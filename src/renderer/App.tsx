@@ -1,50 +1,32 @@
+import { colors, Container, styled } from '@mui/material';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
+import TopBar from './components/TopBar';
+import HomePage from './pages/Home';
+import ProjectPage from './pages/Project';
+import Transcribe from './pages/Transcribe';
 
-const Hello = () => {
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+const RootContainer = styled(Container)`
+  margin: 0;
+  background: ${colors.grey[800]};
+  height: 100vh;
+
+  &.MuiContainer-maxWidthLg {
+    padding: 0;
+  }
+`;
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-      </Routes>
-    </Router>
+    <RootContainer>
+      <TopBar />
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/project" element={<ProjectPage />} />
+          <Route path="/transcribe" element={<Transcribe />} />
+        </Routes>
+      </Router>
+    </RootContainer>
   );
 }

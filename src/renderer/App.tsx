@@ -1,4 +1,4 @@
-import { Box, colors, Container, styled } from '@mui/material';
+import { Box, colors, styled } from '@mui/material';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import TopBar from './components/TopBar';
@@ -10,10 +10,6 @@ const RootContainer = styled(Box)`
   margin: 0;
   background: ${colors.grey[800]};
   height: 100vh;
-
-  &.MuiContainer-maxWidthLg {
-    padding: 0;
-  }
 `;
 
 export default function App() {

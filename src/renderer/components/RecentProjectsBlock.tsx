@@ -1,4 +1,5 @@
 import { Box, Typography, styled, colors } from '@mui/material';
+import GenericSquareBox from './GenericSquareBox';
 
 const recentProjectsMockData: { name: string }[] = [
   {
@@ -34,38 +35,15 @@ const ProjectsListBox = styled(Box)`
   overflow-x: auto;
 `;
 
-const ProjectBox = styled(Box)`
-  flex-grow: 0;
-  flex-shrink: 0;
-  
-  background: ${colors.grey[400]};
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 20px;
-  color: ${colors.grey[900]};
-
-  &:last {
-    margin-right: 0;
-  }
-
-  &:hover {
-    background: ${colors.grey[600]};
-    cursor: pointer;
-  }
-`;
-
 const RecentProjectsBlock = () => {
   return (
     <RecentProjectsBox>
       <Typography fontWeight="bold">Recent Projects</Typography>
       <ProjectsListBox>
         {recentProjectsMockData.map(({ name }) => (
-          <ProjectBox key={name}>
+          <GenericSquareBox key={name}>
             <Typography fontWeight="bold">{name}</Typography>
-          </ProjectBox>
+          </GenericSquareBox>
         ))}
       </ProjectsListBox>
     </RecentProjectsBox>

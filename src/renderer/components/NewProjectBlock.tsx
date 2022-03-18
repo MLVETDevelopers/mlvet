@@ -1,4 +1,4 @@
-import { Box, Card, colors, styled, Typography } from "@mui/material";
+import { Box, colors, styled, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import NewProjectModal from "./NewProjectModal";
 import { useState } from "react";

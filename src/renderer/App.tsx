@@ -1,4 +1,4 @@
-import { colors, Container, styled } from '@mui/material';
+import { Box, colors, Container, styled } from '@mui/material';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import TopBar from './components/TopBar';
@@ -6,7 +6,7 @@ import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import Transcribe from './pages/Transcribe';
 
-const RootContainer = styled(Container)`
+const RootContainer = styled(Box)`
   margin: 0;
   background: ${colors.grey[800]};
   height: 100vh;

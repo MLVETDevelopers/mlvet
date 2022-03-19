@@ -3,8 +3,7 @@ import RecentProjectsBlock from 'renderer/components/RecentProjectsBlock';
 
 const HomePage = () => {
   return (
-    <>
-      <NewProjectBlock />
+    <><NewProjectBlock />
       <RecentProjectsBlock />
     </>
   );

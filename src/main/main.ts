@@ -12,6 +12,9 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { ChildProcess } from 'child_process';
+import { get } from 'http';
+import startServer from './py_server';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -24,6 +27,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let pyServer: ChildProcess | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -90,10 +94,30 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+
+    pyServer = startServer();
+
+    if (pyServer !== null && pyServer.stderr !== null) {
+      pyServer.stderr.once('data', (data) => {
+        console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built
+        get('http://localhost:5000', (res) => {
+          if (res.statusCode === 200) {
+            console.log('Python server is running');
+          } else {
+            throw new Error(
+              `Python server has an error, response to a get '/' expected code 200 got ${res.statusCode}`
+            );
+          }
+        });
+      });
+    }
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    if (pyServer !== null && typeof pyServer.pid === 'number') {
+      pyServer.kill();
+    }
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -119,6 +143,9 @@ app.on('window-all-closed', () => {
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
+    if (pyServer !== null) {
+      pyServer.kill(0);
+    }
   }
 });
 

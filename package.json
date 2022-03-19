@@ -16,18 +16,24 @@
     "test": "jest",
     "prepare": "husky install"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "cross-env NODE_ENV=development eslint --cache"
+      "cross-env NODE_ENV=development eslint --fix --cache",
+      "prettier --ignore-path .eslintignore --write"
     ],
     "*.json,.{eslintrc,prettierrc}": [
       "prettier --ignore-path .eslintignore --parser json --write"
     ],
     "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write"
+      "prettier --ignore-path .eslintignore --write"
     ],
     "*.{html,md,yml}": [
-      "prettier --ignore-path .eslintignore --single-quote --write"
+      "prettier --ignore-path .eslintignore --write"
     ]
   },
   "build": {

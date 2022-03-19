@@ -16,9 +16,9 @@ export const projectCreated: (project: Project) => Action<Project> = (
   payload: project,
 });
 
-export const currentProjectClosed: () => Action<undefined> = () => ({
+export const currentProjectClosed: () => Action<null> = () => ({
   type: CURRENT_PROJECT_CLOSED,
-  payload: undefined,
+  payload: null,
 });
 
 export const recentProjectAdded: (project: Project) => Action<Project> = (

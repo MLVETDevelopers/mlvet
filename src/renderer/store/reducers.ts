@@ -7,29 +7,32 @@ import {
 } from './actions';
 import { ApplicationStore, initialStore, Project } from './helpers';
 
-const currentProjectReducer = (
-  currentProject: ApplicationStore['currentProject'] = initialStore.currentProject,
+const currentProjectReducer: (
+  currentProject: ApplicationStore['currentProject'],
   action: Action<any>
+) => ApplicationStore['currentProject'] = (
+  currentProject = initialStore.currentProject,
+  action
 ) => {
   if (action.type === PROJECT_CREATED) {
     return action.payload as Project;
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {
-    return undefined;
+    return null;
   }
 
   return currentProject;
 };
 
-const recentProjectsReducer = (
-  recentProjects: ApplicationStore['recentProjects'] = initialStore.recentProjects,
+const recentProjectsReducer: (
+  recentProjects: ApplicationStore['recentProjects'],
   action: Action<any>
+) => ApplicationStore['recentProjects'] = (
+  recentProjects = initialStore.recentProjects,
+  action
 ) => {
   if (action.type === RECENT_PROJECT_ADDED) {
-    if (recentProjects === undefined) {
-      return [action.payload as Project];
-    }
     return [action.payload as Project, ...recentProjects];
   }
 

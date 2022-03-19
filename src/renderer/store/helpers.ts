@@ -6,8 +6,8 @@ export interface Project {
 }
 
 export interface ApplicationStore {
-  currentProject: Project | null | undefined;
-  recentProjects: Project[] | undefined;
+  currentProject: Project | null;
+  recentProjects: Project[];
 }
 
 export const initialStore: ApplicationStore = {

@@ -25,7 +25,7 @@ const RecentProjectsBlock = () => {
     <RecentProjectsBox>
       <Typography fontWeight="bold">Recent Projects</Typography>
       <ProjectsListBox>
-        {(recentProjects ?? []).map(({ name }) => (
+        {recentProjects.map(({ name }) => (
           <GenericSquareBox key={name}>
             <Typography fontWeight="bold">{name}</Typography>
           </GenericSquareBox>

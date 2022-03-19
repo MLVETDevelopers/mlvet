@@ -1,4 +1,4 @@
-import { Box, colors, styled } from "@mui/material";
+import { Box, colors, styled } from '@mui/material';
 
 const GenericSquareBox = styled(Box)`
   flex-grow: 0;

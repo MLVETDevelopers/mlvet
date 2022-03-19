@@ -1,4 +1,4 @@
-import { Box, colors, styled, Typography } from "@mui/material";
+import { Box, colors, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 const SelectMediaBox = styled(Box)`
@@ -6,7 +6,7 @@ const SelectMediaBox = styled(Box)`
   color: ${colors.grey[900]};
   margin-top: 20px;
   padding: 20px;
-  
+
   &:hover {
     cursor: pointer;
     background: ${colors.grey[600]};
@@ -23,13 +23,15 @@ const ImportFileBox = styled(Box)`
 `;
 
 const SelectMediaBlock = () => {
-  return <SelectMediaBox>
-    <Typography fontWeight="bold">Video or Audio Base</Typography>
-    <ImportFileBox>
-      <AddIcon fontSize="large" />
-      <Typography fontWeight="bold">Import File or Drag</Typography>
-    </ImportFileBox>
-  </SelectMediaBox>
-}
+  return (
+    <SelectMediaBox>
+      <Typography fontWeight="bold">Video or Audio Base</Typography>
+      <ImportFileBox>
+        <AddIcon fontSize="large" />
+        <Typography fontWeight="bold">Import File or Drag</Typography>
+      </ImportFileBox>
+    </SelectMediaBox>
+  );
+};
 
 export default SelectMediaBlock;

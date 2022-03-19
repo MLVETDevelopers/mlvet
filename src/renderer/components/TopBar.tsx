@@ -8,9 +8,13 @@ const TopBarBox = styled(Box)`
 `;
 
 const TopBar = () => {
-  return <TopBarBox>
-    <Typography component="h1" fontWeight="bold" fontSize="24px">Machine Learning Video Editor Toolkit</Typography>
-  </TopBarBox>
+  return (
+    <TopBarBox>
+      <Typography component="h1" fontWeight="bold" fontSize="24px">
+        Machine Learning Video Editor Toolkit
+      </Typography>
+    </TopBarBox>
+  );
 };
 
 export default TopBar;

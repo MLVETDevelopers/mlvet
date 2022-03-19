@@ -63,24 +63,22 @@ interface Props {
   closeModal: () => void;
 }
 
-const NewProjectModal = (props: Props) => {
-  const { isOpen, closeModal } = props;
-
+const NewProjectModal = ({ isOpen, closeModal }: Props) => {
   return (
     <CustomModal open={isOpen} onClose={closeModal}>
-        <CustomModalInner>
-          <Typography fontWeight="bold">New Project</Typography>
-          <CustomTextField
-            sx={{ marginTop: '40px' }}
-            label="Project Name"
-            variant="outlined"
-          />
-          <SelectMediaBlock />
-          <ButtonContainer>
-            <CancelButton onClick={closeModal}>Cancel</CancelButton>
-            <ActionButton>Create!</ActionButton>
-          </ButtonContainer>
-        </CustomModalInner>
+      <CustomModalInner>
+        <Typography fontWeight="bold">New Project</Typography>
+        <CustomTextField
+          sx={{ marginTop: '40px' }}
+          label="Project Name"
+          variant="outlined"
+        />
+        <SelectMediaBlock />
+        <ButtonContainer>
+          <CancelButton onClick={closeModal}>Cancel</CancelButton>
+          <ActionButton>Create!</ActionButton>
+        </ButtonContainer>
+      </CustomModalInner>
     </CustomModal>
   );
 };

@@ -1,3 +1,3 @@
-const TranscriptionLoadingModal = () => null
+const TranscriptionLoadingModal = () => null;
 
 export default TranscriptionLoadingModal;

@@ -6,8 +6,13 @@ export default function startServer() {
   const pathToServer = path.join(process.cwd(), '/src/py_server');
 
   process.chdir(pathToServer);
+  let proc = null;
 
-  const proc = spawn('flask', ['run']);
+  if (process.env.FLASK_PORT !== undefined) {
+    proc = spawn('flask', ['run', `--port=${process.env.FLASK_PORT}`]);
+  } else {
+    proc = spawn('flask', ['run']);
+  }
 
   // resetting working directory to project root.
   process.chdir(oldWorkingDirectory);

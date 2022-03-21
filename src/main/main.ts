@@ -9,6 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
+import dotenv from 'dotenv';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -28,6 +29,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+dotenv.config();
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;

@@ -101,8 +101,10 @@ const createWindow = async () => {
 
     if (pyServer !== null && pyServer.stderr !== null) {
       pyServer.stderr.once('data', (data) => {
-        console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built
-        get('http://localhost:5000', (res) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built
+        }
+        get(`http://localhost:${process.env.FLASK_PORT}`, (res) => {
           if (res.statusCode === 200) {
             console.log('Python server is running');
           } else {

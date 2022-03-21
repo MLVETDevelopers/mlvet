@@ -16,6 +16,8 @@ Then go into `mlvet/src/py_server` and run
 pip install -r requirements.txt
 ```
 
+This will install all dependencies required to run the python server.
+
 ## Starting Development
 
 Start the app in the `dev` environment:

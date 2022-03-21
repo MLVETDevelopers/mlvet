@@ -8,7 +8,13 @@ Clone the repo, then:
 yarn
 ```
 
-This will install all dependencies needed to run the app.
+This will install all dependencies required by electron needed to run the app.
+
+Then go into `mlvet/src/py_server` and run
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Starting Development
 

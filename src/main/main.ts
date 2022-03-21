@@ -119,7 +119,7 @@ const createWindow = async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
-    if (pyServer !== null && typeof pyServer.pid === 'number') {
+    if (pyServer !== null) {
       pyServer.kill();
     }
   });

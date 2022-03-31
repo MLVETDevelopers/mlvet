@@ -7,7 +7,11 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { projectCreated, recentProjectAdded } from '../store/actions';
 import SelectMediaBlock from './SelectMediaBlock';
+import { Project } from '../store/helpers';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -64,6 +68,28 @@ interface Props {
 }
 
 const NewProjectModal = ({ isOpen, closeModal }: Props) => {
+  const [projectName, setProjectName] = useState<string>('Example');
+
+  const makeMockProject: (name: string) => Project = (name) => ({
+    name,
+    mediaType: 'video',
+    fileExtension: 'mp4',
+    filePath: 'test',
+  });
+
+  const dispatch = useDispatch();
+
+  const setCurrentProject = () =>
+    dispatch(projectCreated(makeMockProject(projectName)));
+  const addToRecentProjects = () =>
+    dispatch(recentProjectAdded(makeMockProject(projectName)));
+
+  const onProjectCreate = () => {
+    setCurrentProject();
+    addToRecentProjects();
+    closeModal();
+  };
+
   return (
     <CustomModal open={isOpen} onClose={closeModal}>
       <CustomModalInner>
@@ -72,11 +98,13 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
           sx={{ marginTop: '40px' }}
           label="Project Name"
           variant="outlined"
+          value={projectName}
+          onChange={(event) => setProjectName(event.target.value)}
         />
         <SelectMediaBlock />
         <ButtonContainer>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
-          <ActionButton>Create!</ActionButton>
+          <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
         </ButtonContainer>
       </CustomModalInner>
     </CustomModal>

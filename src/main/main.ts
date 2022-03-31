@@ -11,8 +11,12 @@
 import path from 'path';
 import os from 'os';
 import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
+import dotenv from 'dotenv';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { ChildProcess } from 'child_process';
+import { get } from 'http';
+import startServer from './py_server';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -31,6 +35,8 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let pyServer: ChildProcess | null = null;
+dotenv.config();
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -97,10 +103,34 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+
+    pyServer = startServer();
+
+    if (pyServer !== null && pyServer.stderr !== null) {
+      // Flask logs to stderr when server is ready. Hence, we listen to stderr rather than stdout
+      // More information why we listen to stderr here: https://github.com/patrickbrett/mlvet/pull/3#discussion_r830701799
+      pyServer.stderr.once('data', (data) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built
+        }
+        get(`http://localhost:${process.env.FLASK_PORT}`, (res) => {
+          if (res.statusCode === 200) {
+            console.log('Python server is running');
+          } else {
+            throw new Error(
+              `Python server has an error, response to a get '/' expected code 200 got ${res.statusCode}`
+            );
+          }
+        });
+      });
+    }
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    if (pyServer !== null) {
+      pyServer.kill();
+    }
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -126,6 +156,9 @@ app.on('window-all-closed', () => {
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
+    if (pyServer !== null) {
+      pyServer.kill(0);
+    }
   }
 });
 

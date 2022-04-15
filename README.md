@@ -1,5 +1,17 @@
 # Machine Learning Video Editing Toolkit
 
+## Dependencies
+
+Node v16: download from https://nodejs.org/en/
+
+Yarn package manager - run the following from your command line
+
+```
+npm install -g yarn
+```
+
+This will install yarn globally. Then you can install project-specific dependencies as follows
+
 ## Installing
 
 Clone the repo, then:

@@ -25,20 +25,20 @@ const ImportFileBox = styled(Box)`
 `;
 
 interface Props {
-  mediaFileName: string | null;
-  setMediaFileName: Dispatch<SetStateAction<string | null>>;
+  mediaFilePath: string | null;
+  setMediaFilePath: Dispatch<SetStateAction<string | null>>;
 }
 
-const SelectMediaBlock = ({ mediaFileName, setMediaFileName }: Props) => {
+const SelectMediaBlock = ({ mediaFilePath, setMediaFilePath }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await requestMediaDialog();
-    setMediaFileName(selectedMedia);
+    setMediaFilePath(selectedMedia);
   };
 
   return (
     <SelectMediaBox onClick={selectMedia}>
       <Typography fontWeight="bold">Video or Audio Base</Typography>
-      {mediaFileName}
+      {mediaFilePath}
       <ImportFileBox>
         <AddIcon fontSize="large" />
         <Typography fontWeight="bold">Import File or Drag</Typography>

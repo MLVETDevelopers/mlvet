@@ -69,6 +69,7 @@ interface Props {
 
 const NewProjectModal = ({ isOpen, closeModal }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
+  const [mediaFileName, setMediaFileName] = useState<string | null>(null);
 
   const makeMockProject: (name: string) => Project = (name) => ({
     name,
@@ -101,7 +102,10 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
           value={projectName}
           onChange={(event) => setProjectName(event.target.value)}
         />
-        <SelectMediaBlock />
+        <SelectMediaBlock
+          mediaFileName={mediaFileName}
+          setMediaFileName={setMediaFileName}
+        />
         <ButtonContainer>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
           <ActionButton onClick={onProjectCreate}>Create!</ActionButton>

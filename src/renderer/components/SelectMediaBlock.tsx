@@ -1,5 +1,7 @@
 import { Box, colors, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Dispatch, SetStateAction } from 'react';
+import requestMediaDialog from '../ipc';
 
 const SelectMediaBox = styled(Box)`
   background: ${colors.grey[400]};
@@ -22,10 +24,21 @@ const ImportFileBox = styled(Box)`
   margin: 80px 0;
 `;
 
-const SelectMediaBlock = () => {
+interface Props {
+  mediaFileName: string | null;
+  setMediaFileName: Dispatch<SetStateAction<string | null>>;
+}
+
+const SelectMediaBlock = ({ mediaFileName, setMediaFileName }: Props) => {
+  const selectMedia: () => Promise<void> = async () => {
+    const selectedMedia = await requestMediaDialog();
+    setMediaFileName(selectedMedia);
+  };
+
   return (
-    <SelectMediaBox>
+    <SelectMediaBox onClick={selectMedia}>
       <Typography fontWeight="bold">Video or Audio Base</Typography>
+      {mediaFileName}
       <ImportFileBox>
         <AddIcon fontSize="large" />
         <Typography fontWeight="bold">Import File or Drag</Typography>

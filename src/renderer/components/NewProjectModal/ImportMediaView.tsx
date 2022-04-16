@@ -1,6 +1,5 @@
 import {
   Box,
-  Modal,
   styled,
   Typography,
   colors,
@@ -9,21 +8,9 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { projectCreated, recentProjectAdded } from '../store/actions';
-import SelectMediaBlock from './SelectMediaBlock';
-import { Project } from '../store/helpers';
-
-const CustomModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CustomModalInner = styled(Box)`
-  width: calc(80vw - 40px);
-  background: ${colors.grey[900]};
-  padding: 20px;
-`;
+import { projectCreated, recentProjectAdded } from '../../store/actions';
+import SelectMediaBlock from '../SelectMediaBlock';
+import { Project } from '../../store/helpers';
 
 const CustomTextField = styled(TextField)`
   background: ${colors.grey[400]};
@@ -63,11 +50,11 @@ const ActionButton = styled(CustomButtonBase)`
 `;
 
 interface Props {
-  isOpen: boolean;
   closeModal: () => void;
+  nextView: () => void;
 }
 
-const NewProjectModal = ({ isOpen, closeModal }: Props) => {
+const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
 
   const makeMockProject: (name: string) => Project = (name) => ({
@@ -75,6 +62,7 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
     mediaType: 'video',
     fileExtension: 'mp4',
     filePath: 'test',
+    transcription: null,
   });
 
   const dispatch = useDispatch();
@@ -87,28 +75,26 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
   const onProjectCreate = () => {
     setCurrentProject();
     addToRecentProjects();
-    closeModal();
+    nextView();
   };
 
   return (
-    <CustomModal open={isOpen} onClose={closeModal}>
-      <CustomModalInner>
-        <Typography fontWeight="bold">New Project</Typography>
-        <CustomTextField
-          sx={{ marginTop: '40px' }}
-          label="Project Name"
-          variant="outlined"
-          value={projectName}
-          onChange={(event) => setProjectName(event.target.value)}
-        />
-        <SelectMediaBlock />
-        <ButtonContainer>
-          <CancelButton onClick={closeModal}>Cancel</CancelButton>
-          <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
-        </ButtonContainer>
-      </CustomModalInner>
-    </CustomModal>
+    <>
+      <Typography fontWeight="bold">New Project</Typography>
+      <CustomTextField
+        sx={{ marginTop: '40px' }}
+        label="Project Name"
+        variant="outlined"
+        value={projectName}
+        onChange={(event) => setProjectName(event.target.value)}
+      />
+      <SelectMediaBlock />
+      <ButtonContainer>
+        <CancelButton onClick={closeModal}>Cancel</CancelButton>
+        <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
+      </ButtonContainer>
+    </>
   );
 };
 
-export default NewProjectModal;
+export default ImportMediaView;

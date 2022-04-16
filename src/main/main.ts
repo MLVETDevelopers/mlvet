@@ -19,6 +19,7 @@ import { get } from 'http';
 import startServer from './py_server';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import handleTranscription from './transcriptionHandler';
 
 // Load Redux DevTools on macOS (TODO: support other OSs)
 const reactDevToolsPath = path.join(
@@ -43,6 +44,10 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
+
+ipcMain.handle('transcribe-media', async (_event, filePath) =>
+  handleTranscription(filePath)
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

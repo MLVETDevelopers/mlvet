@@ -1,4 +1,4 @@
-import { Project } from './helpers';
+import { Project, Transcription } from './helpers';
 
 export type Action<T> = {
   type: string;
@@ -8,6 +8,7 @@ export type Action<T> = {
 export const PROJECT_CREATED = 'PROJECT_CREATED';
 export const CURRENT_PROJECT_CLOSED = 'CURRENT_PROJECT_CLOSED';
 export const RECENT_PROJECT_ADDED = 'RECENT_PROJECT_ADDED';
+export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 
 export const projectCreated: (project: Project) => Action<Project> = (
   project
@@ -26,4 +27,11 @@ export const recentProjectAdded: (project: Project) => Action<Project> = (
 ) => ({
   type: RECENT_PROJECT_ADDED,
   payload: project,
+});
+
+export const transcriptionCreated: (
+  transcription: Transcription
+) => Action<Transcription> = (transcription) => ({
+  type: TRANSCRIPTION_CREATED,
+  payload: transcription,
 });

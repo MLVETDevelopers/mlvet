@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import { homedir } from 'os';
 
@@ -43,8 +43,8 @@ const constructEDL = (title: string, data: any) => {
   return output;
 };
 
-const writeFile = (filename: string, data: any) => {
-  writeFileSync(filename, data, { flag: 'w' });
+const writeFile = (filePath: string, data: any) => {
+  writeFileSync(filePath, data, { flag: 'w' });
 };
 
 export const exportEDL = (
@@ -53,7 +53,13 @@ export const exportEDL = (
   title: string,
   data: any
 ) => {
-  const savepath = savedir || path.join(homedir(), 'Desktop');
+  const exportDir = path.resolve(`${__dirname}../../../export_files`);
+
+  if (!existsSync(exportDir)) {
+    mkdirSync(exportDir);
+  }
+
+  const savepath = savedir || exportDir;
   writeFile(path.join(savepath, `${filename}.edl`), constructEDL(title, data));
 };
 
@@ -61,5 +67,3 @@ const exportFuncs = {
   exportEDL,
 };
 export default exportFuncs;
-
-// test commit

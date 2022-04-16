@@ -1,22 +1,9 @@
-import {
-  Box,
-  styled,
-  Typography,
-  colors,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Box, styled, Typography, colors, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useState } from 'react';
 import requestTranscription from 'renderer/ipc';
 import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore, Transcription } from '../../store/helpers';
-
-const CustomTextField = styled(TextField)`
-  background: ${colors.grey[400]};
-  color: ${colors.grey[900]};
-  width: 400px;
-`;
 
 const ButtonContainer = styled(Box)`
   display: flex;

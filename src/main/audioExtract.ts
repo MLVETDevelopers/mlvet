@@ -2,7 +2,7 @@ import { ChildProcess, spawn } from 'child_process';
 import path from 'path';
 
 export default function extractAudio(
-  absolutePathToVideoFile: string
+  absolutePathToMediaFile: string
 ): ChildProcess {
   const pathToSaveMedia = path.join(
     process.cwd(),
@@ -18,7 +18,7 @@ export default function extractAudio(
   // docs: https://ffmpeg.org/ffmpeg.html
   const proc = spawn('ffmpeg', [
     '-i',
-    absolutePathToVideoFile,
+    absolutePathToMediaFile,
     '-ac',
     '1',
     '-ar',

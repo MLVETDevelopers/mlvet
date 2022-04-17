@@ -1,4 +1,3 @@
-import { ChildProcess, spawn } from 'child_process';
 import path from 'path';
 
 import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
@@ -6,31 +5,36 @@ import ffmpeg from 'fluent-ffmpeg';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-export default function extractAudio(absolutePathToMediaFile: string): void {
-  const pathToSaveMedia = path.join(process.cwd(), 'assets', 'videos');
+export default function extractAudio(
+  absolutePathToMediaFile: string
+): Promise<string> {
+  const pathToSaveMedia = path.join(
+    process.cwd(),
+    'assets',
+    'audio',
+    'audio.wav'
+  );
+
+  console.log('Started audio extraction');
 
   const command = ffmpeg(absolutePathToMediaFile)
     .audioChannels(1)
-    .outputOptions('-ar 16000')
+    .outputOptions('-ar 16000') // Sample rate of 16kHz
     .noVideo()
-    .saveToFile('audio.wav');
+    .saveToFile(pathToSaveMedia);
 
-  // Original command is:
-  // ffmpeg -i input.mp4 -ac 1 -ar 16000 -vn output.wav
-  // const proc = spawn(
-  //   'ffmpeg',
-  //   [
-  //     '-i',
-  //     absolutePathToMediaFile,
-  //     '-ac',
-  //     '1',
-  //     '-ar',
-  //     '16000',
-  //     '-vn',
-  //     'audio.wav',
-  //   ],
-  //   { cwd: pathToSaveMedia }
-  // );
+  return new Promise((resolve, reject) => {
+    command.on('end', (stdout: string, stderr: string) => {
+      if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+      if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
-  // return proc;
+      resolve(pathToSaveMedia);
+    });
+    command.on('error', (stdout: string, stderr: string) => {
+      if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+      if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
+
+      reject(stderr);
+    });
+  });
 }

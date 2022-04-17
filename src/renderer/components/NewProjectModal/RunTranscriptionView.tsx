@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useState } from 'react';
 import { requestTranscription } from 'renderer/ipc';
 import { transcriptionCreated } from '../../store/actions';
-import { ApplicationStore, Transcription } from '../../store/helpers';
+import { ApplicationStore } from '../../store/helpers';
+import { Transcription } from '../../../sharedTypes';
 
 const ButtonContainer = styled(Box)`
   display: flex;

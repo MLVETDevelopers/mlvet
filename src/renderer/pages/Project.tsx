@@ -8,6 +8,10 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  if (currentProject === null) {
+    return null;
+  }
+
   const saveButton = (
     <Button onClick={() => saveProject(currentProject)}>Save</Button>
   );

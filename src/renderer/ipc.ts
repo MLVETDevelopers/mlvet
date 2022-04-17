@@ -1,4 +1,4 @@
-import { Transcription } from './store/helpers';
+import { Project, Transcription } from '../sharedTypes';
 
 const { ipcRenderer } = window.electron;
 

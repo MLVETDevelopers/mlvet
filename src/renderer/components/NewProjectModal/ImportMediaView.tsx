@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { projectCreated, recentProjectAdded } from '../../store/actions';
 import SelectMediaBlock from '../SelectMediaBlock';
-import { Project } from '../../store/helpers';
+import { Project } from '../../../sharedTypes';
 
 const CustomTextField = styled(TextField)`
   background: ${colors.grey[400]};

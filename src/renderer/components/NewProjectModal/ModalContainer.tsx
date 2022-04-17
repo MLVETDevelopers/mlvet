@@ -1,6 +1,6 @@
 import { Modal, styled, colors, Box } from '@mui/material';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import ImportMediaView from './ImportMediaView';
 import RunTranscriptionView from './RunTranscriptionView';
 
@@ -24,14 +24,14 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const viewComponents = [ImportMediaView, RunTranscriptionView];
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
       closeModal();
-      history.push('/project');
+      navigate('/project');
       return;
     }
     setCurrentView((prev) => prev + 1);

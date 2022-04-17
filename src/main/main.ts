@@ -9,7 +9,6 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import os from 'os';
 import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
 import dotenv from 'dotenv';
 import { autoUpdater } from 'electron-updater';
@@ -21,12 +20,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import handleTranscription from './transcriptionHandler';
 import handleSaveProject from './saveProjectHandler';
-
-// Load Redux DevTools on macOS (TODO: support other OSs)
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.0.9_0'
-);
 
 export default class AppUpdater {
   constructor() {
@@ -69,7 +62,7 @@ if (isDevelopment) {
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
   return installer
     .default(
@@ -176,10 +169,6 @@ app
   .whenReady()
   .then(async () => {
     createWindow();
-
-    if (process.platform === 'darwin') {
-      await session.defaultSession.loadExtension(reactDevToolsPath);
-    }
 
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

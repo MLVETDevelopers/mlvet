@@ -19,6 +19,7 @@ import { get } from 'http';
 import startServer from './py_server';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import extractAudio from './audioExtract';
 
 // Load Redux DevTools on macOS (TODO: support other OSs)
 const reactDevToolsPath = path.join(
@@ -103,6 +104,8 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+
+    extractAudio('/Users/Patrick/p/mlvet-sample-data/demo-pov.mp4');
 
     pyServer = startServer();
 

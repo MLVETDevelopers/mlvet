@@ -5,7 +5,6 @@ import './App.css';
 import TopBar from './components/TopBar';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
-import Transcribe from './pages/Transcribe';
 import store from './store/store';
 
 const RootContainer = styled(Box)`
@@ -23,7 +22,6 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/project" element={<ProjectPage />} />
-            <Route path="/transcribe" element={<Transcribe />} />
           </Routes>
         </Router>
       </RootContainer>

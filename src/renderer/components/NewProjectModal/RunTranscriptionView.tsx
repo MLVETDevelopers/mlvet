@@ -1,7 +1,7 @@
 import { Box, styled, Typography, colors, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useState } from 'react';
-import requestTranscription from 'renderer/ipc';
+import { requestTranscription } from 'renderer/ipc';
 import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore, Transcription } from '../../store/helpers';
 

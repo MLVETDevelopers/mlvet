@@ -1,24 +1,13 @@
 /* eslint-disable no-plusplus */
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import { homedir } from 'os';
-
-const padZeros = (num: number, len: number) => {
-  return String(num).padStart(len, '0');
-};
-
-const integerDivide = (a: number, b: number) => {
-  return Math.floor(a / b);
-};
+import { padZeros, integerDivide, writeFile, mkdir } from './utils';
 
 const secondToTimestamp = (num: number) => {
-  return `${padZeros(integerDivide(num, 3600), 2)}:${padZeros(
-    integerDivide(num, 60),
-    2
-  )}:${padZeros(integerDivide(num, 1), 2)}:${padZeros(
-    integerDivide(num, 0.01),
-    2
-  )}`;
+  return `${padZeros(integerDivide(num, 3600), 2)}:
+          ${padZeros(integerDivide(num, 60), 2)}:
+          ${padZeros(integerDivide(num, 1), 2)}:
+          ${padZeros(integerDivide(num, 0.01), 2)}`;
 };
 
 const constructEDL = (title: string, data: any) => {
@@ -43,23 +32,21 @@ const constructEDL = (title: string, data: any) => {
   return output;
 };
 
-const writeFile = (filePath: string, data: any) => {
-  writeFileSync(filePath, data, { flag: 'w' });
-};
-
 export const exportEDL = (
   savedir: string,
   filename: string,
   title: string,
   data: any
 ) => {
-  const exportDir = path.resolve(`${__dirname}../../../export_files`);
+  const defaultDir = path.resolve(`${__dirname}../../../export_files`);
 
-  if (!existsSync(exportDir)) {
-    mkdirSync(exportDir);
+  if (!savedir) {
+    mkdir(savedir);
+  } else {
+    mkdir(defaultDir);
   }
 
-  const savepath = savedir || exportDir;
+  const savepath = savedir || defaultDir;
   writeFile(path.join(savepath, `${filename}.edl`), constructEDL(title, data));
 };
 

@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import dotenv from 'dotenv';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -20,6 +20,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import handleTranscription from './transcriptionHandler';
 import handleSaveProject from './saveProjectHandler';
+import handleOpenProject from './openProjectHandler';
 
 export default class AppUpdater {
   constructor() {
@@ -33,12 +34,6 @@ let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
-
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)
 );
@@ -46,6 +41,8 @@ ipcMain.handle('transcribe-media', async (_event, filePath) =>
 ipcMain.handle('save-project', async (_event, project) =>
   handleSaveProject(mainWindow, project)
 );
+
+ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -92,6 +89,7 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
     },
   });
 

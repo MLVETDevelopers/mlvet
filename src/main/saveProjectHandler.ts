@@ -29,7 +29,7 @@ const saveProjectToFile: (
 ) => Promise<void> = async (filePath, project) => {
   const projectAsString = JSON.stringify(project);
 
-  writeFile(filePath, projectAsString);
+  await writeFile(filePath, projectAsString);
 };
 
 const handleSaveProject: (

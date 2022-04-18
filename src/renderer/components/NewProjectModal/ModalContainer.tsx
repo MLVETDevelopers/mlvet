@@ -1,6 +1,8 @@
 import { Modal, styled, colors, Box } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { pageChanged } from '../../store/actions';
+import { ApplicationPage } from '../../store/helpers';
 import ImportMediaView from './ImportMediaView';
 import RunTranscriptionView from './RunTranscriptionView';
 
@@ -24,14 +26,20 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const navigate: (applicationPage: ApplicationPage) => void = useCallback(
+    (applicationPage: ApplicationPage) =>
+      dispatch(pageChanged(applicationPage)),
+    [dispatch]
+  );
 
   const viewComponents = [ImportMediaView, RunTranscriptionView];
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
       closeModal();
-      navigate('/project');
+      navigate(ApplicationPage.PROJECT);
       return;
     }
     setCurrentView((prev) => prev + 1);

@@ -2,6 +2,7 @@
 export type Transcription = string;
 
 export interface Project {
+  schemaVersion: number;
   name: string;
   mediaType: 'audio' | 'video';
   filePath: string;

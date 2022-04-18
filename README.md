@@ -22,7 +22,7 @@ yarn
 
 This will install all dependencies required by electron needed to run the app.
 
-Then go into `mlvet/src/py_server` and run
+Then go into `src/py_server` and run
 
 ```bash
 pip install -r requirements.txt

@@ -63,6 +63,7 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
     fileExtension: 'mp4',
     filePath: 'test',
     transcription: null,
+    schemaVersion: 1,
   });
 
   const dispatch = useDispatch();

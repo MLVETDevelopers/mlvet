@@ -17,7 +17,9 @@ import { get } from 'http';
 import path from 'path';
 import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
+import handleOpenProject from './openProjectHandler';
 import startServer from './py_server';
+import handleSaveProject from './saveProjectHandler';
 import handleTranscription from './transcriptionHandler';
 import { resolveHtmlPath } from './util';
 import extractAudio from './audioExtract';
@@ -39,6 +41,12 @@ ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)
 );
+
+ipcMain.handle('save-project', async (_event, project) =>
+  handleSaveProject(mainWindow, project)
+);
+
+ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -85,6 +93,7 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
     },
   });
 

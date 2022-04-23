@@ -9,9 +9,9 @@ import {
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { projectCreated, recentProjectAdded } from '../../store/actions';
-import { Project } from '../../store/helpers';
-import { makeProject } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
+import { Project } from '../../../sharedTypes';
+import { makeProject } from '../../util';
 
 const CustomTextField = styled(TextField)`
   background: ${colors.grey[400]};
@@ -57,7 +57,6 @@ interface Props {
 
 const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
-
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
 
   const dispatch = useDispatch();

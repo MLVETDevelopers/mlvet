@@ -10,4 +10,11 @@ contextBridge.exposeInMainWorld('electron', {
   requestMediaDialog: () => ipcRenderer.invoke('import-media'),
   requestTranscription: (filePath) =>
     ipcRenderer.invoke('transcribe-media', filePath),
+  saveProject: (project) => ipcRenderer.invoke('save-project', project),
+  openProject: () => ipcRenderer.invoke('open-project'),
+
+  // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
+  on(channel, listener) {
+    return ipcRenderer.on(channel, listener);
+  },
 });

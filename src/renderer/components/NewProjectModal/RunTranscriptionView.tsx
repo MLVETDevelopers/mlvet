@@ -2,7 +2,8 @@ import { Box, styled, Typography, colors, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useState } from 'react';
 import { transcriptionCreated } from '../../store/actions';
-import { ApplicationStore, Transcription } from '../../store/helpers';
+import { ApplicationStore } from '../../store/helpers';
+import { Transcription } from '../../../sharedTypes';
 
 const ButtonContainer = styled(Box)`
   display: flex;

@@ -27,3 +27,8 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
+
+__pycache__
+
+assets/videos/demo-video.mp4
+assets/audio/audio.wav

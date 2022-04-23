@@ -1,5 +1,17 @@
 # Machine Learning Video Editing Toolkit
 
+## Dependencies
+
+Node v16: download from https://nodejs.org/en/
+
+Yarn package manager - run the following from your command line
+
+```
+npm install -g yarn
+```
+
+This will install yarn globally. Then you can install project-specific dependencies as follows
+
 ## Installing
 
 Clone the repo, then:
@@ -8,7 +20,15 @@ Clone the repo, then:
 yarn
 ```
 
-This will install all dependencies needed to run the app.
+This will install all dependencies required by electron needed to run the app.
+
+Then go into `src/py_server` and run
+
+```bash
+pip install -r requirements.txt
+```
+
+This will install all dependencies required to run the python server.
 
 ## Starting Development
 

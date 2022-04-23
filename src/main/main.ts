@@ -20,6 +20,7 @@ import MenuBuilder from './menu';
 import startServer from './py_server';
 import handleTranscription from './transcriptionHandler';
 import { resolveHtmlPath } from './util';
+import extractAudio from './audioExtract';
 
 export default class AppUpdater {
   constructor() {
@@ -89,7 +90,7 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  mainWindow.on('ready-to-show', () => {
+  mainWindow.on('ready-to-show', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -98,6 +99,11 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+
+    const extractedPath = await extractAudio(
+      path.join(process.cwd(), 'assets/videos/demo-video.mp4')
+    );
+    console.log(`Extracted audio to: ${extractedPath}`);
 
     pyServer = startServer();
 

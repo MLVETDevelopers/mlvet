@@ -1,23 +1,18 @@
 import {
   Box,
+  Button,
+  colors,
   Modal,
   styled,
-  Typography,
-  colors,
   TextField,
-  Button,
+  Typography,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { projectCreated, recentProjectAdded } from '../store/actions';
+import { Project } from '../store/helpers';
+import { makeProject } from '../util';
 import SelectMediaBlock from './SelectMediaBlock';
-import {
-  AudioFileExtension,
-  MediaFileExtension,
-  Project,
-  VideoFileExtension,
-} from '../store/helpers';
-import { extractFileExtension, getMediaType, makeProject } from '../util';
 
 const CustomModal = styled(Modal)`
   display: flex;

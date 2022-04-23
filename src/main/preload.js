@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-  // TODO: dont expose whole renderer for security reasons
+  // TODO: don't expose whole IPC module
   ipcRenderer,
 });

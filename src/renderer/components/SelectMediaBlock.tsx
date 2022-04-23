@@ -1,7 +1,6 @@
 import { Box, colors, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Dispatch, SetStateAction } from 'react';
-import requestMediaDialog from '../ipc';
 
 const SelectMediaBox = styled(Box)`
   background: ${colors.grey[400]};
@@ -31,7 +30,7 @@ interface Props {
 
 const SelectMediaBlock = ({ mediaFilePath, setMediaFilePath }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
-    const selectedMedia = await requestMediaDialog();
+    const selectedMedia = await window.electron.requestMediaDialog();
     setMediaFilePath(selectedMedia);
   };
 

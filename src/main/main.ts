@@ -8,24 +8,18 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import os from 'os';
-import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
-import dotenv from 'dotenv';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import { ChildProcess } from 'child_process';
+import dotenv from 'dotenv';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
-import startServer from './py_server';
+import path from 'path';
+import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import startServer from './py_server';
 import handleTranscription from './transcriptionHandler';
-
-// Load Redux DevTools on macOS (TODO: support other OSs)
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.0.9_0'
-);
+import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -39,11 +33,7 @@ let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)
@@ -64,7 +54,7 @@ if (isDevelopment) {
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
   return installer
     .default(
@@ -171,10 +161,6 @@ app
   .whenReady()
   .then(async () => {
     createWindow();
-
-    if (process.platform === 'darwin') {
-      await session.defaultSession.loadExtension(reactDevToolsPath);
-    }
 
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

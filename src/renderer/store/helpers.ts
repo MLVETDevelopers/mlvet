@@ -1,9 +1,24 @@
-export interface Project {
+interface ProjectBase {
   name: string;
-  mediaType: 'audio' | 'video';
   filePath: string;
-  fileExtension: 'wav' | 'mp4';
 }
+
+export type AudioFileExtension = 'mp3';
+export type VideoFileExtension = 'mp4';
+
+export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
+
+interface AudioProject extends ProjectBase {
+  mediaType: 'audio';
+  fileExtension: AudioFileExtension;
+}
+
+interface VideoProject extends ProjectBase {
+  mediaType: 'video';
+  fileExtension: VideoFileExtension;
+}
+
+export type Project = AudioProject | VideoProject;
 
 export interface ApplicationStore {
   currentProject: Project | null;

@@ -1,17 +1,18 @@
 import {
   Box,
+  Button,
+  colors,
   Modal,
   styled,
-  Typography,
-  colors,
   TextField,
-  Button,
+  Typography,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { projectCreated, recentProjectAdded } from '../store/actions';
-import SelectMediaBlock from './SelectMediaBlock';
 import { Project } from '../store/helpers';
+import { makeProject } from '../util';
+import SelectMediaBlock from './SelectMediaBlock';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -69,24 +70,23 @@ interface Props {
 
 const NewProjectModal = ({ isOpen, closeModal }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
-
-  const makeMockProject: (name: string) => Project = (name) => ({
-    name,
-    mediaType: 'video',
-    fileExtension: 'mp4',
-    filePath: 'test',
-  });
+  const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
 
   const dispatch = useDispatch();
 
-  const setCurrentProject = () =>
-    dispatch(projectCreated(makeMockProject(projectName)));
-  const addToRecentProjects = () =>
-    dispatch(recentProjectAdded(makeMockProject(projectName)));
+  const setCurrentProject = (project: Project) =>
+    dispatch(projectCreated(project));
+  const addToRecentProjects = (project: Project) =>
+    dispatch(recentProjectAdded(project));
 
   const onProjectCreate = () => {
-    setCurrentProject();
-    addToRecentProjects();
+    const project = makeProject(projectName, mediaFilePath);
+    if (project === null) {
+      return;
+    }
+
+    setCurrentProject(project);
+    addToRecentProjects(project);
     closeModal();
   };
 
@@ -101,7 +101,10 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
           value={projectName}
           onChange={(event) => setProjectName(event.target.value)}
         />
-        <SelectMediaBlock />
+        <SelectMediaBlock
+          mediaFilePath={mediaFilePath}
+          setMediaFilePath={setMediaFilePath}
+        />
         <ButtonContainer>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
           <ActionButton onClick={onProjectCreate}>Create!</ActionButton>

@@ -18,6 +18,7 @@ import { get } from 'http';
 import startServer from './py_server';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import showImportMediaDialog from './fileDialog';
 
 export default class AppUpdater {
   constructor() {
@@ -31,11 +32,7 @@ let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

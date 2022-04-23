@@ -1,7 +1,6 @@
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { projectOpened } from 'renderer/store/actions';
-import { saveProject, openProject } from '../ipc';
 import { ApplicationStore } from '../store/helpers';
 
 const ProjectPage = () => {
@@ -17,7 +16,7 @@ const ProjectPage = () => {
 
   const handleOpenProject = async () => {
     try {
-      const project = await openProject();
+      const project = await window.electron.openProject();
       dispatch(projectOpened(project));
     } catch (err) {
       console.error(err);
@@ -25,7 +24,9 @@ const ProjectPage = () => {
   };
 
   const saveButton = (
-    <Button onClick={() => saveProject(currentProject)}>Save</Button>
+    <Button onClick={() => window.electron.saveProject(currentProject)}>
+      Save
+    </Button>
   );
 
   const openButton = <Button onClick={handleOpenProject}>Open</Button>;

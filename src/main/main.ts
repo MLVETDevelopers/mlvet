@@ -8,19 +8,20 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import dotenv from 'dotenv';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import { ChildProcess } from 'child_process';
+import dotenv from 'dotenv';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
-import startServer from './py_server';
+import path from 'path';
+import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
-import handleTranscription from './transcriptionHandler';
-import handleSaveProject from './saveProjectHandler';
 import handleOpenProject from './openProjectHandler';
+import startServer from './py_server';
+import handleSaveProject from './saveProjectHandler';
+import handleTranscription from './transcriptionHandler';
+import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -33,6 +34,8 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
+
+ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)

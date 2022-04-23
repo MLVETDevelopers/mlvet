@@ -30,6 +30,15 @@ pip install -r requirements.txt
 
 This will install all dependencies required to run the python server.
 
+## Additional steps you need to follow
+
+After the [audio extract PR](https://github.com/patrickbrett/mlvet/pull/12) got merged you will now need to have a `demo-vdieo.mp4` video file under `assets/videos`
+
+Note:
+
+- You will have to create the `/video` subdirectory
+- Do not push a .mp4 folder to the repo since it will not be read correctly between different OS's
+
 ## Starting Development
 
 Start the app in the `dev` environment:

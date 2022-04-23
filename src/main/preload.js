@@ -8,4 +8,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   requestMediaDialog: () => ipcRenderer.invoke('import-media'),
+  requestTranscription: (filePath) =>
+    ipcRenderer.invoke('transcribe-media', filePath),
 });

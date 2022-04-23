@@ -4,8 +4,14 @@ import {
   CURRENT_PROJECT_CLOSED,
   RECENT_PROJECT_ADDED,
   Action,
+  TRANSCRIPTION_CREATED,
 } from './actions';
-import { ApplicationStore, initialStore, Project } from './helpers';
+import {
+  ApplicationStore,
+  initialStore,
+  Project,
+  Transcription,
+} from './helpers';
 
 const currentProjectReducer: (
   currentProject: ApplicationStore['currentProject'],
@@ -20,6 +26,13 @@ const currentProjectReducer: (
 
   if (action.type === CURRENT_PROJECT_CLOSED) {
     return null;
+  }
+
+  if (action.type === TRANSCRIPTION_CREATED && currentProject !== null) {
+    return {
+      ...currentProject,
+      transcription: action.payload as Transcription,
+    };
   }
 
   return currentProject;

@@ -1,6 +1,10 @@
-interface ProjectBase {
+// TODO: Define transcription schema (this is just a mockup)
+export type Transcription = string;
+
+export interface ProjectBase {
   name: string;
   filePath: string;
+  transcription: Transcription | null;
 }
 
 export type AudioFileExtension = 'mp3';
@@ -33,36 +37,42 @@ export const initialStore: ApplicationStore = {
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
     {
       name: 'Second Project',
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
     {
       name: 'Third Project',
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
     {
       name: 'Fourth Project',
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
     {
       name: 'Fifth Project',
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
     {
       name: 'Sixth Project',
       mediaType: 'video',
       filePath: 'fakepath',
       fileExtension: 'mp4',
+      transcription: null,
     },
   ],
 };

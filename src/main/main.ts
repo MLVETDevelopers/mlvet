@@ -8,17 +8,18 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
-import dotenv from 'dotenv';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import { ChildProcess } from 'child_process';
+import dotenv from 'dotenv';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
-import startServer from './py_server';
-import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import path from 'path';
 import showImportMediaDialog from './fileDialog';
+import MenuBuilder from './menu';
+import startServer from './py_server';
+import handleTranscription from './transcriptionHandler';
+import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -33,6 +34,10 @@ let pyServer: ChildProcess | null = null;
 dotenv.config();
 
 ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
+
+ipcMain.handle('transcribe-media', async (_event, filePath) =>
+  handleTranscription(filePath)
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

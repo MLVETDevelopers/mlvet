@@ -2,29 +2,16 @@ import {
   Box,
   Button,
   colors,
-  Modal,
   styled,
   TextField,
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { projectCreated, recentProjectAdded } from '../store/actions';
-import { Project } from '../store/helpers';
-import { makeProject } from '../util';
-import SelectMediaBlock from './SelectMediaBlock';
-
-const CustomModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CustomModalInner = styled(Box)`
-  width: calc(80vw - 40px);
-  background: ${colors.grey[900]};
-  padding: 20px;
-`;
+import { projectCreated, recentProjectAdded } from '../../store/actions';
+import { Project } from '../../store/helpers';
+import { makeProject } from '../../util';
+import SelectMediaBlock from '../SelectMediaBlock';
 
 const CustomTextField = styled(TextField)`
   background: ${colors.grey[400]};
@@ -64,12 +51,13 @@ const ActionButton = styled(CustomButtonBase)`
 `;
 
 interface Props {
-  isOpen: boolean;
   closeModal: () => void;
+  nextView: () => void;
 }
 
-const NewProjectModal = ({ isOpen, closeModal }: Props) => {
+const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
+
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
 
   const dispatch = useDispatch();
@@ -87,31 +75,29 @@ const NewProjectModal = ({ isOpen, closeModal }: Props) => {
 
     setCurrentProject(project);
     addToRecentProjects(project);
-    closeModal();
+    nextView();
   };
 
   return (
-    <CustomModal open={isOpen} onClose={closeModal}>
-      <CustomModalInner>
-        <Typography fontWeight="bold">New Project</Typography>
-        <CustomTextField
-          sx={{ marginTop: '40px' }}
-          label="Project Name"
-          variant="outlined"
-          value={projectName}
-          onChange={(event) => setProjectName(event.target.value)}
-        />
-        <SelectMediaBlock
-          mediaFilePath={mediaFilePath}
-          setMediaFilePath={setMediaFilePath}
-        />
-        <ButtonContainer>
-          <CancelButton onClick={closeModal}>Cancel</CancelButton>
-          <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
-        </ButtonContainer>
-      </CustomModalInner>
-    </CustomModal>
+    <>
+      <Typography fontWeight="bold">New Project</Typography>
+      <CustomTextField
+        sx={{ marginTop: '40px' }}
+        label="Project Name"
+        variant="outlined"
+        value={projectName}
+        onChange={(event) => setProjectName(event.target.value)}
+      />
+      <SelectMediaBlock
+        mediaFilePath={mediaFilePath}
+        setMediaFilePath={setMediaFilePath}
+      />
+      <ButtonContainer>
+        <CancelButton onClick={closeModal}>Cancel</CancelButton>
+        <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
+      </ButtonContainer>
+    </>
   );
 };
 
-export default NewProjectModal;
+export default ImportMediaView;

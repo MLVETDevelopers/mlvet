@@ -66,7 +66,7 @@ const ProjectPage = () => {
           <div>
             <div>{saveButton}</div>
             <div>{openButton}</div>
-            {'Current project data: '}
+            Current project data:{' '}
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(currentProject)}
             </pre>

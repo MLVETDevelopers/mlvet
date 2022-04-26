@@ -1,4 +1,4 @@
-import { Box, styled, ThemeProvider } from '@mui/material';
+import { Box, CssBaseline, styled, ThemeProvider } from '@mui/material';
 import { ReactElement } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import './App.css';
@@ -32,10 +32,12 @@ export default function App() {
   return (
     <Provider store={applicationStore}>
       <ThemeProvider theme={theme}>
-        <RootContainer>
-          <TopBar />
-          <Router />
-        </RootContainer>
+        <CssBaseline>
+          <RootContainer>
+            <TopBar />
+            <Router />
+          </RootContainer>
+        </CssBaseline>
       </ThemeProvider>
     </Provider>
   );

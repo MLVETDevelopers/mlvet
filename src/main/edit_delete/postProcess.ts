@@ -4,9 +4,7 @@ import Clip from './Clip';
  * Removes deleted words from edited trancription
  * @param wordList
  */
-const removeDeleted: (wordList: Array<any>) => void = function (
-  wordList: Array<any>
-): void {
+const removeDeleted = (wordList: Array<any>): void => {
   let i = 0;
   while (i < wordList.length) {
     if (wordList[i].deleted) {
@@ -24,9 +22,7 @@ const removeDeleted: (wordList: Array<any>) => void = function (
  */
 const FILENAME = 'placeholder_filename.mp4';
 
-const postProcess: (wordList: Array<any>) => Array<any> = function (
-  wordList: Array<any>
-): Array<any> {
+const postProcess = (wordList: Array<any>): Array<Clip> => {
   removeDeleted(wordList);
   const res: Array<Clip> = [];
   let currentStartTime = -1;

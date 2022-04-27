@@ -1,6 +1,7 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
+import ExportCard from 'renderer/components/ExportCard';
 import StandardButton from 'renderer/components/StandardButton';
 import { projectOpened } from 'renderer/store/actions';
 import { ApplicationStore } from '../store/helpers';
@@ -72,6 +73,9 @@ const ProjectPage = () => {
             </pre>
           </div>
         </Stack>
+        <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>
+          <ExportCard progress={0.5} />
+        </div>
       </Stack>
     </>
   );

@@ -549,6 +549,11 @@
   resolved "https://registry.yarnpkg.com/@ffmpeg-installer/win32-x64/-/win32-x64-4.1.0.tgz#17e8699b5798d4c60e36e2d6326a8ebe5e95a2c5"
   integrity sha512-Drt5u2vzDnIONf4ZEkKtFlbvwj6rI3kxw1Ck9fpudmtgaZIHD4ucsWB2lCZBXRxJgXR+2IMSti+4rtM4C4rXgg==
 
+"@fontsource/rubik@^4.5.6":
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/@fontsource/rubik/-/rubik-4.5.6.tgz#0a40a59a8b9299ea3f714a51a3969e6bec3d332b"
+  integrity sha512-DhXog9xyXyG2gPrF2XedcKZDFYYFXPLjoiT0y6rKosKV2i5Y+eLVjWFsUF7cD2CPYpHKEThOIR5PVssl6BJMtQ==
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"

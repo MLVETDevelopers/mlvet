@@ -1,5 +1,6 @@
 // TODO: Define transcription schema (this is just a mockup)
-export type Transcription = string;
+
+import Transcription from 'sharedTypes/Transcription';
 
 export interface ProjectBase {
   schemaVersion: number;

@@ -58,3 +58,16 @@ ipc.on('initiate-undo', async () => {
 ipc.on('initiate-redo', async () => {
   dispatchRedo();
 });
+
+/**
+ * Used by backend to initiate export from front end
+ */
+ipc.on('initiate-export-project', async () => {
+  // Retrieve current project state from redux
+  const { currentProject } = store.getState();
+
+  // Don't export if we don't have a project open
+  if (currentProject === null) return;
+
+  await window.electron.exportProject(currentProject);
+});

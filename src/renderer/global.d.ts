@@ -50,6 +50,7 @@ declare global {
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       // END GENERATED CODE
 
+      exportProject: (project: Project) => Promise<void>;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

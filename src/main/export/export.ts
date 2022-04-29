@@ -1,6 +1,5 @@
 /* eslint-disable no-plusplus */
 import path from 'path';
-import { homedir } from 'os';
 import { padZeros, integerDivide, writeFile, mkdir } from './utils';
 
 const secondToTimestamp = (num: number) => {
@@ -10,10 +9,10 @@ const secondToTimestamp = (num: number) => {
           ${padZeros(integerDivide(num, 0.01), 2)}`;
 };
 
-const constructEDL = (title: string, data: any) => {
+const constructEDL = (title: string, transcription: Transcription) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
   try {
-    const { words } = data.transcripts[0];
+    const { words } = transcription;
     const entries = words.length;
     for (let i = 0; i < entries; i++) {
       const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
@@ -32,25 +31,35 @@ const constructEDL = (title: string, data: any) => {
   return output;
 };
 
-export const exportEDL = (
-  savedir: string,
-  filename: string,
-  title: string,
-  data: any
-) => {
-  const defaultDir = path.resolve(`${__dirname}../../../export_files`);
+export const exportEDL = (project: ProjectBase) => {
+  mkdir(project.savePath);
 
-  if (!savedir) {
-    mkdir(savedir);
-  } else {
-    mkdir(defaultDir);
+  if (project.transcription) {
+    writeFile(
+      path.join(project.savePath, `${project.name}.edl`),
+      constructEDL(project.name, project.transcription)
+    );
   }
-
-  const savepath = savedir || defaultDir;
-  writeFile(path.join(savepath, `${filename}.edl`), constructEDL(title, data));
 };
 
 const exportFuncs = {
   exportEDL,
 };
 export default exportFuncs;
+
+// Mock type, delete after merge
+type Transcription = { words: [Word] };
+
+type Word = {
+  text: string;
+  start_time: number;
+  duration: number;
+};
+
+interface ProjectBase {
+  schemaVersion: number;
+  name: string;
+  filePath: string;
+  savePath: string;
+  transcription: Transcription | null;
+}

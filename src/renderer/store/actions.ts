@@ -1,10 +1,5 @@
 import { Project, Transcription } from '../../sharedTypes';
-import { ApplicationPage } from './helpers';
-
-export type Action<T> = {
-  type: string;
-  payload: T;
-};
+import { Action, ApplicationPage } from './helpers';
 
 export const PROJECT_CREATED = 'PROJECT_CREATED';
 export const PROJECT_OPENED = 'PROJECT_OPENED';

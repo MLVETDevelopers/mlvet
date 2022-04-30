@@ -5,6 +5,11 @@ export enum ApplicationPage {
   PROJECT = 'PROJECT',
 }
 
+export type Action<T> = {
+  type: string;
+  payload: T;
+};
+
 export interface ApplicationStore {
   currentProject: Project | null;
   recentProjects: Project[];

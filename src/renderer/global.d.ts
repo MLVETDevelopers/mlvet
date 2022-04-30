@@ -11,6 +11,7 @@ declare global {
       requestTranscription: (filePath: string) => Promise<Transcription>;
       saveProject: (project: Project) => Promise<void>;
       openProject: () => Promise<Project>;
+      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

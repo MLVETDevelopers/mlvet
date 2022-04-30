@@ -1,15 +1,15 @@
 import { Project } from '../../sharedTypes';
 import { DoPayload, UndoPayload } from './opPayloads';
 
-export type Action<T> = {
-  type: string;
-  payload: T;
-};
-
 export enum ApplicationPage {
   HOME = 'HOME',
   PROJECT = 'PROJECT',
 }
+
+export type Action<T> = {
+  type: string;
+  payload: T;
+};
 
 export interface Op<T extends DoPayload, U extends UndoPayload> {
   do: Action<T>;

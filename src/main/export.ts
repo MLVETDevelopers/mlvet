@@ -1,6 +1,7 @@
 /* eslint-disable no-plusplus */
 import { join } from 'path';
-import { Project, Transcription } from '../sharedTypes';
+import { Project } from '../sharedTypes';
+import Transcription from '../sharedTypes/Transcription';
 import { padZeros, integerDivide, writeFile, mkdir } from './util';
 
 const secondToTimestamp = (num: number) => {

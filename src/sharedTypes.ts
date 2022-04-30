@@ -1,12 +1,6 @@
 // TODO: Define transcription schema (this is just a mockup)
-export type Transcription = { words: [Word] };
 
-export type Word = {
-  word: string;
-  start_time: number;
-  duration: number;
-};
-
+import Transcription from './sharedTypes/Transcription';
 
 export interface ProjectBase {
   schemaVersion: number;

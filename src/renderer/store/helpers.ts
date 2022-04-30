@@ -1,5 +1,5 @@
 import { Project } from '../../sharedTypes';
-import { UndoPayload } from './opPayloads';
+import { DoPayload, UndoPayload } from './opPayloads';
 
 export type Action<T> = {
   type: string;
@@ -11,7 +11,15 @@ export enum ApplicationPage {
   PROJECT = 'PROJECT',
 }
 
-export type UndoStack = Action<UndoPayload>[];
+export interface Op<T extends DoPayload, U extends UndoPayload> {
+  do: Action<T>;
+  undo: Action<U>;
+}
+
+export interface UndoStack {
+  stack: Op<DoPayload, UndoPayload>[];
+  index: number; // Used for supporting redo
+}
 
 export interface ApplicationStore {
   currentProject: Project | null;
@@ -34,5 +42,5 @@ export const initialStore: ApplicationStore = {
     (name) => ({ ...baseMockProject, name: `${name} Project` })
   ),
   currentPage: ApplicationPage.HOME,
-  undoStack: [],
+  undoStack: { stack: [], index: 0 },
 };

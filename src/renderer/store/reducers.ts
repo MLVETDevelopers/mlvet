@@ -8,16 +8,19 @@ import {
   PAGE_CHANGED,
   UNDO_STACK_PUSHED,
   UNDO_STACK_POPPED,
+  OP_REDONE,
 } from './actions';
 import {
   ApplicationStore,
   ApplicationPage,
   initialStore,
   Action,
+  Op,
 } from './helpers';
 import { Project, Transcription, Word } from '../../sharedTypes';
 import {
   ChangeWordToSwampPayload,
+  DoPayload,
   UndoChangeWordToSwampPayload,
   UndoDeleteEverySecondWordPayload,
   UndoPayload,
@@ -161,18 +164,48 @@ const currentPageReducer: (
 };
 
 const undoStackReducer: (
-  currentPage: ApplicationStore['undoStack'],
+  undoStack: ApplicationStore['undoStack'],
   action: Action<any>
 ) => ApplicationStore['undoStack'] = (
   undoStack = initialStore.undoStack,
   action
 ) => {
+  if (
+    action.type === PROJECT_OPENED ||
+    action.type === CURRENT_PROJECT_CLOSED
+  ) {
+    return initialStore.undoStack;
+  }
+
   if (action.type === UNDO_STACK_PUSHED) {
-    return undoStack.concat([action.payload as Action<UndoPayload>]);
+    const { stack, index } = undoStack;
+
+    const newStack = stack
+      .slice(0, index)
+      .concat([action.payload as Op<DoPayload, UndoPayload>]);
+
+    return {
+      stack: newStack,
+      index: newStack.length,
+    };
   }
 
   if (action.type === UNDO_STACK_POPPED) {
-    return undoStack.slice(0, undoStack.length - 1);
+    const { stack, index } = undoStack;
+
+    return {
+      stack,
+      index: index - 1,
+    };
+  }
+
+  if (action.type === OP_REDONE) {
+    const { stack, index } = undoStack;
+
+    return {
+      stack,
+      index: index + 1,
+    };
   }
 
   return undoStack;

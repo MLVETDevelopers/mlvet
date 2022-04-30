@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from '../components/StandardButton';
 import { projectOpened } from '../store/actions';
-import { dispatchOp, dispatchUndo } from '../store/opHelpers';
+import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
 import {
   makeChangeWordToSwampOp,
@@ -72,6 +72,10 @@ const ProjectPage = () => {
     dispatchUndo(dispatch, undoStack);
   };
 
+  const redo: () => void = () => {
+    dispatchRedo(dispatch, undoStack);
+  };
+
   return (
     <>
       <Stack
@@ -116,7 +120,15 @@ const ProjectPage = () => {
             <StandardButton onClick={changeRandomWordToSwamp}>
               Change a random word to &lsquo;swamp&rsquo;
             </StandardButton>
-            <StandardButton onClick={undo}>Undo last action</StandardButton>
+            <StandardButton onClick={undo} disabled={undoStack.index <= 0}>
+              Undo last action
+            </StandardButton>
+            <StandardButton
+              onClick={redo}
+              disabled={undoStack.index >= undoStack.stack.length}
+            >
+              Redo last action
+            </StandardButton>
             <p>Undo stack:</p>
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(undoStack)}

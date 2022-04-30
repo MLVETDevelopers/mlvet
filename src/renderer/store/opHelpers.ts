@@ -1,31 +1,42 @@
 import { Dispatch } from 'redux';
-import { undoStackPopped, undoStackPushed } from './actions';
-import { Action, UndoStack } from './helpers';
+import { undoStackPopped, undoStackPushed, opRedone } from './actions';
+import { Op, UndoStack } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
-
-export interface Op<T extends DoPayload, U extends UndoPayload> {
-  do: Action<T>;
-  undo: Action<U>;
-}
 
 export const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
   dispatch: Dispatch,
   op: Op<T, U>
 ) => void = (dispatch, op) => {
-  console.log('Dispatching op');
   dispatch(op.do);
-  dispatch(undoStackPushed(op.undo));
+  dispatch(undoStackPushed(op));
 };
 
 export const dispatchUndo: (
   dispatch: Dispatch,
   undoStack: UndoStack
 ) => void = (dispatch, undoStack) => {
-  if (undoStack.length === 0) {
+  const { stack, index } = undoStack;
+
+  if (index <= 0) {
     return;
   }
 
-  const lastAction = undoStack[undoStack.length - 1];
-  dispatch(lastAction);
+  const lastAction = stack[index - 1];
+  dispatch(lastAction.undo);
   dispatch(undoStackPopped());
+};
+
+export const dispatchRedo: (
+  dispatch: Dispatch,
+  undoStack: UndoStack
+) => void = (dispatch, undoStack) => {
+  const { stack, index } = undoStack;
+
+  if (index >= stack.length) {
+    return;
+  }
+
+  const lastAction = stack[index];
+  dispatch(lastAction.do);
+  dispatch(opRedone());
 };

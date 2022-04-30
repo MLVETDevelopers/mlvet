@@ -1,6 +1,7 @@
 /* eslint-disable no-plusplus */
-import path from 'path';
-import { padZeros, integerDivide, writeFile, mkdir } from './utils';
+import { join } from 'path';
+import { Project, Transcription } from '../sharedTypes';
+import { padZeros, integerDivide, writeFile, mkdir } from './util';
 
 const secondToTimestamp = (num: number) => {
   return `${padZeros(integerDivide(num, 3600), 2)}:
@@ -26,17 +27,17 @@ const constructEDL = (title: string, transcription: Transcription) => {
       output += `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
   return output;
 };
 
-export const exportEDL = (project: ProjectBase) => {
+export const exportEDL = (project: Project) => {
   mkdir(project.savePath);
 
   if (project.transcription) {
     writeFile(
-      path.join(project.savePath, `${project.name}.edl`),
+      join(project.savePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
   }
@@ -46,20 +47,3 @@ const exportFuncs = {
   exportEDL,
 };
 export default exportFuncs;
-
-// Mock type, delete after merge
-type Transcription = { words: [Word] };
-
-type Word = {
-  text: string;
-  start_time: number;
-  duration: number;
-};
-
-interface ProjectBase {
-  schemaVersion: number;
-  name: string;
-  filePath: string;
-  savePath: string;
-  transcription: Transcription | null;
-}

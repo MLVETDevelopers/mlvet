@@ -144,7 +144,7 @@ export default class MenuBuilder {
           label: 'Undo',
           accelerator: 'CommandOrControl+Z',
           click: () => {
-            // Tell the renderer to initiaate an undo
+            // Tell the renderer to initiate an undo
             this.mainWindow.webContents.send('initiate-undo');
           },
           enabled: false, // initially disabled, becomes enabled when there are things to undo
@@ -154,7 +154,7 @@ export default class MenuBuilder {
           label: 'Redo',
           accelerator: 'Shift+CommandOrControl+Z',
           click: () => {
-            // Tell the renderer to initiaate a redo
+            // Tell the renderer to initiate a redo
             this.mainWindow.webContents.send('initiate-redo');
           },
           enabled: false, // initially disabled, becomes enabled when there are things to redo

@@ -18,7 +18,7 @@ import path from 'path';
 import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
 import handleOpenProject from './openProjectHandler';
-import startServer from './py_server';
+import startServer from './pyServer';
 import handleSaveProject from './saveProjectHandler';
 import handleTranscription from './transcriptionHandler';
 import { resolveHtmlPath } from './util';

@@ -2,7 +2,7 @@
 // If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron
 
 import { IpcRendererEvent } from 'electron';
-import { Project, Transcription } from 'sharedTypes';
+import { Project, Transcription } from '../sharedTypes';
 
 declare global {
   interface Window {

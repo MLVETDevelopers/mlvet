@@ -1,7 +1,7 @@
 interface Word {
   word: string;
 
-  start_time: number;
+  starTime: number;
 
   duration: number;
 }

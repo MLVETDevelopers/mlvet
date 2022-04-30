@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export: off, import/no-mutable-exports: off */
 import { URL } from 'url';
 import path from 'path';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -18,20 +18,12 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-export const padZeros = (num: number, len: number) => {
+export const padZeros: (num: number, len: number) => string = (num, len) => {
   return String(num).padStart(len, '0');
 };
 
-export const integerDivide = (a: number, b: number) => {
+export const integerDivide: (a: number, b: number) => number = (a, b) => {
   return Math.floor(a / b);
-};
-
-export const writeFile = (filePath: string, data: any) => {
-  try {
-    writeFileSync(filePath, data, { flag: 'w' });
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 export const mkdir = (dirPath: string) => {

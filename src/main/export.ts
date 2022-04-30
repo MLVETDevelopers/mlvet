@@ -1,35 +1,36 @@
 /* eslint-disable no-plusplus */
+import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Project } from '../sharedTypes';
 import Transcription from '../sharedTypes/Transcription';
-import { padZeros, integerDivide, writeFile, mkdir } from './util';
+import { padZeros, integerDivide, mkdir } from './util';
 
-const secondToTimestamp = (num: number) => {
-  return `${padZeros(integerDivide(num, 3600), 2)}:
-          ${padZeros(integerDivide(num, 60), 2)}:
-          ${padZeros(integerDivide(num, 1), 2)}:
-          ${padZeros(integerDivide(num, 0.01), 2)}`;
+// 00:00:00:00
+const secondToTimestamp: (num: number) => string = (num) => {
+  return [3600, 60, 1, 0.01]
+    .map((mult) => padZeros(integerDivide(num, mult), 2))
+    .join(':');
 };
 
-const constructEDL = (title: string, transcription: Transcription) => {
+const constructEDL: (title: string, transcription: Transcription) => string = (
+  title,
+  transcription
+) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
-  try {
-    const { words } = transcription;
-    const entries = words.length;
-    for (let i = 0; i < entries; i++) {
+  const { words } = transcription;
+  const entries = words.length;
+
+  output += words
+    .map((word, i) => {
       const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
 
-      const currWord = words[i];
-      const editStart = secondToTimestamp(currWord.start_time);
-      const editEnd = secondToTimestamp(
-        currWord.start_time + currWord.duration
-      );
+      const editStart = secondToTimestamp(word.starTime);
+      const editEnd = secondToTimestamp(word.starTime + word.duration);
 
-      output += `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
-    }
-  } catch (e) {
-    console.error(e);
-  }
+      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
+    })
+    .join('');
+
   return output;
 };
 
@@ -37,14 +38,11 @@ export const exportEDL = (project: Project) => {
   mkdir(project.savePath);
 
   if (project.transcription) {
-    writeFile(
+    writeFileSync(
       join(project.savePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
   }
 };
 
-const exportFuncs = {
-  exportEDL,
-};
-export default exportFuncs;
+export default exportEDL;

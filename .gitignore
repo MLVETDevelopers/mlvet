@@ -29,6 +29,3 @@ npm-debug.log.*
 *.scss.d.ts
 
 __pycache__
-
-# Export file directory
-export_files

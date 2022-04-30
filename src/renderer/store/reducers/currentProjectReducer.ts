@@ -1,4 +1,4 @@
-import { Project, Transcription, Word } from 'sharedTypes';
+import { Project, Transcription } from 'sharedTypes';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
@@ -6,11 +6,6 @@ import {
   TRANSCRIPTION_CREATED,
 } from '../actions';
 import { Action, ApplicationStore, initialStore } from '../helpers';
-import {
-  ChangeWordToSwampPayload,
-  UndoChangeWordToSwampPayload,
-  UndoDeleteEverySecondWordPayload,
-} from '../opPayloads';
 import {
   CHANGE_WORD_TO_SWAMP,
   DELETE_EVERY_SECOND_WORD,
@@ -41,15 +36,16 @@ const currentProjectReducer: (
     };
   }
 
+  // Delegate transcription-related actions to transcription reducer
   if (
     [
+      TRANSCRIPTION_CREATED,
       DELETE_EVERY_SECOND_WORD,
       UNDO_DELETE_EVERY_SECOND_WORD,
       CHANGE_WORD_TO_SWAMP,
       UNDO_CHANGE_WORD_TO_SWAMP,
     ].includes(action.type) &&
-    currentProject !== null &&
-    currentProject.transcription !== null
+    currentProject !== null
   ) {
     return {
       ...currentProject,

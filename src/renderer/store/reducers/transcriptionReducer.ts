@@ -1,3 +1,4 @@
+import { TRANSCRIPTION_CREATED } from '../actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../helpers';
 import {
@@ -16,17 +17,21 @@ import {
  *  Nested reducer for handling transcriptions
  */
 const transcriptionReducer: (
-  transcription: Transcription,
+  transcription: Transcription | null,
   action: Action<any>
-) => Transcription = (transcription, action) => {
-  if (action.type === DELETE_EVERY_SECOND_WORD) {
+) => Transcription | null = (transcription, action) => {
+  if (action.type === TRANSCRIPTION_CREATED) {
+    return action.payload as Transcription;
+  }
+
+  if (action.type === DELETE_EVERY_SECOND_WORD && transcription !== null) {
     return {
       ...transcription,
       words: transcription.words.filter((_, i) => i % 2 === 0),
     };
   }
 
-  if (action.type === UNDO_DELETE_EVERY_SECOND_WORD) {
+  if (action.type === UNDO_DELETE_EVERY_SECOND_WORD && transcription !== null) {
     const { deletedWords } = action.payload as UndoDeleteEverySecondWordPayload;
 
     const newWordList: Word[] = [];
@@ -45,7 +50,7 @@ const transcriptionReducer: (
     };
   }
 
-  if (action.type === CHANGE_WORD_TO_SWAMP) {
+  if (action.type === CHANGE_WORD_TO_SWAMP && transcription !== null) {
     return {
       ...transcription,
       words: transcription.words.map((v, i) => ({
@@ -58,7 +63,7 @@ const transcriptionReducer: (
     };
   }
 
-  if (action.type === UNDO_CHANGE_WORD_TO_SWAMP) {
+  if (action.type === UNDO_CHANGE_WORD_TO_SWAMP && transcription !== null) {
     const { index, changedWord } =
       action.payload as UndoChangeWordToSwampPayload;
 

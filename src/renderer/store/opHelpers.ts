@@ -6,6 +6,10 @@ import store from './store';
 const { setUndoRedoEnabled } = window.electron;
 const { dispatch } = store;
 
+/**
+ * Send a message to the back end, informing it whether the undo/redo buttons
+ * should be enabled in the edit menu based on the state of the undo stack
+ */
 const updateUndoRedoEnabledInMenu: () => void = () => {
   const { stack, index } = store.getState().undoStack;
 

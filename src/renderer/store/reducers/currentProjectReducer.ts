@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Project, Transcription } from 'sharedTypes';
+import { Project, Transcription } from '../../../sharedTypes';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
@@ -27,6 +27,7 @@ const currentProjectReducer: Reducer<
     return null;
   }
 
+  // Delegate transcription-related actions to transcription reducer
   if (action.type === TRANSCRIPTION_CREATED && currentProject !== null) {
     return {
       ...currentProject,

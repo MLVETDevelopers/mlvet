@@ -11,18 +11,19 @@ export interface ApplicationStore {
   currentPage: ApplicationPage;
 }
 
-const baseMockProject: Omit<Project, 'name'> = {
+const baseMockProject: Project = {
   schemaVersion: 1,
   mediaType: 'video',
   filePath: 'fakepath',
   fileExtension: 'mp4',
   transcription: null,
+  name: 'name',
 };
 
 export const initialStore: ApplicationStore = {
-  currentProject: null,
+  currentProject: baseMockProject,
   recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
     (name) => ({ ...baseMockProject, name: `${name} Project` } as VideoProject)
   ),
-  currentPage: ApplicationPage.HOME,
+  currentPage: ApplicationPage.PROJECT, // Changed from home page to increase load speed
 };

@@ -16,7 +16,21 @@ const baseMockProject: Project = {
   mediaType: 'video',
   filePath: 'fakepath',
   fileExtension: 'mp4',
-  transcription: null,
+  transcription: {
+    confidence: 1,
+    words: [
+      {
+        word: 'yo',
+        start_time: 0,
+        duration: 1,
+      },
+      {
+        word: 'great job',
+        start_time: 1,
+        duration: 1,
+      },
+    ],
+  },
   name: 'name',
 };
 

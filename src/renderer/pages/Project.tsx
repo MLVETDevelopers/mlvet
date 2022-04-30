@@ -5,6 +5,12 @@ import StandardButton from 'renderer/components/StandardButton';
 import { projectOpened } from 'renderer/store/actions';
 import { ApplicationStore } from '../store/helpers';
 
+/*
+This is the page that gets displayed while you are editting a video.
+It will be primarily composed of the transcription area, an editable text box whose
+changes get reflected in the video. In addition to that, there is a video preview
+section to the side among other things.
+*/
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
@@ -35,6 +41,13 @@ const ProjectPage = () => {
     <StandardButton onClick={handleOpenProject}>Open</StandardButton>
   );
 
+  // Turn the words in the transcription into a string
+  const text = currentProject.transcription?.words
+    .map((word) => {
+      return word.word;
+    })
+    .join(' ');
+
   return (
     <>
       <Stack
@@ -55,7 +68,7 @@ const ProjectPage = () => {
               height: '100%',
             }}
           >
-            {'transcription area '.repeat(150)}
+            {text /* This is where the transcription is added */}
           </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />

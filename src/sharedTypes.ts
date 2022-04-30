@@ -7,6 +7,7 @@ export type Word = {
   duration: number;
 };
 
+
 export interface ProjectBase {
   schemaVersion: number;
   name: string;

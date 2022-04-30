@@ -1,14 +1,21 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import StandardButton from 'renderer/components/StandardButton';
-import { projectOpened } from 'renderer/store/actions';
+import StandardButton from '../components/StandardButton';
+import { projectOpened } from '../store/actions';
+import { dispatchOp, dispatchUndo } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
+import {
+  makeChangeWordToSwampOp,
+  makeDeleteEverySecondWordOp,
+} from '../store/ops';
 
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   const dispatch = useDispatch();
 
@@ -35,6 +42,36 @@ const ProjectPage = () => {
     <StandardButton onClick={handleOpenProject}>Open</StandardButton>
   );
 
+  const deleteEverySecondWord: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    dispatchOp(
+      dispatch,
+      makeDeleteEverySecondWordOp(currentProject.transcription)
+    );
+  };
+
+  const changeRandomWordToSwamp: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    const wordIndex = Math.floor(
+      Math.random() * currentProject.transcription.words.length
+    );
+
+    dispatchOp(
+      dispatch,
+      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
+    );
+  };
+
+  const undo: () => void = () => {
+    dispatchUndo(dispatch, undoStack);
+  };
+
   return (
     <>
       <Stack
@@ -55,7 +92,9 @@ const ProjectPage = () => {
               height: '100%',
             }}
           >
-            {'transcription area '.repeat(150)}
+            {currentProject.transcription?.words
+              .map((word) => word.word)
+              .join(' ')}
           </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
@@ -69,6 +108,18 @@ const ProjectPage = () => {
             Current project data:{' '}
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(currentProject)}
+            </pre>
+            <p>Buttons to demo undo</p>
+            <StandardButton onClick={deleteEverySecondWord}>
+              Delete Every Second Word
+            </StandardButton>
+            <StandardButton onClick={changeRandomWordToSwamp}>
+              Change a random word to &lsquo;swamp&rsquo;
+            </StandardButton>
+            <StandardButton onClick={undo}>Undo last action</StandardButton>
+            <p>Undo stack:</p>
+            <pre style={{ width: '200px', overflow: 'auto' }}>
+              {JSON.stringify(undoStack)}
             </pre>
           </div>
         </Stack>

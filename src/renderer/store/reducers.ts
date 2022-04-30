@@ -3,13 +3,31 @@ import {
   PROJECT_CREATED,
   CURRENT_PROJECT_CLOSED,
   RECENT_PROJECT_ADDED,
-  Action,
   TRANSCRIPTION_CREATED,
   PROJECT_OPENED,
   PAGE_CHANGED,
+  UNDO_STACK_PUSHED,
+  UNDO_STACK_POPPED,
 } from './actions';
-import { ApplicationStore, ApplicationPage, initialStore } from './helpers';
-import { Project, Transcription } from '../../sharedTypes';
+import {
+  ApplicationStore,
+  ApplicationPage,
+  initialStore,
+  Action,
+} from './helpers';
+import { Project, Transcription, Word } from '../../sharedTypes';
+import {
+  ChangeWordToSwampPayload,
+  UndoChangeWordToSwampPayload,
+  UndoDeleteEverySecondWordPayload,
+  UndoPayload,
+} from './opPayloads';
+import {
+  CHANGE_WORD_TO_SWAMP,
+  DELETE_EVERY_SECOND_WORD,
+  UNDO_CHANGE_WORD_TO_SWAMP,
+  UNDO_DELETE_EVERY_SECOND_WORD,
+} from './ops';
 
 const currentProjectReducer: (
   currentProject: ApplicationStore['currentProject'],
@@ -30,6 +48,84 @@ const currentProjectReducer: (
     return {
       ...currentProject,
       transcription: action.payload as Transcription,
+    };
+  }
+
+  if (
+    action.type === DELETE_EVERY_SECOND_WORD &&
+    currentProject !== null &&
+    currentProject.transcription !== null
+  ) {
+    return {
+      ...currentProject,
+      transcription: {
+        ...currentProject.transcription,
+        words: currentProject.transcription.words.filter((_, i) => i % 2 === 0),
+      },
+    };
+  }
+
+  if (
+    action.type === UNDO_DELETE_EVERY_SECOND_WORD &&
+    currentProject !== null &&
+    currentProject.transcription !== null
+  ) {
+    const { deletedWords } = action.payload as UndoDeleteEverySecondWordPayload;
+
+    const newWordList: Word[] = [];
+
+    currentProject.transcription.words.forEach((word, i) => {
+      newWordList.push(word);
+      if (i < deletedWords.length) {
+        newWordList.push(deletedWords[i]);
+      }
+    });
+
+    return {
+      ...currentProject,
+      transcription: {
+        ...currentProject.transcription,
+        words: newWordList,
+      },
+    };
+  }
+
+  if (
+    action.type === CHANGE_WORD_TO_SWAMP &&
+    currentProject !== null &&
+    currentProject.transcription !== null
+  ) {
+    return {
+      ...currentProject,
+      transcription: {
+        ...currentProject.transcription,
+        words: currentProject.transcription.words.map((v, i) => ({
+          ...v,
+          word:
+            i === (action.payload as ChangeWordToSwampPayload).index
+              ? 'SWAMP'
+              : v.word,
+        })),
+      },
+    };
+  }
+
+  if (
+    action.type === UNDO_CHANGE_WORD_TO_SWAMP &&
+    currentProject !== null &&
+    currentProject.transcription !== null
+  ) {
+    const { index, changedWord } =
+      action.payload as UndoChangeWordToSwampPayload;
+
+    return {
+      ...currentProject,
+      transcription: {
+        ...currentProject.transcription,
+        words: currentProject.transcription.words.map((v, i) =>
+          i === index ? changedWord : v
+        ),
+      },
     };
   }
 
@@ -64,10 +160,29 @@ const currentPageReducer: (
   return currentPage;
 };
 
+const undoStackReducer: (
+  currentPage: ApplicationStore['undoStack'],
+  action: Action<any>
+) => ApplicationStore['undoStack'] = (
+  undoStack = initialStore.undoStack,
+  action
+) => {
+  if (action.type === UNDO_STACK_PUSHED) {
+    return undoStack.concat([action.payload as Action<UndoPayload>]);
+  }
+
+  if (action.type === UNDO_STACK_POPPED) {
+    return undoStack.slice(0, undoStack.length - 1);
+  }
+
+  return undoStack;
+};
+
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
   recentProjects: recentProjectsReducer,
   currentPage: currentPageReducer,
+  undoStack: undoStackReducer,
 });
 
 export default rootReducer;

@@ -21,13 +21,6 @@ const currentProjectReducer: Reducer<
     return null;
   }
 
-  if (action.type === TRANSCRIPTION_CREATED && currentProject !== null) {
-    return {
-      ...currentProject,
-      transcription: action.payload as Transcription,
-    };
-  }
-
   // Delegate transcription-related actions to transcription reducer
   if (action.type === TRANSCRIPTION_CREATED && currentProject !== null) {
     return {

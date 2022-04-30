@@ -129,6 +129,7 @@ const ProjectPage = () => {
             >
               Redo last action
             </StandardButton>
+            <p>Or, use shortcuts from edit menu to undo/redo</p>
             <p>Undo stack:</p>
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(undoStack)}

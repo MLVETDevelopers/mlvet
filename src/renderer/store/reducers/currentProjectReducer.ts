@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Project, Transcription } from 'sharedTypes';
+import { Project } from 'sharedTypes';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,

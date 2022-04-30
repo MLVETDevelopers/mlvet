@@ -1,3 +1,4 @@
+import { Reducer } from 'redux';
 import { Project, Transcription } from 'sharedTypes';
 import {
   CURRENT_PROJECT_CLOSED,
@@ -14,13 +15,10 @@ import {
 } from '../ops';
 import transcriptionReducer from './transcriptionReducer';
 
-const currentProjectReducer: (
-  currentProject: ApplicationStore['currentProject'],
-  action: Action<any>
-) => ApplicationStore['currentProject'] = (
-  currentProject = initialStore.currentProject,
-  action
-) => {
+const currentProjectReducer: Reducer<
+  ApplicationStore['currentProject'],
+  Action<any>
+> = (currentProject = initialStore.currentProject, action) => {
   if (action.type === PROJECT_CREATED || action.type === PROJECT_OPENED) {
     return action.payload as Project;
   }

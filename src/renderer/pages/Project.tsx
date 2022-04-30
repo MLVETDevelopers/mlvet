@@ -47,10 +47,7 @@ const ProjectPage = () => {
       return;
     }
 
-    dispatchOp(
-      dispatch,
-      makeDeleteEverySecondWordOp(currentProject.transcription)
-    );
+    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
   };
 
   const changeRandomWordToSwamp: () => void = () => {
@@ -63,17 +60,8 @@ const ProjectPage = () => {
     );
 
     dispatchOp(
-      dispatch,
       makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
     );
-  };
-
-  const undo: () => void = () => {
-    dispatchUndo(dispatch, undoStack);
-  };
-
-  const redo: () => void = () => {
-    dispatchRedo(dispatch, undoStack);
   };
 
   return (
@@ -120,11 +108,14 @@ const ProjectPage = () => {
             <StandardButton onClick={changeRandomWordToSwamp}>
               Change a random word to &lsquo;swamp&rsquo;
             </StandardButton>
-            <StandardButton onClick={undo} disabled={undoStack.index <= 0}>
+            <StandardButton
+              onClick={dispatchUndo}
+              disabled={undoStack.index <= 0}
+            >
               Undo last action
             </StandardButton>
             <StandardButton
-              onClick={redo}
+              onClick={dispatchRedo}
               disabled={undoStack.index >= undoStack.stack.length}
             >
               Redo last action

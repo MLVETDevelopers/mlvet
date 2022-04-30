@@ -1,27 +1,37 @@
-import { Dispatch } from 'redux';
 import { undoStackPopped, undoStackPushed, opRedone } from './actions';
-import { Op, UndoStack } from './helpers';
+import { Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
+import store from './store';
+
+const { setUndoRedoEnabled } = window.electron;
+const { dispatch } = store;
+
+const updateUndoRedoEnabledInMenu: () => void = () => {
+  const { stack, index } = store.getState().undoStack;
+
+  const undoEnabled = index > 0;
+  const redoEnabled = index < stack.length;
+
+  setUndoRedoEnabled(undoEnabled, redoEnabled);
+};
 
 /**
  * Dispatches an op, running its 'do' action and giving the undo stack a reference to the op.
  */
 export const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
-  dispatch: Dispatch,
   op: Op<T, U>
-) => void = (dispatch, op) => {
+) => void = (op) => {
   // Dispatch the actual action
   dispatch(op.do);
 
   // Push the entire op to the undo stack, so that we can support undo and redo of this action
   dispatch(undoStackPushed(op));
+
+  updateUndoRedoEnabledInMenu();
 };
 
-export const dispatchUndo: (
-  dispatch: Dispatch,
-  undoStack: UndoStack
-) => void = (dispatch, undoStack) => {
-  const { stack, index } = undoStack;
+export const dispatchUndo: () => void = () => {
+  const { stack, index } = store.getState().undoStack;
 
   // If we're at the beginning of the stack, there's nothing to undo
   if (index <= 0) {
@@ -37,13 +47,12 @@ export const dispatchUndo: (
 
   // Let the undo stack know we just did an undo so it can decrement its index
   dispatch(undoStackPopped());
+
+  updateUndoRedoEnabledInMenu();
 };
 
-export const dispatchRedo: (
-  dispatch: Dispatch,
-  undoStack: UndoStack
-) => void = (dispatch, undoStack) => {
-  const { stack, index } = undoStack;
+export const dispatchRedo: () => void = () => {
+  const { stack, index } = store.getState().undoStack;
 
   // If we're at the end of the stack, there's nothing to redo
   if (index >= stack.length) {
@@ -59,4 +68,6 @@ export const dispatchRedo: (
 
   // Let the undo stack know we just did a redo so it can increment its index
   dispatch(opRedone());
+
+  updateUndoRedoEnabledInMenu();
 };

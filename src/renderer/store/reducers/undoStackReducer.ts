@@ -1,3 +1,4 @@
+import { Reducer } from 'redux';
 import {
   PROJECT_OPENED,
   CURRENT_PROJECT_CLOSED,
@@ -8,10 +9,7 @@ import {
 import { Action, ApplicationStore, initialStore, Op } from '../helpers';
 import { DoPayload, UndoPayload } from '../opPayloads';
 
-const undoStackReducer: (
-  undoStack: ApplicationStore['undoStack'],
-  action: Action<any>
-) => ApplicationStore['undoStack'] = (
+const undoStackReducer: Reducer<ApplicationStore['undoStack'], Action<any>> = (
   undoStack = initialStore.undoStack,
   action
 ) => {

@@ -4,10 +4,9 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  ipcMain,
+  IpcMain,
 } from 'electron';
 import handleOpenProject from './openProjectHandler';
-import handleSaveProject from './saveProjectHandler';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -39,6 +38,33 @@ export default class MenuBuilder {
 
     return menu;
   }
+
+  setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
+    ipcMain.handle(
+      'set-undo-redo-enabled',
+      (_event, undoEnabled: boolean, redoEnabled: boolean) => {
+        const editSubmenu = menu.items.find((submenu) => submenu.id === 'edit');
+
+        if (!editSubmenu) {
+          return;
+        }
+
+        const undoButton = editSubmenu.submenu?.items.find(
+          (item) => item.id === 'undo'
+        );
+        const redoButton = editSubmenu.submenu?.items.find(
+          (item) => item.id === 'redo'
+        );
+
+        if (!undoButton || !redoButton) {
+          return;
+        }
+
+        undoButton.enabled = undoEnabled;
+        redoButton.enabled = redoEnabled;
+      }
+    );
+  };
 
   setupDevelopmentEnvironment(): void {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
@@ -110,23 +136,28 @@ export default class MenuBuilder {
     };
 
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
+      id: 'edit', // do not change, used by IPC to find this menu
       label: 'Edit',
       submenu: [
         {
+          id: 'undo', // do not change, used by IPC to listen for enable/disable undo
           label: 'Undo',
           accelerator: 'CommandOrControl+Z',
           click: () => {
             // Tell the renderer to initiaate an undo
             this.mainWindow.webContents.send('initiate-undo');
           },
+          enabled: false, // initially disabled, becomes enabled when there are things to undo
         },
         {
+          id: 'redo', // do not change, used by IPC to listen for enable/disable redo
           label: 'Redo',
           accelerator: 'Shift+CommandOrControl+Z',
           click: () => {
             // Tell the renderer to initiaate a redo
             this.mainWindow.webContents.send('initiate-redo');
           },
+          enabled: false, // initially disabled, becomes enabled when there are things to redo
         },
         { type: 'separator' },
         { label: 'Cut', accelerator: 'CommandOrControl+X', selector: 'cut:' },

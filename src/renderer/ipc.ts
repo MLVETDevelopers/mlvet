@@ -29,12 +29,12 @@ window.electron.on('project-opened', async (_event, project: Project) => {
  * Used by backend to initiate undo from edit menu
  */
 window.electron.on('initiate-undo', async () => {
-  dispatchUndo(store.dispatch, store.getState().undoStack);
+  dispatchUndo();
 });
 
 /**
  * Used by backend to initiate redo from edit menu
  */
 window.electron.on('initiate-redo', async () => {
-  dispatchRedo(store.dispatch, store.getState().undoStack);
+  dispatchRedo();
 });

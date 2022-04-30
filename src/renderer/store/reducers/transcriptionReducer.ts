@@ -1,3 +1,4 @@
+import { Reducer } from 'redux';
 import { TRANSCRIPTION_CREATED } from '../actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../helpers';
@@ -16,10 +17,10 @@ import {
 /**
  *  Nested reducer for handling transcriptions
  */
-const transcriptionReducer: (
-  transcription: Transcription | null,
-  action: Action<any>
-) => Transcription | null = (transcription, action) => {
+const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
+  transcription = null,
+  action
+) => {
   if (action.type === TRANSCRIPTION_CREATED) {
     return action.payload as Transcription;
   }

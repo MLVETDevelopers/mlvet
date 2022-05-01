@@ -23,6 +23,8 @@ import {
   handleTranscription,
   extractAudio,
   extractThumbnail,
+  readRecentProjects,
+  writeRecentProjects,
 } from './handlers';
 import startServer from './pyServer';
 import { resolveHtmlPath } from './util';
@@ -54,6 +56,12 @@ ipcMain.handle('save-project', async (_event, project) =>
 );
 
 ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
+
+ipcMain.handle('read-recent-projects', async () => readRecentProjects());
+
+ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
+  writeRecentProjects(recentProjects)
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

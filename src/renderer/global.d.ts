@@ -12,6 +12,8 @@ declare global {
       saveProject: (project: Project) => Promise<void>;
       openProject: () => Promise<Project>;
       extractThumbnail: (filePath: string) => Promise<string>;
+      readRecentProjects: () => Promise<Project[]>;
+      writeRecentProjects: (recentProjects: Project[]) => Promise<void>;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

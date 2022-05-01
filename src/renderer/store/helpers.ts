@@ -1,4 +1,4 @@
-import { Project, VideoProject } from '../../sharedTypes';
+import { Project } from '../../sharedTypes';
 
 export enum ApplicationPage {
   HOME = 'HOME',
@@ -27,7 +27,7 @@ const baseMockProject: Omit<Project, 'name'> = {
 export const initialStore: ApplicationStore = {
   currentProject: null,
   recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
-    (name) => ({ ...baseMockProject, name: `${name} Project` } as VideoProject)
+    (name) => ({ ...baseMockProject, name: `${name} Project` })
   ),
   currentPage: ApplicationPage.HOME,
 };

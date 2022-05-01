@@ -1,8 +1,9 @@
+import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
-  Project,
   AudioFileExtension,
+  Project,
   VideoFileExtension,
-} from './store/helpers';
+} from '../sharedTypes';
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -49,20 +50,14 @@ export const makeProject: (
     return null;
   }
 
-  const project: Project =
-    mediaType === 'audio'
-      ? {
-          name: projectName,
-          mediaType: 'audio',
-          fileExtension: fileExtension as AudioFileExtension,
-          filePath: mediaFilePath,
-        }
-      : {
-          name: projectName,
-          mediaType: 'video',
-          fileExtension: fileExtension as VideoFileExtension,
-          filePath: mediaFilePath,
-        };
+  const project: Project = {
+    name: projectName,
+    mediaType,
+    fileExtension: fileExtension as AudioFileExtension | VideoFileExtension,
+    filePath: mediaFilePath,
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    transcription: null,
+  };
 
   return project;
 };

@@ -1,8 +1,10 @@
-export interface ProjectBase {
+export interface Project {
   schemaVersion: number;
   name: string;
   filePath: string;
   transcription: Transcription | null;
+  mediaType: 'audio' | 'video';
+  fileExtension: AudioFileExtension | VideoFileExtension;
 }
 
 export interface Transcription {
@@ -20,15 +22,3 @@ export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
-
-export interface AudioProject extends ProjectBase {
-  mediaType: 'audio';
-  fileExtension: AudioFileExtension;
-}
-
-export interface VideoProject extends ProjectBase {
-  mediaType: 'video';
-  fileExtension: VideoFileExtension;
-}
-
-export type Project = AudioProject | VideoProject;

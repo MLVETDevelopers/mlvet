@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
 import { Project } from '../sharedTypes';
-import { CURRENT_SCHEMA_VERSION } from './constants';
+import { CURRENT_SCHEMA_VERSION } from '../constants';
 
 const getOpenFilePath: (
   mainWindow: BrowserWindow | null

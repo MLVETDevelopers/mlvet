@@ -27,7 +27,7 @@ import {
   writeRecentProjects,
 } from './handlers';
 import startServer from './pyServer';
-import { resolveHtmlPath } from './util';
+import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -40,6 +40,9 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
+
+// If app data storage path doesn't exist, create it
+mkdir(appDataStoragePath());
 
 ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 

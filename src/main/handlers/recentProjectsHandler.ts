@@ -2,10 +2,10 @@ import { app } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
 import { Project } from '../../sharedTypes';
+import { appDataStoragePath } from '../util';
 
 const RECENT_PROJECTS_PATH = path.join(
-  app.getPath('userData'),
-  'mlvet',
+  appDataStoragePath(),
   'recentProjects.json'
 );
 

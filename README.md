@@ -22,7 +22,7 @@ yarn
 
 This will install all dependencies required by electron needed to run the app.
 
-Then go into `src/py_server` and run
+Then go into `src/pyServer` and run
 
 ```bash
 pip install -r requirements.txt
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 This will install all dependencies required to run the python server.
 
-For Deepspeech transcription to work, you will need to also add the pre-trained model and scorer to `src/py_server`
+For Deepspeech transcription to work, you will need to also add the pre-trained model and scorer to `src/pyServer`
 
 ```bash
 curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm

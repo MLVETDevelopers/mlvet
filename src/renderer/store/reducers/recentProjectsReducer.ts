@@ -1,5 +1,5 @@
 import { Project } from 'sharedTypes';
-import { RECENT_PROJECT_ADDED } from '../actions';
+import { RECENT_PROJECTS_LOADED, RECENT_PROJECT_ADDED } from '../actions';
 import { Action, ApplicationStore, initialStore } from '../helpers';
 
 const recentProjectsReducer: (
@@ -11,6 +11,10 @@ const recentProjectsReducer: (
 ) => {
   if (action.type === RECENT_PROJECT_ADDED) {
     return [action.payload as Project, ...recentProjects];
+  }
+
+  if (action.type === RECENT_PROJECTS_LOADED) {
+    return action.payload as Project[];
   }
 
   return recentProjects;

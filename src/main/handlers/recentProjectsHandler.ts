@@ -5,6 +5,7 @@ import { Project } from '../../sharedTypes';
 
 const RECENT_PROJECTS_PATH = path.join(
   app.getPath('userData'),
+  'mlvet',
   'recentProjects.json'
 );
 

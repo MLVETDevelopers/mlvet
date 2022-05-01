@@ -1,8 +1,8 @@
 import { Box, colors, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
-import NewProjectModal from './NewProjectModal';
 import GenericSquareBox from './GenericSquareBox';
+import ModalContainer from './NewProjectModal/ModalContainer';
 
 const NewProjectBox = styled(Box)`
   background: ${colors.grey[900]};
@@ -27,7 +27,7 @@ const NewProjectBlock = () => {
         <AddIcon fontSize="large" />
         <Typography fontWeight="bold">New Project or Drag Media</Typography>
       </GenericSquareBox>
-      <NewProjectModal isOpen={isShowingModal} closeModal={closeModal} />
+      <ModalContainer isOpen={isShowingModal} closeModal={closeModal} />
     </NewProjectBox>
   );
 };

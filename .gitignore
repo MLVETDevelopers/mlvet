@@ -29,3 +29,10 @@ npm-debug.log.*
 *.scss.d.ts
 
 __pycache__
+
+assets/videos/demo-video.mp4
+assets/audio/audio.wav
+
+venv
+src/pyServer/deepspeech-0.9.3-models.pbmm
+src/pyServer/deepspeech-0.9.3-models.scorer

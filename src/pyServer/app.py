@@ -1,5 +1,4 @@
 from flask import Flask
-from background_removal import remove_background
 from transcription import transcribe
 
 app = Flask(__name__)
@@ -11,12 +10,6 @@ app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def start():
     return "<p>Hello world</p>"
-
-
-@app.route("/remove_bg", methods=["POST"])
-def handle_background():
-    remove_background()
-    return ""
 
 
 @app.route("/transcribe", methods=["POST"])

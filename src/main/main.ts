@@ -8,15 +8,22 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
-import dotenv from 'dotenv';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import { ChildProcess } from 'child_process';
+import dotenv from 'dotenv';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
-import startServer from './py_server';
+import path from 'path';
+import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
+import {
+  handleOpenProject,
+  handleSaveProject,
+  handleTranscription,
+  extractAudio,
+} from './handlers';
+import startServer from './pyServer';
 import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
@@ -31,11 +38,17 @@ let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
+
+ipcMain.handle('transcribe-media', async (_event, filePath) =>
+  handleTranscription(filePath)
+);
+
+ipcMain.handle('save-project', async (_event, project) =>
+  handleSaveProject(mainWindow, project)
+);
+
+ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -82,12 +95,13 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
     },
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  mainWindow.on('ready-to-show', () => {
+  mainWindow.on('ready-to-show', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -96,6 +110,11 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
+
+    const extractedPath = await extractAudio(
+      path.join(process.cwd(), 'assets/videos/demo-video.mp4')
+    );
+    console.log(`Extracted audio to: ${extractedPath}`);
 
     pyServer = startServer();
 

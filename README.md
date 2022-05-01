@@ -30,6 +30,17 @@ pip install -r requirements.txt
 
 This will install all dependencies required to run the python server.
 
+For Deepspeech transcription to work, you will need to also add the pre-trained model and scorer to `src/py_server`
+
+```bash
+curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
+curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
+```
+
+If you encounter an import error `ImportError: DLL load failed: The specified module could not be found.` when trying to use Deepspeech, you may need to move the `libdeepspeech.so` file from
+`Lib/site-packages/deepspeech/lib/libdeepspeech.so` to
+`Lib/site-packages/deepspeech/libdeepspeech.so` (in your virtual environment).
+
 ## Additional steps you need to follow
 
 After the [audio extract PR](https://github.com/patrickbrett/mlvet/pull/12) got merged you will now need to have a `demo-vdieo.mp4` video file under `assets/videos`

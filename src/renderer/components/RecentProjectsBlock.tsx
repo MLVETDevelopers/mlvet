@@ -1,36 +1,43 @@
-import { Box, Typography, styled, colors } from '@mui/material';
+import { Box, Typography, styled, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
+import colors from '../colors';
 import { ApplicationStore } from '../store/helpers';
 import GenericSquareBox from './GenericSquareBox';
 
 const RecentProjectsBox = styled(Box)`
-  background: ${colors.grey[900]};
   width: calc(100vw - 80px);
   margin: 20px;
   padding: 20px;
 `;
 
-const ProjectsListBox = styled(Box)`
-  margin-top: 20px;
-  display: flex;
-  overflow-x: auto;
+const RecentProjectsItem = styled(Box)`
+  background: ${colors.grey[700]};
 `;
 
 const RecentProjectsBlock = () => {
-  const recentProjects = useSelector(
-    (store: ApplicationStore) => store.recentProjects
-  );
+  // const recentProjects = useSelector(
+  //   (store: ApplicationStore) => store.recentProjects
+  // );
+
+  const recentProjects = [
+    { name: 'Google Poly', dateModified: '27/07/21', size: '100MB' },
+    { name: 'Game with no players', dateModified: '24/10/20', size: '159MB' },
+  ];
 
   return (
     <RecentProjectsBox>
       <Typography fontWeight="bold">Recent Projects</Typography>
-      <ProjectsListBox>
-        {recentProjects.map(({ name }) => (
-          <GenericSquareBox key={name}>
-            <Typography fontWeight="bold">{name}</Typography>
-          </GenericSquareBox>
+      <Stack spacing={2}>
+        {recentProjects.map(({ name, dateModified, size }) => (
+          <RecentProjectsItem key={name}>
+            <Stack direction="row" justifyContent="space-around">
+              <Typography>{name}</Typography>
+              <Typography>{dateModified}</Typography>
+              <Typography>{size}</Typography>
+            </Stack>
+          </RecentProjectsItem>
         ))}
-      </ProjectsListBox>
+      </Stack>
     </RecentProjectsBox>
   );
 };

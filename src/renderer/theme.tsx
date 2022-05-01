@@ -20,6 +20,9 @@ const theme = responsiveFontSizes(
       },
     },
     typography: {
+      body1: {
+        color: colors.grey[300],
+      },
       fontFamily: ['Rubik', 'sans-serif'].join(','),
       'h-100': {
         fontSize: '24px',

@@ -1,6 +1,7 @@
 export interface Project {
   schemaVersion: number;
   name: string;
+  savePath: string;
   filePath: string;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';

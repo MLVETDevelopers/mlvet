@@ -1,13 +1,20 @@
-// TODO: Define transcription schema (this is just a mockup)
-
-import Transcription from './sharedTypes/Transcription';
-
 export interface ProjectBase {
   schemaVersion: number;
   name: string;
   savePath: string;
   filePath: string;
   transcription: Transcription | null;
+}
+
+export interface Transcription {
+  confidence: number;
+  words: Word[];
+}
+
+export interface Word {
+  word: string;
+  startTime: number;
+  duration: number;
 }
 
 export type AudioFileExtension = 'mp3';

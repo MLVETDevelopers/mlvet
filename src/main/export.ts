@@ -1,8 +1,7 @@
 /* eslint-disable no-plusplus */
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-import { Project } from '../sharedTypes';
-import Transcription from '../sharedTypes/Transcription';
+import { Project, Transcription } from '../sharedTypes';
 import { padZeros, integerDivide, mkdir } from './util';
 
 // 00:00:00:00
@@ -24,8 +23,8 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
     .map((word, i) => {
       const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
 
-      const editStart = secondToTimestamp(word.starTime);
-      const editEnd = secondToTimestamp(word.starTime + word.duration);
+      const editStart = secondToTimestamp(word.startTime);
+      const editEnd = secondToTimestamp(word.startTime + word.duration);
 
       return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
     })

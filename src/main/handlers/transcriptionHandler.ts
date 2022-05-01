@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
-import { Transcription } from '../sharedTypes';
+import { Transcription } from '../../sharedTypes';
 
 /**
  * util to simulate running of transcription

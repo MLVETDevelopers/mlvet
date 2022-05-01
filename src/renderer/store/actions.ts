@@ -1,4 +1,4 @@
-import { Project, Transcription } from '../../sharedTypes';
+import { Project, RecentProject, Transcription } from '../../sharedTypes';
 import { Action, ApplicationPage } from './helpers';
 
 export const PROJECT_CREATED = 'PROJECT_CREATED';
@@ -8,6 +8,7 @@ export const RECENT_PROJECT_ADDED = 'RECENT_PROJECT_ADDED';
 export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 export const PAGE_CHANGED = 'PAGE_CHANGED';
 export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
+export const PROJECT_SAVED = 'PROJECT_SAVED';
 
 export const projectCreated: (project: Project) => Action<Project> = (
   project
@@ -16,11 +17,23 @@ export const projectCreated: (project: Project) => Action<Project> = (
   payload: project,
 });
 
-export const projectOpened: (project: Project) => Action<Project> = (
-  project
-) => ({
+export const projectOpened: (
+  project: Project,
+  filePath: string
+) => Action<{ project: Project; filePath: string }> = (project, filePath) => ({
   type: PROJECT_OPENED,
-  payload: project,
+  payload: { project, filePath },
+});
+
+export const projectSaved: (
+  projectId: string,
+  filePath: string
+) => Action<{
+  projectId: string;
+  filePath: string;
+}> = (projectId, filePath) => ({
+  type: PROJECT_SAVED,
+  payload: { projectId, filePath },
 });
 
 export const currentProjectClosed: () => Action<null> = () => ({
@@ -28,9 +41,9 @@ export const currentProjectClosed: () => Action<null> = () => ({
   payload: null,
 });
 
-export const recentProjectAdded: (project: Project) => Action<Project> = (
-  project
-) => ({
+export const recentProjectAdded: (
+  project: RecentProject
+) => Action<RecentProject> = (project) => ({
   type: RECENT_PROJECT_ADDED,
   payload: project,
 });
@@ -50,8 +63,8 @@ export const pageChanged: (page: ApplicationPage) => Action<ApplicationPage> = (
 });
 
 export const recentProjectsLoaded: (
-  recentProjects: Project[]
-) => Action<Project[]> = (recentProjects) => ({
+  recentProjects: RecentProject[]
+) => Action<RecentProject[]> = (recentProjects) => ({
   type: RECENT_PROJECTS_LOADED,
   payload: recentProjects,
 });

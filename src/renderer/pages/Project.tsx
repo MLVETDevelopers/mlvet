@@ -2,7 +2,7 @@ import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
-import { projectOpened } from 'renderer/store/actions';
+import { projectOpened, projectSaved } from '../store/actions';
 import { ApplicationStore } from '../store/helpers';
 
 const ProjectPage = () => {
@@ -18,17 +18,20 @@ const ProjectPage = () => {
 
   const handleOpenProject = async () => {
     try {
-      const project = await window.electron.openProject();
-      dispatch(projectOpened(project));
+      const { project, filePath } = await window.electron.openProject();
+      dispatch(projectOpened(project, filePath));
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleSaveProject = async () => {
+    const filePath = await window.electron.saveProject(currentProject);
+    dispatch(projectSaved(currentProject.id, filePath));
+  };
+
   const saveButton = (
-    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
-      Save
-    </StandardButton>
+    <StandardButton onClick={handleSaveProject}>Save</StandardButton>
   );
 
   const openButton = (

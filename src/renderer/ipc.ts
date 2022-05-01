@@ -1,5 +1,5 @@
 import { Project } from '../sharedTypes';
-import { projectOpened, pageChanged } from './store/actions';
+import { projectOpened, pageChanged, projectSaved } from './store/actions';
 import { ApplicationPage } from './store/helpers';
 import store from './store/store';
 
@@ -13,13 +13,18 @@ window.electron.on('initiate-save-project', async () => {
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  await window.electron.saveProject(currentProject);
+  const filePath = await window.electron.saveProject(currentProject);
+
+  store.dispatch(projectSaved(currentProject.id, filePath));
 });
 
 /**
  * Used by backend to notify front end that a project was opened
  */
-window.electron.on('project-opened', async (_event, project: Project) => {
-  store.dispatch(projectOpened(project));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+window.electron.on(
+  'project-opened',
+  async (_event, project: Project, filePath: string) => {
+    store.dispatch(projectOpened(project, filePath));
+    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+  }
+);

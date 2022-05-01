@@ -63,12 +63,17 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   );
 
   useEffect(() => {
-    if (currentProject === null || asyncState !== AsyncState.READY) {
+    if (
+      currentProject === null ||
+      currentProject.mediaFilePath === null ||
+      asyncState !== AsyncState.READY
+    ) {
       return;
     }
     setAsyncState(AsyncState.LOADING);
+
     window.electron
-      .requestTranscription(currentProject.filePath)
+      .requestTranscription(currentProject.mediaFilePath)
       .then((transcription) => {
         setAsyncState(AsyncState.DONE);
         setTranscription(transcription);

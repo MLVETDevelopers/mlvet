@@ -15,7 +15,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
 import path from 'path';
-import showImportMediaDialog from './fileDialog';
+import showImportMediaDialog from './handlers/fileDialog';
 import MenuBuilder from './menu';
 import {
   handleOpenProject,
@@ -28,6 +28,7 @@ import {
 } from './handlers';
 import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
+import initialiseIpcHandlers from './ipc';
 
 export default class AppUpdater {
   constructor() {
@@ -43,28 +44,6 @@ dotenv.config();
 
 // If app data storage path doesn't exist, create it
 mkdir(appDataStoragePath());
-
-ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
-
-ipcMain.handle('transcribe-media', async (_event, filePath) =>
-  handleTranscription(filePath)
-);
-
-ipcMain.handle('extract-thumbnail', async (_event, filePath) =>
-  extractThumbnail(filePath)
-);
-
-ipcMain.handle('save-project', async (_event, project) =>
-  handleSaveProject(mainWindow, project)
-);
-
-ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
-
-ipcMain.handle('read-recent-projects', async () => readRecentProjects());
-
-ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
-  writeRecentProjects(recentProjects)
-);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -114,6 +93,8 @@ const createWindow = async () => {
       nodeIntegration: true,
     },
   });
+
+  initialiseIpcHandlers(mainWindow);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

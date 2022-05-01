@@ -1,4 +1,4 @@
-import { Project } from '../../sharedTypes';
+import { Project, RecentProject } from '../../sharedTypes';
 
 export enum ApplicationPage {
   HOME = 'HOME',
@@ -12,7 +12,7 @@ export type Action<T> = {
 
 export interface ApplicationStore {
   currentProject: Project | null;
-  recentProjects: Project[];
+  recentProjects: RecentProject[];
   currentPage: ApplicationPage;
 }
 

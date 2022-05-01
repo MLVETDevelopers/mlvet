@@ -3,6 +3,8 @@ import handleOpenProject_ from './openProjectHandler';
 import handleSaveProject_ from './saveProjectHandler';
 import handleTranscription_ from './transcriptionHandler';
 import extractThumbnail_ from './thumbnailExtract';
+import retrieveProjectMetadata_ from './projectMetadataHandler';
+import showImportMediaDialog_ from './fileDialog';
 
 export {
   readRecentProjects,
@@ -16,3 +18,5 @@ export const handleOpenProject = handleOpenProject_;
 export const handleSaveProject = handleSaveProject_;
 export const handleTranscription = handleTranscription_;
 export const extractThumbnail = extractThumbnail_;
+export const retrieveProjectMetadata = retrieveProjectMetadata_;
+export const showImportMediaDialog = showImportMediaDialog_;

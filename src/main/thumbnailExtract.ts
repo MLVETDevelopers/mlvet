@@ -14,6 +14,7 @@ export default function extractThumbnail(
 
   console.log('Started thumbnail extraction');
 
+  // By Default the image is picked from the middle of the video.
   const command = ffmpeg(absolutePathToVideoFile).thumbnails({
     count: 1,
     filename: 'thumbnail.png',

@@ -1,4 +1,4 @@
-from src.py_server.transcription import *
+from src.pyServer.transcription import *
 import unittest
 import json
 import os
@@ -32,4 +32,5 @@ class TestTranscription(unittest.TestCase):
                 }
             ]
         }
+
         self.assertEquals(actual, expected)

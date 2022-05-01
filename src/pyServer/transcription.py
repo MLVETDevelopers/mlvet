@@ -1,20 +1,21 @@
 # See README.md Installation instructions if you encounter an import error trying to run deepspeech
 import subprocess as sp
+import os
 
 
 def transcribe(audio_filepath):
+    output_filename = "transcription_output.txt"
     sp.getoutput("deepspeech " \
               "--model deepspeech-0.9.3-models.pbmm " \
               "--scorer deepspeech-0.9.3-models.scorer " \
               "--audio " + audio_filepath + " " \
               "--candidate_transcripts 1 " \
               "--json " \
-              "> output.txt")
+              "> " + output_filename)
 
-    with open("output.txt", "r") as text_file:
-        output = text_file.read()
+    with open(output_filename, "r") as text_file:
+        transcription_output = text_file.read()
 
-    return output
+    os.remove(output_filename)
 
-
-print(transcribe("audio/2830-3980-0043.wav"))
+    return transcription_output

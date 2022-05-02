@@ -78,8 +78,8 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
 
     const project = await makeProject(projectName, mediaFilePath);
     if (project === null) {
-      return;
       setAwaitingProjectCreate(false);
+      return;
     }
 
     setCurrentProject(project);

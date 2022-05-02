@@ -1,7 +1,6 @@
 import { Box, Stack, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
-import GenericSquareBox from './GenericSquareBox';
 import ModalContainer from './NewProjectModal/ModalContainer';
 import colors from '../colors';
 

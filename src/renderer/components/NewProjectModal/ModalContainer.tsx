@@ -45,6 +45,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     setCurrentView((prev) => prev + 1);
   };
 
+  // TODO: this doesn't work, find out why
   const closeAndResetModal: () => void = () => {
     setCurrentView(0);
     closeModal();

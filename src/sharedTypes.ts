@@ -1,10 +1,12 @@
 export interface Project {
   schemaVersion: number;
   name: string;
-  filePath: string;
+  savePath: string | null;
+  filePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
   fileExtension: AudioFileExtension | VideoFileExtension;
+  thumbnailPath: string | null;
 }
 
 export type AudioFileExtension = 'mp3';
@@ -20,3 +22,5 @@ export interface Word {
   startTime: number;
   duration: number;
 }
+
+export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

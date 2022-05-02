@@ -49,6 +49,8 @@ const baseMockProject: Omit<Project, 'name'> = {
   filePath: 'fakepath',
   fileExtension: 'mp4',
   transcription: null,
+  savePath: null,
+  thumbnailPath: null,
 };
 
 /**

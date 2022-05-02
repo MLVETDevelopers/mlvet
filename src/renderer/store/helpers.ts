@@ -19,6 +19,7 @@ export interface ApplicationStore {
 const baseMockProject: Omit<Project, 'name'> = {
   schemaVersion: 1,
   mediaType: 'video',
+  savePath: 'fakepath',
   filePath: 'fakepath',
   fileExtension: 'mp4',
   transcription: null,

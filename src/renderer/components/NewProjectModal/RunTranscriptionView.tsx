@@ -66,6 +66,11 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     if (currentProject === null || asyncState !== AsyncState.READY) {
       return;
     }
+
+    if (currentProject.filePath === null) {
+      return;
+    }
+
     setAsyncState(AsyncState.LOADING);
     window.electron
       .requestTranscription(currentProject.filePath)

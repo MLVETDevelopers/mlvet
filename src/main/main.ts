@@ -25,7 +25,7 @@ import {
 } from './handlers';
 import startServer from './pyServer';
 import { resolveHtmlPath } from './util';
-import extractThumbnail from './thumbnailExtract';
+import extractThumbnail from './handlers/thumbnailExtract';
 
 export default class AppUpdater {
   constructor() {
@@ -151,7 +151,8 @@ const createWindow = async () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  const menu = menuBuilder.buildMenu();
+  menuBuilder.setListeners(menu, ipcMain);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

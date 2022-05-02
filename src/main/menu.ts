@@ -20,6 +20,10 @@ export default class MenuBuilder {
     this.mainWindow = mainWindow;
   }
 
+  isDarwin: () => boolean = () => {
+    return process.platform === 'darwin'; // macos
+  };
+
   buildMenu(): Menu {
     if (
       process.env.NODE_ENV === 'development' ||
@@ -28,10 +32,9 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    const template =
-      process.platform === 'darwin'
-        ? this.buildDarwinTemplate()
-        : this.buildDefaultTemplate();
+    const template = this.isDarwin()
+      ? this.buildDarwinTemplate()
+      : this.buildDefaultTemplate();
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
@@ -79,6 +82,31 @@ export default class MenuBuilder {
         },
       ]).popup({ window: this.mainWindow });
     });
+  }
+
+  buildUndoRedoOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'undo', // do not change, used by IPC to listen for enable/disable undo
+        label: 'Undo',
+        accelerator: 'CommandOrControl+Z',
+        click: () => {
+          // Tell the renderer to initiate an undo
+          this.mainWindow.webContents.send('initiate-undo');
+        },
+        enabled: false, // initially disabled, becomes enabled when there are things to undo
+      },
+      {
+        id: 'redo', // do not change, used by IPC to listen for enable/disable redo
+        label: 'Redo',
+        accelerator: 'Shift+CommandOrControl+Z',
+        click: () => {
+          // Tell the renderer to initiate a redo
+          this.mainWindow.webContents.send('initiate-redo');
+        },
+        enabled: false, // initially disabled, becomes enabled when there are things to redo
+      },
+    ];
   }
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
@@ -139,26 +167,7 @@ export default class MenuBuilder {
       id: 'edit', // do not change, used by IPC to find this menu
       label: 'Edit',
       submenu: [
-        {
-          id: 'undo', // do not change, used by IPC to listen for enable/disable undo
-          label: 'Undo',
-          accelerator: 'CommandOrControl+Z',
-          click: () => {
-            // Tell the renderer to initiate an undo
-            this.mainWindow.webContents.send('initiate-undo');
-          },
-          enabled: false, // initially disabled, becomes enabled when there are things to undo
-        },
-        {
-          id: 'redo', // do not change, used by IPC to listen for enable/disable redo
-          label: 'Redo',
-          accelerator: 'Shift+CommandOrControl+Z',
-          click: () => {
-            // Tell the renderer to initiate a redo
-            this.mainWindow.webContents.send('initiate-redo');
-          },
-          enabled: false, // initially disabled, becomes enabled when there are things to redo
-        },
+        ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         { label: 'Cut', accelerator: 'CommandOrControl+X', selector: 'cut:' },
         { label: 'Copy', accelerator: 'CommandOrControl+C', selector: 'copy:' },
@@ -257,6 +266,11 @@ export default class MenuBuilder {
             },
           },
         ],
+      },
+      {
+        id: 'edit',
+        label: '&Edit',
+        submenu: this.buildUndoRedoOptions(),
       },
       {
         label: '&View',

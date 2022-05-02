@@ -1,8 +1,10 @@
-import { Stack } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Stack } from '@mui/material';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
-import { projectOpened } from 'renderer/store/actions';
+import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
+import { projectOpened, transcriptionCreated } from 'renderer/store/actions';
+import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../store/helpers';
 
 /*
@@ -12,13 +14,19 @@ changes get reflected in the video. In addition to that, there is a video previe
 section to the side among other things.
 */
 const ProjectPage = () => {
+  const dispatch = useDispatch();
+
+  // RK: I don't really shouldn't use transcriptionCreated here - but i'm lazy and it works
+  const saveTranscription: (transcription: Transcription) => void = useCallback(
+    (transcription) => dispatch(transcriptionCreated(transcription)),
+    [dispatch]
+  );
+
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
 
-  const dispatch = useDispatch();
-
-  if (currentProject === null) {
+  if (currentProject === null || currentProject?.transcription === null) {
     return null;
   }
 
@@ -41,12 +49,9 @@ const ProjectPage = () => {
     <StandardButton onClick={handleOpenProject}>Open</StandardButton>
   );
 
-  // Turn the words in the transcription into a string
-  const text = currentProject.transcription?.words
-    .map((word) => {
-      return word.word;
-    })
-    .join(' ');
+  const onWordClick = (wordIndex: number) => {
+    console.log(currentProject.transcription?.words[wordIndex]);
+  };
 
   return (
     <>
@@ -60,29 +65,21 @@ const ProjectPage = () => {
         }}
       >
         <Stack spacing={4} sx={{ flex: '5 1 0' }}>
-          <Box
-            sx={{
-              p: 2,
-              backgroundColor: '#515151',
-              overflow: 'auto',
-              height: '100%',
-            }}
-          >
-            {text /* This is where the transcription is added */}
-          </Box>
+          <TranscriptionBlock
+            transcription={currentProject.transcription}
+            onWordClick={onWordClick}
+          />
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
-          <Box sx={{ width: '400px', height: '280px', backgroundColor: 'red' }}>
+          <Box
+            sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
+          >
             video
           </Box>
           <div>
             <div>{saveButton}</div>
             <div>{openButton}</div>
-            Current project data:{' '}
-            <pre style={{ width: '200px', overflow: 'auto' }}>
-              {JSON.stringify(currentProject)}
-            </pre>
           </div>
         </Stack>
       </Stack>

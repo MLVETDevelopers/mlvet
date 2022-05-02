@@ -1,4 +1,6 @@
-import { Project } from '../../sharedTypes';
+import { Project } from 'sharedTypes';
+
+const transcription = require('../../../assets/SampleTranscript.json');
 
 export enum ApplicationPage {
   HOME = 'HOME',
@@ -21,22 +23,9 @@ const baseMockProject: Project = {
   mediaType: 'video',
   filePath: 'fakepath',
   fileExtension: 'mp4',
-  transcription: {
-    confidence: 1,
-    words: [
-      {
-        word: 'yo',
-        start_time: 0,
-        duration: 1,
-      },
-      {
-        word: 'great job',
-        start_time: 1,
-        duration: 1,
-      },
-    ],
-  },
+  transcription: transcription.transcripts[0],
   name: 'name',
+  savePath: '',
 };
 
 export const initialStore: ApplicationStore = {

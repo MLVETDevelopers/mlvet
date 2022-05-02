@@ -1,9 +1,14 @@
-import { Project, VideoProject } from '../../sharedTypes';
+import { Project } from '../../sharedTypes';
 
 export enum ApplicationPage {
   HOME = 'HOME',
   PROJECT = 'PROJECT',
 }
+
+export type Action<T> = {
+  type: string;
+  payload: T;
+};
 
 export interface ApplicationStore {
   currentProject: Project | null;
@@ -37,7 +42,7 @@ const baseMockProject: Project = {
 export const initialStore: ApplicationStore = {
   currentProject: baseMockProject,
   recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
-    (name) => ({ ...baseMockProject, name: `${name} Project` } as VideoProject)
+    (name) => ({ ...baseMockProject, name: `${name} Project` })
   ),
   currentPage: ApplicationPage.PROJECT, // Changed from home page to increase load speed
 };

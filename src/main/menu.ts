@@ -4,6 +4,7 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  IpcMain,
 } from 'electron';
 import { handleOpenProject } from './handlers';
 
@@ -126,9 +127,15 @@ export default class MenuBuilder {
           label: 'Open Project',
           accelerator: 'CommandOrControl+O',
           click: async () => {
-            const project = await handleOpenProject(this.mainWindow);
+            const { project, filePath } = await handleOpenProject(
+              this.mainWindow
+            );
 
-            this.mainWindow.webContents.send('project-opened', project);
+            this.mainWindow.webContents.send(
+              'project-opened',
+              project,
+              filePath
+            );
           },
         },
       ],

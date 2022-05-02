@@ -35,10 +35,12 @@ const saveProjectToFile: (
 const handleSaveProject: (
   mainWindow: BrowserWindow | null,
   project: Project
-) => Promise<void> = async (mainWindow, project) => {
+) => Promise<string> = async (mainWindow, project) => {
   const filePath = await getSaveFilePath(mainWindow);
 
   await saveProjectToFile(filePath, project);
+
+  return filePath;
 };
 
 export default handleSaveProject;

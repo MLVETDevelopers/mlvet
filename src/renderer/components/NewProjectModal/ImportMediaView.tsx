@@ -66,8 +66,8 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const addToRecentProjects = (project: Project) =>
     dispatch(recentProjectAdded(project));
 
-  const onProjectCreate = () => {
-    const project = makeProject(projectName, mediaFilePath);
+  const onProjectCreate = async () => {
+    const project = await makeProject(projectName, mediaFilePath);
     if (project === null) {
       return;
     }

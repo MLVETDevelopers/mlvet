@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../sharedTypes';
+import { Project } from '../../sharedTypes';
 
 const getSaveFilePath: (
   mainWindow: BrowserWindow | null

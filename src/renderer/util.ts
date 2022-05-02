@@ -1,8 +1,11 @@
+import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
-  Project,
   AudioFileExtension,
+  Project,
   VideoFileExtension,
-} from './store/helpers';
+} from '../sharedTypes';
+
+const { extractThumbnail } = window.electron;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -34,7 +37,7 @@ export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
 export const makeProject: (
   projectName: string,
   mediaFilePath: string | null
-) => Project | null = (projectName, mediaFilePath) => {
+) => Promise<Project | null> = async (projectName, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
@@ -49,20 +52,20 @@ export const makeProject: (
     return null;
   }
 
-  const project: Project =
-    mediaType === 'audio'
-      ? {
-          name: projectName,
-          mediaType: 'audio',
-          fileExtension: fileExtension as AudioFileExtension,
-          filePath: mediaFilePath,
-        }
-      : {
-          name: projectName,
-          mediaType: 'video',
-          fileExtension: fileExtension as VideoFileExtension,
-          filePath: mediaFilePath,
-        };
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
+  const project: Project = {
+    name: projectName,
+    mediaType,
+    fileExtension: fileExtension as AudioFileExtension | VideoFileExtension,
+    filePath: mediaFilePath,
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    transcription: null,
+    thumbnailPath,
+  };
 
   return project;
 };

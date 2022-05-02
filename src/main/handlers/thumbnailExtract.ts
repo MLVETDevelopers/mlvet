@@ -1,27 +1,25 @@
 import path from 'path';
 
 import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
+import { path as ffprobePath } from '@ffprobe-installer/ffprobe';
 import ffmpeg from 'fluent-ffmpeg';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
-export default function extractAudio(
-  absolutePathToMediaFile: string
+export default function extractThumbnail(
+  absolutePathToVideoFile: string
 ): Promise<string> {
-  const pathToSaveMedia = path.join(
-    process.cwd(),
-    'assets',
-    'audio',
-    'audio.wav'
-  );
+  const pathToSaveMedia = path.join(process.cwd(), 'assets', 'thumbnails');
 
-  console.log('Started audio extraction');
+  console.log('Started thumbnail extraction');
 
-  const command = ffmpeg(absolutePathToMediaFile)
-    .audioChannels(1)
-    .outputOptions('-ar 16000') // Sample rate of 16kHz
-    .noVideo()
-    .saveToFile(pathToSaveMedia);
+  // By Default the image is picked from the middle of the video.
+  const command = ffmpeg(absolutePathToVideoFile).thumbnails({
+    count: 1,
+    filename: 'thumbnail.png',
+    folder: pathToSaveMedia,
+  });
 
   return new Promise((resolve, reject) => {
     command.on('end', (stdout: string, stderr: string) => {

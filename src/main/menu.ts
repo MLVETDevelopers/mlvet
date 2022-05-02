@@ -4,9 +4,8 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  IpcMain,
 } from 'electron';
-import handleOpenProject from './openProjectHandler';
+import { handleOpenProject } from './handlers';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;

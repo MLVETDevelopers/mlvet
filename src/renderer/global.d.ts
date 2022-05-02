@@ -12,6 +12,7 @@ declare global {
       saveProject: (project: Project) => Promise<void>;
       openProject: () => Promise<Project>;
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
+      extractThumbnail: (filePath: string) => Promise<string>;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

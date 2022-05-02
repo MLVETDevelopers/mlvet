@@ -1,14 +1,12 @@
+import { Reducer } from 'redux';
 import { Project } from 'sharedTypes';
 import { RECENT_PROJECTS_LOADED, RECENT_PROJECT_ADDED } from '../actions';
 import { Action, ApplicationStore, initialStore } from '../helpers';
 
-const recentProjectsReducer: (
-  recentProjects: ApplicationStore['recentProjects'],
-  action: Action<any>
-) => ApplicationStore['recentProjects'] = (
-  recentProjects = initialStore.recentProjects,
-  action
-) => {
+const recentProjectsReducer: Reducer<
+  ApplicationStore['recentProjects'],
+  Action<any>
+> = (recentProjects = initialStore.recentProjects, action) => {
   if (action.type === RECENT_PROJECT_ADDED) {
     return [action.payload as Project, ...recentProjects];
   }

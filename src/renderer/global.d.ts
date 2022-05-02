@@ -11,6 +11,7 @@ declare global {
       requestTranscription: (filePath: string) => Promise<Transcription>;
       saveProject: (project: Project) => Promise<void>;
       openProject: () => Promise<Project>;
+      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
       extractThumbnail: (filePath: string) => Promise<string>;
       readRecentProjects: () => Promise<Project[]>;
       writeRecentProjects: (recentProjects: Project[]) => Promise<void>;

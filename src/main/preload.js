@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('transcribe-media', filePath),
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
   openProject: () => ipcRenderer.invoke('open-project'),
+  setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
+    ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
   extractThumbnail: (filePath) =>
     ipcRenderer.invoke('extract-thumbnail', filePath),
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),

@@ -268,6 +268,7 @@ export default class MenuBuilder {
         ],
       },
       {
+        id: 'edit',
         label: '&Edit',
         submenu: this.buildUndoRedoOptions(),
       },

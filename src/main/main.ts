@@ -15,11 +15,11 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
 import path from 'path';
-import showImportMediaDialog from './handlers/fileDialog';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
+import { extractAudio } from './handlers';
 
 export default class AppUpdater {
   constructor() {

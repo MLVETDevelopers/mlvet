@@ -5,8 +5,6 @@ export interface Project {
   projectFilePath: string | null;
   exportFilePath: string | null;
   mediaFilePath: string | null;
-  savePath: string | null;
-  filePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
   mediaFileExtension: AudioFileExtension | VideoFileExtension;

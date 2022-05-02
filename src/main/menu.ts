@@ -4,6 +4,7 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  IpcMain,
 } from 'electron';
 import { handleOpenProject } from './handlers';
 

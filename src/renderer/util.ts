@@ -5,6 +5,8 @@ import {
   VideoFileExtension,
 } from '../sharedTypes';
 
+const { extractThumbnail } = window.electron;
+
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
 ) => {
@@ -35,7 +37,7 @@ export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
 export const makeProject: (
   projectName: string,
   mediaFilePath: string | null
-) => Project | null = (projectName, mediaFilePath) => {
+) => Promise<Project | null> = async (projectName, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
@@ -50,6 +52,11 @@ export const makeProject: (
     return null;
   }
 
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
   const project: Project = {
     name: projectName,
     mediaType,
@@ -57,6 +64,7 @@ export const makeProject: (
     filePath: mediaFilePath,
     schemaVersion: CURRENT_SCHEMA_VERSION,
     transcription: null,
+    thumbnailPath,
   };
 
   return project;

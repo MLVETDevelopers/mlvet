@@ -25,6 +25,7 @@ import {
 } from './handlers';
 import startServer from './pyServer';
 import { resolveHtmlPath } from './util';
+import extractThumbnail from './thumbnailExtract';
 
 export default class AppUpdater {
   constructor() {
@@ -42,6 +43,10 @@ ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)
+);
+
+ipcMain.handle('extract-thumbnail', async (_event, filePath) =>
+  extractThumbnail(filePath)
 );
 
 ipcMain.handle('save-project', async (_event, project) =>

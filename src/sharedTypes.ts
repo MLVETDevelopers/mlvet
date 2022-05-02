@@ -6,6 +6,7 @@ export interface Project {
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
   fileExtension: AudioFileExtension | VideoFileExtension;
+  thumbnailPath: string | null;
 }
 
 export interface Transcription {

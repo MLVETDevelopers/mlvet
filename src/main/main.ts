@@ -17,15 +17,6 @@ import { get } from 'http';
 import path from 'path';
 import showImportMediaDialog from './handlers/fileDialog';
 import MenuBuilder from './menu';
-import {
-  handleOpenProject,
-  handleSaveProject,
-  handleTranscription,
-  extractAudio,
-  extractThumbnail,
-  readRecentProjects,
-  writeRecentProjects,
-} from './handlers';
 import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
@@ -143,7 +134,8 @@ const createWindow = async () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  const menu = menuBuilder.buildMenu();
+  menuBuilder.setListeners(menu, ipcMain);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

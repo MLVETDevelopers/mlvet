@@ -20,8 +20,6 @@ const retrieveSize: (filePath: string) => Promise<number> = async (
 const retrieveProjectMetadata: (
   project: Project
 ) => Promise<ProjectMetadata> = async (project) => {
-  console.log('proj', project);
-
   const projectLastModified =
     project.projectFilePath === null
       ? null

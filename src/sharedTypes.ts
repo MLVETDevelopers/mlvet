@@ -5,6 +5,8 @@ export interface Project {
   projectFilePath: string | null;
   exportFilePath: string | null;
   mediaFilePath: string | null;
+  savePath: string | null;
+  filePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
   mediaFileExtension: AudioFileExtension | VideoFileExtension;
@@ -18,6 +20,9 @@ export interface ProjectMetadata {
 
 export type RecentProject = Project & ProjectMetadata;
 
+export type AudioFileExtension = 'mp3';
+export type VideoFileExtension = 'mp4';
+
 export interface Transcription {
   confidence: number;
   words: Word[];
@@ -28,8 +33,5 @@ export interface Word {
   startTime: number;
   duration: number;
 }
-
-export type AudioFileExtension = 'mp3';
-export type VideoFileExtension = 'mp4';
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

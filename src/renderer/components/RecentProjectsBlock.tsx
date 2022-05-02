@@ -1,23 +1,48 @@
-import { Box, Typography, styled, Stack } from '@mui/material';
+import { Box, Typography, styled, Stack, Grid, Paper } from '@mui/material';
 import { useSelector } from 'react-redux';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { ApplicationStore } from '../store/helpers';
 import colors from '../colors';
 import { formatDate } from '../util';
+import exampleThumbnail from '../../../assets/example-thumbnail.png';
 
 const RecentProjectsBox = styled(Box)`
-  width: calc(100vw - 80px);
+  width: calc(100vw - 40px);
   margin: 20px;
   padding: 20px;
 `;
 
-const RecentProjectsItem = styled(Box)`
+const RecentProjectsItem = styled(Paper)`
   background: ${colors.grey[700]};
+  color: ${colors.grey[300]};
+  padding: 10px 20px;
+  padding-right: 0;
 `;
+
+const RecentProjectsSubItem = styled(Grid)`
+  display: flex;
+  align-items: center;
+  justify-items: right;
+`;
+
+// No idea why, but styling typography in paper in the usual way just literally does nothing. Seems like an MUI bug,
+// can't find any documentation on it. So doing this instead
+const CategoryHeading = ({ children }: { children: React.ReactNode }) => (
+  <Typography style={{ fontSize: 12, color: colors.grey[400] }}>
+    {children}
+  </Typography>
+);
 
 const RecentProjectsBlock = () => {
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
-  );
+  )
+    .sort(
+      (first, second) =>
+        (second.dateModified?.getTime() || 0) -
+        (first.dateModified?.getTime() || 0)
+    )
+    .slice(0, 5);
 
   const displayDate: (date: Date | null) => string = (date) =>
     date === null ? '?' : formatDate(date);
@@ -27,15 +52,45 @@ const RecentProjectsBlock = () => {
 
   return (
     <RecentProjectsBox>
-      <Typography fontWeight="bold">Recent Projects</Typography>
-      <Stack spacing={2}>
+      <Typography variant="h6" style={{ marginBottom: 20, fontWeight: 'bold' }}>
+        Recent Projects
+      </Typography>
+      <Stack spacing={2} style={{ maxHeight: '50vh', overflowY: 'auto' }}>
         {recentProjects.map(({ id, name, dateModified, mediaSize }) => (
           <RecentProjectsItem key={id}>
-            <Stack direction="row" justifyContent="space-around">
-              <Typography>{name}</Typography>
-              <Typography>{displayDate(dateModified)}</Typography>
-              <Typography>{formatSize(mediaSize)}</Typography>
-            </Stack>
+            <Grid container spacing={2}>
+              <RecentProjectsSubItem item xs={8}>
+                <img
+                  src={exampleThumbnail}
+                  alt={`Thumbnail for project ${name}`}
+                  style={{
+                    maxWidth: 180,
+                  }}
+                />
+                <Typography
+                  style={{ fontSize: 24, fontWeight: 'bold', marginLeft: 40 }}
+                >
+                  {name}
+                </Typography>
+              </RecentProjectsSubItem>
+              <RecentProjectsSubItem item xs={2}>
+                <Stack>
+                  <CategoryHeading>Date modified:</CategoryHeading>
+                  <Typography>{displayDate(dateModified)}</Typography>
+                </Stack>
+              </RecentProjectsSubItem>
+              <RecentProjectsSubItem item xs={1}>
+                <Stack>
+                  <CategoryHeading>Size:</CategoryHeading>
+                  <Typography>{formatSize(mediaSize)}</Typography>
+                </Stack>
+              </RecentProjectsSubItem>
+              <RecentProjectsSubItem item xs={1}>
+                <Stack>
+                  <DeleteIcon />
+                </Stack>
+              </RecentProjectsSubItem>
+            </Grid>
           </RecentProjectsItem>
         ))}
       </Stack>

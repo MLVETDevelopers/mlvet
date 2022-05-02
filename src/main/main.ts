@@ -17,12 +17,14 @@ import { get } from 'http';
 import path from 'path';
 import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
-import handleOpenProject from './openProjectHandler';
+import {
+  handleOpenProject,
+  handleSaveProject,
+  handleTranscription,
+  extractAudio,
+} from './handlers';
 import startServer from './pyServer';
-import handleSaveProject from './saveProjectHandler';
-import handleTranscription from './transcriptionHandler';
 import { resolveHtmlPath } from './util';
-import extractAudio from './audioExtract';
 import extractThumbnail from './thumbnailExtract';
 
 export default class AppUpdater {

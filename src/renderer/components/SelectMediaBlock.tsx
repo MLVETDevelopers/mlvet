@@ -1,10 +1,14 @@
-import { Box, colors, styled, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
+import colors from 'renderer/colors';
+import ActionButton from './ActionButton';
 
-const SelectMediaBox = styled(Box)`
-  background: ${colors.grey[400]};
-  color: ${colors.grey[900]};
+const SelectMediaBox = styled(Box)``;
+
+const InnerBox = styled(Box)`
+  border-style: dashed;
+  border-color: ${colors.grey[500]}
+  color: ${colors.white};
   margin-top: 20px;
   padding: 20px;
 
@@ -14,34 +18,38 @@ const SelectMediaBox = styled(Box)`
   }
 `;
 
-const ImportFileBox = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  margin: 80px 0;
-`;
-
 interface Props {
   mediaFilePath: string | null;
   setMediaFilePath: Dispatch<SetStateAction<string | null>>;
+  setIsAwaitingMedia: Dispatch<SetStateAction<boolean>>;
 }
 
-const SelectMediaBlock = ({ mediaFilePath, setMediaFilePath }: Props) => {
+const SelectMediaBlock = ({
+  mediaFilePath,
+  setMediaFilePath,
+  setIsAwaitingMedia,
+}: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await window.electron.requestMediaDialog();
+    setIsAwaitingMedia(true);
     setMediaFilePath(selectedMedia);
   };
 
   return (
     <SelectMediaBox onClick={selectMedia}>
-      <Typography fontWeight="bold">Video or Audio Base</Typography>
+      <InnerBox>
+        <Stack
+          direction="column"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ height: '150px' }}
+        >
+          <Typography fontWeight="bold">Drag and drop file here</Typography>
+          <Typography fontWeight="bold">or</Typography>
+          <ActionButton>Browse</ActionButton>
+        </Stack>
+      </InnerBox>
       {mediaFilePath}
-      <ImportFileBox>
-        <AddIcon fontSize="large" />
-        <Typography fontWeight="bold">Import File or Drag</Typography>
-      </ImportFileBox>
     </SelectMediaBox>
   );
 };

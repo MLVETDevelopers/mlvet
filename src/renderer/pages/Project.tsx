@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Box, Button, Stack } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import { projectOpened, transcriptionCreated } from 'renderer/store/actions';
-import { Transcription } from 'sharedTypes';
+import { Transcription, Word } from 'sharedTypes';
 import { ApplicationStore } from '../store/helpers';
 
 /*
-This is the page that gets displayed while you are editting a video.
+This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
@@ -19,6 +20,14 @@ const ProjectPage = () => {
   const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
     null
   );
+
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  });
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -43,9 +52,9 @@ const ProjectPage = () => {
     }
   };
 
-  const deleteWord = () => {
-    if (selectedWordIndex && currentProject.transcription) {
-      currentProject.transcription?.words.splice(selectedWordIndex, 1);
+  const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
+    if (currentProject.transcription) {
+      currentProject.transcription?.words.splice(firstWordIndex, numberOfWords);
       saveTranscription(currentProject.transcription);
     }
   };
@@ -64,6 +73,30 @@ const ProjectPage = () => {
     setSelectedWordIndex(wordIndex);
   };
 
+  const deleteText = async () => {
+    const highlightedWords = window.getSelection();
+    console.log('delete text');
+    if (
+      highlightedWords?.anchorNode &&
+      highlightedWords?.focusNode &&
+      highlightedWords.anchorNode.nodeName === '#text'
+    ) {
+      console.log(highlightedWords);
+      const anchor = await Number(highlightedWords?.anchorNode?.parentElement.dataset.index);
+      const focus = await Number(highlightedWords?.focusNode?.parentElement.dataset.index);
+
+      const start = Math.min(anchor, focus);
+      const end = Math.max(anchor, focus);
+      deleteWord(start, end - start + 1);
+    }
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      deleteText();
+    }
+  };
+
   return (
     <>
       <Stack
@@ -80,7 +113,7 @@ const ProjectPage = () => {
             transcription={currentProject.transcription}
             onWordClick={onWordClick}
           />
-          <Button onClick={deleteWord}>Delete</Button>
+          {/* <Button onClick={deleteWord}>Delete</Button> */}
           <span style={{ color: 'white' }}>
             {selectedWordIndex
               ? JSON.stringify(

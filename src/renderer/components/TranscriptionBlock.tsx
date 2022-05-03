@@ -26,6 +26,7 @@ const TranscriptionBlock = (props: {
         {transcription.words.map((word, index) => (
           <Word
             key={word.startTime.toString()}
+            data-index={index}
             onClick={() => {
               onWordClick(index);
             }}

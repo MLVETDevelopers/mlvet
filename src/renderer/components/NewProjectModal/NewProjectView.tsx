@@ -8,6 +8,7 @@ import CancelButton from '../CancelButton';
 import ActionButton from '../ActionButton';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
+import ModalTitle from '../ModalTitle';
 
 interface Props {
   closeModal: () => void;
@@ -25,10 +26,6 @@ const CustomTextField = styled(TextField)`
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
   height: 500px;
-`;
-
-const CustomTypography = styled(Typography)`
-  color: ${colors.grey[500]};
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
@@ -83,7 +80,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <CustomTypography fontWeight="bold">New Project</CustomTypography>
+          <ModalTitle>New Project</ModalTitle>
           <Box onClick={closeModal}>
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>

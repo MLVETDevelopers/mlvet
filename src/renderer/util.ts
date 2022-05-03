@@ -69,3 +69,48 @@ export const makeProject: (
 
   return project;
 };
+
+export const makeProjectWithoutMedia: (
+  projectName: string
+) => Promise<Project | null> = async (projectName) => {
+  const project: Project = {
+    name: projectName,
+  };
+
+  return project;
+};
+
+export const updateProjectWithMedia: (
+  currentProject: Project,
+  mediaFilePath: string | null
+) => Promise<Project | null> = async (currentProject, mediaFilePath) => {
+  if (mediaFilePath === null) {
+    return null;
+  }
+
+  const fileExtension = extractFileExtension(mediaFilePath);
+  if (fileExtension === null) {
+    return null;
+  }
+
+  const mediaType = getMediaType(fileExtension);
+  if (mediaType === null) {
+    return null;
+  }
+
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
+  currentProject.mediaType = mediaType;
+  currentProject.fileExtension = fileExtension as
+    | AudioFileExtension
+    | VideoFileExtension;
+  currentProject.filePath = mediaFilePath;
+  currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
+  currentProject.transcription = null;
+  currentProject.thumbnailPath = thumbnailPath;
+
+  return currentProject;
+};

@@ -13,7 +13,6 @@ const preProcessTranscript = (
     jsonTranscript.confidence
   );
 
-  console.log(jsonTranscript.words[0].start_time);
   for (let i = 0; i < numberOfWords - 1; i += 1) {
     // duration includes the white space between current and next word
 

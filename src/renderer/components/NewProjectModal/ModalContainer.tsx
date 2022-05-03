@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/actions';
 import { ApplicationPage } from '../../store/helpers';
-import ImportMediaView from './ImportMediaView';
+import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 
 const CustomModal = styled(Modal)`
@@ -34,7 +34,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     [dispatch]
   );
 
-  const viewComponents = [ImportMediaView, RunTranscriptionView];
+  const viewComponents = [NewProjectView, RunTranscriptionView];
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
@@ -48,8 +48,8 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const view = (() => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
-      case ImportMediaView:
-        return <ImportMediaView closeModal={closeModal} nextView={nextView} />;
+      case NewProjectView:
+        return <NewProjectView closeModal={closeModal} nextView={nextView} />;
       case RunTranscriptionView:
         return (
           <RunTranscriptionView closeModal={closeModal} nextView={nextView} />

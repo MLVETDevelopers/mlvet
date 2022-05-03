@@ -31,7 +31,11 @@ const SelectMediaBlock = ({
 }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await window.electron.requestMediaDialog();
-    setIsAwaitingMedia(true);
+
+    if (selectMedia !== null) {
+      setIsAwaitingMedia(false);
+    }
+
     setMediaFilePath(selectedMedia);
   };
 

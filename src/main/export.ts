@@ -45,7 +45,11 @@ export const exportEDL = (
       join(project.savePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
-    mainWindow?.webContents.send('export-progress-update', 1);
+
+    // Placeholder for BE - to be copied and removed
+    mainWindow?.webContents.send('export-progress-update', 0.5);
+
+    mainWindow?.webContents.send('finish-export', 1);
   }
 };
 

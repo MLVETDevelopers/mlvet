@@ -3,6 +3,7 @@ import {
   projectOpened,
   pageChanged,
   updateExportProgress,
+  finishExport,
 } from './store/actions';
 import { ApplicationPage } from './store/helpers';
 import store from './store/store';
@@ -37,3 +38,10 @@ window.electron.on(
     store.dispatch(updateExportProgress(progress));
   }
 );
+
+/**
+ * Used by backend to notify frontend that export is complete
+ */
+window.electron.on('finish-export', async (_event) => {
+  store.dispatch(finishExport());
+});

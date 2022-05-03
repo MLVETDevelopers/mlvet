@@ -38,6 +38,7 @@ export interface UndoStack {
  * Import / Export progress states
  */
 export interface IO {
+  isExporting: boolean;
   exportProgress: number; // Used for showing current progress in export
 }
 
@@ -74,5 +75,5 @@ export const initialStore: ApplicationStore = {
   ),
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
-  io: { exportProgress: 0 },
+  io: { isExporting: false, exportProgress: 0 },
 };

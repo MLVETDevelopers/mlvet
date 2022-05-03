@@ -1,3 +1,4 @@
+import { Transcription } from 'sharedTypes';
 import Clip from './Clip';
 
 /**
@@ -22,7 +23,9 @@ const removeDeleted = (wordList: Array<any>): void => {
  */
 const FILENAME = 'placeholder_filename.mp4';
 
-const postProcess = (wordList: Array<any>): Array<Clip> => {
+const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
+  const wordList = jsonTranscript.words;
+
   removeDeleted(wordList);
   const res: Array<Clip> = [];
   let currentStartTime = -1;
@@ -30,13 +33,13 @@ const postProcess = (wordList: Array<any>): Array<Clip> => {
 
   for (let i = 0; i < wordList.length - 1; i += 1) {
     if (currentStartTime === -1) {
-      currentStartTime = wordList[i].start_time;
+      currentStartTime = wordList[i].startTime;
       currentDuration = wordList[i].duration;
     }
 
     if (
-      wordList[i].start_time + wordList[i].duration ===
-      wordList[i + 1].start_time
+      wordList[i].startTime + wordList[i].duration ===
+      wordList[i + 1].startTime
     ) {
       currentDuration += wordList[i + 1].duration;
     } else {
@@ -47,10 +50,10 @@ const postProcess = (wordList: Array<any>): Array<Clip> => {
   }
 
   if (res.length === 0) {
-    currentStartTime = wordList[0].start_time;
+    currentStartTime = wordList[0].startTime;
     res.push(new Clip(currentStartTime, currentDuration, FILENAME));
   } else if (currentStartTime === -1) {
-    currentStartTime = wordList[wordList.length - 1].start_time;
+    currentStartTime = wordList[wordList.length - 1].startTime;
     currentDuration = wordList[wordList.length - 1].duration;
     res.push(new Clip(currentStartTime, currentDuration, FILENAME));
   } else {

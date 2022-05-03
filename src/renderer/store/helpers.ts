@@ -1,6 +1,4 @@
-import { Project } from 'sharedTypes';
-
-const transcription = require('../../../assets/SampleTranscript.json');
+import { Project } from '../../sharedTypes';
 
 export enum ApplicationPage {
   HOME = 'HOME',
@@ -18,20 +16,19 @@ export interface ApplicationStore {
   currentPage: ApplicationPage;
 }
 
-const baseMockProject: Project = {
+const baseMockProject: Omit<Project, 'name'> = {
   schemaVersion: 1,
   mediaType: 'video',
   filePath: 'fakepath',
   fileExtension: 'mp4',
-  transcription: transcription.transcripts[0],
-  name: 'name',
+  transcription: null,
   savePath: '',
 };
 
 export const initialStore: ApplicationStore = {
-  currentProject: baseMockProject,
+  currentProject: null,
   recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
     (name) => ({ ...baseMockProject, name: `${name} Project` })
   ),
-  currentPage: ApplicationPage.PROJECT, // Changed from home page to increase load speed
+  currentPage: ApplicationPage.HOME,
 };

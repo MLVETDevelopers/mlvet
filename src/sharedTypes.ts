@@ -17,6 +17,8 @@ export interface Word {
   word: string;
   startTime: number;
   duration: number;
+  deleted: boolean;
+  key: string;
 }
 
 export type AudioFileExtension = 'mp3';

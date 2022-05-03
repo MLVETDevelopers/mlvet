@@ -5,6 +5,7 @@ import { pageChanged } from '../../store/actions';
 import { ApplicationPage } from '../../store/helpers';
 import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
+import UploadVideoView from './UploadVideoView';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -34,7 +35,11 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     [dispatch]
   );
 
-  const viewComponents = [NewProjectView, RunTranscriptionView];
+  const viewComponents = [
+    NewProjectView,
+    UploadVideoView,
+    RunTranscriptionView,
+  ];
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
@@ -50,6 +55,8 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     switch (viewComponent) {
       case NewProjectView:
         return <NewProjectView closeModal={closeModal} nextView={nextView} />;
+      case UploadVideoView:
+        return <UploadVideoView closeModal={closeModal} nextView={nextView} />;
       case RunTranscriptionView:
         return (
           <RunTranscriptionView closeModal={closeModal} nextView={nextView} />

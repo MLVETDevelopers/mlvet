@@ -1,6 +1,7 @@
 /* eslint import/prefer-default-export: off, import/no-mutable-exports: off */
 import { URL } from 'url';
 import path from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -16,3 +17,21 @@ if (process.env.NODE_ENV === 'development') {
     return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
   };
 }
+
+export const padZeros: (num: number, len: number) => string = (num, len) => {
+  return String(num).padStart(len, '0');
+};
+
+export const integerDivide: (a: number, b: number) => number = (a, b) => {
+  return Math.floor(a / b);
+};
+
+export const mkdir = (dirPath: string) => {
+  if (!existsSync(dirPath)) {
+    try {
+      mkdirSync(dirPath);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+};

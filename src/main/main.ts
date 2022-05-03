@@ -17,12 +17,15 @@ import { get } from 'http';
 import path from 'path';
 import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
-import handleOpenProject from './openProjectHandler';
-import startServer from './py_server';
-import handleSaveProject from './saveProjectHandler';
-import handleTranscription from './transcriptionHandler';
+import {
+  handleOpenProject,
+  handleSaveProject,
+  handleTranscription,
+  extractAudio,
+} from './handlers';
+import startServer from './pyServer';
 import { resolveHtmlPath } from './util';
-import extractAudio from './audioExtract';
+import extractThumbnail from './handlers/thumbnailExtract';
 
 export default class AppUpdater {
   constructor() {
@@ -40,6 +43,10 @@ ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
 ipcMain.handle('transcribe-media', async (_event, filePath) =>
   handleTranscription(filePath)
+);
+
+ipcMain.handle('extract-thumbnail', async (_event, filePath) =>
+  extractThumbnail(filePath)
 );
 
 ipcMain.handle('save-project', async (_event, project) =>
@@ -144,7 +151,8 @@ const createWindow = async () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  const menu = menuBuilder.buildMenu();
+  menuBuilder.setListeners(menu, ipcMain);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

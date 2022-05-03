@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
+import { projectCreated } from 'renderer/store/actions';
 import CancelButton from '../CancelButton';
 import ActionButton from '../ActionButton';
 import colors from '../../colors';
@@ -38,7 +39,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   const dispatch = useDispatch();
 
   const setProjectInStore = async (project: Project) => {
-    dispatch(project);
+    dispatch(projectCreated(project));
   };
 
   const handleContinue = async () => {

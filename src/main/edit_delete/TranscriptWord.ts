@@ -15,12 +15,16 @@ export default class TranscriptWord implements Word {
 
   deleted: boolean;
 
+  key: string;
+
   constructor(
+    key: string,
     word: string,
     startTime: number,
     duration: number,
     fileName: string
   ) {
+    this.key = key;
     this.word = word;
     this.startTime = startTime;
     this.duration = duration;

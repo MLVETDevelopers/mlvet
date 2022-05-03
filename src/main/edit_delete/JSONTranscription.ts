@@ -5,11 +5,8 @@ export default class JSONTranscription implements Transcription {
 
   words: Word[];
 
-  total_length: number;
-
-  constructor(words: Word[], total_length: number, confidence: number) {
+  constructor(words: Word[], confidence: number) {
     this.words = words;
-    this.total_length = total_length;
     this.confidence = confidence;
   }
 }

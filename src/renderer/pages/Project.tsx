@@ -1,5 +1,5 @@
-import { Box, Stack } from '@mui/material';
-import { useCallback } from 'react';
+import { Box, Button, Stack } from '@mui/material';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
@@ -16,7 +16,11 @@ section to the side among other things.
 const ProjectPage = () => {
   const dispatch = useDispatch();
 
-  // RK: I don't really shouldn't use transcriptionCreated here - but i'm lazy and it works
+  const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
+    null
+  );
+
+  // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
     (transcription) => dispatch(transcriptionCreated(transcription)),
     [dispatch]
@@ -39,6 +43,13 @@ const ProjectPage = () => {
     }
   };
 
+  const deleteWord = () => {
+    if (selectedWordIndex && currentProject.transcription) {
+      currentProject.transcription?.words.splice(selectedWordIndex, 1);
+      saveTranscription(currentProject.transcription);
+    }
+  };
+
   const saveButton = (
     <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
       Save
@@ -50,7 +61,7 @@ const ProjectPage = () => {
   );
 
   const onWordClick = (wordIndex: number) => {
-    console.log(currentProject.transcription?.words[wordIndex]);
+    setSelectedWordIndex(wordIndex);
   };
 
   return (
@@ -69,6 +80,14 @@ const ProjectPage = () => {
             transcription={currentProject.transcription}
             onWordClick={onWordClick}
           />
+          <Button onClick={deleteWord}>Delete</Button>
+          <span style={{ color: 'white' }}>
+            {selectedWordIndex
+              ? JSON.stringify(
+                  currentProject.transcription.words[selectedWordIndex]
+                )
+              : 'Selected a word'}
+          </span>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>

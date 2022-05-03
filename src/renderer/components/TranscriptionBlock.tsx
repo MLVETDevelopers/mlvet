@@ -6,7 +6,7 @@ const TranscriptionBlock = (props: {
   transcription: Transcription;
   onWordClick: (wordIndex: number) => void;
 }) => {
-  const { transcription, onWordClick } = props;
+  const { onWordClick, transcription } = props;
 
   const Word = styled('span')`
     &:hover {
@@ -26,7 +26,9 @@ const TranscriptionBlock = (props: {
         {transcription.words.map((word, index) => (
           <Word
             key={word.startTime.toString()}
-            onClick={() => onWordClick(index)}
+            onClick={() => {
+              onWordClick(index);
+            }}
           >
             {`${word.word} `}
           </Word>

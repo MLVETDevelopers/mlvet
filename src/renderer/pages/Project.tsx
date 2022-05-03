@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import { projectOpened, transcriptionCreated } from 'renderer/store/actions';
-import { Transcription, Word } from 'sharedTypes';
+import { transcriptionCreated } from 'renderer/store/actions';
+import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../store/helpers';
 
 /*
@@ -16,18 +15,10 @@ section to the side among other things.
 */
 const ProjectPage = () => {
   const dispatch = useDispatch();
-
-  const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>(
-    null
+  const currentProject = useSelector(
+    (store: ApplicationStore) => store.currentProject
   );
-
-  useEffect(() => {
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  });
+  const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>();
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -35,42 +26,11 @@ const ProjectPage = () => {
     [dispatch]
   );
 
-  const currentProject = useSelector(
-    (store: ApplicationStore) => store.currentProject
-  );
-
-  if (currentProject === null || currentProject?.transcription === null) {
-    return null;
-  }
-
-  const handleOpenProject = async () => {
-    try {
-      const project = await window.electron.openProject();
-      dispatch(projectOpened(project));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
-    if (currentProject.transcription) {
+    if (currentProject && currentProject.transcription) {
       currentProject.transcription?.words.splice(firstWordIndex, numberOfWords);
       saveTranscription(currentProject.transcription);
     }
-  };
-
-  const saveButton = (
-    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
-      Save
-    </StandardButton>
-  );
-
-  const openButton = (
-    <StandardButton onClick={handleOpenProject}>Open</StandardButton>
-  );
-
-  const onWordClick = (wordIndex: number) => {
-    setSelectedWordIndex(wordIndex);
   };
 
   const deleteText = async () => {
@@ -82,8 +42,12 @@ const ProjectPage = () => {
       highlightedWords.anchorNode.nodeName === '#text'
     ) {
       console.log(highlightedWords);
-      const anchor = await Number(highlightedWords?.anchorNode?.parentElement.dataset.index);
-      const focus = await Number(highlightedWords?.focusNode?.parentElement.dataset.index);
+      const anchor = await Number(
+        highlightedWords?.anchorNode?.parentElement.dataset.index
+      );
+      const focus = await Number(
+        highlightedWords?.focusNode?.parentElement.dataset.index
+      );
 
       const start = Math.min(anchor, focus);
       const end = Math.max(anchor, focus);
@@ -96,6 +60,29 @@ const ProjectPage = () => {
       deleteText();
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  });
+
+  const onWordClick = (wordIndex: number) => {
+    setSelectedWordIndex(wordIndex);
+  };
+
+  // TODO: Error handling
+  if (!currentProject || !currentProject?.transcription) {
+    return null;
+  }
+
+  const saveButton = (
+    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
+      Save
+    </StandardButton>
+  );
 
   return (
     <>
@@ -113,14 +100,16 @@ const ProjectPage = () => {
             transcription={currentProject.transcription}
             onWordClick={onWordClick}
           />
-          {/* <Button onClick={deleteWord}>Delete</Button> */}
-          <span style={{ color: 'white' }}>
-            {selectedWordIndex
-              ? JSON.stringify(
-                  currentProject.transcription.words[selectedWordIndex]
-                )
-              : 'Selected a word'}
-          </span>
+          {/* For testing purposes only */}
+          <Box>
+            <code style={{ color: 'white' }}>
+              {selectedWordIndex
+                ? JSON.stringify(
+                    currentProject.transcription.words[selectedWordIndex]
+                  )
+                : 'Selected a word'}
+            </code>
+          </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
@@ -131,7 +120,6 @@ const ProjectPage = () => {
           </Box>
           <div>
             <div>{saveButton}</div>
-            <div>{openButton}</div>
           </div>
         </Stack>
       </Stack>

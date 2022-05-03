@@ -1,31 +1,31 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import { Box, colors } from '@mui/material';
 import { Transcription } from 'sharedTypes';
 
-const TranscriptionBlock = (props: {
+const TranscriptionBox = styled(Box)`
+  background: ${colors.common.white};
+  height: 100%;
+  padding: 20px;
+`;
+
+const Word = styled('span')`
+  &:hover {
+    background: orange;
+  }
+`;
+
+interface Props {
   transcription: Transcription;
   onWordClick: (wordIndex: number) => void;
-}) => {
-  const { onWordClick, transcription } = props;
+}
 
-  const Word = styled('span')`
-    &:hover {
-      background: orange;
-    }
-  `;
-
+const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
   return (
-    <Box
-      sx={{
-        p: 2,
-        backgroundColor: '#FFFFFF',
-        height: '100%',
-      }}
-    >
+    <TranscriptionBox>
       <p>
         {transcription.words.map((word, index) => (
           <Word
-            key={word.startTime.toString()}
+            key={word.key.toString()}
             data-index={index}
             onClick={() => {
               onWordClick(index);
@@ -35,7 +35,7 @@ const TranscriptionBlock = (props: {
           </Word>
         ))}
       </p>
-    </Box>
+    </TranscriptionBox>
   );
 };
 

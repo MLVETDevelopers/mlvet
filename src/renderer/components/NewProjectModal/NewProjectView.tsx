@@ -1,9 +1,12 @@
 import { styled, Typography, Stack, Box, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import CancelButton from '../CancelButton';
 import ActionButton from '../ActionButton';
 import colors from '../../colors';
+import { projectNameSubmitted } from '../../store/actions';
+import { ProjectName } from '../../../sharedTypes';
 
 interface Props {
   closeModal: () => void;
@@ -28,19 +31,24 @@ const CustomTypography = styled(Typography)`
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
-  const [projectName, setProjectName] = useState<string>('');
+  const [projName, setProjName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
     useState<boolean>(true);
 
+  const dispatch = useDispatch();
+
+  const setProjectNameInStore = (projectName: ProjectName) =>
+    dispatch(projectNameSubmitted(projectName));
+
   const handleContinue = async () => {
-    // dispatch proj name to store before moving to next view
-    // nextView();
+    setProjectNameInStore({ name: projName } as ProjectName);
+    nextView();
   };
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProjectName(event.target.value);
+    setProjName(event.target.value);
     if (event.target.value !== '') {
       setIsAwaitingProjectName(false);
     } else {
@@ -77,7 +85,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
           id="standard-basic"
           label="Project Name"
           variant="standard"
-          value={projectName}
+          value={projName}
           onChange={(event) => handleProjectNameInput(event)}
         />
         <CustomStack

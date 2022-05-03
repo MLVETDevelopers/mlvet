@@ -23,8 +23,4 @@ export interface Word {
   duration: number;
 }
 
-export interface ProjectName {
-  name: string;
-}
-
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

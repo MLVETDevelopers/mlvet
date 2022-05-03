@@ -2,11 +2,11 @@ import { styled, Typography, Stack, Box, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { makeProjectWithoutMedia } from 'renderer/util';
 import CancelButton from '../CancelButton';
 import ActionButton from '../ActionButton';
 import colors from '../../colors';
-import { projectNameSubmitted } from '../../store/actions';
-import { ProjectName } from '../../../sharedTypes';
+import { Project } from '../../../sharedTypes';
 
 interface Props {
   closeModal: () => void;
@@ -37,11 +37,16 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setProjectNameInStore = (projectName: ProjectName) =>
-    dispatch(projectNameSubmitted(projectName));
+  const setProjectInStore = async (project: Project) => {
+    dispatch(project);
+  };
 
   const handleContinue = async () => {
-    setProjectNameInStore({ name: projName } as ProjectName);
+    const project = await makeProjectWithoutMedia(projName);
+    if (project === null) {
+      return;
+    }
+    setProjectInStore(project);
     nextView();
   };
 
@@ -55,6 +60,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       setIsAwaitingProjectName(true);
     }
   };
+
   const continueButton = (
     <ActionButton onClick={handleContinue} disabled={isAwaitingProjectName}>
       Continue

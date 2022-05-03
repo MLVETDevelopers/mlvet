@@ -34,6 +34,14 @@ export interface UndoStack {
 }
 
 /**
+ * All input/output user actions states
+ * Import / Export progress states
+ */
+export interface IO {
+  exportProgress: number; // Used for showing current progress in export
+}
+
+/**
  * The schema for the root-level application / redux store, containing the global app state.
  */
 export interface ApplicationStore {
@@ -41,6 +49,7 @@ export interface ApplicationStore {
   recentProjects: Project[];
   currentPage: ApplicationPage;
   undoStack: UndoStack;
+  io: IO;
 }
 
 const baseMockProject: Omit<Project, 'name'> = {
@@ -65,4 +74,5 @@ export const initialStore: ApplicationStore = {
   ),
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
+  io: { exportProgress: 0 },
 };

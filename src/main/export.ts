@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
@@ -33,7 +34,10 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
   return output;
 };
 
-export const exportEDL = (project: Project) => {
+export const exportEDL = (
+  mainWindow: BrowserWindow | null,
+  project: Project
+) => {
   mkdir(project.savePath);
 
   if (project.transcription) {
@@ -41,6 +45,7 @@ export const exportEDL = (project: Project) => {
       join(project.savePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
+    mainWindow?.webContents.send('export-progress-update', 1);
   }
 };
 

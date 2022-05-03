@@ -9,6 +9,8 @@ export const RECENT_PROJECT_ADDED = 'RECENT_PROJECT_ADDED';
 export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 export const PAGE_CHANGED = 'PAGE_CHANGED';
 
+export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
+
 export const UNDO_STACK_PUSHED = 'UNDO_STACK_PUSHED';
 export const UNDO_STACK_POPPED = 'UNDO_STACK_POPPED';
 export const OP_REDONE = 'OP_REDONE';
@@ -68,4 +70,11 @@ export const undoStackPopped: () => Action<null> = () => ({
 export const opRedone: () => Action<null> = () => ({
   type: OP_REDONE,
   payload: null,
+});
+
+export const updateExportProgress: (progress: number) => Action<number> = (
+  progress
+) => ({
+  type: EXPORT_PROGRESS_UPDATE,
+  payload: progress,
 });

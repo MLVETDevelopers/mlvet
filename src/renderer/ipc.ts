@@ -1,5 +1,9 @@
 import { Project } from '../sharedTypes';
-import { projectOpened, pageChanged } from './store/actions';
+import {
+  projectOpened,
+  pageChanged,
+  updateExportProgress,
+} from './store/actions';
 import { ApplicationPage } from './store/helpers';
 import store from './store/store';
 
@@ -23,3 +27,13 @@ window.electron.on('project-opened', async (_event, project: Project) => {
   store.dispatch(projectOpened(project));
   store.dispatch(pageChanged(ApplicationPage.PROJECT));
 });
+
+/**
+ * Used by backend to update frontend on export progress
+ */
+window.electron.on(
+  'export-progress-update',
+  async (_event, progress: number) => {
+    store.dispatch(updateExportProgress(progress));
+  }
+);

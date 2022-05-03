@@ -1,4 +1,4 @@
-import { Stack, stepperClasses } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import ExportCard from 'renderer/components/ExportCard';

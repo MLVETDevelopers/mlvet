@@ -19,7 +19,7 @@ const handleTranscription: (
   // Read from sample transcript. Replace this section with real transcript input
   const transcriptionPath = app.isPackaged
     ? path.join(process.resourcesPath, 'assets/SampleTranscript.json')
-    : path.join(__dirname, '../../assets/SampleTranscript.json');
+    : path.join(__dirname, '../../../assets/SampleTranscript.json');
 
   const rawTranscription = fs.readFileSync(transcriptionPath).toString();
   const jsonTranscript = JSON.parse(rawTranscription);

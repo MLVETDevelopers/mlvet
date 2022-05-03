@@ -1,9 +1,10 @@
-import { Transcription, Word } from "sharedTypes";
+import { Transcription, Word } from 'sharedTypes';
 
 export default class JSONTranscription implements Transcription {
-
   confidence: number;
+
   words: Word[];
+
   total_length: number;
 
   constructor(words: Word[], total_length: number, confidence: number) {

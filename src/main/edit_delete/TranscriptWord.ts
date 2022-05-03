@@ -1,4 +1,4 @@
-import { Word } from "sharedTypes";
+import { Word } from 'sharedTypes';
 
 export default class TranscriptWord implements Word {
   /**
@@ -6,12 +6,21 @@ export default class TranscriptWord implements Word {
    */
 
   word: string;
+
   startTime: number;
+
   duration: number;
+
   fileName: string;
+
   deleted: boolean;
 
-  constructor(word: string, startTime: number, duration: number, fileName: string) {
+  constructor(
+    word: string,
+    startTime: number,
+    duration: number,
+    fileName: string
+  ) {
     this.word = word;
     this.startTime = startTime;
     this.duration = duration;

@@ -1,9 +1,8 @@
 interface Props {
-  isOpen: boolean;
   closeModal: () => void;
-  projectName: string;
+  nextView: () => void;
 }
-const UploadVideoView = ({ isOpen, closeModal, projectName }: Props) => {
+const UploadVideoView = ({ closeModal, projectName }: Props) => {
   return 0;
 };
 

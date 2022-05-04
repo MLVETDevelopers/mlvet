@@ -13,6 +13,7 @@ import ModalTitle from '../ModalTitle';
 import SelectMediaBlock from '../SelectMediaBlock';
 
 interface Props {
+  prevView: () => void;
   closeModal: () => void;
   nextView: () => void;
 }
@@ -26,7 +27,7 @@ const Container = styled(Box)`
   height: calc(30vw);
 `;
 
-const UploadVideoView = ({ closeModal, nextView }: Props) => {
+const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
   const currentProject = useSelector(
@@ -64,7 +65,7 @@ const UploadVideoView = ({ closeModal, nextView }: Props) => {
     </ActionButton>
   );
 
-  const cancelButton = <CancelButton onClick={closeModal}>Back</CancelButton>;
+  const cancelButton = <CancelButton onClick={prevView}>Back</CancelButton>;
 
   return (
     <Container>

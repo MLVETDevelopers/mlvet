@@ -51,13 +51,27 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     setCurrentView((prev) => prev + 1);
   };
 
+  const prevView: () => void = () => {
+    if (currentView === 0) {
+      closeModal();
+      return;
+    }
+    setCurrentView((prev) => prev - 1);
+  };
+
   const view = (() => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
       case NewProjectView:
         return <NewProjectView closeModal={closeModal} nextView={nextView} />;
       case UploadVideoView:
-        return <UploadVideoView closeModal={closeModal} nextView={nextView} />;
+        return (
+          <UploadVideoView
+            prevView={prevView}
+            closeModal={closeModal}
+            nextView={nextView}
+          />
+        );
       case RunTranscriptionView:
         return (
           <RunTranscriptionView closeModal={closeModal} nextView={nextView} />

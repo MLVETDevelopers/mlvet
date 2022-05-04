@@ -34,15 +34,19 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
   return output;
 };
 
-export const exportEDL = (
+export const exportEDL: (
   mainWindow: BrowserWindow | null,
   project: Project
-) => {
-  mkdir(project.savePath);
+) => void = (mainWindow, project) => {
+  if (project.exportFilePath === null) {
+    return;
+  }
+
+  mkdir(project.exportFilePath);
 
   if (project.transcription) {
     writeFileSync(
-      join(project.savePath, `${project.name}.edl`),
+      join(project.exportFilePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
 

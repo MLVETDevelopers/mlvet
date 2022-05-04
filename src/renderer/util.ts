@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
   AudioFileExtension,
@@ -42,12 +43,12 @@ export const makeProject: (
     return null;
   }
 
-  const fileExtension = extractFileExtension(mediaFilePath);
-  if (fileExtension === null) {
+  const mediaFileExtension = extractFileExtension(mediaFilePath);
+  if (mediaFileExtension === null) {
     return null;
   }
 
-  const mediaType = getMediaType(fileExtension);
+  const mediaType = getMediaType(mediaFileExtension);
   if (mediaType === null) {
     return null;
   }
@@ -58,14 +59,31 @@ export const makeProject: (
   }
 
   const project: Project = {
+    id: uuidv4(),
     name: projectName,
     mediaType,
-    fileExtension: fileExtension as AudioFileExtension | VideoFileExtension,
-    filePath: mediaFilePath,
+    mediaFileExtension: mediaFileExtension as
+      | AudioFileExtension
+      | VideoFileExtension,
+    mediaFilePath,
     schemaVersion: CURRENT_SCHEMA_VERSION,
     transcription: null,
-    thumbnailPath,
+    thumbnailFilePath: thumbnailPath,
+    projectFilePath: null,
+    exportFilePath: null,
   };
 
   return project;
+};
+
+export const formatDate: (date: Date) => string = (date) => {
+  // dd/mm/yy
+  const dd = date.getDate().toString(); // days start at 1
+  const mm = (date.getMonth() + 1).toString(); // months start at 0 because JavaScript hates us
+  const yy = (date.getFullYear() % 100).toString();
+
+  const pad: (val: string) => string = (val) =>
+    val.length === 1 ? `0${val}` : val;
+
+  return [dd, mm, yy].map(pad).join('/');
 };

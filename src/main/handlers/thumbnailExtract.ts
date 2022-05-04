@@ -14,10 +14,12 @@ export default function extractThumbnail(
 
   console.log('Started thumbnail extraction');
 
+  const filename = 'thumbnail.png';
+
   // By Default the image is picked from the middle of the video.
   const command = ffmpeg(absolutePathToVideoFile).thumbnails({
     count: 1,
-    filename: 'thumbnail.png',
+    filename,
     folder: pathToSaveMedia,
   });
 
@@ -26,7 +28,7 @@ export default function extractThumbnail(
       if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
       if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
-      resolve(pathToSaveMedia);
+      resolve(path.join(pathToSaveMedia, filename));
     });
     command.on('error', (stdout: string, stderr: string) => {
       if (stdout) console.log(`FFMPEG stdout: ${stdout}`);

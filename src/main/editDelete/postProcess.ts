@@ -1,6 +1,5 @@
 import { Transcription, Clip } from 'sharedTypes';
 
-
 /**
  * Processes edited data to be ready for export
  * @param wordList
@@ -28,7 +27,11 @@ const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
     ) {
       currentDuration += wordList[i + 1].duration;
     } else {
-      clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+      clip = {
+        startTime: currentStartTime,
+        duration: currentDuration,
+        fileName: FILENAME,
+      };
       res.push(clip);
       currentStartTime = -1;
       currentDuration = 0;
@@ -37,15 +40,27 @@ const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
 
   if (res.length === 0) {
     currentStartTime = wordList[0].startTime;
-    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    clip = {
+      startTime: currentStartTime,
+      duration: currentDuration,
+      fileName: FILENAME,
+    };
     res.push(clip);
   } else if (currentStartTime === -1) {
     currentStartTime = wordList[wordList.length - 1].startTime;
     currentDuration = wordList[wordList.length - 1].duration;
-    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    clip = {
+      startTime: currentStartTime,
+      duration: currentDuration,
+      fileName: FILENAME,
+    };
     res.push(clip);
   } else {
-    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    clip = {
+      startTime: currentStartTime,
+      duration: currentDuration,
+      fileName: FILENAME,
+    };
     res.push(clip);
   }
 

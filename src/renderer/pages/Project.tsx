@@ -1,14 +1,21 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import StandardButton from 'renderer/components/StandardButton';
 import { projectOpened, projectSaved } from '../store/actions';
+import StandardButton from '../components/StandardButton';
+import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
+import {
+  makeChangeWordToSwampOp,
+  makeDeleteEverySecondWordOp,
+} from '../store/ops';
 
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   const dispatch = useDispatch();
 
@@ -38,6 +45,28 @@ const ProjectPage = () => {
     <StandardButton onClick={handleOpenProject}>Open</StandardButton>
   );
 
+  const deleteEverySecondWord: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
+  };
+
+  const changeRandomWordToSwamp: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    const wordIndex = Math.floor(
+      Math.random() * currentProject.transcription.words.length
+    );
+
+    dispatchOp(
+      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
+    );
+  };
+
   return (
     <>
       <Stack
@@ -58,7 +87,9 @@ const ProjectPage = () => {
               height: '100%',
             }}
           >
-            {'transcription area '.repeat(150)}
+            {currentProject.transcription?.words
+              .map((word) => word.word)
+              .join(' ')}
           </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
@@ -72,6 +103,30 @@ const ProjectPage = () => {
             Current project data:{' '}
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(currentProject)}
+            </pre>
+            <p>Buttons to demo undo</p>
+            <StandardButton onClick={deleteEverySecondWord}>
+              Delete Every Second Word
+            </StandardButton>
+            <StandardButton onClick={changeRandomWordToSwamp}>
+              Change a random word to &lsquo;swamp&rsquo;
+            </StandardButton>
+            <StandardButton
+              onClick={dispatchUndo}
+              disabled={undoStack.index <= 0}
+            >
+              Undo last action
+            </StandardButton>
+            <StandardButton
+              onClick={dispatchRedo}
+              disabled={undoStack.index >= undoStack.stack.length}
+            >
+              Redo last action
+            </StandardButton>
+            <p>Or, use shortcuts from edit menu to undo/redo</p>
+            <p>Undo stack:</p>
+            <pre style={{ width: '200px', overflow: 'auto' }}>
+              {JSON.stringify(undoStack)}
             </pre>
           </div>
         </Stack>

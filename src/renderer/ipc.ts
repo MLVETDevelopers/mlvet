@@ -1,6 +1,7 @@
 import { Project } from '../sharedTypes';
 import { projectOpened, pageChanged, projectSaved } from './store/actions';
 import { ApplicationPage } from './store/helpers';
+import { dispatchRedo, dispatchUndo } from './store/opHelpers';
 import store from './store/store';
 
 /**
@@ -28,3 +29,17 @@ window.electron.on(
     store.dispatch(pageChanged(ApplicationPage.PROJECT));
   }
 );
+
+/**
+ * Used by backend to initiate undo from edit menu
+ */
+window.electron.on('initiate-undo', async () => {
+  dispatchUndo();
+});
+
+/**
+ * Used by backend to initiate redo from edit menu
+ */
+window.electron.on('initiate-redo', async () => {
+  dispatchRedo();
+});

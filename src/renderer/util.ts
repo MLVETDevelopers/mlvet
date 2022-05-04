@@ -78,8 +78,8 @@ export const makeProject: (
 
 export const formatDate: (date: Date) => string = (date) => {
   // dd/mm/yy
-  const dd = date.getDate().toString();
-  const mm = (date.getMonth() + 1).toString(); // look into this
+  const dd = date.getDate().toString(); // days start at 1
+  const mm = (date.getMonth() + 1).toString(); // months start at 0 because JavaScript hates us
   const yy = (date.getFullYear() % 100).toString();
 
   const pad: (val: string) => string = (val) =>

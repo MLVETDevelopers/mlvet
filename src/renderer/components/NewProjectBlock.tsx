@@ -36,8 +36,8 @@ const NewProjectBlock = () => {
           <AddIcon sx={{ color: colors.yellow[500], fontSize: 72 }} />
           <Typography>New project</Typography>
         </Stack>
-        <ModalContainer isOpen={isShowingModal} closeModal={closeModal} />
       </NewProjectBox>
+      <ModalContainer isOpen={isShowingModal} closeModal={closeModal} />
     </NewProjectBoxWrapper>
   );
 };

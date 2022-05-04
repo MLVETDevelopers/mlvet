@@ -46,7 +46,9 @@ window.electron.on(
  */
 window.electron.on('finish-export', async (_event) => {
   store.dispatch(finishExport());
+});
 
+/*
  * Used by backend to initiate undo from edit menu
  */
 window.electron.on('initiate-undo', async () => {
@@ -58,5 +60,4 @@ window.electron.on('initiate-undo', async () => {
  */
 window.electron.on('initiate-redo', async () => {
   dispatchRedo();
-
 });

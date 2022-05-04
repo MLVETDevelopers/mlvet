@@ -1,6 +1,7 @@
 import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import colors from 'renderer/colors';
+import { extractFileNameWithExtension } from 'renderer/util';
 import ActionButton from './ActionButton';
 
 const SelectMediaBox = styled(Box)`
@@ -21,13 +22,13 @@ const InnerBox = styled(Box)`
 `;
 
 interface Props {
-  mediaFilePath: string | null;
+  setMediaFileName: Dispatch<SetStateAction<string | null>>;
   setMediaFilePath: Dispatch<SetStateAction<string | null>>;
   setIsAwaitingMedia: Dispatch<SetStateAction<boolean>>;
 }
 
 const SelectMediaBlock = ({
-  mediaFilePath,
+  setMediaFileName,
   setMediaFilePath,
   setIsAwaitingMedia,
 }: Props) => {
@@ -39,6 +40,10 @@ const SelectMediaBlock = ({
     }
 
     setMediaFilePath(selectedMedia);
+
+    const fileName = await extractFileNameWithExtension(selectedMedia);
+
+    setMediaFileName(fileName);
   };
 
   return (

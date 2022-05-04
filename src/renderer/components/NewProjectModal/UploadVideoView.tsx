@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, styled, Typography } from '@mui/material';
+import { Box, Stack, styled } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import { ApplicationStore } from 'renderer/store/helpers';
@@ -102,19 +102,19 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
       </CustomStack>
       <CustomStack
         direction="column"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        sx={{ height: '50%' }}
+        alignItems="baseline"
+        justifyContent="flex-start"
+        sx={{ height: '45%' }}
       >
         <MediaDisplayOnUpload fileName={mediaFileName} />
-        <CustomStack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          {cancelButton}
-          {transcribeButton}
-        </CustomStack>
+      </CustomStack>
+      <CustomStack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        {cancelButton}
+        {transcribeButton}
       </CustomStack>
     </Container>
   );

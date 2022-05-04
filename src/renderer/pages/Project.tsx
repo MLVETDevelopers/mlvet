@@ -35,18 +35,15 @@ const ProjectPage = () => {
 
   const deleteText = async () => {
     const highlightedWords = window.getSelection();
-    console.log('delete text');
     if (
-      highlightedWords?.anchorNode &&
-      highlightedWords?.focusNode &&
-      highlightedWords.anchorNode.nodeName === '#text'
+      highlightedWords?.anchorNode?.parentElement?.dataset.type === 'word' &&
+      highlightedWords?.focusNode?.parentElement?.dataset.type === 'word'
     ) {
-      console.log(highlightedWords);
       const anchor = await Number(
-        highlightedWords?.anchorNode?.parentElement.dataset.index
+        highlightedWords?.anchorNode?.parentElement?.dataset.index
       );
       const focus = await Number(
-        highlightedWords?.focusNode?.parentElement.dataset.index
+        highlightedWords?.focusNode?.parentElement?.dataset.index
       );
 
       const start = Math.min(anchor, focus);

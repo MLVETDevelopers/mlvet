@@ -27,6 +27,7 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
           <Word
             key={word.key.toString()}
             data-index={index}
+            data-type="word"
             onClick={() => {
               onWordClick(index);
             }}

@@ -23,8 +23,7 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
   return (
     <TranscriptionBox>
       <p>
-        {/* eslint-disable-next-line prettier/prettier */}
-        {transcription.words.map((word, index) => (
+        {transcription.words.map((word, index) =>
           !word.deleted ? (
             <Word
               key={word.key.toString()}
@@ -37,8 +36,7 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
               {`${word.word} `}
             </Word>
           ) : null
-          /* eslint-disable-next-line prettier/prettier */
-        ))}
+        )}
       </p>
     </TranscriptionBox>
   );

@@ -3,7 +3,9 @@ import { Dispatch, SetStateAction } from 'react';
 import colors from 'renderer/colors';
 import ActionButton from './ActionButton';
 
-const SelectMediaBox = styled(Box)``;
+const SelectMediaBox = styled(Box)`
+  width: 100%;
+`;
 
 const InnerBox = styled(Box)`
   border-style: dashed;

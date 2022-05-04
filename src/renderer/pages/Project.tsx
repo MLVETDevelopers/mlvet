@@ -18,7 +18,7 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.currentProject
   );
   const { isExporting, exportProgress } = useSelector(
-    (store: ApplicationStore) => store.io
+    (store: ApplicationStore) => store.exportIo
   );
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);

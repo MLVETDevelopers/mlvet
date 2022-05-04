@@ -23,17 +23,21 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
   return (
     <TranscriptionBox>
       <p>
+        {/* eslint-disable-next-line prettier/prettier */}
         {transcription.words.map((word, index) => (
-          <Word
-            key={word.key.toString()}
-            data-index={index}
-            data-type="word"
-            onClick={() => {
-              onWordClick(index);
-            }}
-          >
-            {`${word.word} `}
-          </Word>
+          !word.deleted ? (
+            <Word
+              key={word.key.toString()}
+              data-index={index}
+              data-type="word"
+              onClick={() => {
+                onWordClick(index);
+              }}
+            >
+              {`${word.word} `}
+            </Word>
+          ) : null
+          /* eslint-disable-next-line prettier/prettier */
         ))}
       </p>
     </TranscriptionBox>

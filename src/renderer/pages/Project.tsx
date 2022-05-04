@@ -28,7 +28,10 @@ const ProjectPage = () => {
 
   const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
     if (currentProject && currentProject.transcription) {
-      currentProject.transcription?.words.splice(firstWordIndex, numberOfWords);
+      // eslint-disable-next-line no-plusplus
+      for (let i = firstWordIndex; i < firstWordIndex + numberOfWords; i++) {
+        currentProject.transcription.words[i].deleted = true;
+      }
       saveTranscription(currentProject.transcription);
     }
   };

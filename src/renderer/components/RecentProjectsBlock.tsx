@@ -10,7 +10,7 @@ import exampleThumbnail from '../../../assets/example-thumbnail.png';
 const RecentProjectsBox = styled(Box)`
   width: calc(100vw - 40px);
   margin: 20px;
-  padding: 20px;
+  padding: 40px;
 `;
 
 const RecentProjectsItem = styled(Paper)`

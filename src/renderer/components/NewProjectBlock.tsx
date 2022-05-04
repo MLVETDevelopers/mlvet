@@ -59,7 +59,7 @@ const NewProjectBlock = ({ isFullSize }: Props) => {
       <BoxComponent onClick={showModal} elevation={3}>
         <Stack alignItems="center" className="MuiStack-root">
           <AddIcon sx={{ color: colors.yellow[500], fontSize: 72 }} />
-          <Typography>New project</Typography>
+          <Typography>New Project</Typography>
         </Stack>
       </BoxComponent>
       <ModalContainer isOpen={isShowingModal} closeModal={closeModal} />

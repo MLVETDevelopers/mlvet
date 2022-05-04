@@ -19,12 +19,13 @@ export const extractFileExtension: (filePath: string) => string | null = (
 };
 
 export const extractFileNameWithExtension: (
-  filePath: string
+  filePath: string | null
 ) => Promise<string | null> = async (filePath) => {
+  if (filePath === null) {
+    return null;
+  }
   const filePathSplit = filePath.split('/');
   const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
-  console.log(filePathSplit);
-  console.log(fileNameWithExtension);
 
   return fileNameWithExtension;
 };

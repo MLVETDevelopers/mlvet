@@ -4,6 +4,11 @@ import handleSaveProject_ from './saveProjectHandler';
 import handleTranscription_ from './transcriptionHandler';
 import extractThumbnail_ from './thumbnailExtract';
 
+export {
+  readRecentProjects,
+  writeRecentProjects,
+} from './recentProjectsHandler';
+
 // This is kind of hacky so if you find a better way please change it lol
 
 export const extractAudio = extractAudio_;

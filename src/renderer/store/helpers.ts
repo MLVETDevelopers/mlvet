@@ -43,26 +43,13 @@ export interface ApplicationStore {
   undoStack: UndoStack;
 }
 
-const baseMockProject: Omit<Project, 'name'> = {
-  schemaVersion: 1,
-  mediaType: 'video',
-  savePath: 'fakepath',
-  filePath: 'fakepath',
-  fileExtension: 'mp4',
-  transcription: null,
-  savePath: null,
-  thumbnailPath: null,
-};
-
 /**
  * The initial state of the application store / redux store.
  * This is what the store looks like every time the application starts.
  */
 export const initialStore: ApplicationStore = {
   currentProject: null,
-  recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
-    (name) => ({ ...baseMockProject, name: `${name} Project` })
-  ),
+  recentProjects: [],
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
 };

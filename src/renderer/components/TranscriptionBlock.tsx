@@ -24,7 +24,7 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
     <TranscriptionBox>
       <p>
         {transcription.words.map((word, index) =>
-          !word.deleted ? (
+          word.deleted ? null : (
             <Word
               key={word.key.toString()}
               data-index={index}
@@ -35,7 +35,7 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
             >
               {`${word.word} `}
             </Word>
-          ) : null
+          )
         )}
       </p>
     </TranscriptionBox>

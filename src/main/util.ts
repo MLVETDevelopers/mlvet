@@ -2,6 +2,7 @@
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
+import { app } from 'electron';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -35,3 +36,6 @@ export const mkdir = (dirPath: string) => {
     }
   }
 };
+
+export const appDataStoragePath: () => string = () =>
+  path.join(app.getPath('userData'), 'mlvet');

@@ -8,6 +8,7 @@ export const CURRENT_PROJECT_CLOSED = 'CURRENT_PROJECT_CLOSED';
 export const RECENT_PROJECT_ADDED = 'RECENT_PROJECT_ADDED';
 export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 export const PAGE_CHANGED = 'PAGE_CHANGED';
+export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
 
 export const START_EXPORT = 'START_EXPORT';
 export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
@@ -55,6 +56,13 @@ export const pageChanged: (page: ApplicationPage) => Action<ApplicationPage> = (
 ) => ({
   type: PAGE_CHANGED,
   payload: page,
+});
+
+export const recentProjectsLoaded: (
+  recentProjects: Project[]
+) => Action<Project[]> = (recentProjects) => ({
+  type: RECENT_PROJECTS_LOADED,
+  payload: recentProjects,
 });
 
 export const undoStackPushed: <T extends DoPayload, U extends UndoPayload>(

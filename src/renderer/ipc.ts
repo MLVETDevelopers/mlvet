@@ -6,6 +6,7 @@ import {
   finishExport,
 } from './store/actions';
 import { ApplicationPage } from './store/helpers';
+import { dispatchRedo, dispatchUndo } from './store/opHelpers';
 import store from './store/store';
 
 /**
@@ -30,6 +31,7 @@ window.electron.on('project-opened', async (_event, project: Project) => {
 });
 
 /**
+
  * Used by backend to update frontend on export progress
  */
 window.electron.on(
@@ -44,4 +46,17 @@ window.electron.on(
  */
 window.electron.on('finish-export', async (_event) => {
   store.dispatch(finishExport());
+
+ * Used by backend to initiate undo from edit menu
+ */
+window.electron.on('initiate-undo', async () => {
+  dispatchUndo();
+});
+
+/**
+ * Used by backend to initiate redo from edit menu
+ */
+window.electron.on('initiate-redo', async () => {
+  dispatchRedo();
+
 });

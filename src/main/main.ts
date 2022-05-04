@@ -22,10 +22,12 @@ import {
   handleSaveProject,
   handleTranscription,
   extractAudio,
+  extractThumbnail,
+  readRecentProjects,
+  writeRecentProjects,
 } from './handlers';
 import startServer from './pyServer';
-import { resolveHtmlPath } from './util';
-import extractThumbnail from './handlers/thumbnailExtract';
+import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -38,6 +40,9 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
+
+// If app data storage path doesn't exist, create it
+mkdir(appDataStoragePath());
 
 ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
@@ -54,6 +59,12 @@ ipcMain.handle('save-project', async (_event, project) =>
 );
 
 ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
+
+ipcMain.handle('read-recent-projects', async () => readRecentProjects());
+
+ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
+  writeRecentProjects(recentProjects)
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

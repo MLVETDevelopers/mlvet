@@ -25,7 +25,7 @@ const CustomTextField = styled(TextField)`
 
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
-  height: 500px;
+  height: 15vw;
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
@@ -85,13 +85,15 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>
         </CustomStack>
-        <CustomTextField
-          id="standard-basic"
-          label="Project Name"
-          variant="standard"
-          value={projName}
-          onChange={(event) => handleProjectNameInput(event)}
-        />
+        <CustomStack>
+          <CustomTextField
+            id="standard-basic"
+            label="Project Name"
+            variant="standard"
+            value={projName}
+            onChange={(event) => handleProjectNameInput(event)}
+          />
+        </CustomStack>
         <CustomStack
           direction="row"
           alignItems="center"

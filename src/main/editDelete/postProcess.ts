@@ -9,9 +9,8 @@ import Clip from './Clip';
 const FILENAME = 'placeholder_filename.mp4';
 
 const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
+  const wordList = jsonTranscript.words.filter((word) => !word.deleted);
 
-  const wordList = jsonTranscript.words.filter(word => !word.deleted)
-  
   const res: Array<Clip> = [];
   let currentStartTime = -1;
   let currentDuration = 0;

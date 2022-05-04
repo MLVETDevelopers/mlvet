@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
 import { Transcription } from '../../sharedTypes';
-import preProcessTranscript from '../edit_delete/preProcess';
+import preProcessTranscript from '../editDelete/preProcess';
 
 /**
  * util to simulate running of transcription
@@ -34,7 +34,6 @@ const handleTranscription: (
   );
 
   return processedTranscript;
-
 };
 
 export default handleTranscription;

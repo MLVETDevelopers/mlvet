@@ -23,7 +23,7 @@ const CustomStack = styled(Stack)`
 
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
-  height: 500px;
+  height: calc(30vw);
 `;
 
 const UploadVideoView = ({ closeModal, nextView }: Props) => {
@@ -72,7 +72,7 @@ const UploadVideoView = ({ closeModal, nextView }: Props) => {
         direction="column"
         alignItems="flex-start"
         justifyContent="space-around"
-        sx={{ height: '100%' }}
+        sx={{ height: '50%' }}
       >
         <CustomStack
           direction="row"
@@ -95,6 +95,14 @@ const UploadVideoView = ({ closeModal, nextView }: Props) => {
             setIsAwaitingMedia={setIsAwaitingMedia}
           />
         </CustomStack>
+      </CustomStack>
+      <CustomStack
+        direction="column"
+        alignItems="flex-start"
+        justifyContent="flex-end"
+        sx={{ height: '50%' }}
+      >
+        {/* COMPONENT WITH MEDIA TO TRANSCRIBE/TRANSCIRBED GOES HERE */}
         <CustomStack
           direction="row"
           alignItems="center"

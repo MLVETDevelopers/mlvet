@@ -1,4 +1,4 @@
-import { Modal, styled, colors, Box } from '@mui/material';
+import { Modal, styled, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/actions';
@@ -6,6 +6,7 @@ import { ApplicationPage } from '../../store/helpers';
 import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import UploadVideoView from './UploadVideoView';
+import colors from '../../colors';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -14,9 +15,9 @@ const CustomModal = styled(Modal)`
 `;
 
 const CustomModalInner = styled(Box)`
-  width: calc(80vw - 40px);
-  background: ${colors.grey[900]};
-  padding: 20px;
+  width: calc(30vw - 40px);
+  background: ${colors.grey[700]};
+  padding: 30px;
 `;
 
 interface Props {

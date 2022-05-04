@@ -1,7 +1,8 @@
 import { Box, Typography, styled, Stack, Grid, Paper } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ApplicationStore } from '../store/helpers';
+import { projectOpened, pageChanged } from 'renderer/store/actions';
+import { ApplicationPage, ApplicationStore } from '../store/helpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';
@@ -17,6 +18,13 @@ const RecentProjectsItem = styled(Paper)`
   color: ${colors.grey[300]};
   padding: 10px 20px;
   padding-right: 0;
+
+  transition: 0.5s background;
+
+  &:hover {
+    background: ${colors.grey[600]};
+    cursor: pointer;
+  }
 `;
 
 const RecentProjectsSubItem = styled(Grid)`
@@ -34,6 +42,8 @@ const CategoryHeading = ({ children }: { children: React.ReactNode }) => (
 );
 
 const RecentProjectsBlock = () => {
+  const dispatch = useDispatch();
+
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
   )
@@ -50,6 +60,18 @@ const RecentProjectsBlock = () => {
   const formatSize: (size: number | null) => string = (size) =>
     size === null ? '?' : `${Math.floor(size / 1000000)} MB`;
 
+  const openProject: (id: string) => void = (id) => {
+    console.log('rp', recentProjects);
+    const project = recentProjects.find((proj) => proj.id === id);
+
+    if (!project) {
+      return;
+    }
+
+    dispatch(projectOpened(project, project.projectFilePath));
+    dispatch(pageChanged(ApplicationPage.PROJECT));
+  };
+
   return (
     <RecentProjectsBox>
       <Typography variant="h6" style={{ marginBottom: 20, fontWeight: 'bold' }}>
@@ -57,7 +79,7 @@ const RecentProjectsBlock = () => {
       </Typography>
       <Stack spacing={2} style={{ maxHeight: '50vh', overflowY: 'auto' }}>
         {recentProjects.map(({ id, name, dateModified, mediaSize }) => (
-          <RecentProjectsItem key={id}>
+          <RecentProjectsItem key={id} onClick={() => openProject(id)}>
             <Grid container spacing={2}>
               <RecentProjectsSubItem item xs={8}>
                 <img

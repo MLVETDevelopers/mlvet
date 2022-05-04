@@ -24,8 +24,11 @@ export const projectCreated: (project: Project) => Action<Project> = (
 
 export const projectOpened: (
   project: Project,
-  filePath: string
-) => Action<{ project: Project; filePath: string }> = (project, filePath) => ({
+  filePath: string | null
+) => Action<{ project: Project; filePath: string | null }> = (
+  project,
+  filePath
+) => ({
   type: PROJECT_OPENED,
   payload: { project, filePath },
 });

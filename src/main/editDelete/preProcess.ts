@@ -1,6 +1,5 @@
-import { Transcription } from 'sharedTypes';
+import { Transcription, Word } from 'sharedTypes';
 import JSONTranscription from './JSONTranscription';
-import TranscriptWord from './TranscriptWord';
 
 const preProcessTranscript = (
   jsonTranscript: any,
@@ -21,26 +20,31 @@ const preProcessTranscript = (
       jsonTranscript.words[i].start_time;
     // unique identifier for each word
     jsonTranscript.words[i].key = i.toString();
-    const word = new TranscriptWord(
-      i.toString(),
-      jsonTranscript.words[i].word,
-      jsonTranscript.words[i].start_time,
-      wordDuration,
-      'PLACEHOLDER FILENAME'
-    );
+    const word : Word = {
+      word: jsonTranscript.words[i].word,
+      startTime:jsonTranscript.words[i].start_time,
+      duration: wordDuration,
+      deleted: false,
+      key: i.toString(),
+      fileName: "PLACEHOLDER FILENAME"
+    };
+
     processedTranscript.words.push(word);
   }
 
   // last word in transcript
   const wordDuration =
     duration - jsonTranscript.words[numberOfWords - 1].start_time;
-  const lastWord = new TranscriptWord(
-    (numberOfWords - 1).toString(),
-    jsonTranscript.words[numberOfWords - 1].word,
-    jsonTranscript.words[numberOfWords - 1].start_time,
-    wordDuration,
-    'PLACEHOLDER FILENAME'
-  );
+
+  const lastWord : Word = {
+    word: jsonTranscript.words[numberOfWords - 1].word,
+    startTime: jsonTranscript.words[numberOfWords - 1].start_time,
+    duration: wordDuration,
+    deleted: false,
+    key: (numberOfWords - 1).toString(),
+    fileName: "PLACEHOLDER FILENAME"
+  };
+
   processedTranscript.words.push(lastWord);
 
   return processedTranscript;

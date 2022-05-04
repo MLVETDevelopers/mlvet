@@ -1,5 +1,4 @@
 import { Transcription, Word } from 'sharedTypes';
-import JSONTranscription from './JSONTranscription';
 
 const preProcessTranscript = (
   jsonTranscript: any,
@@ -7,10 +6,11 @@ const preProcessTranscript = (
 ): Transcription => {
   const numberOfWords: number = jsonTranscript.words.length;
 
-  const processedTranscript: Transcription = new JSONTranscription(
-    [],
-    jsonTranscript.confidence
-  );
+  const processedTranscript: Transcription = {
+    confidence: jsonTranscript.confidence,
+    words: []
+  }
+
 
   for (let i = 0; i < numberOfWords - 1; i += 1) {
     // duration includes the white space between current and next word

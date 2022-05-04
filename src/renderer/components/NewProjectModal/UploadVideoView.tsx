@@ -71,7 +71,7 @@ const UploadVideoView = ({ closeModal, nextView }: Props) => {
       <CustomStack
         direction="column"
         alignItems="flex-start"
-        justifyContent="space-around"
+        justifyContent="space-between"
         sx={{ height: '50%' }}
       >
         <CustomStack

@@ -1,4 +1,4 @@
-import { styled, Typography, Stack, Box, TextField } from '@mui/material';
+import { styled, Stack, Box, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -72,7 +72,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       <CustomStack
         direction="column"
         alignItems="flex-start"
-        justifyContent="space-around"
+        justifyContent="space-between"
         sx={{ height: '100%' }}
       >
         <CustomStack

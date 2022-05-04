@@ -1,4 +1,4 @@
-import { styled, Box, Stack } from '@mui/material';
+import { styled, Box, Stack, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import colors from '../colors';
@@ -9,26 +9,29 @@ interface Props {
 
 const CustomBox = styled(Box)`
   width: 100%;
+  margin: 5px;
 `;
 
 const MediaDisplayOnUpload = ({ fileName }: Props) => {
-  const view = (() => {
-    if (fileName === null) {
-      return null;
-    }
+  if (fileName === null) {
+    return null;
+  }
 
-    return (
-      <CustomBox>
-        <Stack>
-          <DoneIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
-          {fileName}
-          <DeleteIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
+  return (
+    <CustomBox>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack direction="row" alignItems="center" justifyContent="flex-start">
+          <DoneIcon
+            sx={{ color: colors.yellow[500], fontSize: 36, margin: '5px' }}
+          />
+          <Typography>{fileName}</Typography>
         </Stack>
-      </CustomBox>
-    );
-  })();
-
-  return { view };
+        <DeleteIcon
+          sx={{ color: colors.yellow[500], fontSize: 36, margin: '5px' }}
+        />
+      </Stack>
+    </CustomBox>
+  );
 };
 
 export default MediaDisplayOnUpload;

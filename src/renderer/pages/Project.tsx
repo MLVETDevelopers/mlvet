@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
@@ -74,7 +74,8 @@ const ProjectPage = () => {
   }
 
   const onWordClick = (wordIndex: number) => {
-    console.log(currentProject.transcription?.words[wordIndex]);
+    // TODO: Implement onWordClick
+    return currentProject.transcription?.words[wordIndex];
   };
 
   const saveButton = (

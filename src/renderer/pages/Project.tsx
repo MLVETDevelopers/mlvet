@@ -18,7 +18,6 @@ const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
-  const [selectedWordIndex, setSelectedWordIndex] = useState<number | null>();
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -69,14 +68,14 @@ const ProjectPage = () => {
     };
   });
 
-  const onWordClick = (wordIndex: number) => {
-    setSelectedWordIndex(wordIndex);
-  };
-
   // TODO: Error handling
-  if (!currentProject || !currentProject?.transcription) {
+  if (!currentProject?.transcription) {
     return null;
   }
+
+  const onWordClick = (wordIndex: number) => {
+    console.log(currentProject.transcription?.words[wordIndex]);
+  };
 
   const saveButton = (
     <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
@@ -100,16 +99,6 @@ const ProjectPage = () => {
             transcription={currentProject.transcription}
             onWordClick={onWordClick}
           />
-          {/* For testing purposes only */}
-          <Box>
-            <code style={{ color: 'white' }}>
-              {selectedWordIndex
-                ? JSON.stringify(
-                    currentProject.transcription.words[selectedWordIndex]
-                  )
-                : 'Selected a word'}
-            </code>
-          </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>

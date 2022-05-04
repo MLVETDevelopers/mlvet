@@ -11,6 +11,7 @@ import ActionButton from '../ActionButton';
 import CancelButton from '../CancelButton';
 import ModalTitle from '../ModalTitle';
 import SelectMediaBlock from '../SelectMediaBlock';
+import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
 
 interface Props {
   prevView: () => void;
@@ -105,8 +106,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         justifyContent="space-between"
         sx={{ height: '50%' }}
       >
-        {/* COMPONENT WITH MEDIA TO TRANSCRIBE/TRANSCIRBED GOES HERE */}
-        <Typography>{mediaFileName}</Typography>
+        <MediaDisplayOnUpload fileName={mediaFileName} />
         <CustomStack
           direction="row"
           alignItems="center"

@@ -24,15 +24,15 @@ const theme = responsiveFontSizes(
         color: colors.grey[300],
       },
       fontFamily: ['Rubik', 'sans-serif'].join(','),
-      'h-100': {
+      h1: {
         fontSize: '24px',
-        lineHeight: '36px',
+        lineHeight: 36 / 18, // 36px
         margin: 0,
         fontWeight: 500,
       },
-      'h-300': {
+      h3: {
         fontSize: '18px',
-        lineHeight: '28px',
+        lineHeight: 28 / 18, // 28px
         margin: 0,
         fontWeight: 500,
       },
@@ -66,8 +66,6 @@ const theme = responsiveFontSizes(
       MuiTypography: {
         defaultProps: {
           variantMapping: {
-            h1: 'h-100',
-            h3: 'h-300',
             body1: 'p-300',
             body2: 'p-400',
           },

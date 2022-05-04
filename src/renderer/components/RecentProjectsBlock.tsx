@@ -74,7 +74,10 @@ const RecentProjectsBlock = () => {
 
   return (
     <RecentProjectsBox>
-      <Typography variant="h6" style={{ marginBottom: 20, fontWeight: 'bold' }}>
+      <Typography
+        variant="h3"
+        style={{ display: 'block', marginBottom: 10, fontWeight: 'bold' }}
+      >
         Recent Projects
       </Typography>
       <Stack spacing={2} style={{ maxHeight: '50vh', overflowY: 'auto' }}>
@@ -90,7 +93,8 @@ const RecentProjectsBlock = () => {
                   }}
                 />
                 <Typography
-                  style={{ fontSize: 24, fontWeight: 'bold', marginLeft: 40 }}
+                  variant="h1"
+                  style={{ fontWeight: 'bold', marginLeft: 40 }}
                 >
                   {name}
                 </Typography>

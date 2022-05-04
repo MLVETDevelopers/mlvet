@@ -35,9 +35,6 @@ const handleTranscription: (
 
   return processedTranscript;
 
-  // const newTranscript: Transcription = processedTranscript;
-
-  // return newTranscript;
 };
 
 export default handleTranscription;

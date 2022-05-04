@@ -41,18 +41,19 @@ const CategoryHeading = ({ children }: { children: React.ReactNode }) => (
   </Typography>
 );
 
+const sortByDateModified = (first: RecentProject, second: RecentProject) =>
+  (second.dateModified?.getTime() || 0) - (first.dateModified?.getTime() || 0);
+
+const RECENT_PROJECTS_COUNT = 5;
+
 const RecentProjectsBlock = () => {
   const dispatch = useDispatch();
 
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
   )
-    .sort(
-      (first, second) =>
-        (second.dateModified?.getTime() || 0) -
-        (first.dateModified?.getTime() || 0)
-    )
-    .slice(0, 5);
+    .sort(sortByDateModified)
+    .slice(0, RECENT_PROJECTS_COUNT);
 
   const displayDate: (date: Date | null) => string = (date) =>
     date === null ? '?' : formatDate(date);

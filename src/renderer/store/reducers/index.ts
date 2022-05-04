@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
   recentProjects: recentProjectsReducer,
   currentPage: currentPageReducer,
   undoStack: undoStackReducer,
-  io: exportIoReducer,
+  exportIo: exportIoReducer,
 });
 
 export default rootReducer;

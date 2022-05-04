@@ -21,6 +21,12 @@ export interface Word {
   key: string;
 }
 
+export interface Clip {
+  startTime: number;
+  duration: number;
+  fileName: string;
+}
+
 export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 

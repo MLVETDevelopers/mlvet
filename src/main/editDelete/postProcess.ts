@@ -1,5 +1,5 @@
-import { Transcription } from 'sharedTypes';
-import Clip from './Clip';
+import { Transcription, Clip } from 'sharedTypes';
+
 
 /**
  * Processes edited data to be ready for export
@@ -14,6 +14,7 @@ const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
   const res: Array<Clip> = [];
   let currentStartTime = -1;
   let currentDuration = 0;
+  let clip: Clip;
 
   for (let i = 0; i < wordList.length - 1; i += 1) {
     if (currentStartTime === -1) {
@@ -27,7 +28,8 @@ const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
     ) {
       currentDuration += wordList[i + 1].duration;
     } else {
-      res.push(new Clip(currentStartTime, currentDuration, FILENAME));
+      clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+      res.push(clip);
       currentStartTime = -1;
       currentDuration = 0;
     }
@@ -35,13 +37,16 @@ const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
 
   if (res.length === 0) {
     currentStartTime = wordList[0].startTime;
-    res.push(new Clip(currentStartTime, currentDuration, FILENAME));
+    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    res.push(clip);
   } else if (currentStartTime === -1) {
     currentStartTime = wordList[wordList.length - 1].startTime;
     currentDuration = wordList[wordList.length - 1].duration;
-    res.push(new Clip(currentStartTime, currentDuration, FILENAME));
+    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    res.push(clip);
   } else {
-    res.push(new Clip(currentStartTime, currentDuration, FILENAME));
+    clip= {startTime: currentStartTime, duration: currentDuration, fileName: FILENAME}
+    res.push(clip);
   }
 
   return res;

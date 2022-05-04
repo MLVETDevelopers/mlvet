@@ -2,21 +2,6 @@ import { Transcription } from 'sharedTypes';
 import Clip from './Clip';
 
 /**
- * Removes deleted words from edited trancription
- * @param wordList
- */
-const removeDeleted = (wordList: Array<any>): void => {
-  let i = 0;
-  while (i < wordList.length) {
-    if (wordList[i].deleted) {
-      wordList.splice(i, 1);
-    } else {
-      i += 1;
-    }
-  }
-};
-
-/**
  * Processes edited data to be ready for export
  * @param wordList
  * @returns
@@ -26,7 +11,8 @@ const FILENAME = 'placeholder_filename.mp4';
 const postProcess = (jsonTranscript: Transcription): Array<Clip> => {
   const wordList = jsonTranscript.words;
 
-  removeDeleted(wordList);
+  wordList.filter(word => !word.deleted)
+  
   const res: Array<Clip> = [];
   let currentStartTime = -1;
   let currentDuration = 0;

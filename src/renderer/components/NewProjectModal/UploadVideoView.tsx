@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, styled } from '@mui/material';
+import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
-import { updateProjectWithMedia } from 'renderer/util';
+import {
+  updateProjectWithMedia,
+  extractFileNameWithExtension,
+} from 'renderer/util';
 import ActionButton from '../ActionButton';
 import CancelButton from '../CancelButton';
 import ModalTitle from '../ModalTitle';
@@ -30,6 +33,7 @@ const Container = styled(Box)`
 const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
+  const [mediaFileName, setMediaFileName] = useState<string | null>(null);
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -50,13 +54,18 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   const handleTranscribe = async () => {
     const project = await updateProjectWithMedia(currentProject, mediaFilePath);
 
-    if (project === null) {
+    if (project === null || mediaFilePath === null) {
       return;
     }
 
     setCurrentProject(project);
     addToRecentProjects(project);
-    nextView();
+
+    const fileName = await extractFileNameWithExtension(mediaFilePath);
+
+    setMediaFileName(fileName);
+
+    // nextView();
   };
 
   const transcribeButton = (
@@ -104,6 +113,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         sx={{ height: '50%' }}
       >
         {/* COMPONENT WITH MEDIA TO TRANSCRIBE/TRANSCIRBED GOES HERE */}
+        <Typography>{mediaFileName}</Typography>
         <CustomStack
           direction="row"
           alignItems="center"

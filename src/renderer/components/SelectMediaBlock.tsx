@@ -55,7 +55,6 @@ const SelectMediaBlock = ({
           <ActionButton>Browse</ActionButton>
         </Stack>
       </InnerBox>
-      {mediaFilePath}
     </SelectMediaBox>
   );
 };

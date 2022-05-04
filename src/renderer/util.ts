@@ -18,6 +18,17 @@ export const extractFileExtension: (filePath: string) => string | null = (
   return extension;
 };
 
+export const extractFileNameWithExtension: (
+  filePath: string
+) => Promise<string | null> = async (filePath) => {
+  const filePathSplit = filePath.split('/');
+  const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
+  console.log(filePathSplit);
+  console.log(fileNameWithExtension);
+
+  return fileNameWithExtension;
+};
+
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
   extension
 ) => {

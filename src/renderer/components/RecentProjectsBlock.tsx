@@ -61,7 +61,6 @@ const RecentProjectsBlock = () => {
     size === null ? '?' : `${Math.floor(size / 1000000)} MB`;
 
   const openProject: (id: string) => void = (id) => {
-    console.log('rp', recentProjects);
     const project = recentProjects.find((proj) => proj.id === id);
 
     if (!project) {

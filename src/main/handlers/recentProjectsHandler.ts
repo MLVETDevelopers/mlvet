@@ -1,8 +1,8 @@
-import { app } from 'electron';
 import path from 'path';
 import fs from 'fs/promises';
-import { Project } from '../../sharedTypes';
+import { Project, RecentProject } from '../../sharedTypes';
 import { appDataStoragePath } from '../util';
+import retrieveMetadata from './projectMetadataHandler';
 
 const RECENT_PROJECTS_PATH = path.join(
   appDataStoragePath(),
@@ -17,14 +17,22 @@ export const writeRecentProjects: (
   await fs.writeFile(RECENT_PROJECTS_PATH, recentProjectsJson);
 };
 
-export const readRecentProjects: () => Promise<Project[]> = async () => {
+export const readRecentProjects: () => Promise<RecentProject[]> = async () => {
   try {
     const recentProjectsJson = (
       await fs.readFile(RECENT_PROJECTS_PATH)
     ).toString();
     const recentProjects = JSON.parse(recentProjectsJson);
 
-    return recentProjects;
+    // Read metadata
+    const recentProjectsWithMetadata = await Promise.all(
+      recentProjects.map(async (project: Project) => ({
+        ...project,
+        ...(await retrieveMetadata(project)),
+      }))
+    );
+
+    return recentProjectsWithMetadata;
   } catch (err) {
     return [];
   }

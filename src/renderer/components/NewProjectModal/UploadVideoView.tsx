@@ -6,10 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
-import {
-  updateProjectWithMedia,
-  extractFileNameWithExtension,
-} from 'renderer/util';
+import { updateProjectWithMedia } from 'renderer/util';
 import ActionButton from '../ActionButton';
 import CancelButton from '../CancelButton';
 import ModalTitle from '../ModalTitle';
@@ -61,11 +58,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
     setCurrentProject(project);
     addToRecentProjects(project);
 
-    const fileName = await extractFileNameWithExtension(mediaFilePath);
-
-    setMediaFileName(fileName);
-
-    // nextView();
+    nextView();
   };
 
   const transcribeButton = (
@@ -100,7 +93,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
           justifyContent="center"
         >
           <SelectMediaBlock
-            mediaFilePath={mediaFilePath}
+            setMediaFileName={setMediaFileName}
             setMediaFilePath={setMediaFilePath}
             setIsAwaitingMedia={setIsAwaitingMedia}
           />
@@ -109,7 +102,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
       <CustomStack
         direction="column"
         alignItems="flex-start"
-        justifyContent="flex-end"
+        justifyContent="space-between"
         sx={{ height: '50%' }}
       >
         {/* COMPONENT WITH MEDIA TO TRANSCRIBE/TRANSCIRBED GOES HERE */}

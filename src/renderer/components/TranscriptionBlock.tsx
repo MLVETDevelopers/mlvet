@@ -1,11 +1,24 @@
 import styled from '@emotion/styled';
-import { Box, colors } from '@mui/material';
+import { Box } from '@mui/material';
 import { Transcription } from 'sharedTypes';
+import colors from '../colors';
 
 const TranscriptionBox = styled(Box)`
-  background: ${colors.common.white};
+  background: ${colors.grey[700]};
+  border-radius: 5px;
+  color: ${colors.grey[300]};
+  overflow-y: scroll;
   height: 100%;
   padding: 20px;
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: ${colors.yellow[500]};
+  }
 `;
 
 const Word = styled('span')`

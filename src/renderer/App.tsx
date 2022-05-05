@@ -12,7 +12,7 @@ import theme from './theme';
 
 const RootContainer = styled(Box)`
   margin: 0;
-  background: ${colors.grey[700]};
+  background: ${colors.grey[900]};
   height: 100vh;
 `;
 

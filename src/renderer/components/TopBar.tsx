@@ -2,6 +2,7 @@ import { styled, Box, colors, Typography } from '@mui/material';
 
 const TopBarBox = styled(Box)`
   background: ${colors.grey[900]};
+  color: ${colors.grey[300]};
   width: calc(100vw - 40px);
   margin: 0;
   padding: 20px;

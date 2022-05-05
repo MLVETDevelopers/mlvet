@@ -24,7 +24,7 @@ const CustomTextField = styled(TextField)`
 
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
-  height: 15vw;
+  height: 200px;
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {

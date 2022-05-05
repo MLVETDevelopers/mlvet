@@ -24,7 +24,9 @@ const CustomStack = styled(Stack)`
 
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
-  height: calc(30vw);
+  ${(props) => props.theme.breakpoints.up('xs')} {
+    height: 500px;
+  }
 `;
 
 const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {

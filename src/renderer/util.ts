@@ -5,7 +5,7 @@ import {
   VideoFileExtension,
 } from '../sharedTypes';
 
-const { extractThumbnail } = window.electron;
+const { extractThumbnail, userOS } = window.electron;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -24,7 +24,21 @@ export const extractFileNameWithExtension: (
   if (filePath === null) {
     return null;
   }
-  const filePathSplit = filePath.split('/');
+  const { isDarwin, isWindows, isLinux } = await userOS();
+
+  let delimiter: string | null = null;
+
+  if (isDarwin || isLinux) {
+    delimiter = '/';
+  } else if (isWindows) {
+    delimiter = '\\';
+  }
+
+  if (delimiter === null) {
+    return null;
+  }
+
+  const filePathSplit = filePath.split(delimiter);
   const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
 
   return fileNameWithExtension;

@@ -2,7 +2,7 @@
 // If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron
 
 import { IpcRendererEvent } from 'electron';
-import { Project, Transcription } from '../sharedTypes';
+import { Project, Transcription, OperatingSystems } from '../sharedTypes';
 
 declare global {
   interface Window {
@@ -13,6 +13,7 @@ declare global {
       openProject: () => Promise<Project>;
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
       extractThumbnail: (filePath: string) => Promise<string>;
+      userOS: () => Promise<OperatingSystems>;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

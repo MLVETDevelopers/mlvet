@@ -2,6 +2,8 @@
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
+import os from 'os';
+import { OperatingSystems } from '../sharedTypes';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -34,4 +36,16 @@ export const mkdir = (dirPath: string) => {
       console.error(err);
     }
   }
+};
+
+export const handleOSQuery: () => OperatingSystems = () => {
+  const isDarwin = os.platform() === 'darwin';
+  const isWindows = os.platform() === 'win32';
+  const isLinux = os.platform() === 'linux';
+
+  return {
+    isDarwin,
+    isWindows,
+    isLinux,
+  };
 };

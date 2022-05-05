@@ -24,7 +24,7 @@ import {
   extractAudio,
 } from './handlers';
 import startServer from './pyServer';
-import { resolveHtmlPath } from './util';
+import { resolveHtmlPath, handleOSQuery } from './util';
 import extractThumbnail from './handlers/thumbnailExtract';
 
 export default class AppUpdater {
@@ -54,6 +54,8 @@ ipcMain.handle('save-project', async (_event, project) =>
 );
 
 ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
+
+ipcMain.handle('user-os', async () => handleOSQuery());
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

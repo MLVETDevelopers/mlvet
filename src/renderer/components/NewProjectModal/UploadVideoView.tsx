@@ -7,8 +7,8 @@ import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
 import { updateProjectWithMedia } from 'renderer/util';
-import ActionButton from '../ActionButton';
-import CancelButton from '../CancelButton';
+import PrimaryButton from '../PrimaryButton';
+import SecondaryButton from '../SecondaryButton';
 import ModalTitle from '../ModalTitle';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
@@ -63,12 +63,14 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   };
 
   const transcribeButton = (
-    <ActionButton onClick={handleTranscribe} disabled={isAwaitingMedia}>
+    <PrimaryButton onClick={handleTranscribe} disabled={isAwaitingMedia}>
       Transcribe
-    </ActionButton>
+    </PrimaryButton>
   );
 
-  const cancelButton = <CancelButton onClick={prevView}>Back</CancelButton>;
+  const cancelButton = (
+    <SecondaryButton onClick={prevView}>Back</SecondaryButton>
+  );
 
   return (
     <Container>

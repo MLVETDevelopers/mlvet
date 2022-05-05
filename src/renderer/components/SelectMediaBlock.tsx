@@ -2,7 +2,7 @@ import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import colors from 'renderer/colors';
 import { extractFileNameWithExtension } from 'renderer/util';
-import ActionButton from './ActionButton';
+import PrimaryButton from './PrimaryButton';
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
@@ -57,7 +57,7 @@ const SelectMediaBlock = ({
         >
           <Typography fontWeight="bold">Drag and drop file here</Typography>
           <Typography fontWeight="bold">or</Typography>
-          <ActionButton>Browse</ActionButton>
+          <PrimaryButton>Browse</PrimaryButton>
         </Stack>
       </InnerBox>
     </SelectMediaBox>

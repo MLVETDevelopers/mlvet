@@ -4,11 +4,10 @@ import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
-import SecondaryButton from '../SecondaryButton';
-import PrimaryButton from '../PrimaryButton';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
 import ModalTitle from '../ModalTitle';
+import StandardButton from '../StandardButton';
 
 interface Props {
   closeModal: () => void;
@@ -60,13 +59,19 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const continueButton = (
-    <PrimaryButton onClick={handleContinue} disabled={isAwaitingProjectName}>
+    <StandardButton
+      color="primary"
+      onClick={handleContinue}
+      disabled={isAwaitingProjectName}
+    >
       Continue
-    </PrimaryButton>
+    </StandardButton>
   );
 
   const cancelButton = (
-    <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+    <StandardButton color="secondary" onClick={closeModal}>
+      Cancel
+    </StandardButton>
   );
 
   return (

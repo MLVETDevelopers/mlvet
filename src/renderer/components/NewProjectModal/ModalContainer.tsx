@@ -42,9 +42,14 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     RunTranscriptionView,
   ];
 
+  const handleModalClose: () => void = () => {
+    closeModal();
+    setCurrentView(0);
+  };
+
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
-      closeModal();
+      handleModalClose();
       navigate(ApplicationPage.PROJECT);
       return;
     }
@@ -53,7 +58,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   const prevView: () => void = () => {
     if (currentView === 0) {
-      closeModal();
+      handleModalClose();
       return;
     }
     setCurrentView((prev) => prev - 1);
@@ -63,18 +68,23 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
       case NewProjectView:
-        return <NewProjectView closeModal={closeModal} nextView={nextView} />;
+        return (
+          <NewProjectView closeModal={handleModalClose} nextView={nextView} />
+        );
       case UploadVideoView:
         return (
           <UploadVideoView
             prevView={prevView}
-            closeModal={closeModal}
+            closeModal={handleModalClose}
             nextView={nextView}
           />
         );
       case RunTranscriptionView:
         return (
-          <RunTranscriptionView closeModal={closeModal} nextView={nextView} />
+          <RunTranscriptionView
+            closeModal={handleModalClose}
+            nextView={nextView}
+          />
         );
       default:
         return null;
@@ -82,7 +92,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   })();
 
   return (
-    <CustomModal open={isOpen} onClose={closeModal}>
+    <CustomModal open={isOpen} onClose={handleModalClose}>
       <CustomModalInner>{view}</CustomModalInner>
     </CustomModal>
   );

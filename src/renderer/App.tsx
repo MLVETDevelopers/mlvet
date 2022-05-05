@@ -3,7 +3,6 @@ import { ReactElement } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import './App.css';
 import colors from './colors';
-import TopBar from './components/TopBar';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import { ApplicationPage, ApplicationStore } from './store/helpers';
@@ -34,7 +33,6 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <RootContainer>
-            <TopBar />
             <Router />
           </RootContainer>
         </CssBaseline>

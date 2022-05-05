@@ -5,6 +5,7 @@ import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
+import VideoController from 'renderer/components/VideoController';
 import { ApplicationStore } from '../store/helpers';
 
 /*
@@ -86,6 +87,8 @@ const ProjectPage = () => {
 
   return (
     <>
+      <VideoController />
+
       <Stack
         direction="row"
         sx={{

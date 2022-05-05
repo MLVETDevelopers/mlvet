@@ -79,15 +79,11 @@ export default theme;
 
 declare module '@mui/material/styles' {
   interface TypographyVariants {
-    'h-100': React.CSSProperties;
-    'h-300': React.CSSProperties;
     'p-300': React.CSSProperties;
     'p-400': React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
-    'h-100'?: React.CSSProperties;
-    'h-300'?: React.CSSProperties;
     'p-300'?: React.CSSProperties;
     'p-400'?: React.CSSProperties;
   }
@@ -95,8 +91,6 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
-    'h-100': true;
-    'h-300': true;
     'p-300': true;
     'p-400': true;
   }

@@ -11,6 +11,10 @@ export const PAGE_CHANGED = 'PAGE_CHANGED';
 export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
 export const PROJECT_SAVED = 'PROJECT_SAVED';
 
+export const START_EXPORT = 'START_EXPORT';
+export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
+export const FINISH_EXPORT = 'FINISH_UPDATE';
+
 export const UNDO_STACK_PUSHED = 'UNDO_STACK_PUSHED';
 export const UNDO_STACK_POPPED = 'UNDO_STACK_POPPED';
 export const OP_REDONE = 'OP_REDONE';
@@ -91,5 +95,22 @@ export const undoStackPopped: () => Action<null> = () => ({
 
 export const opRedone: () => Action<null> = () => ({
   type: OP_REDONE,
+  payload: null,
+});
+
+export const startExport: () => Action<null> = () => ({
+  type: START_EXPORT,
+  payload: null,
+});
+
+export const updateExportProgress: (progress: number) => Action<number> = (
+  progress
+) => ({
+  type: EXPORT_PROGRESS_UPDATE,
+  payload: progress,
+});
+
+export const finishExport: () => Action<null> = () => ({
+  type: FINISH_EXPORT,
   payload: null,
 });

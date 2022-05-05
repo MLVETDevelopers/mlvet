@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
@@ -33,7 +34,10 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
   return output;
 };
 
-export const exportEDL: (project: Project) => void = (project) => {
+export const exportEDL: (
+  mainWindow: BrowserWindow | null,
+  project: Project
+) => void = (mainWindow, project) => {
   if (project.exportFilePath === null) {
     return;
   }
@@ -45,6 +49,11 @@ export const exportEDL: (project: Project) => void = (project) => {
       join(project.exportFilePath, `${project.name}.edl`),
       constructEDL(project.name, project.transcription)
     );
+
+    // Placeholder for BE - to be copied and removed
+    mainWindow?.webContents.send('export-progress-update', 0.5);
+
+    mainWindow?.webContents.send('finish-export', 1);
   }
 };
 

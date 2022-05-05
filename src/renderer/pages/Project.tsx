@@ -1,7 +1,10 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useSelector } from 'react-redux';
+
+import ExportCard from '../components/ExportCard';
 import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
+
 import { ApplicationStore } from '../store/helpers';
 import {
   makeChangeWordToSwampOp,
@@ -12,6 +15,9 @@ import StandardButton from '../components/StandardButton';
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
+  );
+  const { isExporting, exportProgress } = useSelector(
+    (store: ApplicationStore) => store.exportIo
   );
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
@@ -103,6 +109,11 @@ const ProjectPage = () => {
             </pre>
           </div>
         </Stack>
+        {isExporting && (
+          <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>
+            <ExportCard progress={exportProgress} />
+          </div>
+        )}
       </Stack>
     </>
   );

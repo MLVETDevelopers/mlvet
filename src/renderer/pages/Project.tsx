@@ -1,11 +1,16 @@
 import { Box, Stack } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import StandardButton from 'renderer/components/StandardButton';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
+import ExportCard from '../components/ExportCard';
+import { dispatchOp } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
+import {
+  makeChangeWordToSwampOp,
+  makeDeleteEverySecondWordOp,
+} from '../store/ops';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -18,6 +23,11 @@ const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+  const { isExporting, exportProgress } = useSelector(
+    (store: ApplicationStore) => store.exportIo
+  );
+
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -78,11 +88,27 @@ const ProjectPage = () => {
     return currentProject.transcription?.words[wordIndex];
   };
 
-  const saveButton = (
-    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
-      Save
-    </StandardButton>
-  );
+  const deleteEverySecondWord: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
+  };
+
+  const changeRandomWordToSwamp: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
+
+    const wordIndex = Math.floor(
+      Math.random() * currentProject.transcription.words.length
+    );
+
+    dispatchOp(
+      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
+    );
+  };
 
   return (
     <>
@@ -108,10 +134,12 @@ const ProjectPage = () => {
           >
             video
           </Box>
-          <div>
-            <div>{saveButton}</div>
-          </div>
         </Stack>
+        {isExporting && (
+          <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>
+            <ExportCard progress={exportProgress} />
+          </div>
+        )}
       </Stack>
     </>
   );

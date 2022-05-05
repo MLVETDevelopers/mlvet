@@ -12,6 +12,15 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('transcribe-media', filePath),
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
   openProject: () => ipcRenderer.invoke('open-project'),
+  setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
+    ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
+  extractThumbnail: (filePath) =>
+    ipcRenderer.invoke('extract-thumbnail', filePath),
+  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
+  writeRecentProjects: (recentProjects) =>
+    ipcRenderer.invoke('write-recent-projects', recentProjects),
+  retrieveProjectMetadata: (project) =>
+    ipcRenderer.invoke('retrieve-project-metadata', project),
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {

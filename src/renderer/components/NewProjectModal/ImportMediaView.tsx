@@ -58,6 +58,8 @@ interface Props {
 const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('Example');
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
+  const [isAwaitingProjectCreate, setAwaitingProjectCreate] =
+    useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -66,8 +68,9 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
   const addToRecentProjects = (project: Project) =>
     dispatch(recentProjectAdded(project));
 
-  const onProjectCreate = () => {
-    const project = makeProject(projectName, mediaFilePath);
+  const onProjectCreate = async () => {
+    setAwaitingProjectCreate(true);
+    const project = await makeProject(projectName, mediaFilePath);
     if (project === null) {
       return;
     }
@@ -93,7 +96,12 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
       />
       <ButtonContainer>
         <CancelButton onClick={closeModal}>Cancel</CancelButton>
-        <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
+        <ActionButton
+          onClick={onProjectCreate}
+          disabled={isAwaitingProjectCreate}
+        >
+          Create!
+        </ActionButton>
       </ButtonContainer>
     </>
   );

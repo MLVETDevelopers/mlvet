@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
 import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
   AudioFileExtension,
   Project,
   VideoFileExtension,
 } from '../sharedTypes';
+
+const { extractThumbnail } = window.electron;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -35,29 +38,52 @@ export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
 export const makeProject: (
   projectName: string,
   mediaFilePath: string | null
-) => Project | null = (projectName, mediaFilePath) => {
+) => Promise<Project | null> = async (projectName, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
 
-  const fileExtension = extractFileExtension(mediaFilePath);
-  if (fileExtension === null) {
+  const mediaFileExtension = extractFileExtension(mediaFilePath);
+  if (mediaFileExtension === null) {
     return null;
   }
 
-  const mediaType = getMediaType(fileExtension);
+  const mediaType = getMediaType(mediaFileExtension);
   if (mediaType === null) {
     return null;
   }
 
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
   const project: Project = {
+    id: uuidv4(),
     name: projectName,
     mediaType,
-    fileExtension: fileExtension as AudioFileExtension | VideoFileExtension,
-    filePath: mediaFilePath,
+    mediaFileExtension: mediaFileExtension as
+      | AudioFileExtension
+      | VideoFileExtension,
+    mediaFilePath,
     schemaVersion: CURRENT_SCHEMA_VERSION,
     transcription: null,
+    thumbnailFilePath: thumbnailPath,
+    projectFilePath: null,
+    exportFilePath: null,
   };
 
   return project;
+};
+
+export const formatDate: (date: Date) => string = (date) => {
+  // dd/mm/yy
+  const dd = date.getDate().toString(); // days start at 1
+  const mm = (date.getMonth() + 1).toString(); // months start at 0 because JavaScript hates us
+  const yy = (date.getFullYear() % 100).toString();
+
+  const pad: (val: string) => string = (val) =>
+    val.length === 1 ? `0${val}` : val;
+
+  return [dd, mm, yy].map(pad).join('/');
 };

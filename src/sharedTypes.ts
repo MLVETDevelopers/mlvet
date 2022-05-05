@@ -1,12 +1,25 @@
 export interface Project {
+  id: string; // UUID
   schemaVersion: number;
   name: string;
-  savePath: string;
-  filePath: string;
+  projectFilePath: string | null;
+  exportFilePath: string | null;
+  mediaFilePath: string | null;
+  thumbnailFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
-  fileExtension: AudioFileExtension | VideoFileExtension;
+  mediaFileExtension: AudioFileExtension | VideoFileExtension;
 }
+
+export interface ProjectMetadata {
+  dateModified: Date | null;
+  mediaSize: number | null; // bytes
+}
+
+export type RecentProject = Project & ProjectMetadata;
+
+export type AudioFileExtension = 'mp3';
+export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
   confidence: number;
@@ -19,7 +32,7 @@ export interface Word {
   duration: number;
   deleted: boolean;
   key: string;
-  fileName : string;
+  fileName: string;
 }
 
 export interface Clip {
@@ -27,8 +40,5 @@ export interface Clip {
   duration: number;
   fileName: string;
 }
-
-export type AudioFileExtension = 'mp3';
-export type VideoFileExtension = 'mp4';
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

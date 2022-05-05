@@ -1,6 +1,12 @@
 import { Project } from '../sharedTypes';
-import { projectOpened, pageChanged } from './store/actions';
+import {
+  projectOpened,
+  pageChanged,
+  updateExportProgress,
+  finishExport,
+} from './store/actions';
 import { ApplicationPage } from './store/helpers';
+import { dispatchRedo, dispatchUndo } from './store/opHelpers';
 import store from './store/store';
 
 /**
@@ -22,4 +28,36 @@ window.electron.on('initiate-save-project', async () => {
 window.electron.on('project-opened', async (_event, project: Project) => {
   store.dispatch(projectOpened(project));
   store.dispatch(pageChanged(ApplicationPage.PROJECT));
+});
+
+/**
+
+ * Used by backend to update frontend on export progress
+ */
+window.electron.on(
+  'export-progress-update',
+  async (_event, progress: number) => {
+    store.dispatch(updateExportProgress(progress));
+  }
+);
+
+/**
+ * Used by backend to notify frontend that export is complete
+ */
+window.electron.on('finish-export', async (_event) => {
+  store.dispatch(finishExport());
+});
+
+/*
+ * Used by backend to initiate undo from edit menu
+ */
+window.electron.on('initiate-undo', async () => {
+  dispatchUndo();
+});
+
+/**
+ * Used by backend to initiate redo from edit menu
+ */
+window.electron.on('initiate-redo', async () => {
+  dispatchRedo();
 });

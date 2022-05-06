@@ -1,5 +1,7 @@
-import { Button } from '@mui/material';
+import { Button, styled } from '@mui/material';
 
-const StandardButton = Button;
+const StandardButton = styled(Button)`
+  text-transform: capitalize;
+`;
 
 export default StandardButton;

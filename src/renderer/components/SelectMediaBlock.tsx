@@ -1,8 +1,7 @@
-import { Box, styled, Typography, Stack } from '@mui/material';
+import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import colors from 'renderer/colors';
 import { extractFileNameWithExtension } from 'renderer/util';
-import StandardButton from './StandardButton';
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
@@ -57,7 +56,7 @@ const SelectMediaBlock = ({
         >
           <Typography variant="p-300">Drag and drop file here</Typography>
           <Typography variant="p-300">or</Typography>
-          <StandardButton color="primary">Browse</StandardButton>
+          <Button color="primary">Browse</Button>
         </Stack>
       </InnerBox>
     </SelectMediaBox>

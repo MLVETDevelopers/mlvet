@@ -1,4 +1,11 @@
-import { styled, Stack, Box, TextField, Typography } from '@mui/material';
+import {
+  styled,
+  Stack,
+  Box,
+  TextField,
+  Typography,
+  Button,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -6,7 +13,6 @@ import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
-import StandardButton from '../StandardButton';
 
 interface Props {
   closeModal: () => void;
@@ -67,24 +73,20 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const continueButton = (
-    <StandardButton
+    <Button
       color="primary"
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
-      sx={{ width: '50%' }}
+      sx={{ width: '40%' }}
     >
       Continue
-    </StandardButton>
+    </Button>
   );
 
   const cancelButton = (
-    <StandardButton
-      color="secondary"
-      onClick={closeModal}
-      sx={{ width: '50%' }}
-    >
+    <Button color="secondary" onClick={closeModal} sx={{ width: '40%' }}>
       Cancel
-    </StandardButton>
+    </Button>
   );
 
   return (

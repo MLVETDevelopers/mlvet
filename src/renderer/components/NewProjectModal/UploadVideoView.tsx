@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, styled, Typography } from '@mui/material';
+import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import { ApplicationStore } from 'renderer/store/helpers';
@@ -9,7 +9,6 @@ import { Project } from 'sharedTypes';
 import { updateProjectWithMedia } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
-import StandardButton from '../StandardButton';
 
 interface Props {
   prevView: () => void;
@@ -69,20 +68,20 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   };
 
   const transcribeButton = (
-    <StandardButton
+    <Button
       color="primary"
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
-      sx={{ width: '50%' }}
+      sx={{ width: '40%' }}
     >
       Transcribe
-    </StandardButton>
+    </Button>
   );
 
   const cancelButton = (
-    <StandardButton color="secondary" onClick={prevView} sx={{ width: '50%' }}>
+    <Button color="secondary" onClick={prevView} sx={{ width: '40%' }}>
       Back
-    </StandardButton>
+    </Button>
   );
 
   return (

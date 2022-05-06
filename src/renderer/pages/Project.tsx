@@ -1,7 +1,6 @@
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import StandardButton from 'renderer/components/StandardButton';
 import { projectOpened } from 'renderer/store/actions';
 import { ApplicationStore } from '../store/helpers';
 
@@ -26,14 +25,12 @@ const ProjectPage = () => {
   };
 
   const saveButton = (
-    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
+    <Button onClick={() => window.electron.saveProject(currentProject)}>
       Save
-    </StandardButton>
+    </Button>
   );
 
-  const openButton = (
-    <StandardButton onClick={handleOpenProject}>Open</StandardButton>
-  );
+  const openButton = <Button onClick={handleOpenProject}>Open</Button>;
 
   return (
     <>

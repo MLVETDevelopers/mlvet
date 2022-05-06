@@ -12,14 +12,15 @@ const secondToTimestamp: (num: number) => string = (num) => {
     .join(':');
 };
 
-const constructEDL: (title: string, transcription: Transcription) => string = (
-  title,
-  transcription
-) => {
+const constructEDL: (
+  title: string,
+  transcription: Transcription,
+  source: string | null,
+  mainWindow: BrowserWindow | null
+) => string = (title, transcription, source, mainWindow) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
   const { words } = transcription;
   const entries = words.length;
-
   output += words
     .map((word, i) => {
       const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
@@ -27,7 +28,11 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
       const editStart = secondToTimestamp(word.startTime);
       const editEnd = secondToTimestamp(word.startTime + word.duration);
 
-      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
+      mainWindow?.webContents.send('export-progress-update', i / entries);
+
+      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: ${
+        source ?? 'FILE PATH NOT FOUND'
+      }\n\n`;
     })
     .join('');
 
@@ -47,12 +52,13 @@ export const exportEDL: (
   if (project.transcription) {
     writeFileSync(
       join(project.exportFilePath, `${project.name}.edl`),
-      constructEDL(project.name, project.transcription)
+      constructEDL(
+        project.name,
+        project.transcription,
+        project.mediaFilePath,
+        mainWindow
+      )
     );
-
-    // Placeholder for BE - to be copied and removed
-    mainWindow?.webContents.send('export-progress-update', 0.5);
-
     mainWindow?.webContents.send('finish-export', 1);
   }
 };

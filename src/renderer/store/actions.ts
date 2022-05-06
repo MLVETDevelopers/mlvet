@@ -1,4 +1,4 @@
-import { Project, ProjectName, Transcription } from '../../sharedTypes';
+import { Project, Transcription } from '../../sharedTypes';
 import { Action, ApplicationPage, Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
 
@@ -69,11 +69,4 @@ export const undoStackPopped: () => Action<null> = () => ({
 export const opRedone: () => Action<null> = () => ({
   type: OP_REDONE,
   payload: null,
-});
-
-export const projectNameSubmitted: (
-  projectName: ProjectName
-) => Action<ProjectName> = (projectName) => ({
-  type: PROJECT_CREATED,
-  payload: projectName,
 });

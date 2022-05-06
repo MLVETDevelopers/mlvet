@@ -11,8 +11,8 @@ const InnerBox = styled(Box)`
   border-style: dashed;
   border-width: 1px;
   border-radius: 5px;
-  border-color: ${colors.grey[300]};
-  color: ${colors.white};
+  border-color: ${colors.grey[500]};
+  color: ${colors.grey[300]};
   margin-top: 20px;
   padding: 20px;
 

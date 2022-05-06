@@ -42,6 +42,10 @@ const Container = styled(Box)`
   height: 200px;
 `;
 
+const CustomButton = styled(Button)`
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
+`;
+
 const NewProjectView = ({ closeModal, nextView }: Props) => {
   const [projName, setProjName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
@@ -74,27 +78,27 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const continueButton = (
-    <Button
+    <CustomButton
       color="primary"
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
       sx={{ width: '40%' }}
     >
       Continue
-    </Button>
+    </CustomButton>
   );
 
   const cancelButton = (
-    <Button color="secondary" onClick={closeModal} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '40%' }}>
       Cancel
-    </Button>
+    </CustomButton>
   );
 
   return (
     <Container>
       <CustomColumnStack>
         <CustomRowStack>
-          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>
           <IconButton

@@ -34,6 +34,10 @@ const Container = styled(Box)`
   background-color: ${colors.grey[700]};
 `;
 
+const CustomButton = styled(Button)`
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
+`;
+
 const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
@@ -69,20 +73,20 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   };
 
   const transcribeButton = (
-    <Button
+    <CustomButton
       color="primary"
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
       sx={{ width: '40%' }}
     >
       Transcribe
-    </Button>
+    </CustomButton>
   );
 
   const cancelButton = (
-    <Button color="secondary" onClick={prevView} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={prevView} sx={{ width: '40%' }}>
       Back
-    </Button>
+    </CustomButton>
   );
 
   return (
@@ -93,7 +97,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         sx={{ height: '50%' }}
       >
         <CustomRowStack justifyContent="space-between">
-          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
             {projectName}
           </Typography>
           <IconButton

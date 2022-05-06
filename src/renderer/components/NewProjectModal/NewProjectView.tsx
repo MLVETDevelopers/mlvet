@@ -30,10 +30,6 @@ const CustomRowStack = styled(CustomStack)`
   justify-content: space-between;
 `;
 
-const CustomTextField = styled(TextField)`
-  color: ${colors.white};
-`;
-
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
   height: 200px;
@@ -101,10 +97,8 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
           </Box>
         </CustomRowStack>
         <CustomStack>
-          <CustomTextField
-            id="standard-basic"
+          <TextField
             label="Project Name"
-            variant="standard"
             value={projName}
             onChange={(event) => handleProjectNameInput(event)}
           />

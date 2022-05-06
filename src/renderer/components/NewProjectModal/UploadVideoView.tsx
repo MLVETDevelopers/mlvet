@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, styled } from '@mui/material';
+import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
 import { updateProjectWithMedia } from 'renderer/util';
-import ModalTitle from '../ModalTitle';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
 import StandardButton from '../StandardButton';
@@ -92,7 +91,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <ModalTitle>{projectName}</ModalTitle>
+          <Typography variant="h-100">{projectName}</Typography>
           <Box onClick={closeModal}>
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>

@@ -1,4 +1,4 @@
-import { styled, Stack, Box, TextField } from '@mui/material';
+import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -6,7 +6,6 @@ import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
-import ModalTitle from '../ModalTitle';
 import StandardButton from '../StandardButton';
 
 interface Props {
@@ -87,7 +86,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <ModalTitle>New Project</ModalTitle>
+          <Typography variant="h-100">New Project</Typography>
           <Box onClick={closeModal}>
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>

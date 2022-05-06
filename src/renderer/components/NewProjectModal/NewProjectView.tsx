@@ -7,6 +7,7 @@ import {
   Button,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
@@ -93,10 +94,15 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
     <Container>
       <CustomColumnStack>
         <CustomRowStack>
-          <Typography variant="h-100">New Project</Typography>
-          <Box onClick={closeModal}>
-            <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
-          </Box>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+            New Project
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 36 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
         </CustomRowStack>
         <CustomStack>
           <TextField

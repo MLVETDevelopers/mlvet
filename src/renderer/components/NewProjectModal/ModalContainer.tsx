@@ -17,6 +17,7 @@ const CustomModal = styled(Modal)`
 const CustomModalInner = styled(Box)`
   background: ${colors.grey[700]};
   padding: 30px;
+  border-radius: 5px;
 `;
 
 interface Props {

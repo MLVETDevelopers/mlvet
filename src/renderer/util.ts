@@ -91,6 +91,7 @@ export const makeProject: (
     schemaVersion: CURRENT_SCHEMA_VERSION,
     transcription: null,
     thumbnailPath,
+    savePath: null,
   };
 
   return project;
@@ -101,6 +102,13 @@ export const makeProjectWithoutMedia: (
 ) => Promise<Project | null> = async (projectName) => {
   const project: Project = {
     name: projectName,
+    schemaVersion: 0,
+    savePath: null,
+    filePath: null,
+    transcription: null,
+    mediaType: 'audio',
+    fileExtension: 'mp3',
+    thumbnailPath: null,
   };
 
   return project;

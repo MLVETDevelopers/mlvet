@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
@@ -92,10 +93,15 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         sx={{ height: '50%' }}
       >
         <CustomRowStack justifyContent="space-between">
-          <Typography variant="h-100">{projectName}</Typography>
-          <Box onClick={closeModal}>
-            <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
-          </Box>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+            {projectName}
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 20 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
         </CustomRowStack>
         <CustomRowStack justifyContent="center">
           <SelectMediaBlock

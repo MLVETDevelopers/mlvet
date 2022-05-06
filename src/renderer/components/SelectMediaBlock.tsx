@@ -9,6 +9,8 @@ const SelectMediaBox = styled(Box)`
 
 const InnerBox = styled(Box)`
   border-style: dashed;
+  border-width: 1px;
+  border-radius: 5px;
   border-color: ${colors.grey[300]};
   color: ${colors.white};
   margin-top: 20px;

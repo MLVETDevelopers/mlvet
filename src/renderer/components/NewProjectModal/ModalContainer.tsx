@@ -45,14 +45,27 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     setCurrentView((prev) => prev + 1);
   };
 
+  const closeAndResetModal: () => void = () => {
+    setCurrentView(0);
+    closeModal();
+  };
+
   const view = (() => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
       case ImportMediaView:
-        return <ImportMediaView closeModal={closeModal} nextView={nextView} />;
+        return (
+          <ImportMediaView
+            closeModal={closeAndResetModal}
+            nextView={nextView}
+          />
+        );
       case RunTranscriptionView:
         return (
-          <RunTranscriptionView closeModal={closeModal} nextView={nextView} />
+          <RunTranscriptionView
+            closeModal={closeAndResetModal}
+            nextView={nextView}
+          />
         );
       default:
         return null;

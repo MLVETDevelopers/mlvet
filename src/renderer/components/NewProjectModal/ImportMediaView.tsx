@@ -13,6 +13,8 @@ import SelectMediaBlock from '../SelectMediaBlock';
 import { Project } from '../../../sharedTypes';
 import { makeProject } from '../../util';
 
+const { retrieveProjectMetadata } = window.electron;
+
 const CustomTextField = styled(TextField)`
   background: ${colors.grey[400]};
   color: ${colors.grey[900]};
@@ -65,18 +67,23 @@ const ImportMediaView = ({ closeModal, nextView }: Props) => {
 
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = (project: Project) =>
-    dispatch(recentProjectAdded(project));
+
+  const addToRecentProjects = async (project: Project) => {
+    const projectMetadata = await retrieveProjectMetadata(project);
+    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
+  };
 
   const onProjectCreate = async () => {
     setAwaitingProjectCreate(true);
+
     const project = await makeProject(projectName, mediaFilePath);
     if (project === null) {
+      setAwaitingProjectCreate(false);
       return;
     }
 
     setCurrentProject(project);
-    addToRecentProjects(project);
+    await addToRecentProjects(project);
     nextView();
   };
 

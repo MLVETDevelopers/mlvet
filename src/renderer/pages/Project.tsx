@@ -1,10 +1,8 @@
 import { Stack } from '@mui/material';
 import { Box } from '@mui/system';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import ExportCard from '../components/ExportCard';
-import StandardButton from '../components/StandardButton';
-import { projectOpened } from '../store/actions';
 import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
 
 import { ApplicationStore } from '../store/helpers';
@@ -12,6 +10,7 @@ import {
   makeChangeWordToSwampOp,
   makeDeleteEverySecondWordOp,
 } from '../store/ops';
+import StandardButton from '../components/StandardButton';
 
 const ProjectPage = () => {
   const currentProject = useSelector(
@@ -23,30 +22,9 @@ const ProjectPage = () => {
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
-  const dispatch = useDispatch();
-
   if (currentProject === null) {
     return null;
   }
-
-  const handleOpenProject = async () => {
-    try {
-      const project = await window.electron.openProject();
-      dispatch(projectOpened(project));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const saveButton = (
-    <StandardButton onClick={() => window.electron.saveProject(currentProject)}>
-      Save
-    </StandardButton>
-  );
-
-  const openButton = (
-    <StandardButton onClick={handleOpenProject}>Open</StandardButton>
-  );
 
   const deleteEverySecondWord: () => void = () => {
     if (currentProject.transcription === null) {
@@ -101,8 +79,6 @@ const ProjectPage = () => {
             video
           </Box>
           <div>
-            <div>{saveButton}</div>
-            <div>{openButton}</div>
             Current project data:{' '}
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(currentProject)}

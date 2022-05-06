@@ -1,13 +1,22 @@
 export interface Project {
+  id: string; // UUID
   schemaVersion: number;
   name: string;
-  savePath: string | null;
-  filePath: string | null;
+  projectFilePath: string | null;
+  exportFilePath: string | null;
+  mediaFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
-  fileExtension: AudioFileExtension | VideoFileExtension;
-  thumbnailPath: string | null;
+  mediaFileExtension: AudioFileExtension | VideoFileExtension;
+  thumbnailFilePath: string | null;
 }
+
+export interface ProjectMetadata {
+  dateModified: Date | null;
+  mediaSize: number | null; // bytes
+}
+
+export type RecentProject = Project & ProjectMetadata;
 
 export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';

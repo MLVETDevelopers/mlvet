@@ -2,18 +2,27 @@
 // If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron
 
 import { IpcRendererEvent } from 'electron';
-import { Project, Transcription, OperatingSystems } from '../sharedTypes';
+import {
+  Project,
+  ProjectMetadata,
+  Transcription,
+  OperatingSystems,
+} from '../sharedTypes';
 
 declare global {
   interface Window {
     electron: {
       requestMediaDialog: () => Promise<string | null>;
       requestTranscription: (filePath: string) => Promise<Transcription>;
-      saveProject: (project: Project) => Promise<void>;
-      openProject: () => Promise<Project>;
+      saveProject: (project: Project) => Promise<string>; // Returns the file path
+      openProject: () => Promise<{ project: Project; filePath: string }>;
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
       extractThumbnail: (filePath: string) => Promise<string>;
       userOS: () => Promise<OperatingSystems>;
+      readRecentProjects: () => Promise<Project[]>;
+      writeRecentProjects: (recentProjects: Project[]) => Promise<void>;
+      retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
+
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

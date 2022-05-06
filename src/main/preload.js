@@ -17,6 +17,12 @@ contextBridge.exposeInMainWorld('electron', {
   extractThumbnail: (filePath) =>
     ipcRenderer.invoke('extract-thumbnail', filePath),
   userOS: async () => ipcRenderer.invoke('user-os'),
+  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
+  writeRecentProjects: (recentProjects) =>
+    ipcRenderer.invoke('write-recent-projects', recentProjects),
+  retrieveProjectMetadata: (project) =>
+    ipcRenderer.invoke('retrieve-project-metadata', project),
+
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {
     return ipcRenderer.on(channel, listener);

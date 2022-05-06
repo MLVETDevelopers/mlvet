@@ -1,36 +1,51 @@
 import { Button, Stack } from '@mui/material';
 import { Box } from '@mui/system';
-import { useDispatch, useSelector } from 'react-redux';
-import { projectOpened } from 'renderer/store/actions';
+import { useSelector } from 'react-redux';
+
+import ExportCard from '../components/ExportCard';
+import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
+
 import { ApplicationStore } from '../store/helpers';
+import {
+  makeChangeWordToSwampOp,
+  makeDeleteEverySecondWordOp,
+} from '../store/ops';
 
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+  const { isExporting, exportProgress } = useSelector(
+    (store: ApplicationStore) => store.exportIo
+  );
 
-  const dispatch = useDispatch();
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   if (currentProject === null) {
     return null;
   }
 
-  const handleOpenProject = async () => {
-    try {
-      const project = await window.electron.openProject();
-      dispatch(projectOpened(project));
-    } catch (err) {
-      console.error(err);
+  const deleteEverySecondWord: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
     }
+
+    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
   };
 
-  const saveButton = (
-    <Button onClick={() => window.electron.saveProject(currentProject)}>
-      Save
-    </Button>
-  );
+  const changeRandomWordToSwamp: () => void = () => {
+    if (currentProject.transcription === null) {
+      return;
+    }
 
-  const openButton = <Button onClick={handleOpenProject}>Open</Button>;
+    const wordIndex = Math.floor(
+      Math.random() * currentProject.transcription.words.length
+    );
+
+    dispatchOp(
+      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
+    );
+  };
 
   return (
     <>
@@ -52,7 +67,9 @@ const ProjectPage = () => {
               height: '100%',
             }}
           >
-            {'transcription area '.repeat(150)}
+            {currentProject.transcription?.words
+              .map((word) => word.word)
+              .join(' ')}
           </Box>
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
@@ -61,14 +78,38 @@ const ProjectPage = () => {
             video
           </Box>
           <div>
-            <div>{saveButton}</div>
-            <div>{openButton}</div>
             Current project data:{' '}
             <pre style={{ width: '200px', overflow: 'auto' }}>
               {JSON.stringify(currentProject)}
             </pre>
+            <p>Buttons to demo undo</p>
+            <Button onClick={deleteEverySecondWord}>
+              Delete Every Second Word
+            </Button>
+            <Button onClick={changeRandomWordToSwamp}>
+              Change a random word to &lsquo;swamp&rsquo;
+            </Button>
+            <Button onClick={dispatchUndo} disabled={undoStack.index <= 0}>
+              Undo last action
+            </Button>
+            <Button
+              onClick={dispatchRedo}
+              disabled={undoStack.index >= undoStack.stack.length}
+            >
+              Redo last action
+            </Button>
+            <p>Or, use shortcuts from edit menu to undo/redo</p>
+            <p>Undo stack:</p>
+            <pre style={{ width: '200px', overflow: 'auto' }}>
+              {JSON.stringify(undoStack)}
+            </pre>
           </div>
         </Stack>
+        {isExporting && (
+          <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>
+            <ExportCard progress={exportProgress} />
+          </div>
+        )}
       </Stack>
     </>
   );

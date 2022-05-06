@@ -1,4 +1,4 @@
-import { Project, Transcription } from '../../sharedTypes';
+import { Project, RecentProject, Transcription } from '../../sharedTypes';
 import { Action, ApplicationPage, Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
 
@@ -9,6 +9,12 @@ export const CURRENT_PROJECT_CLOSED = 'CURRENT_PROJECT_CLOSED';
 export const RECENT_PROJECT_ADDED = 'RECENT_PROJECT_ADDED';
 export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 export const PAGE_CHANGED = 'PAGE_CHANGED';
+export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
+export const PROJECT_SAVED = 'PROJECT_SAVED';
+
+export const START_EXPORT = 'START_EXPORT';
+export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
+export const FINISH_EXPORT = 'FINISH_UPDATE';
 
 export const UNDO_STACK_PUSHED = 'UNDO_STACK_PUSHED';
 export const UNDO_STACK_POPPED = 'UNDO_STACK_POPPED';
@@ -21,11 +27,26 @@ export const projectCreated: (project: Project) => Action<Project> = (
   payload: project,
 });
 
-export const projectOpened: (project: Project) => Action<Project> = (
-  project
+export const projectOpened: (
+  project: Project,
+  filePath: string | null
+) => Action<{ project: Project; filePath: string | null }> = (
+  project,
+  filePath
 ) => ({
   type: PROJECT_OPENED,
-  payload: project,
+  payload: { project, filePath },
+});
+
+export const projectSaved: (
+  projectId: string,
+  filePath: string
+) => Action<{
+  projectId: string;
+  filePath: string;
+}> = (projectId, filePath) => ({
+  type: PROJECT_SAVED,
+  payload: { projectId, filePath },
 });
 
 export const currentProjectClosed: () => Action<null> = () => ({
@@ -33,9 +54,9 @@ export const currentProjectClosed: () => Action<null> = () => ({
   payload: null,
 });
 
-export const recentProjectAdded: (project: Project) => Action<Project> = (
-  project
-) => ({
+export const recentProjectAdded: (
+  project: RecentProject
+) => Action<RecentProject> = (project) => ({
   type: RECENT_PROJECT_ADDED,
   payload: project,
 });
@@ -54,6 +75,13 @@ export const pageChanged: (page: ApplicationPage) => Action<ApplicationPage> = (
   payload: page,
 });
 
+export const recentProjectsLoaded: (
+  recentProjects: RecentProject[]
+) => Action<RecentProject[]> = (recentProjects) => ({
+  type: RECENT_PROJECTS_LOADED,
+  payload: recentProjects,
+});
+
 export const undoStackPushed: <T extends DoPayload, U extends UndoPayload>(
   op: Op<T, U>
 ) => Action<Op<T, U>> = (undoAction) => ({
@@ -68,5 +96,22 @@ export const undoStackPopped: () => Action<null> = () => ({
 
 export const opRedone: () => Action<null> = () => ({
   type: OP_REDONE,
+  payload: null,
+});
+
+export const startExport: () => Action<null> = () => ({
+  type: START_EXPORT,
+  payload: null,
+});
+
+export const updateExportProgress: (progress: number) => Action<number> = (
+  progress
+) => ({
+  type: EXPORT_PROGRESS_UPDATE,
+  payload: progress,
+});
+
+export const finishExport: () => Action<null> = () => ({
+  type: FINISH_EXPORT,
   payload: null,
 });

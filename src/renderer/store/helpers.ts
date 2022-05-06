@@ -1,4 +1,4 @@
-import { Project } from '../../sharedTypes';
+import { Project, RecentProject } from '../../sharedTypes';
 import { DoPayload, UndoPayload } from './opPayloads';
 
 export enum ApplicationPage {
@@ -34,25 +34,24 @@ export interface UndoStack {
 }
 
 /**
+ * All input/output user actions states
+ * Import / Export progress states
+ */
+export interface ExportIO {
+  isExporting: boolean;
+  exportProgress: number; // Used for showing current progress in export
+}
+
+/**
  * The schema for the root-level application / redux store, containing the global app state.
  */
 export interface ApplicationStore {
   currentProject: Project | null;
-  recentProjects: Project[];
+  recentProjects: RecentProject[];
   currentPage: ApplicationPage;
   undoStack: UndoStack;
+  exportIo: ExportIO;
 }
-
-const baseMockProject: Omit<Project, 'name'> = {
-  schemaVersion: 1,
-  mediaType: 'video',
-  savePath: 'fakepath',
-  filePath: 'fakepath',
-  fileExtension: 'mp4',
-  transcription: null,
-  savePath: null,
-  thumbnailPath: null,
-};
 
 /**
  * The initial state of the application store / redux store.
@@ -60,9 +59,8 @@ const baseMockProject: Omit<Project, 'name'> = {
  */
 export const initialStore: ApplicationStore = {
   currentProject: null,
-  recentProjects: ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'].map(
-    (name) => ({ ...baseMockProject, name: `${name} Project` })
-  ),
+  recentProjects: [],
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
+  exportIo: { isExporting: false, exportProgress: 0 },
 };

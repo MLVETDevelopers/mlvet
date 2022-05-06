@@ -11,6 +11,8 @@ import { updateProjectWithMedia } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
 
+const { retrieveProjectMetadata } = window.electron;
+
 interface Props {
   prevView: () => void;
   closeModal: () => void;
@@ -56,8 +58,10 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
 
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = (project: Project) =>
-    dispatch(recentProjectAdded(project));
+  const addToRecentProjects = async (project: Project) => {
+    const projectMetadata = await retrieveProjectMetadata(project);
+    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
+  };
 
   const handleTranscribe = async () => {
     const project = await updateProjectWithMedia(currentProject, mediaFilePath);
@@ -67,7 +71,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
     }
 
     setCurrentProject(project);
-    addToRecentProjects(project);
+    await addToRecentProjects(project);
 
     nextView();
   };

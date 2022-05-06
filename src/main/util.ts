@@ -3,6 +3,7 @@ import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import os from 'os';
+import { app } from 'electron';
 import { OperatingSystems } from '../sharedTypes';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
@@ -49,3 +50,6 @@ export const handleOSQuery: () => OperatingSystems = () => {
     isLinux,
   };
 };
+
+export const appDataStoragePath: () => string = () =>
+  path.join(app.getPath('userData'), 'mlvet');

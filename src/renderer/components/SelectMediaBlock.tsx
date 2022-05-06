@@ -55,8 +55,8 @@ const SelectMediaBlock = ({
           justifyContent="space-between"
           sx={{ height: '150px' }}
         >
-          <Typography fontWeight="bold">Drag and drop file here</Typography>
-          <Typography fontWeight="bold">or</Typography>
+          <Typography variant="p-300">Drag and drop file here</Typography>
+          <Typography variant="p-300">or</Typography>
           <StandardButton color="primary">Browse</StandardButton>
         </Stack>
       </InnerBox>

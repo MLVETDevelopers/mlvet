@@ -21,6 +21,15 @@ const CustomStack = styled(Stack)`
   width: 100%;
 `;
 
+const CustomColumnStack = styled(CustomStack)`
+  flex-direction: column;
+`;
+
+const CustomRowStack = styled(CustomStack)`
+  flex-direction: row;
+  align-items: center;
+`;
+
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
   ${(props) => props.theme.breakpoints.up('xs')} {
@@ -81,50 +90,36 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
 
   return (
     <Container>
-      <CustomStack
-        direction="column"
+      <CustomColumnStack
         alignItems="flex-start"
         justifyContent="space-between"
         sx={{ height: '50%' }}
       >
-        <CustomStack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <CustomRowStack justifyContent="space-between">
           <Typography variant="h-100">{projectName}</Typography>
           <Box onClick={closeModal}>
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>
-        </CustomStack>
-        <CustomStack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
+        </CustomRowStack>
+        <CustomRowStack justifyContent="center">
           <SelectMediaBlock
             setMediaFileName={setMediaFileName}
             setMediaFilePath={setMediaFilePath}
             setIsAwaitingMedia={setIsAwaitingMedia}
           />
-        </CustomStack>
-      </CustomStack>
-      <CustomStack
-        direction="column"
+        </CustomRowStack>
+      </CustomColumnStack>
+      <CustomColumnStack
         alignItems="baseline"
         justifyContent="flex-start"
         sx={{ height: '45%' }}
       >
         <MediaDisplayOnUpload fileName={mediaFileName} />
-      </CustomStack>
-      <CustomStack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      </CustomColumnStack>
+      <CustomRowStack justifyContent="space-between">
         {cancelButton}
         {transcribeButton}
-      </CustomStack>
+      </CustomRowStack>
     </Container>
   );
 };

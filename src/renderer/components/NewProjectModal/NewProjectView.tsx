@@ -15,6 +15,19 @@ interface Props {
 
 const CustomStack = styled(Stack)`
   width: 100%;
+  height: 100%;
+`;
+
+const CustomColumnStack = styled(CustomStack)`
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+`;
+
+const CustomRowStack = styled(CustomStack)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const CustomTextField = styled(TextField)`
@@ -80,22 +93,13 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   return (
     <Container>
-      <CustomStack
-        direction="column"
-        alignItems="flex-start"
-        justifyContent="space-between"
-        sx={{ height: '100%' }}
-      >
-        <CustomStack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+      <CustomColumnStack>
+        <CustomRowStack>
           <Typography variant="h-100">New Project</Typography>
           <Box onClick={closeModal}>
             <CloseIcon sx={{ color: colors.yellow[500], fontSize: 36 }} />
           </Box>
-        </CustomStack>
+        </CustomRowStack>
         <CustomStack>
           <CustomTextField
             id="standard-basic"
@@ -105,15 +109,11 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
             onChange={(event) => handleProjectNameInput(event)}
           />
         </CustomStack>
-        <CustomStack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <CustomRowStack>
           {cancelButton}
           {continueButton}
-        </CustomStack>
-      </CustomStack>
+        </CustomRowStack>
+      </CustomColumnStack>
     </Container>
   );
 };

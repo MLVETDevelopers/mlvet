@@ -32,9 +32,6 @@ const CustomRowStack = styled(CustomStack)`
 
 const Container = styled(Box)`
   background-color: ${colors.grey[700]};
-  ${(props) => props.theme.breakpoints.up('xs')} {
-    height: 500px;
-  }
 `;
 
 const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
@@ -89,7 +86,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   );
 
   return (
-    <Container>
+    <Container sx={{ height: { xs: 500 } }}>
       <CustomColumnStack
         alignItems="flex-start"
         justifyContent="space-between"

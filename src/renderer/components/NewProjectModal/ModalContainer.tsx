@@ -15,17 +15,6 @@ const CustomModal = styled(Modal)`
 `;
 
 const CustomModalInner = styled(Box)`
-  width: calc(30vw - 40px);
-  ${(props) => props.theme.breakpoints.up('xs')} {
-    width: 300px;
-  }
-  ${(props) => props.theme.breakpoints.up('sm')} {
-    width: 400px;
-  }
-  ${(props) => props.theme.breakpoints.up('lg')} {
-    width: 500px;
-  }
-
   background: ${colors.grey[700]};
   padding: 30px;
 `;
@@ -103,7 +92,9 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   return (
     <CustomModal open={isOpen} onClose={handleModalClose}>
-      <CustomModalInner>{view}</CustomModalInner>
+      <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
+        {view}
+      </CustomModalInner>
     </CustomModal>
   );
 };

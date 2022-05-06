@@ -62,13 +62,18 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
+      sx={{ width: '50%' }}
     >
       Continue
     </StandardButton>
   );
 
   const cancelButton = (
-    <StandardButton color="secondary" onClick={closeModal}>
+    <StandardButton
+      color="secondary"
+      onClick={closeModal}
+      sx={{ width: '50%' }}
+    >
       Cancel
     </StandardButton>
   );

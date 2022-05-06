@@ -67,13 +67,14 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
+      sx={{ width: '50%' }}
     >
       Transcribe
     </StandardButton>
   );
 
   const cancelButton = (
-    <StandardButton color="secondary" onClick={prevView}>
+    <StandardButton color="secondary" onClick={prevView} sx={{ width: '50%' }}>
       Back
     </StandardButton>
   );

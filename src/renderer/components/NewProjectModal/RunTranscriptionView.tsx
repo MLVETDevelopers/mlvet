@@ -8,7 +8,6 @@ import { extractFileNameWithExtension } from 'renderer/util';
 import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore } from '../../store/helpers';
 import { Transcription } from '../../../sharedTypes';
-import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 
 const CustomStack = styled(Stack)`
@@ -68,10 +67,6 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       return;
     }
 
-    if (currentProject.projectFilePath === null) {
-      return;
-    }
-
     setAsyncState(AsyncState.LOADING);
 
     window.electron
@@ -102,7 +97,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     <CustomButton
       color="primary"
       onClick={nextView}
-      disabled={asyncState !== AsyncState.READY}
+      disabled={asyncState !== AsyncState.DONE}
       sx={{ width: '100%' }}
     >
       Get Started
@@ -110,14 +105,19 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   );
 
   return (
-    <Container sx={{ height: { xs: 450 } }}>
+    <Container sx={{ height: { xs: 500 } }}>
       <CustomColumnStack
         alignItems="flex-start"
         justifyContent="space-between"
         sx={{ height: '15%' }}
       >
         <CustomRowStack justifyContent="space-between">
-          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+          <Typography
+            overflow="hidden"
+            textOverflow="ellipsis"
+            variant="h1"
+            sx={{ color: colors.grey[400] }}
+          >
             {projectName}
           </Typography>
           <IconButton
@@ -131,17 +131,17 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
           Please wait while we transcribe your video
         </Typography>
       </CustomColumnStack>
-      <CustomRowStack
-        alignItems="flex-start"
+      <CustomColumnStack
+        alignItems="baseline"
         justifyContent="flex-start"
-        sx={{ height: '75%' }}
+        marginTop="25px"
+        sx={{ height: '74%' }}
       >
         <MediaDisplayTranscribeProgress
           fileName={mediaFileName}
           asyncState={asyncState}
         />
-        {asyncState}
-      </CustomRowStack>
+      </CustomColumnStack>
       <CustomRowStack justifyContent="space-between">
         {completedButton}
       </CustomRowStack>

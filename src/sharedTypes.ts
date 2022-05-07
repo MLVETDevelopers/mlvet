@@ -34,8 +34,8 @@ export interface Word {
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
 
-export interface OperatingSystems {
-  isDarwin: boolean;
-  isWindows: boolean;
-  isLinux: boolean;
+export enum OperatingSystems {
+  Darwin,
+  Windows,
+  Linux,
 }

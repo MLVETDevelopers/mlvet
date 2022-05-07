@@ -39,16 +39,22 @@ export const mkdir = (dirPath: string) => {
   }
 };
 
-export const handleOSQuery: () => OperatingSystems = () => {
+export const handleOSQuery: () => OperatingSystems | null = () => {
   const isDarwin = os.platform() === 'darwin';
   const isWindows = os.platform() === 'win32';
   const isLinux = os.platform() === 'linux';
 
-  return {
-    isDarwin,
-    isWindows,
-    isLinux,
-  };
+  if (isDarwin) {
+    return OperatingSystems.Darwin;
+  }
+  if (isWindows) {
+    return OperatingSystems.Windows;
+  }
+  if (isLinux) {
+    return OperatingSystems.Linux;
+  }
+
+  return null;
 };
 
 export const appDataStoragePath: () => string = () =>

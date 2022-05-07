@@ -45,7 +45,6 @@ const preProcessTranscript = (
     key: (numberOfWords - 1).toString(),
     fileName: 'PLACEHOLDER FILENAME',
   };
-
   processedTranscript.words.push(lastWord);
   return processedTranscript;
 };

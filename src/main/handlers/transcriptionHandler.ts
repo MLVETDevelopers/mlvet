@@ -23,11 +23,7 @@ const handleTranscription: (
     'audio',
     'audio.wav'
   );
-  const audioDurationPromise = getAudioDurationInSeconds(pathToSaveMedia)
-    .then((duration) => {
-      return duration;
-    })
-    .catch((error) => {});
+  const audioDurationPromise = getAudioDurationInSeconds(pathToSaveMedia);
 
   await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
 

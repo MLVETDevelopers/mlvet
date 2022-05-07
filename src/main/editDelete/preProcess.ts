@@ -1,16 +1,6 @@
 import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
-
-interface SnakeCaseWord {
-  word: string;
-  duration: number;
-  start_time: number; // TODO: change this to camel case before it touches TS
-}
-
-interface JSONTranscript {
-  confidence: number;
-  words: SnakeCaseWord[];
-}
+import { JSONTranscription, SnakeCaseWord } from '../types';
 
 type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
@@ -65,7 +55,7 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
  * @returns formatted Transcript object
  */
 const preProcessTranscript = (
-  jsonTranscript: JSONTranscript,
+  jsonTranscript: JSONTranscription,
   duration: number
 ): Transcription => {
   return {

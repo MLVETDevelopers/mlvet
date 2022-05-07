@@ -97,7 +97,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   return (
     <Container>
       <CustomColumnStack>
-        <CustomRowStack>
+        <CustomRowStack sx={{ alignItems: 'flex-start' }}>
           <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>
@@ -115,7 +115,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
             onChange={(event) => handleProjectNameInput(event)}
           />
         </CustomStack>
-        <CustomRowStack>
+        <CustomRowStack sx={{ alignItems: 'flex-end' }}>
           {cancelButton}
           {continueButton}
         </CustomRowStack>

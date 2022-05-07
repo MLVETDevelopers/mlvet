@@ -82,14 +82,14 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
-      sx={{ width: '40%' }}
+      sx={{ width: '100%' }}
     >
       Continue
     </CustomButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '100%' }}>
       Cancel
     </CustomButton>
   );
@@ -115,7 +115,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
             onChange={(event) => handleProjectNameInput(event)}
           />
         </CustomStack>
-        <CustomRowStack sx={{ alignItems: 'flex-end' }}>
+        <CustomRowStack sx={{ alignItems: 'flex-end', gap: '32px' }}>
           {cancelButton}
           {continueButton}
         </CustomRowStack>

@@ -81,14 +81,14 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
-      sx={{ width: '40%' }}
+      sx={{ width: '100%' }}
     >
       Transcribe
     </CustomButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={prevView} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={prevView} sx={{ width: '100%' }}>
       Back
     </CustomButton>
   );
@@ -126,7 +126,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
       >
         <MediaDisplayOnUpload fileName={mediaFileName} />
       </CustomColumnStack>
-      <CustomRowStack justifyContent="space-between">
+      <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
         {cancelButton}
         {transcribeButton}
       </CustomRowStack>

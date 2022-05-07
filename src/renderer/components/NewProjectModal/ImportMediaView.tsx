@@ -40,7 +40,7 @@ const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
 `;
 
-const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
+const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
   const [mediaFileName, setMediaFileName] = useState<string | null>(null);
@@ -134,4 +134,4 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   );
 };
 
-export default UploadVideoView;
+export default ImportMediaView;

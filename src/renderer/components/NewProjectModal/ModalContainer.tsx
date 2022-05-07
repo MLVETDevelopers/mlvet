@@ -5,7 +5,7 @@ import { pageChanged } from '../../store/actions';
 import { ApplicationPage } from '../../store/helpers';
 import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
-import UploadVideoView from './UploadVideoView';
+import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 
 const CustomModal = styled(Modal)`
@@ -39,7 +39,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   const viewComponents = [
     NewProjectView,
-    UploadVideoView,
+    ImportMediaView,
     RunTranscriptionView,
   ];
 
@@ -72,9 +72,9 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
         return (
           <NewProjectView closeModal={handleModalClose} nextView={nextView} />
         );
-      case UploadVideoView:
+      case ImportMediaView:
         return (
-          <UploadVideoView
+          <ImportMediaView
             prevView={prevView}
             closeModal={handleModalClose}
             nextView={nextView}

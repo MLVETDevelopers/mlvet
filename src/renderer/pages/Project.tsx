@@ -1,18 +1,25 @@
-import { Stack } from '@mui/material';
-import { Box } from '@mui/system';
-import { useSelector } from 'react-redux';
-
+import { Box, Stack } from '@mui/material';
+import { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
+import { transcriptionCreated } from 'renderer/store/actions';
+import { Transcription } from 'sharedTypes';
 import ExportCard from '../components/ExportCard';
-import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
-
+import { dispatchOp } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
 import {
   makeChangeWordToSwampOp,
   makeDeleteEverySecondWordOp,
 } from '../store/ops';
-import StandardButton from '../components/StandardButton';
 
+/*
+This is the page that gets displayed while you are editing a video.
+It will be primarily composed of the transcription area, an editable text box whose
+changes get reflected in the video. In addition to that, there is a video preview
+section to the side among other things.
+*/
 const ProjectPage = () => {
+  const dispatch = useDispatch();
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -22,9 +29,64 @@ const ProjectPage = () => {
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
-  if (currentProject === null) {
+  // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
+  const saveTranscription: (transcription: Transcription) => void = useCallback(
+    (transcription) => dispatch(transcriptionCreated(transcription)),
+    [dispatch]
+  );
+
+  const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
+    if (currentProject && currentProject.transcription) {
+      // eslint-disable-next-line no-plusplus
+      for (let i = firstWordIndex; i < firstWordIndex + numberOfWords; i++) {
+        currentProject.transcription.words[i].deleted = true;
+      }
+      saveTranscription(currentProject.transcription);
+    }
+  };
+
+  const deleteText = async () => {
+    const highlightedWords = window.getSelection();
+    if (
+      highlightedWords?.anchorNode?.parentElement?.dataset.type === 'word' &&
+      highlightedWords?.focusNode?.parentElement?.dataset.type === 'word'
+    ) {
+      const anchor = await Number(
+        highlightedWords?.anchorNode?.parentElement?.dataset.index
+      );
+      const focus = await Number(
+        highlightedWords?.focusNode?.parentElement?.dataset.index
+      );
+
+      const start = Math.min(anchor, focus);
+      const end = Math.max(anchor, focus);
+      deleteWord(start, end - start + 1);
+    }
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      deleteText();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  });
+
+  // TODO: Error handling
+  if (!currentProject?.transcription) {
     return null;
   }
+
+  const onWordClick = (wordIndex: number) => {
+    // TODO: Implement onWordClick
+    return currentProject.transcription?.words[wordIndex];
+  };
 
   const deleteEverySecondWord: () => void = () => {
     if (currentProject.transcription === null) {
@@ -60,54 +122,18 @@ const ProjectPage = () => {
         }}
       >
         <Stack spacing={4} sx={{ flex: '5 1 0' }}>
-          <Box
-            sx={{
-              p: 2,
-              backgroundColor: '#515151',
-              overflow: 'auto',
-              height: '100%',
-            }}
-          >
-            {currentProject.transcription?.words
-              .map((word) => word.word)
-              .join(' ')}
-          </Box>
+          <TranscriptionBlock
+            transcription={currentProject.transcription}
+            onWordClick={onWordClick}
+          />
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
-          <Box sx={{ width: '400px', height: '280px', backgroundColor: 'red' }}>
+          <Box
+            sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
+          >
             video
           </Box>
-          <div>
-            Current project data:{' '}
-            <pre style={{ width: '200px', overflow: 'auto' }}>
-              {JSON.stringify(currentProject)}
-            </pre>
-            <p>Buttons to demo undo</p>
-            <StandardButton onClick={deleteEverySecondWord}>
-              Delete Every Second Word
-            </StandardButton>
-            <StandardButton onClick={changeRandomWordToSwamp}>
-              Change a random word to &lsquo;swamp&rsquo;
-            </StandardButton>
-            <StandardButton
-              onClick={dispatchUndo}
-              disabled={undoStack.index <= 0}
-            >
-              Undo last action
-            </StandardButton>
-            <StandardButton
-              onClick={dispatchRedo}
-              disabled={undoStack.index >= undoStack.stack.length}
-            >
-              Redo last action
-            </StandardButton>
-            <p>Or, use shortcuts from edit menu to undo/redo</p>
-            <p>Undo stack:</p>
-            <pre style={{ width: '200px', overflow: 'auto' }}>
-              {JSON.stringify(undoStack)}
-            </pre>
-          </div>
         </Stack>
         {isExporting && (
           <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>

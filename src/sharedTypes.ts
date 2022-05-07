@@ -30,6 +30,15 @@ export interface Word {
   word: string;
   startTime: number;
   duration: number;
+  deleted: boolean;
+  key: string;
+  fileName: string;
+}
+
+export interface Clip {
+  startTime: number;
+  duration: number;
+  fileName: string;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

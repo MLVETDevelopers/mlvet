@@ -17,13 +17,6 @@ const handleTranscription: (
   filePath: string
 ) => Promise<Transcription> = async (filePath: string) => {
   // TODO: replace hard coded media path with parameter passed in
-  const pathToSaveMedia = path.join(
-    process.cwd(),
-    'assets',
-    'audio',
-    'audio.wav'
-  );
-  const audioDurationPromise = getAudioDurationInSeconds(pathToSaveMedia);
 
   await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
 
@@ -36,7 +29,14 @@ const handleTranscription: (
   const jsonTranscript = JSON.parse(rawTranscription);
 
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
-  const duration: number = (await audioDurationPromise) || 0;
+  const pathToSaveMedia = path.join(
+    process.cwd(),
+    'assets',
+    'audio',
+    'audio.wav'
+  );
+  const duration: number =
+    (await getAudioDurationInSeconds(pathToSaveMedia)) || 0;
   const fileName = path.basename(filePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],

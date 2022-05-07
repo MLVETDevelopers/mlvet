@@ -10,7 +10,6 @@ const preProcessTranscript = (
   const processedTranscript: Transcription = {
     confidence: jsonTranscript.confidence,
     words: [],
-    fileName,
   };
 
   for (let i = 0; i < numberOfWords - 1; i += 1) {
@@ -27,7 +26,7 @@ const preProcessTranscript = (
       duration: wordDuration,
       deleted: false,
       key: i.toString(),
-      fileName: 'PLACEHOLDER FILENAME',
+      fileName,
     };
 
     processedTranscript.words.push(word);
@@ -43,7 +42,7 @@ const preProcessTranscript = (
     duration: wordDuration,
     deleted: false,
     key: (numberOfWords - 1).toString(),
-    fileName: 'PLACEHOLDER FILENAME',
+    fileName,
   };
   processedTranscript.words.push(lastWord);
   return processedTranscript;

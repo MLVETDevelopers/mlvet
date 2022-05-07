@@ -98,7 +98,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
     <Container>
       <CustomColumnStack>
         <CustomRowStack>
-          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>
           <IconButton

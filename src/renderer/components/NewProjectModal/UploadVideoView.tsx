@@ -101,7 +101,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         sx={{ height: '50%' }}
       >
         <CustomRowStack justifyContent="space-between">
-          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             {projectName}
           </Typography>
           <IconButton

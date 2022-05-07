@@ -47,7 +47,7 @@ const CustomButton = styled(Button)`
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
-  const [projName, setProjName] = useState<string>('');
+  const [projectName, setProjectName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
     useState<boolean>(true);
 
@@ -58,7 +58,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const handleContinue = async () => {
-    const project = await makeProjectWithoutMedia(projName);
+    const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
@@ -69,7 +69,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProjName(event.target.value);
+    setProjectName(event.target.value);
     if (event.target.value !== '') {
       setIsAwaitingProjectName(false);
     } else {
@@ -111,7 +111,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
         <CustomStack>
           <TextField
             label="Project Name"
-            value={projName}
+            value={projectName}
             onChange={(event) => handleProjectNameInput(event)}
           />
         </CustomStack>

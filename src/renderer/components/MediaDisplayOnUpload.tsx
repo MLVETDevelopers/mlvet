@@ -10,7 +10,6 @@ interface Props {
 
 const CustomBox = styled(Box)`
   width: 100%;
-  margin-top: 5px;
 `;
 
 const MediaDisplayOnUpload = ({ fileName }: Props) => {

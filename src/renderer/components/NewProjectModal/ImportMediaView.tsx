@@ -122,7 +122,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
       <CustomColumnStack
         alignItems="baseline"
         justifyContent="flex-start"
-        sx={{ height: '45%' }}
+        sx={{ height: '42.5%', overflowY: 'auto' }}
       >
         <MediaDisplayOnUpload fileName={mediaFileName} />
       </CustomColumnStack>

@@ -2,13 +2,15 @@ import { Transcription, Word } from 'sharedTypes';
 
 const preProcessTranscript = (
   jsonTranscript: any,
-  duration: number
+  duration: number,
+  fileName: string
 ): Transcription => {
   const numberOfWords: number = jsonTranscript.words.length;
 
   const processedTranscript: Transcription = {
     confidence: jsonTranscript.confidence,
     words: [],
+    fileName,
   };
 
   for (let i = 0; i < numberOfWords - 1; i += 1) {
@@ -45,7 +47,6 @@ const preProcessTranscript = (
   };
 
   processedTranscript.words.push(lastWord);
-
   return processedTranscript;
 };
 

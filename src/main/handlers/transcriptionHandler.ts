@@ -14,8 +14,8 @@ const sleep: (n: number) => Promise<void> = (n) =>
   new Promise((resolve) => setTimeout(resolve, n * 1000));
 
 const handleTranscription: (
-  fileName: string
-) => Promise<Transcription> = async () => {
+  filePath: string
+) => Promise<Transcription> = async (filePath: string) => {
   // TODO: replace hard coded media path with parameter passed in
   const pathToSaveMedia = path.join(
     process.cwd(),
@@ -41,9 +41,11 @@ const handleTranscription: (
 
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
   const duration: number = (await audioDurationPromise) || 0;
+  const fileName = path.basename(filePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
-    duration
+    duration,
+    fileName
   );
 
   return processedTranscript;

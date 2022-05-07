@@ -24,6 +24,7 @@ export type VideoFileExtension = 'mp4';
 export interface Transcription {
   confidence: number;
   words: Word[];
+  fileName: string;
 }
 
 export interface Word {

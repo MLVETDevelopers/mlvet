@@ -2,6 +2,7 @@ import { Project } from '../sharedTypes';
 import {
   projectOpened,
   pageChanged,
+  projectSaved,
   updateExportProgress,
   finishExport,
 } from './store/actions';
@@ -19,16 +20,21 @@ window.electron.on('initiate-save-project', async () => {
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  await window.electron.saveProject(currentProject);
+  const filePath = await window.electron.saveProject(currentProject);
+
+  store.dispatch(projectSaved(currentProject.id, filePath));
 });
 
 /**
  * Used by backend to notify front end that a project was opened
  */
-window.electron.on('project-opened', async (_event, project: Project) => {
-  store.dispatch(projectOpened(project));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+window.electron.on(
+  'project-opened',
+  async (_event, project: Project, filePath: string) => {
+    store.dispatch(projectOpened(project, filePath));
+    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+  }
+);
 
 /**
 
@@ -44,7 +50,7 @@ window.electron.on(
 /**
  * Used by backend to notify frontend that export is complete
  */
-window.electron.on('finish-export', async (_event) => {
+window.electron.on('finish-export', async () => {
   store.dispatch(finishExport());
 });
 

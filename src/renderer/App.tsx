@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import colors from './colors';
-import TopBar from './components/TopBar';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import { recentProjectsLoaded } from './store/actions';
@@ -15,7 +14,7 @@ const { readRecentProjects, writeRecentProjects } = window.electron;
 
 const RootContainer = styled(Box)`
   margin: 0;
-  background: ${colors.grey[700]};
+  background: ${colors.grey[900]};
   height: 100vh;
 `;
 
@@ -77,7 +76,6 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <RootContainer>
-            <TopBar />
             <Router />
           </RootContainer>
         </CssBaseline>

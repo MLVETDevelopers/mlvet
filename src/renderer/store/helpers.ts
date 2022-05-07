@@ -1,4 +1,4 @@
-import { Project } from '../../sharedTypes';
+import { Project, RecentProject } from '../../sharedTypes';
 import { DoPayload, UndoPayload } from './opPayloads';
 
 export enum ApplicationPage {
@@ -47,7 +47,7 @@ export interface ExportIO {
  */
 export interface ApplicationStore {
   currentProject: Project | null;
-  recentProjects: Project[];
+  recentProjects: RecentProject[];
   currentPage: ApplicationPage;
   undoStack: UndoStack;
   exportIo: ExportIO;

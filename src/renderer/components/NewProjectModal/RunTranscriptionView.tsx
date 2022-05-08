@@ -71,7 +71,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       return;
     }
 
-    if (currentProject.filePath === null) {
+    if (currentProject.mediaFilePath === null) {
       return;
     }
 

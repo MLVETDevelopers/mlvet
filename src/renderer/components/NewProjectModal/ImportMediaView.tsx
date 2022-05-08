@@ -9,7 +9,7 @@ import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
 import { updateProjectWithMedia } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
-import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
+import MediaDisplayOnImport from '../MediaDisplayOnImport';
 
 const { retrieveProjectMetadata } = window.electron;
 
@@ -124,7 +124,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
         justifyContent="flex-start"
         sx={{ height: '42.5%', overflowY: 'auto' }}
       >
-        <MediaDisplayOnUpload fileName={mediaFileName} />
+        <MediaDisplayOnImport fileName={mediaFileName} />
       </CustomColumnStack>
       <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
         {cancelButton}

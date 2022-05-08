@@ -1,10 +1,12 @@
-import { Modal, styled, colors, Box } from '@mui/material';
+import { Modal, styled, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/actions';
 import { ApplicationPage } from '../../store/helpers';
-import ImportMediaView from './ImportMediaView';
+import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
+import ImportMediaView from './ImportMediaView';
+import colors from '../../colors';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -13,9 +15,10 @@ const CustomModal = styled(Modal)`
 `;
 
 const CustomModalInner = styled(Box)`
-  width: calc(80vw - 40px);
-  background: ${colors.grey[900]};
-  padding: 20px;
+  background: ${colors.grey[700]};
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 interface Props {
@@ -34,36 +37,53 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     [dispatch]
   );
 
-  const viewComponents = [ImportMediaView, RunTranscriptionView];
+  const viewComponents = [
+    NewProjectView,
+    ImportMediaView,
+    RunTranscriptionView,
+  ];
+
+  const handleModalClose: () => void = () => {
+    closeModal();
+    setCurrentView(0);
+  };
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
-      closeModal();
+      handleModalClose();
       navigate(ApplicationPage.PROJECT);
       return;
     }
     setCurrentView((prev) => prev + 1);
   };
 
-  const closeAndResetModal: () => void = () => {
-    setCurrentView(0);
-    closeModal();
+  const prevView: () => void = () => {
+    if (currentView === 0) {
+      handleModalClose();
+      return;
+    }
+    setCurrentView((prev) => prev - 1);
   };
 
   const view = (() => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
+      case NewProjectView:
+        return (
+          <NewProjectView closeModal={handleModalClose} nextView={nextView} />
+        );
       case ImportMediaView:
         return (
           <ImportMediaView
-            closeModal={closeAndResetModal}
+            prevView={prevView}
+            closeModal={handleModalClose}
             nextView={nextView}
           />
         );
       case RunTranscriptionView:
         return (
           <RunTranscriptionView
-            closeModal={closeAndResetModal}
+            closeModal={handleModalClose}
             nextView={nextView}
           />
         );
@@ -73,8 +93,10 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   })();
 
   return (
-    <CustomModal open={isOpen} onClose={closeModal}>
-      <CustomModalInner>{view}</CustomModalInner>
+    <CustomModal open={isOpen} onClose={handleModalClose}>
+      <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
+        {view}
+      </CustomModalInner>
     </CustomModal>
   );
 };

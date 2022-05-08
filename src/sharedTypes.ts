@@ -42,3 +42,9 @@ export interface Clip {
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
+
+export enum OperatingSystems {
+  MACOS = 'darwin',
+  WINDOWS = 'win32',
+  LINUX = 'linux',
+}

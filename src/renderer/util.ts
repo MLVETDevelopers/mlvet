@@ -31,11 +31,11 @@ export const extractFileNameWithExtension: (
   let delimiter: string | null = null;
 
   if (
-    userOperatingSystem === OperatingSystems.Darwin ||
-    userOperatingSystem === OperatingSystems.Linux
+    userOperatingSystem === OperatingSystems.MACOS ||
+    userOperatingSystem === OperatingSystems.LINUX
   ) {
     delimiter = '/';
-  } else if (userOperatingSystem === OperatingSystems.Windows) {
+  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
     delimiter = '\\';
   }
 

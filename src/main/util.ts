@@ -40,18 +40,18 @@ export const mkdir = (dirPath: string) => {
 };
 
 export const handleOSQuery: () => OperatingSystems | null = () => {
-  const isDarwin = os.platform() === 'darwin';
-  const isWindows = os.platform() === 'win32';
-  const isLinux = os.platform() === 'linux';
+  const isDarwin = os.platform() === OperatingSystems.MACOS;
+  const isWindows = os.platform() === OperatingSystems.WINDOWS;
+  const isLinux = os.platform() === OperatingSystems.LINUX;
 
   if (isDarwin) {
-    return OperatingSystems.Darwin;
+    return OperatingSystems.MACOS;
   }
   if (isWindows) {
-    return OperatingSystems.Windows;
+    return OperatingSystems.WINDOWS;
   }
   if (isLinux) {
-    return OperatingSystems.Linux;
+    return OperatingSystems.LINUX;
   }
 
   return null;

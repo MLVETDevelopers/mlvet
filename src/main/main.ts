@@ -15,16 +15,16 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
 import path from 'path';
-import showImportMediaDialog from './fileDialog';
 import MenuBuilder from './menu';
-import {
-  handleOpenProject,
-  handleSaveProject,
-  handleTranscription,
-  extractAudio,
-} from './handlers';
 import startServer from './pyServer';
-import { resolveHtmlPath } from './util';
+import {
+  appDataStoragePath,
+  mkdir,
+  resolveHtmlPath,
+  handleOSQuery,
+} from './util';
+import initialiseIpcHandlers from './ipc';
+import { extractAudio } from './handlers';
 
 export default class AppUpdater {
   constructor() {
@@ -38,17 +38,10 @@ let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
 dotenv.config();
 
-ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
+// If app data storage path doesn't exist, create it
+mkdir(appDataStoragePath());
 
-ipcMain.handle('transcribe-media', async (_event, filePath) =>
-  handleTranscription(filePath)
-);
-
-ipcMain.handle('save-project', async (_event, project) =>
-  handleSaveProject(mainWindow, project)
-);
-
-ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
+ipcMain.handle('user-os', async () => handleOSQuery());
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -99,6 +92,8 @@ const createWindow = async () => {
     },
   });
 
+  initialiseIpcHandlers(mainWindow);
+
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', async () => {
@@ -146,7 +141,8 @@ const createWindow = async () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  const menu = menuBuilder.buildMenu();
+  menuBuilder.setListeners(menu, ipcMain);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

@@ -1,4 +1,5 @@
 /* eslint-disable no-plusplus */
+import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
@@ -11,14 +12,15 @@ const secondToTimestamp: (num: number) => string = (num) => {
     .join(':');
 };
 
-const constructEDL: (title: string, transcription: Transcription) => string = (
-  title,
-  transcription
-) => {
+const constructEDL: (
+  title: string,
+  transcription: Transcription,
+  source: string | null,
+  mainWindow: BrowserWindow | null
+) => string = (title, transcription, source, mainWindow) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
   const { words } = transcription;
   const entries = words.length;
-
   output += words
     .map((word, i) => {
       const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
@@ -26,21 +28,38 @@ const constructEDL: (title: string, transcription: Transcription) => string = (
       const editStart = secondToTimestamp(word.startTime);
       const editEnd = secondToTimestamp(word.startTime + word.duration);
 
-      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: sample\n\n`;
+      mainWindow?.webContents.send('export-progress-update', i / entries);
+
+      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: ${
+        source ?? 'FILE PATH NOT FOUND'
+      }\n\n`;
     })
     .join('');
 
   return output;
 };
 
-export const exportEDL = (project: Project) => {
-  mkdir(project.savePath);
+export const exportEDL: (
+  mainWindow: BrowserWindow | null,
+  project: Project
+) => void = (mainWindow, project) => {
+  if (project.exportFilePath === null) {
+    return;
+  }
+
+  mkdir(project.exportFilePath);
 
   if (project.transcription) {
     writeFileSync(
-      join(project.savePath, `${project.name}.edl`),
-      constructEDL(project.name, project.transcription)
+      join(project.exportFilePath, `${project.name}.edl`),
+      constructEDL(
+        project.name,
+        project.transcription,
+        project.mediaFilePath,
+        mainWindow
+      )
     );
+    mainWindow?.webContents.send('finish-export', 1);
   }
 };
 

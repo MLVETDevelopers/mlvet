@@ -3,7 +3,7 @@ import path from 'path';
 
 export default function startServer(): ChildProcess {
   const oldWorkingDirectory = process.cwd();
-  const pathToServer = path.join(process.cwd(), 'src', 'py_server');
+  const pathToServer = path.join(process.cwd(), 'src', 'pyServer');
 
   process.chdir(pathToServer);
   let proc = null;

@@ -47,12 +47,12 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
 
 const handleOpenProject: (
   mainWindow: BrowserWindow | null
-) => Promise<Project> = async (mainWindow) => {
+) => Promise<{ project: Project; filePath: string }> = async (mainWindow) => {
   const filePath = await getOpenFilePath(mainWindow);
 
   const project = await openProjectFromFile(filePath);
 
-  return project;
+  return { project, filePath };
 };
 
 export default handleOpenProject;

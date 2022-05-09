@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
@@ -11,7 +11,8 @@ def connect():
 @socketio.event
 def transcribe(data):
   print('transcribe ', data)
-  return transcript(data)
+  transcriptJSON = transcript(data)
+  socketio.emit('transcript', transcriptJSON)
 
 @socketio.event
 def disconnect():

@@ -16,17 +16,14 @@ const sleep: (n: number) => Promise<void> = (n) =>
 const handleTranscription: (
   fileName: string
 ) => Promise<Transcription> = async () => {
-  const socket = io();
-
-  await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
-
-  // Read from sample transcript. Replace this section with real transcript input
-  const transcriptionPath = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets/SampleTranscript.json')
-    : path.join(__dirname, '../../../assets/SampleTranscript.json');
-
-  const rawTranscription = fs.readFileSync(transcriptionPath).toString();
-  const jsonTranscript = JSON.parse(rawTranscription);
+  const socket = io('http://localhost:5000');
+  socket.emit('transcribe', 'assets/videos/demo-video.mp4');
+  let transcript = '';
+  socket.on('transcription', (transcriptJson: any) => {
+    transcript = transcriptJson;
+  });
+  // socket.disconnect();
+  const jsonTranscript = JSON.parse(transcript);
 
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
 

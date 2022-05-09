@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
 import { Transcription } from '../../sharedTypes';
+import preProcessTranscript from '../editDelete/preProcess';
 
 /**
  * util to simulate running of transcription
@@ -26,9 +27,13 @@ const handleTranscription: (
 
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
 
-  const newTranscript: Transcription = jsonTranscript.transcripts[0];
+  const duration = 0; // TODO: get actual duration from video
+  const processedTranscript = preProcessTranscript(
+    jsonTranscript.transcripts[0],
+    duration
+  );
 
-  return newTranscript;
+  return processedTranscript;
 };
 
 export default handleTranscription;

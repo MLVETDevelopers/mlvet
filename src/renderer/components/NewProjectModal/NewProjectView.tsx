@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
 import { projectCreated } from 'renderer/store/actions';
@@ -53,18 +53,35 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setProjectInStore = async (project: Project) => {
-    dispatch(projectCreated(project));
-  };
+  const setProjectInStore = useCallback(
+    async (project: Project) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
 
-  const handleContinue = async () => {
+  const handleContinue = useCallback(async () => {
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
     setProjectInStore(project);
     nextView();
-  };
+  }, [nextView, projectName, setProjectInStore]);
+
+  useEffect(() => {
+    const handleKeypress = async (event: KeyboardEvent) => {
+      if (event.code === 'Enter' && !isAwaitingProjectName) {
+        handleContinue();
+      }
+    };
+
+    window.addEventListener('keypress', handleKeypress);
+
+    return () => {
+      window.removeEventListener('keypress', handleKeypress);
+    };
+  }, [handleContinue, isAwaitingProjectName]);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

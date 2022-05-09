@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
@@ -50,20 +50,25 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  if (currentProject === null) {
-    return null;
-  }
+  const setCurrentProject = useCallback(
+    (project: Project) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
+  const addToRecentProjects = useCallback(
+    async (project: Project) => {
+      const projectMetadata = await retrieveProjectMetadata(project);
+      dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
+    },
+    [dispatch]
+  );
 
-  const projectName = currentProject.name;
+  const handleTranscribe = useCallback(async () => {
+    if (currentProject === null) {
+      return;
+    }
 
-  const setCurrentProject = (project: Project) =>
-    dispatch(projectCreated(project));
-  const addToRecentProjects = async (project: Project) => {
-    const projectMetadata = await retrieveProjectMetadata(project);
-    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
-  };
-
-  const handleTranscribe = async () => {
     const project = await updateProjectWithMedia(currentProject, mediaFilePath);
 
     if (project === null || mediaFilePath === null) {
@@ -74,7 +79,33 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     await addToRecentProjects(project);
 
     nextView();
-  };
+  }, [
+    addToRecentProjects,
+    currentProject,
+    mediaFilePath,
+    nextView,
+    setCurrentProject,
+  ]);
+
+  useEffect(() => {
+    const handleKeypress = async (event: KeyboardEvent) => {
+      if (event.code === 'Enter' && !isAwaitingMedia) {
+        handleTranscribe();
+      }
+    };
+
+    window.addEventListener('keypress', handleKeypress);
+
+    return () => {
+      window.removeEventListener('keypress', handleKeypress);
+    };
+  }, [handleTranscribe, isAwaitingMedia]);
+
+  if (currentProject === null) {
+    return null;
+  }
+
+  const projectName = currentProject.name;
 
   const transcribeButton = (
     <CustomButton

@@ -1,26 +1,50 @@
-// TODO: Define transcription schema (this is just a mockup)
-export type Transcription = string;
-
-export interface ProjectBase {
+export interface Project {
+  id: string; // UUID
   schemaVersion: number;
   name: string;
-  filePath: string;
+  projectFilePath: string | null;
+  exportFilePath: string | null;
+  mediaFilePath: string | null;
   transcription: Transcription | null;
+  mediaType: 'audio' | 'video';
+  mediaFileExtension: AudioFileExtension | VideoFileExtension;
+  thumbnailFilePath: string | null;
 }
+
+export interface ProjectMetadata {
+  dateModified: Date | null;
+  mediaSize: number | null; // bytes
+}
+
+export type RecentProject = Project & ProjectMetadata;
 
 export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
+export interface Transcription {
+  confidence: number;
+  words: Word[];
+}
+
+export interface Word {
+  word: string;
+  startTime: number;
+  duration: number;
+  deleted: boolean;
+  key: string;
+  fileName: string;
+}
+
+export interface Clip {
+  startTime: number;
+  duration: number;
+  fileName: string;
+}
+
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
 
-export interface AudioProject extends ProjectBase {
-  mediaType: 'audio';
-  fileExtension: AudioFileExtension;
+export enum OperatingSystems {
+  MACOS = 'darwin',
+  WINDOWS = 'win32',
+  LINUX = 'linux',
 }
-
-export interface VideoProject extends ProjectBase {
-  mediaType: 'video';
-  fileExtension: VideoFileExtension;
-}
-
-export type Project = AudioProject | VideoProject;

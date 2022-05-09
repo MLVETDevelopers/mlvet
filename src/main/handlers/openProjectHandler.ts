@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../sharedTypes';
-import { CURRENT_SCHEMA_VERSION } from './constants';
+import { Project } from '../../sharedTypes';
+import { CURRENT_SCHEMA_VERSION } from '../../constants';
 
 const getOpenFilePath: (
   mainWindow: BrowserWindow | null
@@ -47,12 +47,12 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
 
 const handleOpenProject: (
   mainWindow: BrowserWindow | null
-) => Promise<Project> = async (mainWindow) => {
+) => Promise<{ project: Project; filePath: string }> = async (mainWindow) => {
   const filePath = await getOpenFilePath(mainWindow);
 
   const project = await openProjectFromFile(filePath);
 
-  return project;
+  return { project, filePath };
 };
 
 export default handleOpenProject;

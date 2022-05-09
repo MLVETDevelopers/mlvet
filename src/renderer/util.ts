@@ -1,8 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
+import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
-  Project,
   AudioFileExtension,
+  Project,
   VideoFileExtension,
-} from './store/helpers';
+  OperatingSystems,
+} from '../sharedTypes';
+
+const { extractThumbnail, userOS } = window.electron;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -13,6 +18,35 @@ export const extractFileExtension: (filePath: string) => string | null = (
     return null;
   }
   return extension;
+};
+
+export const extractFileNameWithExtension: (
+  filePath: string | null
+) => Promise<string | null> = async (filePath) => {
+  if (filePath === null) {
+    return null;
+  }
+  const userOperatingSystem = await userOS();
+
+  let delimiter: string | null = null;
+
+  if (
+    userOperatingSystem === OperatingSystems.MACOS ||
+    userOperatingSystem === OperatingSystems.LINUX
+  ) {
+    delimiter = '/';
+  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
+    delimiter = '\\';
+  }
+
+  if (delimiter === null) {
+    return null;
+  }
+
+  const filePathSplit = filePath.split(delimiter);
+  const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
+
+  return fileNameWithExtension;
 };
 
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
@@ -34,7 +68,67 @@ export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
 export const makeProject: (
   projectName: string,
   mediaFilePath: string | null
-) => Project | null = (projectName, mediaFilePath) => {
+) => Promise<Project | null> = async (projectName, mediaFilePath) => {
+  if (mediaFilePath === null) {
+    return null;
+  }
+
+  const mediaFileExtension = extractFileExtension(mediaFilePath);
+  if (mediaFileExtension === null) {
+    return null;
+  }
+
+  const mediaType = getMediaType(mediaFileExtension);
+  if (mediaType === null) {
+    return null;
+  }
+
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
+  const project: Project = {
+    id: uuidv4(),
+    name: projectName,
+    mediaType,
+    mediaFileExtension: mediaFileExtension as
+      | AudioFileExtension
+      | VideoFileExtension,
+    mediaFilePath,
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    transcription: null,
+    thumbnailFilePath: thumbnailPath,
+    projectFilePath: null,
+    exportFilePath: null,
+  };
+
+  return project;
+};
+
+export const makeProjectWithoutMedia: (
+  projectName: string
+) => Promise<Project | null> = async (projectName) => {
+  const project: Project = {
+    id: uuidv4(),
+    name: projectName,
+    schemaVersion: 0,
+    projectFilePath: null,
+    exportFilePath: null,
+    mediaFilePath: null,
+    transcription: null,
+    mediaType: 'audio',
+    mediaFileExtension: 'mp3',
+    thumbnailFilePath: null,
+  };
+
+  return project;
+};
+
+export const updateProjectWithMedia: (
+  currentProject: Project,
+  mediaFilePath: string | null
+) => Promise<Project | null> = async (currentProject, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
@@ -49,20 +143,31 @@ export const makeProject: (
     return null;
   }
 
-  const project: Project =
-    mediaType === 'audio'
-      ? {
-          name: projectName,
-          mediaType: 'audio',
-          fileExtension: fileExtension as AudioFileExtension,
-          filePath: mediaFilePath,
-        }
-      : {
-          name: projectName,
-          mediaType: 'video',
-          fileExtension: fileExtension as VideoFileExtension,
-          filePath: mediaFilePath,
-        };
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
 
-  return project;
+  currentProject.mediaType = mediaType;
+  currentProject.mediaFileExtension = fileExtension as
+    | AudioFileExtension
+    | VideoFileExtension;
+  currentProject.mediaFilePath = mediaFilePath;
+  currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
+  currentProject.transcription = null;
+  currentProject.thumbnailFilePath = thumbnailPath;
+
+  return currentProject;
+};
+
+export const formatDate: (date: Date) => string = (date) => {
+  // dd/mm/yy
+  const dd = date.getDate().toString(); // days start at 1
+  const mm = (date.getMonth() + 1).toString(); // months start at 0 because JavaScript hates us
+  const yy = (date.getFullYear() % 100).toString();
+
+  const pad: (val: string) => string = (val) =>
+    val.length === 1 ? `0${val}` : val;
+
+  return [dd, mm, yy].map(pad).join('/');
 };

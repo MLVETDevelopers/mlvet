@@ -1,11 +1,18 @@
-import { Box, colors, styled, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
+import colors from 'renderer/colors';
+import { extractFileNameWithExtension } from 'renderer/util';
 
 const SelectMediaBox = styled(Box)`
-  background: ${colors.grey[400]};
-  color: ${colors.grey[900]};
-  margin-top: 20px;
+  width: 100%;
+`;
+
+const InnerBox = styled(Box)`
+  border-style: dashed;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: ${colors.grey[500]};
+  color: ${colors.grey[300]};
   padding: 20px;
 
   &:hover {
@@ -14,34 +21,45 @@ const SelectMediaBox = styled(Box)`
   }
 `;
 
-const ImportFileBox = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  margin: 80px 0;
-`;
-
 interface Props {
-  mediaFilePath: string | null;
+  setMediaFileName: Dispatch<SetStateAction<string | null>>;
   setMediaFilePath: Dispatch<SetStateAction<string | null>>;
+  setIsAwaitingMedia: Dispatch<SetStateAction<boolean>>;
 }
 
-const SelectMediaBlock = ({ mediaFilePath, setMediaFilePath }: Props) => {
+const SelectMediaBlock = ({
+  setMediaFileName,
+  setMediaFilePath,
+  setIsAwaitingMedia,
+}: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await window.electron.requestMediaDialog();
+
+    if (selectMedia !== null) {
+      setIsAwaitingMedia(false);
+    }
+
     setMediaFilePath(selectedMedia);
+
+    const fileName = await extractFileNameWithExtension(selectedMedia);
+
+    setMediaFileName(fileName);
   };
 
   return (
     <SelectMediaBox onClick={selectMedia}>
-      <Typography fontWeight="bold">Video or Audio Base</Typography>
-      {mediaFilePath}
-      <ImportFileBox>
-        <AddIcon fontSize="large" />
-        <Typography fontWeight="bold">Import File or Drag</Typography>
-      </ImportFileBox>
+      <InnerBox>
+        <Stack
+          direction="column"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ height: '150px' }}
+        >
+          <Typography variant="p-300">Drag and drop file here</Typography>
+          <Typography variant="p-300">or</Typography>
+          <Button color="primary">Browse</Button>
+        </Stack>
+      </InnerBox>
     </SelectMediaBox>
   );
 };

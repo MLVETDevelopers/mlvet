@@ -1,2 +1,0 @@
-def transcribe():
-    raise NotImplementedError

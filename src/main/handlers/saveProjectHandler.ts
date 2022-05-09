@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../sharedTypes';
+import { Project } from '../../sharedTypes';
 
 const getSaveFilePath: (
   mainWindow: BrowserWindow | null
@@ -35,10 +35,12 @@ const saveProjectToFile: (
 const handleSaveProject: (
   mainWindow: BrowserWindow | null,
   project: Project
-) => Promise<void> = async (mainWindow, project) => {
+) => Promise<string> = async (mainWindow, project) => {
   const filePath = await getSaveFilePath(mainWindow);
 
   await saveProjectToFile(filePath, project);
+
+  return filePath;
 };
 
 export default handleSaveProject;

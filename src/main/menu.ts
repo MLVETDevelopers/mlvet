@@ -4,10 +4,9 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  ipcMain,
+  IpcMain,
 } from 'electron';
-import handleOpenProject from './openProjectHandler';
-import handleSaveProject from './saveProjectHandler';
+import { handleOpenProject } from './handlers';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -21,6 +20,10 @@ export default class MenuBuilder {
     this.mainWindow = mainWindow;
   }
 
+  isDarwin: () => boolean = () => {
+    return process.platform === 'darwin'; // macos
+  };
+
   buildMenu(): Menu {
     if (
       process.env.NODE_ENV === 'development' ||
@@ -29,16 +32,42 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    const template =
-      process.platform === 'darwin'
-        ? this.buildDarwinTemplate()
-        : this.buildDefaultTemplate();
+    const template = this.isDarwin()
+      ? this.buildDarwinTemplate()
+      : this.buildDefaultTemplate();
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 
     return menu;
   }
+
+  setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
+    ipcMain.handle(
+      'set-undo-redo-enabled',
+      (_event, undoEnabled: boolean, redoEnabled: boolean) => {
+        const editSubmenu = menu.items.find((submenu) => submenu.id === 'edit');
+
+        if (!editSubmenu) {
+          return;
+        }
+
+        const undoButton = editSubmenu.submenu?.items.find(
+          (item) => item.id === 'undo'
+        );
+        const redoButton = editSubmenu.submenu?.items.find(
+          (item) => item.id === 'redo'
+        );
+
+        if (!undoButton || !redoButton) {
+          return;
+        }
+
+        undoButton.enabled = undoEnabled;
+        redoButton.enabled = redoEnabled;
+      }
+    );
+  };
 
   setupDevelopmentEnvironment(): void {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
@@ -53,6 +82,31 @@ export default class MenuBuilder {
         },
       ]).popup({ window: this.mainWindow });
     });
+  }
+
+  buildUndoRedoOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'undo', // do not change, used by IPC to listen for enable/disable undo
+        label: 'Undo',
+        accelerator: 'CommandOrControl+Z',
+        click: () => {
+          // Tell the renderer to initiate an undo
+          this.mainWindow.webContents.send('initiate-undo');
+        },
+        enabled: false, // initially disabled, becomes enabled when there are things to undo
+      },
+      {
+        id: 'redo', // do not change, used by IPC to listen for enable/disable redo
+        label: 'Redo',
+        accelerator: 'Shift+CommandOrControl+Z',
+        click: () => {
+          // Tell the renderer to initiate a redo
+          this.mainWindow.webContents.send('initiate-redo');
+        },
+        enabled: false, // initially disabled, becomes enabled when there are things to redo
+      },
+    ];
   }
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
@@ -101,23 +155,25 @@ export default class MenuBuilder {
           label: 'Open Project',
           accelerator: 'CommandOrControl+O',
           click: async () => {
-            const project = await handleOpenProject(this.mainWindow);
+            const { project, filePath } = await handleOpenProject(
+              this.mainWindow
+            );
 
-            this.mainWindow.webContents.send('project-opened', project);
+            this.mainWindow.webContents.send(
+              'project-opened',
+              project,
+              filePath
+            );
           },
         },
       ],
     };
 
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
+      id: 'edit', // do not change, used by IPC to find this menu
       label: 'Edit',
       submenu: [
-        { label: 'Undo', accelerator: 'CommandOrControl+Z', selector: 'undo:' },
-        {
-          label: 'Redo',
-          accelerator: 'Shift+CommandOrControl+Z',
-          selector: 'redo:',
-        },
+        ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         { label: 'Cut', accelerator: 'CommandOrControl+X', selector: 'cut:' },
         { label: 'Copy', accelerator: 'CommandOrControl+C', selector: 'copy:' },
@@ -216,6 +272,11 @@ export default class MenuBuilder {
             },
           },
         ],
+      },
+      {
+        id: 'edit',
+        label: '&Edit',
+        submenu: this.buildUndoRedoOptions(),
       },
       {
         label: '&View',

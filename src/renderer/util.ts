@@ -4,6 +4,7 @@ import {
   AudioFileExtension,
   Project,
   VideoFileExtension,
+  OperatingSystems,
 } from '../sharedTypes';
 
 const { extractThumbnail, userOS } = window.electron;
@@ -25,13 +26,16 @@ export const extractFileNameWithExtension: (
   if (filePath === null) {
     return null;
   }
-  const { isDarwin, isWindows, isLinux } = await userOS();
+  const userOperatingSystem = await userOS();
 
   let delimiter: string | null = null;
 
-  if (isDarwin || isLinux) {
+  if (
+    userOperatingSystem === OperatingSystems.MACOS ||
+    userOperatingSystem === OperatingSystems.LINUX
+  ) {
     delimiter = '/';
-  } else if (isWindows) {
+  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
     delimiter = '\\';
   }
 

@@ -10,10 +10,9 @@ interface Props {
 
 const CustomBox = styled(Box)`
   width: 100%;
-  margin-top: 5px;
 `;
 
-const MediaDisplayOnUpload = ({ fileName }: Props) => {
+const MediaDisplayOnImport = ({ fileName }: Props) => {
   if (fileName === null) {
     return null;
   }
@@ -42,4 +41,4 @@ const MediaDisplayOnUpload = ({ fileName }: Props) => {
   );
 };
 
-export default MediaDisplayOnUpload;
+export default MediaDisplayOnImport;

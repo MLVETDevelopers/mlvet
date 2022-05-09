@@ -9,7 +9,7 @@ import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
 import { updateProjectWithMedia } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
-import MediaDisplayOnUpload from '../MediaDisplayOnUpload';
+import MediaDisplayOnImport from '../MediaDisplayOnImport';
 
 const { retrieveProjectMetadata } = window.electron;
 
@@ -40,7 +40,7 @@ const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
 `;
 
-const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
+const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
   const [mediaFileName, setMediaFileName] = useState<string | null>(null);
@@ -81,14 +81,14 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
-      sx={{ width: '40%' }}
+      sx={{ width: '100%' }}
     >
       Transcribe
     </CustomButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={prevView} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={prevView} sx={{ width: '100%' }}>
       Back
     </CustomButton>
   );
@@ -101,7 +101,7 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
         sx={{ height: '50%' }}
       >
         <CustomRowStack justifyContent="space-between">
-          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             {projectName}
           </Typography>
           <IconButton
@@ -122,11 +122,11 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
       <CustomColumnStack
         alignItems="baseline"
         justifyContent="flex-start"
-        sx={{ height: '45%' }}
+        sx={{ height: '42.5%', overflowY: 'auto' }}
       >
-        <MediaDisplayOnUpload fileName={mediaFileName} />
+        <MediaDisplayOnImport fileName={mediaFileName} />
       </CustomColumnStack>
-      <CustomRowStack justifyContent="space-between">
+      <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
         {cancelButton}
         {transcribeButton}
       </CustomRowStack>
@@ -134,4 +134,4 @@ const UploadVideoView = ({ prevView, closeModal, nextView }: Props) => {
   );
 };
 
-export default UploadVideoView;
+export default ImportMediaView;

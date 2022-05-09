@@ -47,7 +47,7 @@ const CustomButton = styled(Button)`
 `;
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
-  const [projName, setProjName] = useState<string>('');
+  const [projectName, setProjectName] = useState<string>('');
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
     useState<boolean>(true);
 
@@ -58,7 +58,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const handleContinue = async () => {
-    const project = await makeProjectWithoutMedia(projName);
+    const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
@@ -69,7 +69,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProjName(event.target.value);
+    setProjectName(event.target.value);
     if (event.target.value !== '') {
       setIsAwaitingProjectName(false);
     } else {
@@ -82,14 +82,14 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
       color="primary"
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
-      sx={{ width: '40%' }}
+      sx={{ width: '100%' }}
     >
       Continue
     </CustomButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '40%' }}>
+    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '100%' }}>
       Cancel
     </CustomButton>
   );
@@ -97,8 +97,8 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   return (
     <Container>
       <CustomColumnStack>
-        <CustomRowStack>
-          <Typography variant="h-100" sx={{ color: colors.grey[400] }}>
+        <CustomRowStack sx={{ alignItems: 'flex-start' }}>
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>
           <IconButton
@@ -111,11 +111,11 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
         <CustomStack>
           <TextField
             label="Project Name"
-            value={projName}
+            value={projectName}
             onChange={(event) => handleProjectNameInput(event)}
           />
         </CustomStack>
-        <CustomRowStack>
+        <CustomRowStack sx={{ alignItems: 'flex-end', gap: '32px' }}>
           {cancelButton}
           {continueButton}
         </CustomRowStack>

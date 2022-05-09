@@ -113,6 +113,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
             label="Project Name"
             value={projectName}
             onChange={(event) => handleProjectNameInput(event)}
+            autoFocus
           />
         </CustomStack>
         <CustomRowStack sx={{ alignItems: 'flex-end', gap: '32px' }}>

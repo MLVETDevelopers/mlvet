@@ -41,6 +41,11 @@ export interface Clip {
   fileName: string;
 }
 
+export interface Cut {
+  startTime: number;
+  duration: number;
+}
+
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
 
 export enum OperatingSystems {

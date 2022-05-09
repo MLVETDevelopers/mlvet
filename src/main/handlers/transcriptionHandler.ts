@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { io } from 'socket.io-client';
 import { app } from 'electron';
 import { Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
@@ -15,6 +16,8 @@ const sleep: (n: number) => Promise<void> = (n) =>
 const handleTranscription: (
   fileName: string
 ) => Promise<Transcription> = async () => {
+  const socket = io();
+
   await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
 
   // Read from sample transcript. Replace this section with real transcript input

@@ -47,6 +47,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+  const projectName = currentProject?.name;
 
   const dispatch = useDispatch();
 
@@ -104,8 +105,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   if (currentProject === null) {
     return null;
   }
-
-  const projectName = currentProject.name;
 
   const transcribeButton = (
     <CustomButton

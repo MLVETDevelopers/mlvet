@@ -19,7 +19,7 @@ export interface Word {
   duration: number;
   deleted: boolean;
   key: string;
-  fileName : string;
+  fileName: string;
 }
 
 export interface Clip {

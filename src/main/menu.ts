@@ -42,29 +42,43 @@ export default class MenuBuilder {
     return menu;
   }
 
+  setButtonEnabled: (
+    menu: Menu,
+    submenuId: string,
+    itemId: string,
+    enabled: boolean
+  ) => void = (menu, submenuId, itemId, isEnabled) => {
+    const foundSubmenu = menu.items.find((submenu) => submenu.id === submenuId);
+
+    if (!foundSubmenu) {
+      return;
+    }
+
+    const button = foundSubmenu.submenu?.items.find(
+      (item) => item.id === itemId
+    );
+
+    if (!button) {
+      return;
+    }
+
+    button.enabled = isEnabled;
+  };
+
   setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
+    ipcMain.handle(
+      'set-save-enabled',
+      (_event, saveEnabled: boolean, saveAsEnabled: boolean) => {
+        this.setButtonEnabled(menu, 'file', 'save', saveEnabled);
+        this.setButtonEnabled(menu, 'file', 'saveAs', saveAsEnabled);
+      }
+    );
+
     ipcMain.handle(
       'set-undo-redo-enabled',
       (_event, undoEnabled: boolean, redoEnabled: boolean) => {
-        const editSubmenu = menu.items.find((submenu) => submenu.id === 'edit');
-
-        if (!editSubmenu) {
-          return;
-        }
-
-        const undoButton = editSubmenu.submenu?.items.find(
-          (item) => item.id === 'undo'
-        );
-        const redoButton = editSubmenu.submenu?.items.find(
-          (item) => item.id === 'redo'
-        );
-
-        if (!undoButton || !redoButton) {
-          return;
-        }
-
-        undoButton.enabled = undoEnabled;
-        redoButton.enabled = redoEnabled;
+        this.setButtonEnabled(menu, 'edit', 'undo', undoEnabled);
+        this.setButtonEnabled(menu, 'edit', 'redo', redoEnabled);
       }
     );
   };
@@ -113,7 +127,7 @@ export default class MenuBuilder {
     return [
       {
         id: 'save',
-        label: 'Save Project',
+        label: 'Save',
         accelerator: 'CommandOrControl+S',
         click: () => {
           // Tell the renderer to initiate a save
@@ -123,7 +137,7 @@ export default class MenuBuilder {
       },
       {
         id: 'saveAs',
-        label: 'Save Project As...',
+        label: 'Save As...',
         accelerator: 'CommandOrControl+Shift+S',
         click: () => {
           // Tell the renderer to initiate a save-as
@@ -133,7 +147,7 @@ export default class MenuBuilder {
       },
       {
         id: 'open',
-        label: 'Open Project',
+        label: 'Open',
         accelerator: 'CommandOrControl+O',
         click: async () => {
           const { project, filePath } = await handleOpenProject(

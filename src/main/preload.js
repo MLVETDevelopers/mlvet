@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   openProject: () => ipcRenderer.invoke('open-project'),
 
+  setSaveEnabled: (saveEnabled, saveAsEnabled) =>
+    ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
+
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 

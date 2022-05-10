@@ -18,11 +18,21 @@ declare global {
 
       saveProject: (project: Project) => Promise<string>; // Returns the file path
 
+      saveAsProject: (project: Project) => Promise<string>; // Returns the file path
+
       openProject: (
         filePath: string | null
       ) => Promise<{ project: Project; filePath: string }>;
 
-      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
+      setSaveEnabled: (
+        saveEnabled: boolean,
+        saveAsEnabled: boolean
+      ) => Promise<void>;
+
+      setUndoRedoEnabled: (
+        undoEnabled: boolean,
+        redoEnabled: boolean
+      ) => Promise<void>;
 
       extractThumbnail: (filePath: string) => Promise<string>;
 

@@ -37,6 +37,8 @@ window.electron.on('initiate-save-project', async () => {
   }
 
   store.dispatch(projectSaved(currentProject.id, filePath));
+
+  await window.electron.setSaveEnabled(true, true);
 });
 
 /**
@@ -55,23 +57,20 @@ window.electron.on('initiate-save-as-project', async () => {
   newProject.name = `Copy of ${currentProject.name}`;
   newProject.id = uuidv4();
 
-  // TODO(patrick): regenerate thumbnail
+  // TODO(patrick): regenerate thumbnail and audio extract
 
   const filePath = await window.electron.saveAsProject(newProject);
 
   // Add to recent projects
-  if (filePath !== currentProject.projectFilePath) {
-    const projectMetadata = await window.electron.retrieveProjectMetadata({
-      ...currentProject,
-      projectFilePath: filePath,
-    });
+  const projectMetadata = await window.electron.retrieveProjectMetadata({
+    ...currentProject,
+    projectFilePath: filePath,
+  });
 
-    store.dispatch(
-      projectSavedFirstTime(currentProject, projectMetadata, filePath)
-    );
-  }
+  store.dispatch(projectSavedFirstTime(newProject, projectMetadata, filePath));
+  store.dispatch(projectOpened(newProject, filePath));
 
-  store.dispatch(projectSaved(currentProject.id, filePath));
+  await window.electron.setSaveEnabled(true, true);
 });
 
 /**
@@ -82,6 +81,8 @@ window.electron.on(
   async (_event, project: Project, filePath: string) => {
     store.dispatch(projectOpened(project, filePath));
     store.dispatch(pageChanged(ApplicationPage.PROJECT));
+
+    await window.electron.setSaveEnabled(true, true);
   }
 );
 

@@ -4,6 +4,7 @@ import handleTranscription_ from './transcriptionHandler';
 import extractThumbnail_ from './thumbnailExtract';
 import retrieveProjectMetadata_ from './projectMetadataHandler';
 import showImportMediaDialog_ from './fileDialog';
+import handleOsQuery_ from './osQuery';
 
 export {
   readRecentProjects,
@@ -20,3 +21,4 @@ export const handleTranscription = handleTranscription_;
 export const extractThumbnail = extractThumbnail_;
 export const retrieveProjectMetadata = retrieveProjectMetadata_;
 export const showImportMediaDialog = showImportMediaDialog_;
+export const handleOsQuery = handleOsQuery_;

@@ -68,19 +68,6 @@ export const projectSavedFirstTime: (
   payload: { project, metadata, filePath },
 });
 
-export const projectSavedAs: (
-  project: Project,
-  metadata: ProjectMetadata,
-  filePath: string
-) => Action<{
-  project: Project;
-  metadata: ProjectMetadata;
-  filePath: string;
-}> = (project, metadata, filePath) => ({
-  type: PROJECT_SAVED_AS,
-  payload: { project, metadata, filePath },
-});
-
 export const currentProjectClosed: () => Action<null> = () => ({
   type: CURRENT_PROJECT_CLOSED,
   payload: null,

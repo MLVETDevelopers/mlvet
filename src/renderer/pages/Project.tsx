@@ -1,13 +1,41 @@
 import { Box, Stack } from '@mui/material';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
+import { transcriptionCreated } from 'renderer/store/actions';
 import VideoController from 'renderer/components/VideoController';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeDeleteWord } from 'renderer/store/undoStack/ops';
+import { Transcription, Word } from 'sharedTypes';
+import { Replay } from 'vimond-replay';
+import {
+  PlaybackActions,
+  VideoStreamState,
+} from 'vimond-replay/default-player/Replay';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
+import { ApplicationStore } from '../store/helpers';
+import { dispatchOp } from '../store/opHelpers';
+import {
+  makeDeleteWord,
+  makeChangeWordToSwampOp,
+  makeDeleteEverySecondWordOp,
+} from '../store/ops';
+import cuts from './cuts';
+
+export interface SystemClock {
+  startTime: number;
+  time: number;
+}
+export interface CurrentCutClock {
+  currentCutDuration: number;
+  currentCutIndex: number;
+  time: number;
+  performanceStartTime: number;
+  isRunning: boolean;
+  intervalRef: null | any;
+}
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -62,16 +90,199 @@ const ProjectPage = () => {
     };
   });
 
+  // TODO: figure out return type
+  const onWordClick: (wordIndex: number) => void = () => {
+    // TODO: Implement onWordClick
+    if (currentProject !== null) {
+      // return currentProject.transcription?.words[wordIndex];
+    }
+  };
+
+  const deleteEverySecondWord: () => void = () => {
+    // if (currentProject.transcription === null) {
+    //   return;
+    // }
+    // dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
+  };
+
+  const changeRandomWordToSwamp: () => void = () => {
+    // if (currentProject.transcription === null) {
+    //   return;
+    // }
+    // const wordIndex = Math.floor(
+    //   Math.random() * currentProject.transcription.words.length
+    // );
+    // dispatchOp(
+    //   makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
+    // );
+  };
+
+  // Global / system clock refs
+  const systemClockRef = useRef<SystemClock>({
+    startTime: 0,
+    time: 0,
+  });
+
+  // Cut Countdown Clock (ccc) refs
+  const cccRef = useRef<CurrentCutClock>({
+    currentCutDuration: 0,
+    currentCutIndex: 0,
+    time: 0,
+    performanceStartTime: 0,
+    isRunning: false,
+    intervalRef: null,
+  });
+
+  // Video preview refs
+  const videoActions = useRef<null | PlaybackActions>(null);
+  // const setVideoProperties = useRef<null | any>(null);
+
+  // UI states
+  const [time, setTime] = useState<string>('0');
+  const [cccTimeRemaining, setCccTimeRemaining] = useState<string>('0');
+
+  const framesPerSecond = 30;
+  const skip = 30;
+
+  // DONE - Sets time of the video preview element to be newTime
+  const setVideoTime = (newTime: number) => {
+    if (videoActions?.current !== null) {
+      videoActions.current.setPosition(newTime);
+    }
+  };
+
+  function pauseVideo() {
+    if (videoActions.current) {
+      videoActions.current.pause();
+    }
+  }
+
+  function playVideo() {
+    if (videoActions.current) {
+      videoActions.current.play();
+    }
+  }
+
+  function pause() {
+    if (cccRef.current.isRunning) {
+      pauseVideo();
+      clearInterval(cccRef.current.intervalRef);
+      cccRef.current.intervalRef = null;
+      cccRef.current.isRunning = false;
+    }
+  }
+
+  function onFrame() {
+    if (cccRef.current.isRunning) {
+      cccRef.current.time =
+        performance.now() * 0.001 - cccRef.current.performanceStartTime;
+      systemClockRef.current.time =
+        performance.now() * 0.001 - cccRef.current.performanceStartTime;
+      setTime(systemClockRef.current.time.toFixed(2));
+
+      // Has cut finished
+      if (cccRef.current.time >= cccRef.current.currentCutDuration) {
+        // console.log('CCC: ', cccTimeRef.current);
+        // console.log('Duration: ', currentCutDurationRef.current.toFixed(4));
+        console.log(
+          'Diff: ',
+          (cccRef.current.time - cccRef.current.currentCutDuration).toFixed(4)
+        );
+
+        cccRef.current.performanceStartTime = performance.now() * 0.001;
+        cccRef.current.time = 0;
+
+        // Is this the last cut
+        if (cccRef.current.currentCutIndex + 1 >= cuts.length) {
+          pause();
+        } else {
+          cccRef.current.currentCutIndex += 1;
+          const currentCut = cuts[cccRef.current.currentCutIndex];
+          cccRef.current.currentCutDuration = currentCut.end - currentCut.start;
+          setVideoTime(currentCut.start);
+
+          console.log(currentCut);
+        }
+      }
+    }
+  }
+
+  function play() {
+    if (!cccRef.current.isRunning) {
+      cccRef.current.isRunning = true;
+
+      playVideo();
+
+      cccRef.current.intervalRef = setInterval(
+        onFrame,
+        Math.floor(1000 / framesPerSecond)
+      );
+    }
+  }
+
+  function startFromTime(newSystemTime: number) {
+    pause();
+
+    if (!cccRef.current.isRunning) {
+      cccRef.current.time = 0;
+      cccRef.current.performanceStartTime = performance.now() * 0.001;
+      systemClockRef.current.startTime = performance.now() * 0.001;
+
+      // TODO: get index from new system time
+      const newCut = 1;
+
+      cccRef.current.currentCutIndex = newCut;
+      const currentCut = cuts[newCut];
+      cccRef.current.currentCutDuration = currentCut.end - currentCut.start;
+
+      setTime(newSystemTime.toFixed(2));
+      setVideoTime(currentCut.start);
+
+      play();
+    }
+  }
+
+  const handlePlaybackActionsReady = (params: PlaybackActions) => {
+    // {
+    //   setPlaybackProperties: any,
+    //   ...actions
+    // }
+    videoActions.current = params;
+    // setVideoProperties.current = params.setPlaybackProperties;
+  };
+
+  const handleStreamStateChange = (stateProperties: VideoStreamState) => {
+    if (stateProperties) {
+      if ('position' in stateProperties) {
+        // console.log(
+        // 	'Stream observation example: Playback position is ' +
+        // 		stateProperties.position.toFixed(1),
+        // );
+      }
+      if (stateProperties.isPaused) {
+        console.log('Stream observation example: The playback was paused.');
+      }
+      if (stateProperties.isPaused === false) {
+        console.log('Stream observation example: The playback was resumed.');
+      }
+      if (stateProperties.playState === 'inactive') {
+        console.log('Stream observation example: The playback has ended.');
+      }
+    }
+  };
+
+  const forward = () => {
+    setVideoTime(systemClockRef.current.time + skip * 60);
+  };
+
+  const back = () => {
+    setVideoTime(systemClockRef.current.time - skip * 60);
+  };
+
   // TODO: Error handling
   if (!currentProject?.transcription) {
     return null;
   }
-
-  const onWordClick = (wordIndex: number) => {
-    // TODO: Implement onWordClick
-    return currentProject.transcription?.words[wordIndex];
-  };
-
   return (
     <>
       <VideoController />
@@ -96,7 +307,24 @@ const ProjectPage = () => {
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
           >
-            video
+            <Replay
+              source="http://localhost:5003/video"
+              options={{
+                controls: {
+                  // includeControls: [],
+                  includeControls: [
+                    'playPauseButton',
+                    'timeline',
+                    'timeDisplay',
+                    'volume',
+                    'fullscreenButton',
+                  ],
+                },
+              }}
+              initialPlaybackProps={{ isPaused: true }}
+              onStreamStateChange={handleStreamStateChange}
+              onPlaybackActionsReady={handlePlaybackActionsReady}
+            />
           </Box>
         </Stack>
         {isExporting && (

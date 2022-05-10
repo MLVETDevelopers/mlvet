@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { extractFileNameWithExtension } from 'renderer/util';
 import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore } from '../../store/helpers';
-import { Transcription } from '../../../sharedTypes';
+import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 
 const CustomStack = styled(Stack)`
@@ -30,13 +30,6 @@ const Container = styled(Box)`
 const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
 `;
-
-enum AsyncState {
-  READY = 'READY',
-  LOADING = 'LOADING',
-  DONE = 'DONE',
-  ERROR = 'ERROR',
-}
 
 interface Props {
   closeModal: () => void;
@@ -94,18 +87,13 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   getFileName();
 
   const completedButton = (
-    <CustomButton
-      color="primary"
-      onClick={nextView}
-      disabled={asyncState !== AsyncState.DONE}
-      sx={{ width: '100%' }}
-    >
+    <CustomButton color="primary" onClick={nextView} sx={{ width: '100%' }}>
       Get Started
     </CustomButton>
   );
 
   return (
-    <Container sx={{ height: { xs: 500 } }}>
+    <Container sx={{ height: { xs: 400 } }}>
       <CustomColumnStack
         alignItems="flex-start"
         justifyContent="space-between"
@@ -135,15 +123,15 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
         alignItems="baseline"
         justifyContent="flex-start"
         marginTop="25px"
-        sx={{ height: '74%' }}
+        sx={{ height: '70%' }}
       >
         <MediaDisplayTranscribeProgress
           fileName={mediaFileName}
           asyncState={asyncState}
         />
       </CustomColumnStack>
-      <CustomRowStack justifyContent="space-between">
-        {completedButton}
+      <CustomRowStack>
+        {asyncState === AsyncState.DONE ? completedButton : <></>}
       </CustomRowStack>
     </Container>
   );

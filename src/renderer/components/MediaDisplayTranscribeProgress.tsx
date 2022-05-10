@@ -10,13 +10,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
 import colors from '../colors';
-
-enum AsyncState {
-  READY = 'READY',
-  LOADING = 'LOADING',
-  DONE = 'DONE',
-  ERROR = 'ERROR',
-}
+import { AsyncState } from '../../sharedTypes';
 
 interface Props {
   fileName: string | null;

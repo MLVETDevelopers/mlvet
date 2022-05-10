@@ -97,7 +97,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   return (
     <Container>
       <CustomColumnStack>
-        <CustomRowStack sx={{ alignItems: 'flex-start' }}>
+        <CustomRowStack paddingTop="5px" sx={{ alignItems: 'flex-start' }}>
           <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>

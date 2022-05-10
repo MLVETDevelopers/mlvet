@@ -13,14 +13,25 @@ declare global {
   interface Window {
     electron: {
       requestMediaDialog: () => Promise<string | null>;
+
       requestTranscription: (filePath: string) => Promise<Transcription>;
+
       saveProject: (project: Project) => Promise<string>; // Returns the file path
-      openProject: () => Promise<{ project: Project; filePath: string }>;
+
+      openProject: (
+        filePath: string | null
+      ) => Promise<{ project: Project; filePath: string }>;
+
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
+
       extractThumbnail: (filePath: string) => Promise<string>;
+
       userOS: () => Promise<OperatingSystems>;
+
       readRecentProjects: () => Promise<Project[]>;
+
       writeRecentProjects: (recentProjects: Project[]) => Promise<void>;
+
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
 
       on: (

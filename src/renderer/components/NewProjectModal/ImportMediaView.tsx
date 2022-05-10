@@ -5,13 +5,11 @@ import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from 'renderer/store/helpers';
-import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
-import { Project } from 'sharedTypes';
-import { updateProjectWithMedia } from 'renderer/util';
+import { projectCreated } from '../../store/actions';
+import { Project } from '../../../sharedTypes';
+import { updateProjectWithMedia } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
-
-const { retrieveProjectMetadata } = window.electron;
 
 interface Props {
   prevView: () => void;
@@ -58,10 +56,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = async (project: Project) => {
-    const projectMetadata = await retrieveProjectMetadata(project);
-    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
-  };
 
   const handleTranscribe = async () => {
     const project = await updateProjectWithMedia(currentProject, mediaFilePath);
@@ -71,8 +65,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     }
 
     setCurrentProject(project);
-    await addToRecentProjects(project);
-
     nextView();
   };
 

@@ -109,6 +109,44 @@ export default class MenuBuilder {
     ];
   }
 
+  buildFileOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'save',
+        label: 'Save Project',
+        accelerator: 'CommandOrControl+S',
+        click: () => {
+          // Tell the renderer to initiate a save
+          this.mainWindow.webContents.send('initiate-save-project');
+        },
+        enabled: false,
+      },
+      {
+        id: 'saveAs',
+        label: 'Save Project As...',
+        accelerator: 'CommandOrControl+Shift+S',
+        click: () => {
+          // Tell the renderer to initiate a save-as
+          this.mainWindow.webContents.send('initiate-save-as-project');
+        },
+        enabled: false,
+      },
+      {
+        id: 'open',
+        label: 'Open Project',
+        accelerator: 'CommandOrControl+O',
+        click: async () => {
+          const { project, filePath } = await handleOpenProject(
+            null,
+            this.mainWindow
+          );
+
+          this.mainWindow.webContents.send('project-opened', project, filePath);
+        },
+      },
+    ];
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'MLVET',
@@ -141,32 +179,9 @@ export default class MenuBuilder {
     };
 
     const subMenuFile: DarwinMenuItemConstructorOptions = {
+      id: 'file',
       label: 'File',
-      submenu: [
-        {
-          label: 'Save Project',
-          accelerator: 'CommandOrControl+S',
-          click: () => {
-            // Tell the renderer to initiate a save
-            this.mainWindow.webContents.send('initiate-save-project');
-          },
-        },
-        {
-          label: 'Open Project',
-          accelerator: 'CommandOrControl+O',
-          click: async () => {
-            const { project, filePath } = await handleOpenProject(
-              this.mainWindow
-            );
-
-            this.mainWindow.webContents.send(
-              'project-opened',
-              project,
-              filePath
-            );
-          },
-        },
-      ],
+      submenu: this.buildFileOptions(),
     };
 
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
@@ -259,19 +274,7 @@ export default class MenuBuilder {
     const templateDefault = [
       {
         label: '&File',
-        submenu: [
-          {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
-          },
-          {
-            label: '&Close',
-            accelerator: 'Ctrl+W',
-            click: () => {
-              this.mainWindow.close();
-            },
-          },
-        ],
+        submenu: this.buildFileOptions(),
       },
       {
         id: 'edit',

@@ -6,6 +6,9 @@ import { ApplicationPage, ApplicationStore } from '../store/helpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';
+import { RecentProject } from '../../sharedTypes';
+
+const { openProject } = window.electron;
 
 const RecentProjectsBox = styled(Box)`
   width: calc(100vw - 40px);
@@ -61,14 +64,26 @@ const RecentProjectsBlock = () => {
   const formatSize: (size: number | null) => string = (size) =>
     size === null ? '?' : `${Math.floor(size / 1000000)} MB`;
 
-  const openProject: (id: string) => void = (id) => {
-    const project = recentProjects.find((proj) => proj.id === id);
+  const handleOpenProject: (id: string) => Promise<void> = async (id) => {
+    const recentProject = recentProjects.find((proj) => proj.id === id);
 
-    if (!project) {
+    if (!recentProject) {
       return;
     }
 
-    dispatch(projectOpened(project, project.projectFilePath));
+    if (!recentProject.projectFilePath) {
+      // TODO(patrick): bring up project file locator, and/or offer to delete project
+      // since not found
+      return;
+    }
+
+    // Open the full project from storage, as the current one only has metadata
+    // TODO(patrick): error handling if the project file doesn't exist / was moved
+    const { project, filePath } = await openProject(
+      recentProject.projectFilePath
+    );
+
+    dispatch(projectOpened(project, filePath));
     dispatch(pageChanged(ApplicationPage.PROJECT));
   };
 
@@ -82,7 +97,7 @@ const RecentProjectsBlock = () => {
       </Typography>
       <Stack spacing={2} style={{ maxHeight: '50vh', overflowY: 'auto' }}>
         {recentProjects.map(({ id, name, dateModified, mediaSize }) => (
-          <RecentProjectsItem key={id} onClick={() => openProject(id)}>
+          <RecentProjectsItem key={id} onClick={() => handleOpenProject(id)}>
             <Grid container spacing={2}>
               <RecentProjectsSubItem item xs={8}>
                 <img

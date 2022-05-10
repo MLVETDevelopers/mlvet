@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import {
   projectOpened,
@@ -5,6 +6,7 @@ import {
   projectSaved,
   updateExportProgress,
   finishExport,
+  projectSavedFirstTime,
 } from './store/actions';
 import { ApplicationPage } from './store/helpers';
 import { dispatchRedo, dispatchUndo } from './store/opHelpers';
@@ -21,6 +23,53 @@ window.electron.on('initiate-save-project', async () => {
   if (currentProject === null) return;
 
   const filePath = await window.electron.saveProject(currentProject);
+
+  // Add to recent projects if project was saved for the first time
+  if (filePath !== currentProject.projectFilePath) {
+    const projectMetadata = await window.electron.retrieveProjectMetadata({
+      ...currentProject,
+      projectFilePath: filePath,
+    });
+
+    store.dispatch(
+      projectSavedFirstTime(currentProject, projectMetadata, filePath)
+    );
+  }
+
+  store.dispatch(projectSaved(currentProject.id, filePath));
+});
+
+/**
+ * Used by backend to initiate save-as from front end
+ */
+window.electron.on('initiate-save-as-project', async () => {
+  // Retrieve current project state from redux
+  const { currentProject } = store.getState();
+
+  // Don't save-as if we don't have a project open or if the project doesn't have an existing save path
+  if (currentProject === null || currentProject.projectFilePath === null)
+    return;
+
+  // Generate a deep-copy of the project, with new ID and name
+  const newProject = JSON.parse(JSON.stringify(currentProject)) as Project;
+  newProject.name = `Copy of ${currentProject.name}`;
+  newProject.id = uuidv4();
+
+  // TODO(patrick): regenerate thumbnail
+
+  const filePath = await window.electron.saveAsProject(newProject);
+
+  // Add to recent projects
+  if (filePath !== currentProject.projectFilePath) {
+    const projectMetadata = await window.electron.retrieveProjectMetadata({
+      ...currentProject,
+      projectFilePath: filePath,
+    });
+
+    store.dispatch(
+      projectSavedFirstTime(currentProject, projectMetadata, filePath)
+    );
+  }
 
   store.dispatch(projectSaved(currentProject.id, filePath));
 });

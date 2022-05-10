@@ -27,7 +27,13 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
     handleSaveProject(mainWindow, project)
   );
 
-  ipcMain.handle('open-project', async () => handleOpenProject(mainWindow));
+  ipcMain.handle('save-as-project', async (_event, project) =>
+    handleSaveAsProject(mainWindow, project)
+  );
+
+  ipcMain.handle('open-project', async (_event, filePath: string | null) =>
+    handleOpenProject(filePath, mainWindow)
+  );
 
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 

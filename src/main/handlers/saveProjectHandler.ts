@@ -2,8 +2,15 @@ import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
 import { Project } from '../../sharedTypes';
 
+const extractFileName: (filePath: string) => string = (filePath) => {
+  // TODO(patrick): support windows, which uses back slashes
+  const split = filePath.split('/');
+  return split[split.length - 1];
+};
+
 const getSaveFilePath: (
-  mainWindow: BrowserWindow | null
+  mainWindow: BrowserWindow | null,
+  proposedFileName: string
 ) => Promise<string> = async (mainWindow) => {
   if (mainWindow === null) {
     throw new Error('Main window not defined');
@@ -32,15 +39,35 @@ const saveProjectToFile: (
   await writeFile(filePath, projectAsString);
 };
 
-const handleSaveProject: (
+export const handleSaveProject: (
   mainWindow: BrowserWindow | null,
   project: Project
 ) => Promise<string> = async (mainWindow, project) => {
-  const filePath = await getSaveFilePath(mainWindow);
+  const filePath =
+    project.projectFilePath === null
+      ? await getSaveFilePath(mainWindow)
+      : project.projectFilePath;
 
   await saveProjectToFile(filePath, project);
 
   return filePath;
 };
 
-export default handleSaveProject;
+export const handleSaveAsProject: (
+  mainWindow: BrowserWindow | null,
+  project: Project
+) => Promise<string> = async (mainWindow, project) => {
+  if (project.projectFilePath === null) {
+    throw new Error('Cannot "save as" on a file without an existing file path');
+  }
+
+  const proposedFileName = `Copy of ${extractFileName(
+    project.projectFilePath
+  )}`;
+
+  const filePath = await getSaveFilePath(mainWindow, proposedFileName);
+
+  await saveProjectToFile(filePath, project);
+
+  return filePath;
+};

@@ -5,6 +5,8 @@ import {
   Project,
   VideoFileExtension,
   OperatingSystems,
+  ProjectMetadata,
+  RecentProject,
 } from '../sharedTypes';
 
 const { extractThumbnail, userOS } = window.electron;
@@ -158,6 +160,32 @@ export const updateProjectWithMedia: (
   currentProject.thumbnailFilePath = thumbnailPath;
 
   return currentProject;
+};
+
+export const makeRecentProject: (
+  project: Project,
+  metadata: ProjectMetadata,
+  filePath: string
+) => RecentProject = (project, metadata, filePath) => {
+  const projectFields: (keyof (RecentProject | Project))[] = [
+    'id',
+    'name',
+    'projectFilePath',
+    'mediaFilePath',
+    'thumbnailFilePath',
+  ];
+
+  const recentProject: Partial<RecentProject> = {
+    ...metadata,
+    projectFilePath: filePath,
+  };
+
+  // Programmatically assign fields from project
+  projectFields.forEach((field) => {
+    recentProject[field] = project[field] as any; // try to give this proper types, I double dare you
+  });
+
+  return recentProject as RecentProject;
 };
 
 export const formatDate: (date: Date) => string = (date) => {

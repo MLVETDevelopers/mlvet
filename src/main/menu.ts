@@ -183,6 +183,7 @@ export default class MenuBuilder {
           label: 'Export Project',
           accelerator: 'CommandOrControl+Shift+E',
           click: () => {
+            console.log('export project clicked 1');
             this.mainWindow.webContents.send('initiate-export-project');
           },
         },
@@ -296,6 +297,7 @@ export default class MenuBuilder {
             label: '&Export',
             accelerator: 'Ctrl+Shift+E',
             click: () => {
+              console.log('export file menu clicked 2');
               this.mainWindow.webContents.send('initiate-export-project');
             },
           },

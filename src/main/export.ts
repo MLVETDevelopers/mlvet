@@ -47,8 +47,13 @@ export const exportEDL: (
   project: Project
 ) => void = (mainWindow, project) => {
   if (project.exportFilePath === null) {
+    console.log('export edl returned null');
+    console.log(project);
     return;
   }
+
+  console.log('export edl called');
+  console.log(project);
 
   mkdir(project.exportFilePath);
 

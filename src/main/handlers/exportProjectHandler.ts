@@ -1,6 +1,8 @@
 import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../sharedTypes';
+import path from 'path';
+import { Project } from '../../sharedTypes';
+import { exportEDL } from '../export';
 
 const getSaveFilePath: (
   mainWindow: BrowserWindow | null
@@ -25,11 +27,14 @@ const getSaveFilePath: (
 
 const exportProjectToFile: (
   filePath: string,
+  mainWindow: BrowserWindow | null,
   project: Project
-) => Promise<void> = async (filePath, project) => {
-  const projectAsString = JSON.stringify(project);
+) => Promise<void> = async (filePath, mainWindow, project) => {
+  console.log('export project to file called');
+  console.log(project);
 
-  await writeFile(filePath, projectAsString);
+  project.exportFilePath = path.dirname(filePath);
+  exportEDL(mainWindow, project);
 };
 
 const handleExportProject: (
@@ -37,8 +42,10 @@ const handleExportProject: (
   project: Project
 ) => Promise<void> = async (mainWindow, project) => {
   const filePath = await getSaveFilePath(mainWindow);
+  console.log('handle export project called');
+  console.log(project);
 
-  await exportProjectToFile(filePath, project);
+  await exportProjectToFile(filePath, mainWindow, project);
 };
 
 export default handleExportProject;

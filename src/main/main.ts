@@ -21,7 +21,7 @@ import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
 import { extractAudio } from './handlers';
-import handleExportProject from './exportProjectHandler';
+// import handleExportProject from './exportProjectHandler';
 
 export default class AppUpdater {
   constructor() {
@@ -39,9 +39,9 @@ dotenv.config();
 mkdir(appDataStoragePath());
 
 ipcMain.handle('user-os', async () => handleOSQuery());
-ipcMain.handle('export-project', async (_event, project) =>
-  handleExportProject(mainWindow, project)
-);
+// ipcMain.handle('export-project', async (_event, project) =>
+//   handleExportProject(mainWindow, project)
+// );
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

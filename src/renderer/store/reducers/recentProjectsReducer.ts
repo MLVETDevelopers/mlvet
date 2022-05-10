@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { makeRecentProject } from '../../util';
+import makeRecentProject from '../../../sharedUtils';
 import { Project, ProjectMetadata, RecentProject } from '../../../sharedTypes';
 import {
   PROJECT_OPENED,

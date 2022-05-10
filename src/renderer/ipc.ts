@@ -37,8 +37,6 @@ window.electron.on('initiate-save-project', async () => {
   }
 
   store.dispatch(projectSaved(currentProject.id, filePath));
-
-  await window.electron.setSaveEnabled(true, true);
 });
 
 /**
@@ -69,8 +67,6 @@ window.electron.on('initiate-save-as-project', async () => {
 
   store.dispatch(projectSavedFirstTime(newProject, projectMetadata, filePath));
   store.dispatch(projectOpened(newProject, filePath));
-
-  await window.electron.setSaveEnabled(true, true);
 });
 
 /**
@@ -81,8 +77,6 @@ window.electron.on(
   async (_event, project: Project, filePath: string) => {
     store.dispatch(projectOpened(project, filePath));
     store.dispatch(pageChanged(ApplicationPage.PROJECT));
-
-    await window.electron.setSaveEnabled(true, true);
   }
 );
 

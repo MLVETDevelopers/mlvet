@@ -7,6 +7,7 @@ import {
   ProjectMetadata,
   Transcription,
   OperatingSystems,
+  RecentProject,
 } from '../sharedTypes';
 
 declare global {
@@ -38,9 +39,9 @@ declare global {
 
       userOS: () => Promise<OperatingSystems>;
 
-      readRecentProjects: () => Promise<Project[]>;
+      readRecentProjects: () => Promise<RecentProject[]>;
 
-      writeRecentProjects: (recentProjects: Project[]) => Promise<void>;
+      writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
 

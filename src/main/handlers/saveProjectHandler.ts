@@ -11,7 +11,7 @@ const extractFileName: (filePath: string) => string = (filePath) => {
 const getSaveFilePath: (
   mainWindow: BrowserWindow | null,
   proposedFileName: string
-) => Promise<string> = async (mainWindow) => {
+) => Promise<string> = async (mainWindow, proposedFileName) => {
   if (mainWindow === null) {
     throw new Error('Main window not defined');
   }
@@ -21,6 +21,7 @@ const getSaveFilePath: (
     buttonLabel: 'Save',
     title: 'Save Project',
     properties: ['createDirectory'],
+    defaultPath: proposedFileName,
   });
 
   if (dialogResponse.canceled) {
@@ -48,7 +49,7 @@ export const handleSaveProject: (
       ? await getSaveFilePath(mainWindow, project.name)
       : project.projectFilePath;
 
-  await saveProjectToFile(filePath, project);
+  await saveProjectToFile(filePath, { ...project, projectFilePath: filePath });
 
   return filePath;
 };

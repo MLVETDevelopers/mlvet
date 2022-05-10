@@ -126,6 +126,19 @@ export default class MenuBuilder {
   buildFileOptions(): MenuItemConstructorOptions[] {
     return [
       {
+        id: 'open',
+        label: 'Open...',
+        accelerator: 'CommandOrControl+O',
+        click: async () => {
+          const { project, filePath } = await handleOpenProject(
+            null,
+            this.mainWindow
+          );
+
+          this.mainWindow.webContents.send('project-opened', project, filePath);
+        },
+      },
+      {
         id: 'save',
         label: 'Save',
         accelerator: 'CommandOrControl+S',
@@ -144,19 +157,6 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-save-as-project');
         },
         enabled: false,
-      },
-      {
-        id: 'open',
-        label: 'Open',
-        accelerator: 'CommandOrControl+O',
-        click: async () => {
-          const { project, filePath } = await handleOpenProject(
-            null,
-            this.mainWindow
-          );
-
-          this.mainWindow.webContents.send('project-opened', project, filePath);
-        },
       },
     ];
   }

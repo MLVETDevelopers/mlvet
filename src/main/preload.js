@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
-  openProject: () => ipcRenderer.invoke('open-project'),
+  openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),

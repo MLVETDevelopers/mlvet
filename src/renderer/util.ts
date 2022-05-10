@@ -162,32 +162,6 @@ export const updateProjectWithMedia: (
   return currentProject;
 };
 
-export const makeRecentProject: (
-  project: Project,
-  metadata: ProjectMetadata,
-  filePath: string
-) => RecentProject = (project, metadata, filePath) => {
-  const projectFields: (keyof (RecentProject | Project))[] = [
-    'id',
-    'name',
-    'projectFilePath',
-    'mediaFilePath',
-    'thumbnailFilePath',
-  ];
-
-  const recentProject: Partial<RecentProject> = {
-    ...metadata,
-    projectFilePath: filePath,
-  };
-
-  // Programmatically assign fields from project
-  projectFields.forEach((field) => {
-    recentProject[field] = project[field] as any; // try to give this proper types, I double dare you
-  });
-
-  return recentProject as RecentProject;
-};
-
 export const formatDate: (date: Date) => string = (date) => {
   // dd/mm/yy
   const dd = date.getDate().toString(); // days start at 1

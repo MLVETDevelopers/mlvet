@@ -70,6 +70,11 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     ) {
       return;
     }
+
+    if (currentProject.mediaFilePath === null) {
+      return;
+    }
+
     setAsyncState(AsyncState.LOADING);
 
     window.electron

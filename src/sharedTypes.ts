@@ -30,6 +30,7 @@ export interface Word {
   word: string;
   startTime: number;
   duration: number;
+  outputStartTime: number;
   deleted: boolean;
   key: string;
   fileName: string;
@@ -41,4 +42,15 @@ export interface Clip {
   fileName: string;
 }
 
+export interface Cut {
+  startTime: number;
+  duration: number;
+}
+
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
+
+export enum OperatingSystems {
+  MACOS = 'darwin',
+  WINDOWS = 'win32',
+  LINUX = 'linux',
+}

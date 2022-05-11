@@ -40,3 +40,5 @@ assets/thumbnails/thumbnail.png
 venv
 src/pyServer/deepspeech-0.9.3-models.pbmm
 src/pyServer/deepspeech-0.9.3-models.scorer
+
+experiments/**/assets

@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
   extractThumbnail: (filePath) =>
     ipcRenderer.invoke('extract-thumbnail', filePath),
+  userOS: async () => ipcRenderer.invoke('user-os'),
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),

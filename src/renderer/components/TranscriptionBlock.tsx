@@ -36,7 +36,11 @@ interface Props {
 const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
   return (
     <TranscriptionBox>
-      <p>
+      <p
+        style={{
+          margin: 0,
+        }}
+      >
         {transcription.words
           .map((word, index) =>
             word.deleted ? null : (

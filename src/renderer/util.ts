@@ -4,9 +4,10 @@ import {
   AudioFileExtension,
   Project,
   VideoFileExtension,
+  OperatingSystems,
 } from '../sharedTypes';
 
-const { extractThumbnail } = window.electron;
+const { extractThumbnail, userOS } = window.electron;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -17,6 +18,35 @@ export const extractFileExtension: (filePath: string) => string | null = (
     return null;
   }
   return extension;
+};
+
+export const extractFileNameWithExtension: (
+  filePath: string | null
+) => Promise<string | null> = async (filePath) => {
+  if (filePath === null) {
+    return null;
+  }
+  const userOperatingSystem = await userOS();
+
+  let delimiter: string | null = null;
+
+  if (
+    userOperatingSystem === OperatingSystems.MACOS ||
+    userOperatingSystem === OperatingSystems.LINUX
+  ) {
+    delimiter = '/';
+  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
+    delimiter = '\\';
+  }
+
+  if (delimiter === null) {
+    return null;
+  }
+
+  const filePathSplit = filePath.split(delimiter);
+  const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
+
+  return fileNameWithExtension;
 };
 
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
@@ -74,6 +104,60 @@ export const makeProject: (
   };
 
   return project;
+};
+
+export const makeProjectWithoutMedia: (
+  projectName: string
+) => Promise<Project | null> = async (projectName) => {
+  const project: Project = {
+    id: uuidv4(),
+    name: projectName,
+    schemaVersion: 0,
+    projectFilePath: null,
+    exportFilePath: null,
+    mediaFilePath: null,
+    transcription: null,
+    mediaType: 'audio',
+    mediaFileExtension: 'mp3',
+    thumbnailFilePath: null,
+  };
+
+  return project;
+};
+
+export const updateProjectWithMedia: (
+  currentProject: Project,
+  mediaFilePath: string | null
+) => Promise<Project | null> = async (currentProject, mediaFilePath) => {
+  if (mediaFilePath === null) {
+    return null;
+  }
+
+  const fileExtension = extractFileExtension(mediaFilePath);
+  if (fileExtension === null) {
+    return null;
+  }
+
+  const mediaType = getMediaType(fileExtension);
+  if (mediaType === null) {
+    return null;
+  }
+
+  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  if (thumbnailPath === null) {
+    return null;
+  }
+
+  currentProject.mediaType = mediaType;
+  currentProject.mediaFileExtension = fileExtension as
+    | AudioFileExtension
+    | VideoFileExtension;
+  currentProject.mediaFilePath = mediaFilePath;
+  currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
+  currentProject.transcription = null;
+  currentProject.thumbnailFilePath = thumbnailPath;
+
+  return currentProject;
 };
 
 export const formatDate: (date: Date) => string = (date) => {

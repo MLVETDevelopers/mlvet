@@ -41,6 +41,7 @@ const theme = responsiveFontSizes(
         lineHeight: '25px',
         margin: 0,
         fontWeight: 500,
+        textTransform: 'none',
       },
       'p-300': {
         fontSize: '18px',
@@ -69,6 +70,36 @@ const theme = responsiveFontSizes(
             body1: 'p-300',
             body2: 'p-400',
           },
+        },
+      },
+      MuiButton: {
+        defaultProps: {
+          variant: 'contained',
+        },
+      },
+
+      // Text field styling
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: colors.grey[500],
+          },
+        },
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            '::before': { borderColor: colors.grey[500] },
+            ':hover:not(.Mui-disabled):before': {
+              borderBottom: `${colors.grey[500]} 2px solid`,
+            },
+            color: colors.grey[300],
+          },
+        },
+      },
+      MuiTextField: {
+        defaultProps: {
+          variant: 'standard',
         },
       },
     },

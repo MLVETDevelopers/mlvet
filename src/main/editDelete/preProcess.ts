@@ -23,13 +23,16 @@ const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
  * @param i index of the word in the transcript
  * @returns full Word object
  */
-const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
-  ...word,
-  outputStartTime: word.startTime,
-  key: i.toString(),
-  deleted: false,
-  fileName: 'PLACEHOLDER FILENAME',
-});
+const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
+  (fileName: string) => (word, i) => {
+    return {
+      ...word,
+      outputStartTime: word.startTime,
+      key: i.toString(),
+      deleted: false,
+      fileName,
+    };
+  };
 
 const constructWord: (
   word: string,
@@ -101,7 +104,8 @@ const addSpaces: ReduceCallback<Word, Word[]> = (
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number
+  duration: number,
+  fileName: string
 ): Transcription => {
   TOTAL_DURATION = duration;
   return {
@@ -110,6 +114,7 @@ const preProcessTranscript = (
       .map(camelCase)
       .map(injectAttributes)
       .reduce(addSpaces, []),
+
   };
 };
 

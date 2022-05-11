@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
+import getAudioDurationInSeconds from 'get-audio-duration';
 import { Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../types';
@@ -48,8 +49,10 @@ const validateJsonTranscriptionContainer = <
   validateJsonTranscription(transcription.transcripts[0]));
 
 const handleTranscription: (
-  fileName: string
-) => Promise<Transcription> = async () => {
+  filePath: string
+) => Promise<Transcription> = async (filePath: string) => {
+  // TODO: replace hard coded media path with parameter passed in
+
   await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
 
   // Read from sample transcript. Replace this section with real transcript input
@@ -64,10 +67,19 @@ const handleTranscription: (
     throw new Error('JSON transcript is invalid');
   }
 
-  const duration = 0; // TODO: get actual duration from video
+  const pathToSaveMedia = path.join(
+    process.cwd(),
+    'assets',
+    'audio',
+    'audio.wav'
+  );
+  const duration: number =
+    (await getAudioDurationInSeconds(pathToSaveMedia)) || 0;
+  const fileName = path.basename(filePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
-    duration
+    duration,
+    fileName
   );
 
   return processedTranscript;

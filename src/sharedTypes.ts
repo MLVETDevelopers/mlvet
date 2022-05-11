@@ -28,8 +28,9 @@ export interface Transcription {
 
 export interface Word {
   word: string;
-  startTime: number;
+  inputStartTime: number;
   duration: number;
+  outputStartTime: number;
   deleted: boolean;
   key: string;
   fileName: string;

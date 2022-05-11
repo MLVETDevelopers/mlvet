@@ -112,9 +112,8 @@ const preProcessTranscript = (
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
-      .map(injectAttributes)
+      .map(injectAttributes(fileName))
       .reduce(addSpaces, []),
-
   };
 };
 

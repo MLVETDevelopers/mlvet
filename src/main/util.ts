@@ -59,3 +59,13 @@ export const handleOSQuery: () => OperatingSystems | null = () => {
 
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
+
+// Round a number in seconds to milliseconds - solves a lot of floating point errors
+export const roundToMs: (input: number) => number = (input) =>
+  Math.round(input * 1000) / 1000;
+
+/** Utility types */
+
+// Callback to be passed into a map function.
+// First type argument is the input type, second is the output type
+export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;

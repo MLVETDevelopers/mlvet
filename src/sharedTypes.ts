@@ -30,6 +30,7 @@ export interface Word {
   word: string;
   startTime: number;
   duration: number;
+  outputStartTime: number;
   deleted: boolean;
   key: string;
   fileName: string;

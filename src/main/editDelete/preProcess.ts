@@ -1,52 +1,72 @@
-import { Transcription, Word } from 'sharedTypes';
+import { MapCallback, roundToMs } from '../util';
+import { Transcription, Word } from '../../sharedTypes';
+import { JSONTranscription, SnakeCaseWord } from '../types';
 
+type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+
+/**
+ * Replace the start_time attribute with startTime (can be generalised further but shouldn't
+ * need this once python outputs camelcase anyway)
+ * @param word snake cased partial word
+ * @returns camel cased partial word
+ *
+ */
+const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
+  word: word.word,
+  duration: word.duration,
+  startTime: word.start_time,
+});
+
+/**
+ * Adjusts durations so that words last until the next word, or until the end of the transcript
+ * if the last word
+ * @param totalDuration total duration of transcript
+ * @returns word with durations updated
+ */
+const fillDurationGaps: (
+  totalDuration: number
+) => MapCallback<PartialWord, PartialWord> =
+  (totalDuration) => (word, i, words) => {
+    const isLastWord = i === words.length - 1;
+    const durationUntil = isLastWord ? totalDuration : words[i + 1].startTime;
+
+    return {
+      ...word,
+      duration: roundToMs(durationUntil - word.startTime),
+    };
+  };
+
+/**
+ * Injects extra attributes into a PartialWord to make it a full Word -
+ * @param word the word to fill attributes for
+ * @param i index of the word in the transcript
+ * @returns full Word object
+ */
+const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
+  ...word,
+  outputStartTime: word.startTime,
+  key: i.toString(),
+  deleted: false,
+  fileName: 'PLACEHOLDER FILENAME',
+});
+
+/**
+ * Pre processes a JSON transcript from python for use in the front end
+ * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
+ * @param duration duration of the input media file
+ * @returns formatted Transcript object
+ */
 const preProcessTranscript = (
-  jsonTranscript: any,
+  jsonTranscript: JSONTranscription,
   duration: number
 ): Transcription => {
-  const numberOfWords: number = jsonTranscript.words.length;
-
-  const processedTranscript: Transcription = {
+  return {
     confidence: jsonTranscript.confidence,
-    words: [],
+    words: jsonTranscript.words
+      .map(camelCase)
+      .map(fillDurationGaps(duration))
+      .map(injectAttributes),
   };
-
-  for (let i = 0; i < numberOfWords - 1; i += 1) {
-    // duration includes the white space between current and next word
-
-    const wordDuration =
-      jsonTranscript.words[i + 1].start_time -
-      jsonTranscript.words[i].start_time;
-    // unique identifier for each word
-    jsonTranscript.words[i].key = i.toString();
-    const word: Word = {
-      word: jsonTranscript.words[i].word,
-      startTime: jsonTranscript.words[i].start_time,
-      duration: wordDuration,
-      deleted: false,
-      key: i.toString(),
-      fileName: 'PLACEHOLDER FILENAME',
-    };
-
-    processedTranscript.words.push(word);
-  }
-
-  // last word in transcript
-  const wordDuration =
-    duration - jsonTranscript.words[numberOfWords - 1].start_time;
-
-  const lastWord: Word = {
-    word: jsonTranscript.words[numberOfWords - 1].word,
-    startTime: jsonTranscript.words[numberOfWords - 1].start_time,
-    duration: wordDuration,
-    deleted: false,
-    key: (numberOfWords - 1).toString(),
-    fileName: 'PLACEHOLDER FILENAME',
-  };
-
-  processedTranscript.words.push(lastWord);
-
-  return processedTranscript;
 };
 
 export default preProcessTranscript;

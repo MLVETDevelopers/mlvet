@@ -4,14 +4,14 @@ import preProcessTranscript from './preProcess';
 const calculate = (word: Word, i: number, words: Word[]): Word => {
   if (!word.deleted) {
     if (i === 0) {
-      word.outputStartTime = word.inputStartTime;
+      word.outputStartTime = word.startTime;
     } else {
       let j = i - 1;
       while (j > 0 && words[j].deleted) {
         j -= 1;
       }
       if (j === 0) {
-        word.outputStartTime = words[j].inputStartTime + words[j].duration;
+        word.outputStartTime = words[j].startTime + words[j].duration;
       } else {
         word.outputStartTime = words[j].outputStartTime + words[j].duration;
       }

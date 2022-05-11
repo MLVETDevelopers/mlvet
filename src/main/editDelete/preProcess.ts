@@ -46,7 +46,7 @@ const fillDurationGaps: (
  */
 const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
   ...word,
-  outputStartTime: 0,
+  outputStartTime: word.inputStartTime,
   key: i.toString(),
   deleted: false,
   fileName: 'PLACEHOLDER FILENAME',

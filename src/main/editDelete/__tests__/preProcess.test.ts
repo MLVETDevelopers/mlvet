@@ -19,7 +19,11 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 2;
 
-    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
+    const outputTranscript = preProcessTranscript(
+      jsonTranscript,
+      duration,
+      'PLACEHOLDER FILENAME'
+    );
 
     expect(outputTranscript).toEqual({
       confidence: 1,
@@ -67,7 +71,11 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 15.77;
 
-    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
+    const outputTranscript = preProcessTranscript(
+      jsonTranscript,
+      duration,
+      'PLACEHOLDER FILENAME'
+    );
 
     expect(outputTranscript).toEqual({
       confidence: -7,

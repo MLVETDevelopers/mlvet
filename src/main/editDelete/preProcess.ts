@@ -42,13 +42,16 @@ const fillDurationGaps: (
  * @param i index of the word in the transcript
  * @returns full Word object
  */
-const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
-  ...word,
-  outputStartTime: word.startTime,
-  key: i.toString(),
-  deleted: false,
-  fileName: 'PLACEHOLDER FILENAME',
-});
+const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
+  (fileName: string) => (word, i) => {
+    return {
+      ...word,
+      outputStartTime: word.startTime,
+      key: i.toString(),
+      deleted: false,
+      fileName,
+    };
+  };
 
 /**
  * Pre processes a JSON transcript from python for use in the front end
@@ -58,14 +61,15 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number
+  duration: number,
+  fileName: string
 ): Transcription => {
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
       .map(fillDurationGaps(duration))
-      .map(injectAttributes),
+      .map(injectAttributes(fileName)),
   };
 };
 

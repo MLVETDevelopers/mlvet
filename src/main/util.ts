@@ -69,3 +69,11 @@ export const roundToMs: (input: number) => number = (input) =>
 // Callback to be passed into a map function.
 // First type argument is the input type, second is the output type
 export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;
+
+// Callback to be passed into a reduce function
+export type ReduceCallback<T, U> = (
+  acc: T[],
+  curr: T,
+  index: number,
+  arr: T[]
+) => U;

@@ -1,4 +1,4 @@
-import { MapCallback, roundToMs } from '../util';
+import { MapCallback, roundToMs, ReduceCallback } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
@@ -60,7 +60,7 @@ const constructWord = (
  * @returns The updated transcript with a silence after word
  */
 let TOTAL_DURATION = 0;
-const addSpaces = (
+const addSpaces: ReduceCallback<Word, Word[]> = (
   result: Word[],
   word: Word,
   index: number,

@@ -40,6 +40,26 @@ let TOTAL_DURATION = 0;
  * @param words The list of words being reduced
  * @returns The updated transcript with a silence after word
  */
+
+const constructWord = (
+  word: string,
+  startTime: number,
+  duration: number,
+  outputStartTime: number,
+  key: string
+) => {
+  const newWord: Word = {
+    word,
+    startTime,
+    duration: roundToMs(duration),
+    outputStartTime,
+    deleted: false,
+    key,
+    fileName: 'PLACEHOLDER FILENAME',
+  };
+
+  return newWord;
+};
 const addSpaces = (
   result: Word[],
   word: Word,
@@ -50,48 +70,38 @@ const addSpaces = (
 
   // is the first word
   if (index === 0) {
-    const preSilence: Word = {
-      word: spaceChar,
-      startTime: 0,
-      duration: roundToMs(words[index].startTime),
-      outputStartTime: 0,
-      deleted: false,
-      key: index.toString(),
-      fileName: 'PLACEHOLDER FILENAME',
-    };
-    result.push(preSilence);
+    result.push(
+      constructWord(spaceChar, 0, words[index].startTime, 0, index.toString())
+    );
   }
   // not the last word
   if (index < words.length - 1) {
     word.key = (index * 2 + 1).toString();
-    const silence: Word = {
-      word: spaceChar,
-      startTime: roundToMs(word.startTime + word.duration),
-      duration: roundToMs(
-        words[index + 1].startTime - word.startTime - word.duration
-      ),
-      outputStartTime: roundToMs(word.startTime + word.duration),
-      deleted: false,
-      key: (index * 2 + 2).toString(),
-      fileName: 'PLACEHOLDER FILENAME',
-    };
+
     result.push(word);
-    result.push(silence);
+    result.push(
+      constructWord(
+        spaceChar,
+        word.startTime + word.duration,
+        words[index + 1].startTime - word.startTime - word.duration,
+        word.startTime + word.duration,
+        (index * 2 + 2).toString()
+      )
+    );
   }
   // is last word
   else {
     word.key = (index * 2 + 1).toString();
-    const silence: Word = {
-      word: spaceChar,
-      startTime: roundToMs(word.startTime + word.duration),
-      duration: roundToMs(TOTAL_DURATION - word.startTime - word.duration),
-      outputStartTime: roundToMs(word.startTime + word.duration),
-      deleted: false,
-      key: (index * 2 + 2).toString(),
-      fileName: 'PLACEHOLDER FILENAME',
-    };
     result.push(word);
-    result.push(silence);
+    result.push(
+      constructWord(
+        spaceChar,
+        word.startTime + word.duration,
+        TOTAL_DURATION - word.startTime - word.duration,
+        word.startTime + word.duration,
+        (index * 2 + 2).toString()
+      )
+    );
   }
 
   return result;

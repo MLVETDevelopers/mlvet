@@ -79,6 +79,8 @@ const addSpaces = (
   const endTime = isLastWord ? TOTAL_DURATION : words[index + 1].startTime;
   const silenceDuration = endTime - word.startTime - word.duration;
 
+  // index*2 is used because we are mapping 1 Word to 2 Words and want the key to represent the index of the each Word in the processed Transcript.
+  // +1 is to account for the first element in the words array being a silence to pad the beginning of the transcript.
   word.key = (index * 2 + 1).toString();
   result.push(word);
   result.push(
@@ -87,6 +89,7 @@ const addSpaces = (
       word.startTime + word.duration,
       silenceDuration,
       word.startTime + word.duration,
+      // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
       (index * 2 + 2).toString()
     )
   );

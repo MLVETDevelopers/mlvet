@@ -37,8 +37,8 @@ const VideoController = () => {
       <div
         style={{
           backgroundColor: colors.grey[600],
-          fontWeight: 'bold',
-          fontSize: '24px',
+          fontWeight: 'regular',
+          fontSize: '28px',
           borderRadius: '5px',
           padding: '0 19px',
           marginRight: '47px',

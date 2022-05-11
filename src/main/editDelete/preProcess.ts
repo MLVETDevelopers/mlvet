@@ -31,16 +31,6 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
   fileName: 'PLACEHOLDER FILENAME',
 });
 
-let TOTAL_DURATION = 0;
-/**
- * Adds spaces between words which represent the silence between each word
- * @param result The output being constructed
- * @param word The current element of words
- * @param index The index of word in words
- * @param words The list of words being reduced
- * @returns The updated transcript with a silence after word
- */
-
 const constructWord = (
   word: string,
   startTime: number,
@@ -50,9 +40,9 @@ const constructWord = (
 ) => {
   const newWord: Word = {
     word,
-    startTime,
+    startTime: roundToMs(startTime),
     duration: roundToMs(duration),
-    outputStartTime,
+    outputStartTime: roundToMs(outputStartTime),
     deleted: false,
     key,
     fileName: 'PLACEHOLDER FILENAME',
@@ -60,6 +50,16 @@ const constructWord = (
 
   return newWord;
 };
+
+/**
+ * Adds spaces between words which represent the silence between each word
+ * @param result The output being constructed
+ * @param word The current element of words
+ * @param index The index of word in words
+ * @param words The list of words being reduced
+ * @returns The updated transcript with a silence after word
+ */
+let TOTAL_DURATION = 0;
 const addSpaces = (
   result: Word[],
   word: Word,

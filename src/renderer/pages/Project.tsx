@@ -8,6 +8,7 @@ import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
 import { dispatchOp } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
+import colors from '../colors';
 import {
   makeChangeWordToSwampOp,
   makeDeleteEverySecondWordOp,
@@ -130,7 +131,7 @@ const ProjectPage = () => {
             onWordClick={onWordClick}
           />
         </Stack>
-        <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
+        <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}

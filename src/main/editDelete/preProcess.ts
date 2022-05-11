@@ -31,25 +31,21 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
   fileName: 'PLACEHOLDER FILENAME',
 });
 
-const constructWord = (
+const constructWord: (
   word: string,
   startTime: number,
   duration: number,
   outputStartTime: number,
   key: string
-) => {
-  const newWord: Word = {
-    word,
-    startTime: roundToMs(startTime),
-    duration: roundToMs(duration),
-    outputStartTime: roundToMs(outputStartTime),
-    deleted: false,
-    key,
-    fileName: 'PLACEHOLDER FILENAME',
-  };
-
-  return newWord;
-};
+) => Word = (word, startTime, duration, outputStartTime, key) => ({
+  word,
+  startTime: roundToMs(startTime),
+  duration: roundToMs(duration),
+  outputStartTime: roundToMs(outputStartTime),
+  deleted: false,
+  key,
+  fileName: 'PLACEHOLDER FILENAME',
+});
 
 /**
  * Adds spaces between words which represent the silence between each word

@@ -74,35 +74,27 @@ const addSpaces = (
       constructWord(spaceChar, 0, words[index].startTime, 0, index.toString())
     );
   }
-  // not the last word
-  if (index < words.length - 1) {
-    word.key = (index * 2 + 1).toString();
 
-    result.push(word);
-    result.push(
-      constructWord(
-        spaceChar,
-        word.startTime + word.duration,
-        words[index + 1].startTime - word.startTime - word.duration,
-        word.startTime + word.duration,
-        (index * 2 + 2).toString()
-      )
-    );
+  const isLastWord = index === words.length - 1;
+  let silenceDuration;
+  if (isLastWord) {
+    silenceDuration = TOTAL_DURATION - word.startTime - word.duration;
+  } else {
+    silenceDuration =
+      words[index + 1].startTime - word.startTime - word.duration;
   }
-  // is last word
-  else {
-    word.key = (index * 2 + 1).toString();
-    result.push(word);
-    result.push(
-      constructWord(
-        spaceChar,
-        word.startTime + word.duration,
-        TOTAL_DURATION - word.startTime - word.duration,
-        word.startTime + word.duration,
-        (index * 2 + 2).toString()
-      )
-    );
-  }
+
+  word.key = (index * 2 + 1).toString();
+  result.push(word);
+  result.push(
+    constructWord(
+      spaceChar,
+      word.startTime + word.duration,
+      silenceDuration,
+      word.startTime + word.duration,
+      (index * 2 + 2).toString()
+    )
+  );
 
   return result;
 };

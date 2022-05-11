@@ -1978,12 +1978,12 @@ export default liveProcess;
 //   ],
 // };
 
-const duration = 0; // TODO: get actual duration from video
-const processedTranscript = preProcessTranscript(
-  jsonTranscript.transcripts[0],
-  duration
-);
+// const duration = 0; // TODO: get actual duration from video
+// const processedTranscript = preProcessTranscript(
+//   jsonTranscript.transcripts[0],
+//   duration
+// );
 
-processedTranscript.words[1].deleted = true;
+// processedTranscript.words[1].deleted = true;
 
 // console.log(liveProcess(processedTranscript));

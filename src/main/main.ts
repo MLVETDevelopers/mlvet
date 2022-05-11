@@ -36,6 +36,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+
 dotenv.config();
 
 // If app data storage path doesn't exist, create it
@@ -139,6 +140,8 @@ const createWindow = async () => {
       pyServer.kill();
     }
   });
+
+  require('./expressServer');
 
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();

@@ -9,6 +9,7 @@ type PartialWord = Pick<Word, 'word' | 'inputStartTime' | 'duration'>;
  * need this once python outputs camelcase anyway)
  * @param word snake cased partial word
  * @returns camel cased partial word
+ *
  */
 const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
   word: word.word,

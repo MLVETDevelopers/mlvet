@@ -76,13 +76,8 @@ const addSpaces = (
   }
 
   const isLastWord = index === words.length - 1;
-  let silenceDuration;
-  if (isLastWord) {
-    silenceDuration = TOTAL_DURATION - word.startTime - word.duration;
-  } else {
-    silenceDuration =
-      words[index + 1].startTime - word.startTime - word.duration;
-  }
+  const endTime = isLastWord ? TOTAL_DURATION : words[index + 1].startTime;
+  const silenceDuration = endTime - word.startTime - word.duration;
 
   word.key = (index * 2 + 1).toString();
   result.push(word);

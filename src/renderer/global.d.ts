@@ -7,6 +7,7 @@ import {
   ProjectMetadata,
   Transcription,
   OperatingSystems,
+  RecentProject,
 } from '../sharedTypes';
 
 declare global {
@@ -19,8 +20,8 @@ declare global {
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
       extractThumbnail: (filePath: string) => Promise<string>;
       userOS: () => Promise<OperatingSystems>;
-      readRecentProjects: () => Promise<Project[]>;
-      writeRecentProjects: (recentProjects: Project[]) => Promise<void>;
+      readRecentProjects: () => Promise<RecentProject[]>;
+      writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
 
       on: (

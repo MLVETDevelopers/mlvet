@@ -39,24 +39,6 @@ export const mkdir = (dirPath: string) => {
   }
 };
 
-export const handleOSQuery: () => OperatingSystems | null = () => {
-  const isDarwin = os.platform() === OperatingSystems.MACOS;
-  const isWindows = os.platform() === OperatingSystems.WINDOWS;
-  const isLinux = os.platform() === OperatingSystems.LINUX;
-
-  if (isDarwin) {
-    return OperatingSystems.MACOS;
-  }
-  if (isWindows) {
-    return OperatingSystems.WINDOWS;
-  }
-  if (isLinux) {
-    return OperatingSystems.LINUX;
-  }
-
-  return null;
-};
-
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
 

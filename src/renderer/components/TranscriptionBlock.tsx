@@ -24,7 +24,7 @@ const TranscriptionBox = styled(Box)`
 const Word = styled('span')`
   &:hover {
     color: ${colors.grey['000']};
-    background: rgba(255, 187, 85, 0.5);
+    background: ${colors.yellow[500]}80;
   }
 `;
 

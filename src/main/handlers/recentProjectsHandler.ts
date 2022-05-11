@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
-import { Project, ProjectMetadata, RecentProject } from '../../sharedTypes';
+import { Project, RecentProject } from '../../sharedTypes';
 import { appDataStoragePath } from '../util';
 import retrieveMetadata from './projectMetadataHandler';
 import makeRecentProject from '../../sharedUtils';

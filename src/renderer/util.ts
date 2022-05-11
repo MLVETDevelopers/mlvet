@@ -5,8 +5,6 @@ import {
   Project,
   VideoFileExtension,
   OperatingSystems,
-  ProjectMetadata,
-  RecentProject,
 } from '../sharedTypes';
 
 const { extractThumbnail, userOS } = window.electron;

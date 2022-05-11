@@ -2,7 +2,7 @@ import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
-type PartialWord = Pick<Word, 'word' | 'inputStartTime' | 'duration'>;
+type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
 /**
  * Replace the start_time attribute with startTime (can be generalised further but shouldn't
@@ -14,7 +14,7 @@ type PartialWord = Pick<Word, 'word' | 'inputStartTime' | 'duration'>;
 const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
   word: word.word,
   duration: word.duration,
-  inputStartTime: word.start_time,
+  startTime: word.start_time,
 });
 
 /**
@@ -28,13 +28,11 @@ const fillDurationGaps: (
 ) => MapCallback<PartialWord, PartialWord> =
   (totalDuration) => (word, i, words) => {
     const isLastWord = i === words.length - 1;
-    const durationUntil = isLastWord
-      ? totalDuration
-      : words[i + 1].inputStartTime;
+    const durationUntil = isLastWord ? totalDuration : words[i + 1].startTime;
 
     return {
       ...word,
-      duration: roundToMs(durationUntil - word.inputStartTime),
+      duration: roundToMs(durationUntil - word.startTime),
     };
   };
 
@@ -46,7 +44,7 @@ const fillDurationGaps: (
  */
 const injectAttributes: MapCallback<PartialWord, Word> = (word, i) => ({
   ...word,
-  outputStartTime: 0,
+  outputStartTime: word.startTime,
   key: i.toString(),
   deleted: false,
   fileName: 'PLACEHOLDER FILENAME',

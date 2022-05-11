@@ -28,7 +28,7 @@ export interface Transcription {
 
 export interface Word {
   word: string;
-  inputStartTime: number;
+  startTime: number;
   duration: number;
   outputStartTime: number;
   deleted: boolean;

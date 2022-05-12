@@ -6,13 +6,13 @@ import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
 import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
-import { dispatchOp } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
 import colors from '../colors';
 import {
   makeChangeWordToSwampOp,
   makeDeleteEverySecondWordOp,
 } from '../store/ops';
+
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -28,8 +28,6 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
-
-  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -88,28 +86,6 @@ const ProjectPage = () => {
   const onWordClick = (wordIndex: number) => {
     // TODO: Implement onWordClick
     return currentProject.transcription?.words[wordIndex];
-  };
-
-  const deleteEverySecondWord: () => void = () => {
-    if (currentProject.transcription === null) {
-      return;
-    }
-
-    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
-  };
-
-  const changeRandomWordToSwamp: () => void = () => {
-    if (currentProject.transcription === null) {
-      return;
-    }
-
-    const wordIndex = Math.floor(
-      Math.random() * currentProject.transcription.words.length
-    );
-
-    dispatchOp(
-      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
-    );
   };
 
   return (

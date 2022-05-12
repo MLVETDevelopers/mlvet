@@ -117,6 +117,14 @@ export default class MenuBuilder {
         },
         enabled: false,
       },
+      {
+        id: 'export',
+        label: 'Export Project',
+        accelerator: 'CommandOrControl+Shift+E',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-export-project');
+        },
+      },
     ];
   }
 
@@ -155,38 +163,6 @@ export default class MenuBuilder {
       id: 'file',
       label: 'File',
       submenu: this.buildFileOptions(),
-      submenu: [
-        {
-          label: 'Save Project',
-          accelerator: 'CommandOrControl+S',
-          click: () => {
-            // Tell the renderer to initiate a save
-            this.mainWindow.webContents.send('initiate-save-project');
-          },
-        },
-        {
-          label: 'Open Project',
-          accelerator: 'CommandOrControl+O',
-          click: async () => {
-            const { project, filePath } = await handleOpenProject(
-              this.mainWindow
-            );
-
-            this.mainWindow.webContents.send(
-              'project-opened',
-              project,
-              filePath
-            );
-          },
-        },
-        {
-          label: 'Export Project',
-          accelerator: 'CommandOrControl+Shift+E',
-          click: () => {
-            this.mainWindow.webContents.send('initiate-export-project');
-          },
-        },
-      ],
     };
 
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
@@ -280,26 +256,6 @@ export default class MenuBuilder {
       {
         label: '&File',
         submenu: this.buildFileOptions(),
-        submenu: [
-          {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
-          },
-          {
-            label: '&Close',
-            accelerator: 'Ctrl+W',
-            click: () => {
-              this.mainWindow.close();
-            },
-          },
-          {
-            label: '&Export',
-            accelerator: 'Ctrl+Shift+E',
-            click: () => {
-              this.mainWindow.webContents.send('initiate-export-project');
-            },
-          },
-        ],
       },
       {
         id: 'edit',

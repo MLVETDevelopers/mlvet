@@ -38,11 +38,6 @@ dotenv.config();
 // If app data storage path doesn't exist, create it
 mkdir(appDataStoragePath());
 
-ipcMain.handle('user-os', async () => handleOSQuery());
-// ipcMain.handle('export-project', async (_event, project) =>
-//   handleExportProject(mainWindow, project)
-// );
-
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();

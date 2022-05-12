@@ -1,4 +1,4 @@
-import { MapCallback, roundToMs, ReduceCallback } from '../util';
+import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
@@ -39,15 +39,16 @@ const constructWord: (
   startTime: number,
   duration: number,
   outputStartTime: number,
-  key: string
-) => Word = (word, startTime, duration, outputStartTime, key) => ({
+  key: string,
+  fileName: string
+) => Word = (word, startTime, duration, outputStartTime, key, fileName) => ({
   word,
   startTime: roundToMs(startTime),
   duration: roundToMs(duration),
   outputStartTime: roundToMs(outputStartTime),
   deleted: false,
   key,
-  fileName: 'PLACEHOLDER FILENAME',
+  fileName,
 });
 
 /**
@@ -59,18 +60,22 @@ const constructWord: (
  * @returns The updated transcript with a silence after word
  */
 let TOTAL_DURATION = 0;
-const addSpaces: ReduceCallback<Word, Word[]> = (
-  result: Word[],
-  word: Word,
-  index: number,
-  words: Word[]
-) => {
+let FILENAME = '';
+const addSpaces: MapCallback<Word, Word[]> = (word, index, words) => {
   const spaceChar = ' ';
+  const wordAndSilence: Word[] = [];
 
   // is the first word
   if (index === 0) {
-    result.push(
-      constructWord(spaceChar, 0, words[index].startTime, 0, index.toString())
+    wordAndSilence.push(
+      constructWord(
+        spaceChar,
+        0,
+        words[index].startTime,
+        0,
+        index.toString(),
+        FILENAME
+      )
     );
   }
 
@@ -81,19 +86,20 @@ const addSpaces: ReduceCallback<Word, Word[]> = (
   // index*2 is used because we are mapping 1 Word to 2 Words and want the key to represent the index of the each Word in the processed Transcript.
   // +1 is to account for the first element in the words array being a silence to pad the beginning of the transcript.
   word.key = (index * 2 + 1).toString();
-  result.push(word);
-  result.push(
+  wordAndSilence.push(word);
+  wordAndSilence.push(
     constructWord(
       spaceChar,
       word.startTime + word.duration,
       silenceDuration,
       word.startTime + word.duration,
       // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
-      (index * 2 + 2).toString()
+      (index * 2 + 2).toString(),
+      FILENAME
     )
   );
 
-  return result;
+  return wordAndSilence;
 };
 
 /**
@@ -108,12 +114,14 @@ const preProcessTranscript = (
   fileName: string
 ): Transcription => {
   TOTAL_DURATION = duration;
+  FILENAME = fileName;
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
       .map(injectAttributes(fileName))
-      .reduce(addSpaces, []),
+      .map(addSpaces)
+      .flat(),
   };
 };
 

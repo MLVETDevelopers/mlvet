@@ -5,6 +5,8 @@ import {
   UndoDeleteEverySecondWordPayload,
   ChangeWordToSwampPayload,
   UndoChangeWordToSwampPayload,
+  DeleteWordsPayload,
+  UndoDelteWordsPayload,
 } from './opPayloads';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
@@ -17,6 +19,23 @@ export const UNDO_DELETE_EVERY_SECOND_WORD = 'UNDO_DELETE_EVERY_SECOND_WORD';
 
 export const CHANGE_WORD_TO_SWAMP = 'CHANGE_WORD_TO_SWAMP';
 export const UNDO_CHANGE_WORD_TO_SWAMP = 'UNDO_CHANGE_WORD_TO_SWAMP';
+
+export const DELETE_WORD = 'DELETE_WORD';
+export const UNDO_DELETE_WORD = 'UNDO_DELETE_WORD';
+
+export const makeDeleteWord: (
+  startIndex: number,
+  endIndex: number
+) => DeleteWordsOp = (startWordIndex, endWordIndex) => ({
+  do: {
+    type: DELETE_WORD,
+    payload: { startIndex: startWordIndex, endIndex: endWordIndex },
+  },
+  undo: {
+    type: UNDO_DELETE_WORD,
+    payload: { startIndex: startWordIndex, endIndex: endWordIndex },
+  },
+});
 
 export const makeDeleteEverySecondWordOp: (
   transcription: Transcription
@@ -56,3 +75,5 @@ export type ChangeWordToSwampOp = Op<
   ChangeWordToSwampPayload,
   UndoChangeWordToSwampPayload
 >;
+
+export type DeleteWordsOp = Op<DeleteWordsPayload, UndoDelteWordsPayload>;

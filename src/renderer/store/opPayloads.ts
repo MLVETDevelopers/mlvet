@@ -15,8 +15,22 @@ export interface UndoChangeWordToSwampPayload {
   changedWord: Word;
 }
 
-export type DoPayload = DeleteEverySecondWordPayload | ChangeWordToSwampPayload;
+export interface DeleteWordsPayload {
+  startIndex: number;
+  endIndex: number;
+}
+
+export interface UndoDelteWordsPayload {
+  startIndex: number;
+  endIndex: number;
+}
+
+export type DoPayload =
+  | DeleteEverySecondWordPayload
+  | ChangeWordToSwampPayload
+  | DeleteWordsPayload;
 
 export type UndoPayload =
   | UndoDeleteEverySecondWordPayload
-  | UndoChangeWordToSwampPayload;
+  | UndoChangeWordToSwampPayload
+  | UndoDelteWordsPayload;

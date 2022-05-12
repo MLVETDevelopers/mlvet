@@ -118,7 +118,8 @@
     ],
     "moduleDirectories": [
       "node_modules",
-      "release/app/node_modules"
+      "release/app/node_modules",
+      "src"
     ],
     "testPathIgnorePatterns": [
       "release/app/dist"

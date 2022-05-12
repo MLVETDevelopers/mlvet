@@ -72,3 +72,17 @@ To package apps for the local platform:
 ```bash
 yarn package
 ```
+
+## Testing
+
+if app has not already been built, run:
+
+```bash
+yarn build
+```
+
+To run unit tests:
+
+```bash
+yarn test
+```

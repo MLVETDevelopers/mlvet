@@ -59,48 +59,48 @@ const constructWord: (
  * @param words The list of words being reduced
  * @returns The updated transcript with a silence after word
  */
-let TOTAL_DURATION = 0;
-const addSpaces: MapCallback<Word, Word[]> = (word, index, words) => {
-  const spaceChar = ' ';
-  const wordAndSilence: Word[] = [];
-  const { fileName } = word;
+const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
+  (totalDuration: number) => (word, index, words) => {
+    const spaceChar = ' ';
+    const wordAndSilence: Word[] = [];
+    const { fileName } = word;
 
-  // is the first word
-  if (index === 0) {
+    // is the first word
+    if (index === 0) {
+      wordAndSilence.push(
+        constructWord(
+          spaceChar,
+          0,
+          words[index].startTime,
+          0,
+          index.toString(),
+          fileName
+        )
+      );
+    }
+
+    const isLastWord = index === words.length - 1;
+    const endTime = isLastWord ? totalDuration : words[index + 1].startTime;
+    const silenceDuration = endTime - word.startTime - word.duration;
+
+    // index*2 is used because we are mapping 1 Word to 2 Words and want the key to represent the index of the each Word in the processed Transcript.
+    // +1 is to account for the first element in the words array being a silence to pad the beginning of the transcript.
+    word.key = (index * 2 + 1).toString();
+    wordAndSilence.push(word);
     wordAndSilence.push(
       constructWord(
         spaceChar,
-        0,
-        words[index].startTime,
-        0,
-        index.toString(),
+        word.startTime + word.duration,
+        silenceDuration,
+        word.startTime + word.duration,
+        // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
+        (index * 2 + 2).toString(),
         fileName
       )
     );
-  }
 
-  const isLastWord = index === words.length - 1;
-  const endTime = isLastWord ? TOTAL_DURATION : words[index + 1].startTime;
-  const silenceDuration = endTime - word.startTime - word.duration;
-
-  // index*2 is used because we are mapping 1 Word to 2 Words and want the key to represent the index of the each Word in the processed Transcript.
-  // +1 is to account for the first element in the words array being a silence to pad the beginning of the transcript.
-  word.key = (index * 2 + 1).toString();
-  wordAndSilence.push(word);
-  wordAndSilence.push(
-    constructWord(
-      spaceChar,
-      word.startTime + word.duration,
-      silenceDuration,
-      word.startTime + word.duration,
-      // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
-      (index * 2 + 2).toString(),
-      fileName
-    )
-  );
-
-  return wordAndSilence;
-};
+    return wordAndSilence;
+  };
 
 /**
  * Pre processes a JSON transcript from python for use in the front end
@@ -113,13 +113,12 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
-  TOTAL_DURATION = duration;
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
       .map(injectAttributes(fileName))
-      .map(addSpaces)
+      .map(addSpaces(duration))
       .flat(),
   };
 };

@@ -34,6 +34,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '0',
           startTime: 0,
+          outputStartTime: 0,
           word: 'abc',
         },
         {
@@ -42,6 +43,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '1',
           startTime: 1,
+          outputStartTime: 1,
           word: 'def',
         },
       ],
@@ -85,7 +87,8 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           duration: 3,
           fileName: 'PLACEHOLDER FILENAME',
           key: '0',
-          startTime: 5,
+          startTime: 0,
+          outputStartTime: 0,
           word: ' ',
         },
         {
@@ -94,6 +97,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '1',
           startTime: 5,
+          outputStartTime: 5,
           word: 'heat',
         },
         {
@@ -102,6 +106,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '2',
           startTime: 7,
+          outputStartTime: 7,
           word: ' ',
         },
         {
@@ -110,6 +115,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '3',
           startTime: 8,
+          outputStartTime: 8,
           word: 'from',
         },
         {
@@ -118,6 +124,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '4',
           startTime: 11,
+          outputStartTime: 11,
           word: ' ',
         },
         {
@@ -126,6 +133,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '5',
           startTime: 11.2,
+          outputStartTime: 11.2,
           word: 'fire',
         },
         {
@@ -134,6 +142,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
           key: '6',
           startTime: 12.1,
+          outputStartTime: 12.1,
           word: ' ',
         },
       ],

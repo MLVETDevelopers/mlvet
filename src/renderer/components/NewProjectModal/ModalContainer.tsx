@@ -16,10 +16,7 @@ const CustomModal = styled(Modal)`
 
 const CustomModalInner = styled(Box)`
   background: ${colors.grey[700]};
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-bottom: 30px;
-  padding-top: 15px;
+  padding: 15px 30px 30px 30px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;

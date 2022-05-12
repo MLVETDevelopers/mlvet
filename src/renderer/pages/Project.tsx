@@ -1,12 +1,10 @@
 import { Box, Stack } from '@mui/material';
-import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import { transcriptionCreated } from 'renderer/store/actions';
-import { Transcription } from 'sharedTypes';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/helpers';
-import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
+import { dispatchOp } from '../store/opHelpers';
 import { makeDeleteWord } from '../store/ops';
 
 /*
@@ -16,18 +14,11 @@ changes get reflected in the video. In addition to that, there is a video previe
 section to the side among other things.
 */
 const ProjectPage = () => {
-  const dispatch = useDispatch();
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
-  );
-
-  // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
-  const saveTranscription: (transcription: Transcription) => void = useCallback(
-    (transcription) => dispatch(transcriptionCreated(transcription)),
-    [dispatch]
   );
 
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {

@@ -6,6 +6,8 @@ import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/helpers';
+import { dispatchOp, dispatchRedo, dispatchUndo } from '../store/opHelpers';
+import { makeDeleteWord } from '../store/ops';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -28,13 +30,9 @@ const ProjectPage = () => {
     [dispatch]
   );
 
-  const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
+  const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
-      // eslint-disable-next-line no-plusplus
-      for (let i = firstWordIndex; i < firstWordIndex + numberOfWords; i++) {
-        currentProject.transcription.words[i].deleted = true;
-      }
-      saveTranscription(currentProject.transcription);
+      dispatchOp(makeDeleteWord(firstWordIndex, lastWordIndex));
     }
   };
 
@@ -53,7 +51,7 @@ const ProjectPage = () => {
 
       const start = Math.min(anchor, focus);
       const end = Math.max(anchor, focus);
-      deleteWord(start, end - start + 1);
+      deleteWord(start, end);
     }
   };
 

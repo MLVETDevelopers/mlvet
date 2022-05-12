@@ -35,7 +35,7 @@ export default function StoreChangeObserver() {
 
   // Persist the recent projects in the back end when the recentProjects changes in the store
   useEffect(() => {
-    // If we haven't read yet, don't write
+    // If we haven't read yet, or the list of recent projects is empty, don't write
     if (recentProjects.length === 0) {
       return;
     }

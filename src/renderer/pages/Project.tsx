@@ -7,7 +7,7 @@ import { Transcription } from 'sharedTypes';
 import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/helpers';
-import { colors } from '../colors';
+import colors from '../colors';
 
 /*
 This is the page that gets displayed while you are editing a video.

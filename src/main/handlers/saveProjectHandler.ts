@@ -1,10 +1,10 @@
-import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 import { Project } from '../../sharedTypes';
 
 const extractFileName: (filePath: string) => string = (filePath) => {
-  // TODO(patrick): support windows, which uses back slashes
-  const split = filePath.split('/');
+  const split = filePath.split(path.delimiter);
   return split[split.length - 1];
 };
 

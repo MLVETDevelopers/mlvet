@@ -60,10 +60,10 @@ const constructWord: (
  * @returns The updated transcript with a silence after word
  */
 let TOTAL_DURATION = 0;
-let FILENAME = '';
 const addSpaces: MapCallback<Word, Word[]> = (word, index, words) => {
   const spaceChar = ' ';
   const wordAndSilence: Word[] = [];
+  const { fileName } = word;
 
   // is the first word
   if (index === 0) {
@@ -74,7 +74,7 @@ const addSpaces: MapCallback<Word, Word[]> = (word, index, words) => {
         words[index].startTime,
         0,
         index.toString(),
-        FILENAME
+        fileName
       )
     );
   }
@@ -95,7 +95,7 @@ const addSpaces: MapCallback<Word, Word[]> = (word, index, words) => {
       word.startTime + word.duration,
       // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
       (index * 2 + 2).toString(),
-      FILENAME
+      fileName
     )
   );
 
@@ -114,7 +114,6 @@ const preProcessTranscript = (
   fileName: string
 ): Transcription => {
   TOTAL_DURATION = duration;
-  FILENAME = fileName;
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words

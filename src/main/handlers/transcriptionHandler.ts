@@ -13,20 +13,25 @@ import preProcessTranscript from '../editDelete/preProcess';
 const sleep: (n: number) => Promise<void> = (n) =>
   new Promise((resolve) => setTimeout(resolve, n * 1000));
 
+const transcribeRequest: () => Promise<string> = async () => {
+  const socket = io('http://localhost:5000');
+  return new Promise((resolve) => {
+    socket.emit(
+      'transcribe',
+      'audio/2830-3980-0043.wav',
+      (transcription: string) => {
+        resolve(transcription);
+      }
+    );
+  });
+};
+
 const handleTranscription: (
   fileName: string
 ) => Promise<Transcription> = async () => {
-  const socket = io('http://localhost:5000');
-  socket.emit('transcribe', 'assets/videos/demo-video.mp4');
-  let transcript = '';
-  socket.on('transcription', (transcriptJson: any) => {
-    transcript = transcriptJson;
-  });
-  // socket.disconnect();
+  const transcript = await transcribeRequest();
   const jsonTranscript = JSON.parse(transcript);
-
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
-
   const duration = 0; // TODO: get actual duration from video
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],

@@ -6,12 +6,15 @@ import {
   UndoDeleteEverySecondWordPayload,
   ChangeWordToSwampPayload,
   UndoChangeWordToSwampPayload,
+  DeleteWordsPayload,
 } from '../opPayloads';
 import {
   CHANGE_WORD_TO_SWAMP,
   DELETE_EVERY_SECOND_WORD,
   UNDO_CHANGE_WORD_TO_SWAMP,
   UNDO_DELETE_EVERY_SECOND_WORD,
+  DELETE_WORD,
+  UNDO_DELETE_WORD,
 } from '../ops';
 
 /**
@@ -60,6 +63,27 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
           i === (action.payload as ChangeWordToSwampPayload).index
             ? 'SWAMP'
             : v.word,
+      })),
+    };
+  }
+
+  if (
+    (action.type === DELETE_WORD || action.type === UNDO_DELETE_WORD) &&
+    transcription != null
+  ) {
+    const payload = action.payload as DeleteWordsPayload;
+
+    // sets newDeleted bool to true for delete and false for undo
+    const newDeletedBool = action.type === DELETE_WORD;
+
+    return {
+      ...transcription,
+      words: transcription.words.map((word, i) => ({
+        ...word,
+        deleted:
+          i >= payload.startIndex && i <= payload.endIndex
+            ? newDeletedBool
+            : word.deleted,
       })),
     };
   }

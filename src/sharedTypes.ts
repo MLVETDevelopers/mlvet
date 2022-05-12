@@ -58,3 +58,10 @@ export enum OperatingSystems {
   WINDOWS = 'win32',
   LINUX = 'linux',
 }
+
+export enum AsyncState {
+  READY = 'READY',
+  LOADING = 'LOADING',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
+}

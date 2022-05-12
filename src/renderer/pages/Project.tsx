@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
+import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/helpers';
+import { colors } from '../colors';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -83,6 +85,8 @@ const ProjectPage = () => {
 
   return (
     <>
+      <VideoController />
+
       <Stack
         direction="row"
         sx={{
@@ -98,7 +102,7 @@ const ProjectPage = () => {
             onWordClick={onWordClick}
           />
         </Stack>
-        <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
+        <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}

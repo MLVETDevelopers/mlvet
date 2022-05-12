@@ -1,16 +1,18 @@
-import { Box, colors, styled } from '@mui/material';
+import { Box, CssBaseline, styled, ThemeProvider } from '@mui/material';
 import { ReactElement } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import './App.css';
-import TopBar from './components/TopBar';
+import colors from './colors';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import { ApplicationPage, ApplicationStore } from './store/helpers';
 import applicationStore from './store/store';
+import StoreChangeObserver from './StoreChangeObserver';
+import theme from './theme';
 
 const RootContainer = styled(Box)`
   margin: 0;
-  background: ${colors.grey[800]};
+  background: ${colors.grey[900]};
   height: 100vh;
 `;
 
@@ -30,10 +32,14 @@ function Router() {
 export default function App() {
   return (
     <Provider store={applicationStore}>
-      <RootContainer>
-        <TopBar />
-        <Router />
-      </RootContainer>
+      <StoreChangeObserver />
+      <ThemeProvider theme={theme}>
+        <CssBaseline>
+          <RootContainer>
+            <Router />
+          </RootContainer>
+        </CssBaseline>
+      </ThemeProvider>
     </Provider>
   );
 }

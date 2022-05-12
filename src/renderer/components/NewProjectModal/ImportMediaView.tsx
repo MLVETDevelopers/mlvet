@@ -1,101 +1,136 @@
-import {
-  Box,
-  Button,
-  colors,
-  styled,
-  TextField,
-  Typography,
-} from '@mui/material';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { projectCreated, recentProjectAdded } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, Stack, styled, Typography } from '@mui/material';
+import colors from 'renderer/colors';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import { ApplicationStore } from 'renderer/store/helpers';
+import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
+import { Project } from 'sharedTypes';
+import { updateProjectWithMedia } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
-import { Project } from '../../../sharedTypes';
-import { makeProject } from '../../util';
+import MediaDisplayOnImport from '../MediaDisplayOnImport';
 
-const CustomTextField = styled(TextField)`
-  background: ${colors.grey[400]};
-  color: ${colors.grey[900]};
-  width: 400px;
-`;
-
-const ButtonContainer = styled(Box)`
-  display: flex;
-  justify-content: right;
-  width: 100%;
-`;
-
-const CustomButtonBase = styled(Button)`
-  border-radius: 0;
-  font-weight: bold;
-  color: ${colors.grey[900]};
-  text-transform: none;
-  margin: 20px 10px;
-  padding: 10px;
-`;
-
-const CancelButton = styled(CustomButtonBase)`
-  background: ${colors.grey[400]};
-
-  &:hover {
-    background: ${colors.grey[600]};
-  }
-`;
-
-const ActionButton = styled(CustomButtonBase)`
-  background: ${colors.lightBlue[500]};
-
-  &:hover {
-    background: ${colors.lightBlue[700]};
-  }
-`;
+const { retrieveProjectMetadata } = window.electron;
 
 interface Props {
+  prevView: () => void;
   closeModal: () => void;
   nextView: () => void;
 }
 
-const ImportMediaView = ({ closeModal, nextView }: Props) => {
-  const [projectName, setProjectName] = useState<string>('Example');
+const CustomStack = styled(Stack)`
+  width: 100%;
+`;
+
+const CustomColumnStack = styled(CustomStack)`
+  flex-direction: column;
+`;
+
+const CustomRowStack = styled(CustomStack)`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Container = styled(Box)`
+  background-color: ${colors.grey[700]};
+`;
+
+const CustomButton = styled(Button)`
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
+`;
+
+const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
+  const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
   const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
+  const [mediaFileName, setMediaFileName] = useState<string | null>(null);
+  const currentProject = useSelector(
+    (store: ApplicationStore) => store.currentProject
+  );
 
   const dispatch = useDispatch();
 
+  if (currentProject === null) {
+    return null;
+  }
+
+  const projectName = currentProject.name;
+
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = (project: Project) =>
-    dispatch(recentProjectAdded(project));
+  const addToRecentProjects = async (project: Project) => {
+    const projectMetadata = await retrieveProjectMetadata(project);
+    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
+  };
 
-  const onProjectCreate = () => {
-    const project = makeProject(projectName, mediaFilePath);
-    if (project === null) {
+  const handleTranscribe = async () => {
+    const project = await updateProjectWithMedia(currentProject, mediaFilePath);
+
+    if (project === null || mediaFilePath === null) {
       return;
     }
 
     setCurrentProject(project);
-    addToRecentProjects(project);
+    await addToRecentProjects(project);
+
     nextView();
   };
 
+  const transcribeButton = (
+    <CustomButton
+      color="primary"
+      onClick={handleTranscribe}
+      disabled={isAwaitingMedia}
+      sx={{ width: '100%' }}
+    >
+      Transcribe
+    </CustomButton>
+  );
+
+  const cancelButton = (
+    <CustomButton color="secondary" onClick={prevView} sx={{ width: '100%' }}>
+      Back
+    </CustomButton>
+  );
+
   return (
-    <>
-      <Typography fontWeight="bold">New Project</Typography>
-      <CustomTextField
-        sx={{ marginTop: '40px' }}
-        label="Project Name"
-        variant="outlined"
-        value={projectName}
-        onChange={(event) => setProjectName(event.target.value)}
-      />
-      <SelectMediaBlock
-        mediaFilePath={mediaFilePath}
-        setMediaFilePath={setMediaFilePath}
-      />
-      <ButtonContainer>
-        <CancelButton onClick={closeModal}>Cancel</CancelButton>
-        <ActionButton onClick={onProjectCreate}>Create!</ActionButton>
-      </ButtonContainer>
-    </>
+    <Container sx={{ height: { xs: 500 } }}>
+      <CustomColumnStack
+        alignItems="flex-start"
+        justifyContent="space-between"
+        sx={{ height: '50%' }}
+      >
+        <CustomRowStack justifyContent="space-between">
+          <Typography variant="h1" sx={{ color: colors.grey[400] }}>
+            {projectName}
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 20 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
+        </CustomRowStack>
+        <CustomRowStack justifyContent="center">
+          <SelectMediaBlock
+            setMediaFileName={setMediaFileName}
+            setMediaFilePath={setMediaFilePath}
+            setIsAwaitingMedia={setIsAwaitingMedia}
+          />
+        </CustomRowStack>
+      </CustomColumnStack>
+      <CustomColumnStack
+        alignItems="baseline"
+        justifyContent="flex-start"
+        sx={{ height: '42.5%', overflowY: 'auto' }}
+      >
+        <MediaDisplayOnImport fileName={mediaFileName} />
+      </CustomColumnStack>
+      <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
+        {cancelButton}
+        {transcribeButton}
+      </CustomRowStack>
+    </Container>
   );
 };
 

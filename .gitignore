@@ -15,6 +15,9 @@ coverage
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
+# Video
+assets/videos/*
+
 # OSX
 .DS_Store
 
@@ -32,3 +35,10 @@ __pycache__
 
 assets/videos/demo-video.mp4
 assets/audio/audio.wav
+assets/thumbnails/thumbnail.png
+
+venv
+src/pyServer/deepspeech-0.9.3-models.pbmm
+src/pyServer/deepspeech-0.9.3-models.scorer
+
+experiments/**/assets

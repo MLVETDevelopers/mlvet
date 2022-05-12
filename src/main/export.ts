@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
-import { join } from 'path';
+import path, { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
 import { padZeros, integerDivide, mkdir } from './util';
 
@@ -47,19 +47,19 @@ export const exportEDL: (
   project: Project
 ) => void = (mainWindow, project) => {
   if (project.exportFilePath === null) {
-    console.log('export edl returned null');
-    console.log(project);
     return;
   }
 
-  console.log('export edl called');
-  console.log(project);
-
-  mkdir(project.exportFilePath);
+  const exportFilepath = path.dirname(project.exportFilePath);
+  mkdir(exportFilepath);
+  const exportFilename = path.basename(
+    project.exportFilePath,
+    path.extname(project.exportFilePath)
+  );
 
   if (project.transcription) {
     writeFileSync(
-      join(project.exportFilePath, `${project.name}.edl`),
+      join(exportFilepath, `${exportFilename}.edl`),
       constructEDL(
         project.name,
         project.transcription,

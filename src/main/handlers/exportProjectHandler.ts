@@ -30,10 +30,9 @@ const exportProjectToFile: (
   mainWindow: BrowserWindow | null,
   project: Project
 ) => Promise<void> = async (filePath, mainWindow, project) => {
-  console.log('export project to file called');
-  console.log(project);
+  // project.exportFilePath = path.dirname(filePath);
+  project.exportFilePath = filePath;
 
-  project.exportFilePath = path.dirname(filePath);
   exportEDL(mainWindow, project);
 };
 
@@ -42,8 +41,6 @@ const handleExportProject: (
   project: Project
 ) => Promise<void> = async (mainWindow, project) => {
   const filePath = await getSaveFilePath(mainWindow);
-  console.log('handle export project called');
-  console.log(project);
 
   await exportProjectToFile(filePath, mainWindow, project);
 };

@@ -1,6 +1,5 @@
-import { Project, Transcription } from '../../../sharedTypes';
+import { Project } from '../../../sharedTypes';
 import { Action } from '../action';
-import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 
 export const PROJECT_CREATED = 'PROJECT_CREATED';
 export const PROJECT_OPENED = 'PROJECT_OPENED';
@@ -39,11 +38,4 @@ export const projectSaved: (
 export const currentProjectClosed: () => Action<null> = () => ({
   type: CURRENT_PROJECT_CLOSED,
   payload: null,
-});
-
-export const transcriptionCreated: (
-  transcription: Transcription
-) => Action<Transcription> = (transcription) => ({
-  type: TRANSCRIPTION_CREATED,
-  payload: transcription,
 });

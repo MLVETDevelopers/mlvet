@@ -4,11 +4,12 @@ import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
-import { extractFileNameWithExtension } from 'renderer/util';
 import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore } from '../../store/helpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
+
+const { getFileNameWithExtension } = window.electron;
 
 const CustomStack = styled(Stack)`
   width: 100%;
@@ -77,9 +78,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   }
 
   const getFileName = async () => {
-    const name = await extractFileNameWithExtension(
-      currentProject.mediaFilePath
-    );
+    const name = await getFileNameWithExtension(currentProject.mediaFilePath);
     setMediaFileName(name);
   };
 

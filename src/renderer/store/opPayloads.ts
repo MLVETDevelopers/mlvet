@@ -20,7 +20,7 @@ export interface DeleteWordsPayload {
   endIndex: number;
 }
 
-export type UndoDelteWordsPayload = DeleteWordsPayload;
+export type UndoDeleteWordsPayload = DeleteWordsPayload;
 
 export type DoPayload =
   | DeleteEverySecondWordPayload
@@ -30,4 +30,4 @@ export type DoPayload =
 export type UndoPayload =
   | UndoDeleteEverySecondWordPayload
   | UndoChangeWordToSwampPayload
-  | UndoDelteWordsPayload;
+  | UndoDeleteWordsPayload;

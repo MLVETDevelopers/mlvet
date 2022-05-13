@@ -6,7 +6,7 @@ import {
   ChangeWordToSwampPayload,
   UndoChangeWordToSwampPayload,
   DeleteWordsPayload,
-  UndoDelteWordsPayload,
+  UndoDeleteWordsPayload,
 } from './opPayloads';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
@@ -76,4 +76,4 @@ export type ChangeWordToSwampOp = Op<
   UndoChangeWordToSwampPayload
 >;
 
-export type DeleteWordsOp = Op<DeleteWordsPayload, UndoDelteWordsPayload>;
+export type DeleteWordsOp = Op<DeleteWordsPayload, UndoDeleteWordsPayload>;

@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const express = require('express');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, './renderer')));
+
 const getVideo: (req: any, res: any) => void = (_, res) => {
-  res.sendFile('assets/sample.mp4', { root: __dirname });
+  res.sendFile('assets/sample.mp4');
 };
 
 app.get('/video', getVideo);
@@ -52,10 +55,10 @@ const streamVideo: (req: any, res: any) => void = (req, res) => {
   }
 };
 
-app.get('/video', streamVideo);
+app.get('/video/stream', streamVideo);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.EXPRESS_PORT, () => {
   console.log(
-    `Express Server listening on port ${process.env.IP}:${process.env.PORT}!\n`
+    `Express Server listening on port :${process.env.EXPRESS_PORT}!\n`
   );
 });

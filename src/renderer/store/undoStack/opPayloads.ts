@@ -1,4 +1,4 @@
-import { Word } from '../../sharedTypes';
+import { Word } from '../../../sharedTypes';
 
 export type DeleteEverySecondWordPayload = null;
 

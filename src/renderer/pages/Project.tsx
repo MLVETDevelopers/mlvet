@@ -2,17 +2,12 @@ import { Box, Stack } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import { transcriptionCreated } from 'renderer/store/actions';
+import { transcriptionCreated } from 'renderer/store/transcription/actions';
 import { Transcription } from 'sharedTypes';
 import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
-import { ApplicationStore } from '../store/helpers';
+import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import {
-  makeChangeWordToSwampOp,
-  makeDeleteEverySecondWordOp,
-} from '../store/ops';
-
 
 /*
 This is the page that gets displayed while you are editing a video.

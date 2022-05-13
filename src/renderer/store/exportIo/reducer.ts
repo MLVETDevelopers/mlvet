@@ -1,10 +1,8 @@
 import { Reducer } from 'redux';
-import {
-  EXPORT_PROGRESS_UPDATE,
-  FINISH_EXPORT,
-  START_EXPORT,
-} from '../actions';
-import { ApplicationStore, initialStore, Action, ExportIO } from '../helpers';
+import { EXPORT_PROGRESS_UPDATE, FINISH_EXPORT, START_EXPORT } from './actions';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { ExportIO } from './helpers';
+import { Action } from '../action';
 
 const exportIoReducer: Reducer<ApplicationStore['exportIo'], Action<any>> = (
   exportIo = initialStore.exportIo,

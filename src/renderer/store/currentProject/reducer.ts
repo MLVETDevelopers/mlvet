@@ -1,20 +1,21 @@
 import { Reducer } from 'redux';
-import { Project, Transcription } from '../../../sharedTypes';
+import { Project } from '../../../sharedTypes';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
   PROJECT_OPENED,
   PROJECT_SAVED,
-  TRANSCRIPTION_CREATED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
+} from './actions';
 import {
   CHANGE_WORD_TO_SWAMP,
   DELETE_EVERY_SECOND_WORD,
   UNDO_CHANGE_WORD_TO_SWAMP,
   UNDO_DELETE_EVERY_SECOND_WORD,
-} from '../ops';
-import transcriptionReducer from './transcriptionReducer';
+} from '../undoStack/ops';
+import transcriptionReducer from '../transcription/reducer';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],

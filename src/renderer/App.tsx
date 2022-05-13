@@ -5,7 +5,7 @@ import './App.css';
 import colors from './colors';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
-import { ApplicationPage, ApplicationStore } from './store/helpers';
+import { ApplicationPage, ApplicationStore } from './store/sharedHelpers';
 import applicationStore from './store/store';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';

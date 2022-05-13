@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { recentProjectsLoaded } from './store/actions';
-import { ApplicationStore } from './store/helpers';
+import { recentProjectsLoaded } from './store/recentProjects/actions';
+import { ApplicationStore } from './store/sharedHelpers';
 
 const { readRecentProjects, writeRecentProjects } = window.electron;
 

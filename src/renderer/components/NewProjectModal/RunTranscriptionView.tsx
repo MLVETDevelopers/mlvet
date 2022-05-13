@@ -5,8 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { extractFileNameWithExtension } from 'renderer/util';
-import { transcriptionCreated } from '../../store/actions';
-import { ApplicationStore } from '../../store/helpers';
+import { transcriptionCreated } from '../../store/transcription/actions';
+import { ApplicationStore } from '../../store/sharedHelpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 

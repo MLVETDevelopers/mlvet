@@ -1,4 +1,4 @@
-import { Transcription } from '../../sharedTypes';
+import { Transcription } from '../../../sharedTypes';
 import { Op } from './helpers';
 import {
   DeleteEverySecondWordPayload,

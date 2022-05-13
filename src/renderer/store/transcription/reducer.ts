@@ -1,18 +1,18 @@
 import { Reducer } from 'redux';
-import { TRANSCRIPTION_CREATED } from '../actions';
+import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
-import { Action } from '../helpers';
+import { Action } from '../action';
 import {
   UndoDeleteEverySecondWordPayload,
   ChangeWordToSwampPayload,
   UndoChangeWordToSwampPayload,
-} from '../opPayloads';
+} from '../undoStack/opPayloads';
 import {
   CHANGE_WORD_TO_SWAMP,
   DELETE_EVERY_SECOND_WORD,
   UNDO_CHANGE_WORD_TO_SWAMP,
   UNDO_DELETE_EVERY_SECOND_WORD,
-} from '../ops';
+} from '../undoStack/ops';
 
 /**
  *  Nested reducer for handling transcriptions

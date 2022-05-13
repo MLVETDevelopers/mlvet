@@ -2,9 +2,7 @@
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
-import os from 'os';
 import { app } from 'electron';
-import { OperatingSystems } from '../sharedTypes';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 

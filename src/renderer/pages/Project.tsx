@@ -2,7 +2,9 @@ import { Box, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
+import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
+import colors from '../colors';
 import { ApplicationStore } from '../store/helpers';
 import { dispatchOp } from '../store/opHelpers';
 import { makeDeleteWord } from '../store/ops';
@@ -72,6 +74,8 @@ const ProjectPage = () => {
 
   return (
     <>
+      <VideoController />
+
       <Stack
         direction="row"
         sx={{
@@ -87,7 +91,7 @@ const ProjectPage = () => {
             onWordClick={onWordClick}
           />
         </Stack>
-        <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
+        <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}

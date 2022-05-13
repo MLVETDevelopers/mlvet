@@ -23,7 +23,7 @@ declare global {
       readRecentProjects: () => Promise<RecentProject[]>;
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
-
+      getFileNameWithExtension: (filePath: string | null) => string;
       on: (
         channel: string,
         listener: (event: IpcRendererEvent, ...args: any[]) => void

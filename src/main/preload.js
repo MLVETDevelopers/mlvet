@@ -22,7 +22,8 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('write-recent-projects', recentProjects),
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
-
+  getFileNameWithExtension: (filePath) =>
+    ipcRenderer.invoke('file-name-with-ext', filePath),
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {
     return ipcRenderer.on(channel, listener);

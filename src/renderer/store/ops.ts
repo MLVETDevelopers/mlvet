@@ -24,16 +24,16 @@ export const DELETE_WORD = 'DELETE_WORD';
 export const UNDO_DELETE_WORD = 'UNDO_DELETE_WORD';
 
 export const makeDeleteWord: (
-  startIndex: number,
-  endIndex: number
-) => DeleteWordsOp = (startWordIndex, endWordIndex) => ({
+  deleteFrom: number,
+  deleteTo: number
+) => DeleteWordsOp = (deleteFrom, deleteTo) => ({
   do: {
     type: DELETE_WORD,
-    payload: { startIndex: startWordIndex, endIndex: endWordIndex },
+    payload: { startIndex: deleteFrom, endIndex: deleteTo },
   },
   undo: {
     type: UNDO_DELETE_WORD,
-    payload: { startIndex: startWordIndex, endIndex: endWordIndex },
+    payload: { startIndex: deleteFrom, endIndex: deleteTo },
   },
 });
 

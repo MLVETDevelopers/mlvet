@@ -20,10 +20,7 @@ export interface DeleteWordsPayload {
   endIndex: number;
 }
 
-export interface UndoDelteWordsPayload {
-  startIndex: number;
-  endIndex: number;
-}
+export type UndoDelteWordsPayload = DeleteWordsPayload;
 
 export type DoPayload =
   | DeleteEverySecondWordPayload

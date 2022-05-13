@@ -3,6 +3,7 @@ import showImportMediaDialog from './handlers/fileDialog';
 import {
   handleTranscription,
   extractThumbnail,
+  extractAudio,
   handleSaveProject,
   handleOpenProject,
   readRecentProjects,
@@ -41,6 +42,10 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
   );
 
   ipcMain.handle('user-os', async () => handleOsQuery());
+
+  ipcMain.handle('extract-audio', async (_event, project) =>
+    extractAudio(project)
+  );
 };
 
 export default initialiseIpcHandlers;

@@ -23,6 +23,7 @@ declare global {
       readRecentProjects: () => Promise<RecentProject[]>;
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
+      extractAudio: (project: Project) => Promise<string>;
 
       on: (
         channel: string,

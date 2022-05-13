@@ -14,7 +14,7 @@ declare global {
   interface Window {
     electron: {
       requestMediaDialog: () => Promise<string | null>;
-      requestTranscription: (filePath: string) => Promise<Transcription>;
+      requestTranscription: (project: Project) => Promise<Transcription | null>;
       saveProject: (project: Project) => Promise<string>; // Returns the file path
       openProject: () => Promise<{ project: Project; filePath: string }>;
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;

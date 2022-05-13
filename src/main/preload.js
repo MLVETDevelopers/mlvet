@@ -8,8 +8,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   requestMediaDialog: () => ipcRenderer.invoke('import-media'),
-  requestTranscription: (filePath) =>
-    ipcRenderer.invoke('transcribe-media', filePath),
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('transcribe-media', project),
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
   openProject: () => ipcRenderer.invoke('open-project'),
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>

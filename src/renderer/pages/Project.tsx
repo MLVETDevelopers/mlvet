@@ -1,18 +1,13 @@
 import { Box, Stack } from '@mui/material';
-import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import { transcriptionCreated } from 'renderer/store/actions';
-import { Transcription } from 'sharedTypes';
 import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
-import { ApplicationStore } from '../store/helpers';
 import colors from '../colors';
-import {
-  makeChangeWordToSwampOp,
-  makeDeleteEverySecondWordOp,
-} from '../store/ops';
-
+import { ApplicationStore } from '../store/helpers';
+import { dispatchOp } from '../store/opHelpers';
+import { makeDeleteWord } from '../store/ops';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -21,7 +16,6 @@ changes get reflected in the video. In addition to that, there is a video previe
 section to the side among other things.
 */
 const ProjectPage = () => {
-  const dispatch = useDispatch();
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -29,19 +23,9 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.exportIo
   );
 
-  // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
-  const saveTranscription: (transcription: Transcription) => void = useCallback(
-    (transcription) => dispatch(transcriptionCreated(transcription)),
-    [dispatch]
-  );
-
-  const deleteWord = (firstWordIndex: number, numberOfWords: number) => {
+  const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
-      // eslint-disable-next-line no-plusplus
-      for (let i = firstWordIndex; i < firstWordIndex + numberOfWords; i++) {
-        currentProject.transcription.words[i].deleted = true;
-      }
-      saveTranscription(currentProject.transcription);
+      dispatchOp(makeDeleteWord(firstWordIndex, lastWordIndex));
     }
   };
 
@@ -60,7 +44,7 @@ const ProjectPage = () => {
 
       const start = Math.min(anchor, focus);
       const end = Math.max(anchor, focus);
-      deleteWord(start, end - start + 1);
+      deleteWord(start, end);
     }
   };
 

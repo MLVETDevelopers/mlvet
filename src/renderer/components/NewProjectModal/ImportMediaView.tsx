@@ -7,11 +7,14 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from 'renderer/store/helpers';
 import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
 import { Project } from 'sharedTypes';
-import { updateProjectWithMedia } from 'renderer/util';
+import {
+  updateProjectWithMedia,
+  updateProjectWithExtractedAudio,
+} from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 
-const { retrieveProjectMetadata } = window.electron;
+const { retrieveProjectMetadata, extractAudio } = window.electron;
 
 interface Props {
   prevView: () => void;
@@ -64,14 +67,32 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   };
 
   const handleTranscribe = async () => {
-    const project = await updateProjectWithMedia(currentProject, mediaFilePath);
-
-    if (project === null || mediaFilePath === null) {
+    if (mediaFilePath === null) {
       return;
     }
 
-    setCurrentProject(project);
-    await addToRecentProjects(project);
+    const projectWithMedia = await updateProjectWithMedia(
+      currentProject,
+      mediaFilePath
+    );
+
+    if (projectWithMedia === null) {
+      return;
+    }
+
+    const audioFilePath = await extractAudio(projectWithMedia);
+
+    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
+      projectWithMedia,
+      audioFilePath
+    );
+
+    if (projectWithAudioExtract === null) {
+      return;
+    }
+
+    setCurrentProject(projectWithAudioExtract);
+    await addToRecentProjects(projectWithAudioExtract);
 
     nextView();
   };

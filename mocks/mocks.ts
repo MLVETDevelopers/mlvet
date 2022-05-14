@@ -1,4 +1,4 @@
-import { Project } from 'sharedTypes';
+import { Project } from '../src/sharedTypes';
 
 /* eslint-disable import/prefer-default-export */
 export const mockProject: Project = {
@@ -7,6 +7,7 @@ export const mockProject: Project = {
   name: 'test-name',
   projectFilePath: 'test-project-file-path',
   exportFilePath: 'test-export-file-path',
+  audioExtractFilePath: 'test-audio-file-path',
   mediaFilePath: 'test-media-file-path',
   transcription: {
     confidence: 123456789,

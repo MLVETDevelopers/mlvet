@@ -5,7 +5,7 @@ import {
   PROJECT_OPENED,
   PROJECT_SAVED,
 } from '../actions';
-import { mockProject } from '../../../../__tests__/mocks';
+import { mockProject } from '../../../../../mocks/mocks';
 
 describe('Current Project reducer', () => {
   it('should handle current project closed', () => {
@@ -31,7 +31,7 @@ describe('Current Project reducer', () => {
     expect(
       currentPageReducer(mockProject, {
         type: PROJECT_SAVED,
-        payload: newFilePath,
+        payload: { id: 'test-id', filePath: newFilePath },
       })
     ).toEqual({ ...mockProject, projectFilePath: newFilePath });
   });

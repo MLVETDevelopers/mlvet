@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import { mockProject } from '__tests__/mocks';
+import { mockProject } from '../../../../../mocks/mocks';
 import currentPageReducer from '../reducer';
 import {
   currentProjectClosed,

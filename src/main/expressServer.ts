@@ -1,26 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import fs from 'fs';
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, './renderer')));
-
-const getVideo: (req: any, res: any) => void = (_, res) => {
-  res.sendFile('assets/sample.mp4');
-};
-
-app.get('/video', getVideo);
-
 const streamVideo: (req: any, res: any) => void = (req, res) => {
-  const sourcePath = 'assets/sample.mp4';
+  const encodeFilePath = req.params.name;
+  const sourcePath = Buffer.from(encodeFilePath, 'base64').toString('utf-8');
   const stat = fs.statSync(sourcePath);
   const fileSize = stat.size;
   const { range } = req.headers;
-
-  console.log('Range', range);
 
   if (range) {
     const parts = range.replace(/bytes=/, '').split('-');
@@ -55,10 +44,6 @@ const streamVideo: (req: any, res: any) => void = (req, res) => {
   }
 };
 
-app.get('/video/stream', streamVideo);
+app.get('/video/:name', streamVideo);
 
-app.listen(process.env.EXPRESS_PORT, () => {
-  console.log(
-    `Express Server listening on port :${process.env.EXPRESS_PORT}!\n`
-  );
-});
+app.listen(process.env.EXPRESS_PORT);

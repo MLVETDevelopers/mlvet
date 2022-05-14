@@ -1,4 +1,4 @@
-import currentPageReducer from '../reducer';
+import currentProjectReducer from '../reducer';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
@@ -10,7 +10,7 @@ import { mockProject } from '../../../../../mocks/mocks';
 describe('Current Project reducer', () => {
   it('should handle current project closed', () => {
     expect(
-      currentPageReducer(mockProject, {
+      currentProjectReducer(mockProject, {
         type: CURRENT_PROJECT_CLOSED,
         payload: null,
       })
@@ -19,7 +19,7 @@ describe('Current Project reducer', () => {
 
   it('should handle project created', () => {
     expect(
-      currentPageReducer(null, {
+      currentProjectReducer(null, {
         type: PROJECT_CREATED,
         payload: mockProject,
       })
@@ -29,7 +29,7 @@ describe('Current Project reducer', () => {
   it('should handle project saved', () => {
     const newFilePath = 'test-new-file-path';
     expect(
-      currentPageReducer(mockProject, {
+      currentProjectReducer(mockProject, {
         type: PROJECT_SAVED,
         payload: { id: 'test-id', filePath: newFilePath },
       })
@@ -39,7 +39,7 @@ describe('Current Project reducer', () => {
   it('should handle project opened', () => {
     const newFilePath = 'test-new-file-path';
     expect(
-      currentPageReducer(null, {
+      currentProjectReducer(null, {
         type: PROJECT_OPENED,
         payload: { project: mockProject, filePath: newFilePath },
       })

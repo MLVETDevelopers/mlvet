@@ -1,6 +1,6 @@
 import { Project, RecentProject } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
-import { ExportIO } from './exportIo/helpers';
+import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
 
 /**
@@ -11,7 +11,7 @@ export interface ApplicationStore {
   recentProjects: RecentProject[];
   currentPage: ApplicationPage;
   undoStack: UndoStack;
-  exportIo: ExportIO;
+  exportIo: ExportIo;
 }
 
 /**

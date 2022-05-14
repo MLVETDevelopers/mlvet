@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 import { mockProject } from '../../../../../mocks/mocks';
-import currentPageReducer from '../reducer';
+import currentProjectReducer from '../reducer';
 import {
   currentProjectClosed,
   projectCreated,
@@ -8,11 +8,11 @@ import {
   projectOpened,
 } from '../actions';
 
-const store = createStore(currentPageReducer);
+const store = createStore(currentProjectReducer);
 
 describe('Current Project actions', () => {
   afterEach(() => {
-    store.replaceReducer(currentPageReducer);
+    store.replaceReducer(currentProjectReducer);
   });
 
   it('closing initial state project', () => {

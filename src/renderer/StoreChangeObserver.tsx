@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import ipc from './ipc';
 import { recentProjectsLoaded } from './store/actions';
 import { ApplicationStore } from './store/helpers';
 
-const { readRecentProjects, writeRecentProjects } = window.electron;
+const { readRecentProjects, writeRecentProjects } = ipc;
 
 export default function StoreChangeObserver() {
   const recentProjects = useSelector(

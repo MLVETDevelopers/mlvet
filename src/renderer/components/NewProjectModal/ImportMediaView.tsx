@@ -13,8 +13,9 @@ import {
 } from 'renderer/util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
+import ipc from '../../ipc';
 
-const { retrieveProjectMetadata, extractAudio } = window.electron;
+const { retrieveProjectMetadata, extractAudio } = ipc;
 
 interface Props {
   prevView: () => void;

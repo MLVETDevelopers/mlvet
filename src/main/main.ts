@@ -19,6 +19,7 @@ import MenuBuilder from './menu';
 import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
+import { IpcContext } from './types';
 
 export default class AppUpdater {
   constructor() {

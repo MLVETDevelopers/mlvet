@@ -28,10 +28,10 @@ describe('Current Project actions', () => {
   it('saving project', () => {
     const newFilePath = 'test-new-file-path';
     store.dispatch(projectSaved('test-id', newFilePath));
-    // expect(store.getState()).toEqual({
-    //   ...mockProject,
-    //   projectFilePath: newFilePath,
-    // });
+    expect(store.getState()).toEqual({
+      ...mockProject,
+      projectFilePath: newFilePath,
+    });
   });
 
   it('opening project', () => {

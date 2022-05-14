@@ -35,7 +35,7 @@ const currentProjectReducer: Reducer<
   if (action.type === PROJECT_SAVED && currentProject !== null) {
     return {
       ...currentProject,
-      projectFilePath: action.payload as string,
+      projectFilePath: action.payload.filePath,
     };
   }
 

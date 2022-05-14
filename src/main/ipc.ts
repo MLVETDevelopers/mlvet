@@ -3,6 +3,7 @@ import showImportMediaDialog from './handlers/fileDialog';
 import {
   handleTranscription,
   extractThumbnail,
+  extractAudio,
   handleSaveProject,
   handleOpenProject,
   readRecentProjects,
@@ -17,8 +18,8 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
 ) => {
   ipcMain.handle('import-media', () => showImportMediaDialog(mainWindow));
 
-  ipcMain.handle('transcribe-media', async (_event, filePath) =>
-    handleTranscription(filePath)
+  ipcMain.handle('transcribe-media', async (_event, project) =>
+    handleTranscription(project)
   );
 
   ipcMain.handle('extract-thumbnail', async (_event, filePath) =>
@@ -45,6 +46,10 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
 
   ipcMain.handle('file-name-with-ext', async (_event, filePath) =>
     getFileNameWithExtension(filePath)
+  );
+
+  ipcMain.handle('extract-audio', async (_event, project) =>
+    extractAudio(project)
   );
 };
 

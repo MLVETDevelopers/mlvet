@@ -15,7 +15,7 @@ declare global {
     electron: {
       requestMediaDialog: () => Promise<string | null>;
 
-      requestTranscription: (filePath: string) => Promise<Transcription>;
+      requestTranscription: (project: Project) => Promise<Transcription | null>;
 
       saveProject: (project: Project) => Promise<string>; // Returns the file path
 
@@ -44,6 +44,7 @@ declare global {
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
+      extractAudio: (project: Project) => Promise<string>;
 
       on: (
         channel: string,

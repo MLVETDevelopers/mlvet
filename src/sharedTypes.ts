@@ -4,6 +4,7 @@ export interface Project {
   name: string;
   projectFilePath: string | null;
   exportFilePath: string | null;
+  audioExtractFilePath: string | null;
   mediaFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';

@@ -9,8 +9,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electron', {
   requestMediaDialog: () => ipcRenderer.invoke('import-media'),
 
-  requestTranscription: (filePath) =>
-    ipcRenderer.invoke('transcribe-media', filePath),
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('transcribe-media', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
@@ -36,7 +36,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
-
+  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {
     return ipcRenderer.on(channel, listener);

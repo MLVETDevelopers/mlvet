@@ -4,12 +4,17 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ApplicationStore } from 'renderer/store/helpers';
+import { ApplicationStore } from '../../store/helpers';
 import { projectCreated } from '../../store/actions';
 import { Project } from '../../../sharedTypes';
-import { updateProjectWithMedia } from '../../util';
+import {
+  updateProjectWithMedia,
+  updateProjectWithExtractedAudio,
+} from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
+
+const { extractAudio } = window.electron;
 
 interface Props {
   prevView: () => void;
@@ -58,13 +63,32 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     dispatch(projectCreated(project));
 
   const handleTranscribe = async () => {
-    const project = await updateProjectWithMedia(currentProject, mediaFilePath);
-
-    if (project === null || mediaFilePath === null) {
+    if (mediaFilePath === null) {
       return;
     }
 
-    setCurrentProject(project);
+    const projectWithMedia = await updateProjectWithMedia(
+      currentProject,
+      mediaFilePath
+    );
+
+    if (projectWithMedia === null) {
+      return;
+    }
+
+    const audioFilePath = await extractAudio(projectWithMedia);
+
+    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
+      projectWithMedia,
+      audioFilePath
+    );
+
+    if (projectWithAudioExtract === null) {
+      return;
+    }
+
+    setCurrentProject(projectWithAudioExtract);
+
     nextView();
   };
 

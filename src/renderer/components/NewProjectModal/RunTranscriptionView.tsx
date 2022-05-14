@@ -10,6 +10,8 @@ import { ApplicationStore } from '../../store/sharedHelpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 
+const { requestTranscription } = window.electron;
+
 const CustomStack = styled(Stack)`
   width: 100%;
 `;
@@ -62,9 +64,12 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
 
     setAsyncState(AsyncState.LOADING);
 
-    window.electron
-      .requestTranscription(currentProject.mediaFilePath)
+    requestTranscription(currentProject)
       .then((transcription) => {
+        if (transcription === null) {
+          return null;
+        }
+
         setAsyncState(AsyncState.DONE);
         setTranscription(transcription);
         return null;

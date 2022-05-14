@@ -124,9 +124,6 @@
     ],
     "testPathIgnorePatterns": [
       "release/app/dist"
-    ],
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
     ]
   },
   "devDependencies": {

@@ -52,8 +52,7 @@ const handleOpenProject: (
   filePath,
   mainWindow
 ) => {
-  const openFilePath =
-    filePath === null ? await getOpenFilePath(mainWindow) : filePath;
+  const openFilePath = filePath ?? (await getOpenFilePath(mainWindow));
 
   const project = await openProjectFromFile(openFilePath);
 

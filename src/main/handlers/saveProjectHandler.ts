@@ -45,9 +45,8 @@ export const handleSaveProject: (
   project: Project
 ) => Promise<string> = async (mainWindow, project) => {
   const filePath =
-    project.projectFilePath === null
-      ? await getSaveFilePath(mainWindow, project.name)
-      : project.projectFilePath;
+    project.projectFilePath ??
+    (await getSaveFilePath(mainWindow, project.name));
 
   await saveProjectToFile(filePath, { ...project, projectFilePath: filePath });
 

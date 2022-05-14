@@ -101,6 +101,7 @@ export const makeProject: (
     thumbnailFilePath: thumbnailPath,
     projectFilePath: null,
     exportFilePath: null,
+    audioExtractFilePath: null,
   };
 
   return project;
@@ -120,6 +121,7 @@ export const makeProjectWithoutMedia: (
     mediaType: 'audio',
     mediaFileExtension: 'mp3',
     thumbnailFilePath: null,
+    audioExtractFilePath: null,
   };
 
   return project;
@@ -156,6 +158,23 @@ export const updateProjectWithMedia: (
   currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
   currentProject.transcription = null;
   currentProject.thumbnailFilePath = thumbnailPath;
+  currentProject.audioExtractFilePath = null;
+
+  return currentProject;
+};
+
+export const updateProjectWithExtractedAudio: (
+  currentProject: Project,
+  extractedAudioFilePath: string | null
+) => Promise<Project | null> = async (
+  currentProject,
+  extractedAudioFilePath
+) => {
+  if (extractedAudioFilePath === null) {
+    return null;
+  }
+
+  currentProject.audioExtractFilePath = extractedAudioFilePath;
 
   return currentProject;
 };

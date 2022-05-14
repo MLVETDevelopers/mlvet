@@ -34,9 +34,9 @@ const extractHandlerArgs: (
   index: number
 ) => string[] = (fileContentsNoNewline, index) => {
   const resultString = [];
-  let curr = index; // skip first bracket
   let isRecording = false;
-  while (curr < fileContentsNoNewline.length) {
+  for (let curr = index; curr < fileContentsNoNewline.length; curr += 1) {
+    // curr = index to skip first bracket
     const char = fileContentsNoNewline[curr];
     if (char === ')') {
       break;
@@ -45,7 +45,6 @@ const extractHandlerArgs: (
     } else if (isRecording) {
       resultString.push(char);
     }
-    curr += 1;
   }
 
   return resultString

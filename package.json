@@ -14,7 +14,8 @@
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -146,6 +147,7 @@
     "@typescript-eslint/parser": "^5.8.1",
     "browserslist-config-erb": "^0.0.3",
     "chalk": "^4.1.2",
+    "change-case": "^4.1.2",
     "concurrently": "^6.5.1",
     "core-js": "^3.20.1",
     "cross-env": "^7.0.3",

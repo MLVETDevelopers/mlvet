@@ -84,7 +84,11 @@ const createWindow = async () => {
     },
   });
 
-  initialiseIpcHandlers(mainWindow);
+  const ipcContext: IpcContext = {
+    mainWindow,
+  };
+
+  initialiseIpcHandlers(ipcContext);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

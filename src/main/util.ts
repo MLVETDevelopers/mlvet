@@ -47,6 +47,11 @@ export const audioExtractStoragePath: () => string = () =>
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
 
+export const RECENT_PROJECTS_PATH = path.join(
+  appDataStoragePath(),
+  'recentProjects.json'
+);
+
 /** Utility types */
 
 // Callback to be passed into a map function.

@@ -6,7 +6,7 @@ import {
   MenuItemConstructorOptions,
   IpcMain,
 } from 'electron';
-import { handleOpenProject } from './handlers';
+import handleOpenProject from './handlers/openProjectHandler';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -131,7 +131,8 @@ export default class MenuBuilder {
         accelerator: 'CommandOrControl+O',
         click: async () => {
           const { project, filePath } = await handleOpenProject(
-            this.mainWindow
+            { mainWindow: this.mainWindow },
+            null
           );
 
           this.mainWindow.webContents.send('project-opened', project, filePath);

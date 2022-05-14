@@ -1,44 +1,21 @@
-import { writeFile } from 'fs/promises';
-import { BrowserWindow, dialog } from 'electron';
+import { IpcContext } from '../types';
 import { Project } from '../../sharedTypes';
+import { getSaveFilePath, saveProjectToFile } from './helpers/saveUtils';
 
-const getSaveFilePath: (
-  mainWindow: BrowserWindow | null
-) => Promise<string> = async (mainWindow) => {
-  if (mainWindow === null) {
-    throw new Error('Main window not defined');
-  }
-
-  const dialogResponse = await dialog.showSaveDialog(mainWindow, {
-    filters: [{ name: 'MLVET Files', extensions: ['mlvet'] }],
-    buttonLabel: 'Save',
-    title: 'Save Project',
-    properties: ['createDirectory'],
-  });
-
-  if (dialogResponse.canceled) {
-    throw new Error('Dialog cancelled');
-  }
-
-  return dialogResponse.filePath as string;
-};
-
-const saveProjectToFile: (
-  filePath: string,
+type HandleSaveProject = (
+  ipcContext: IpcContext,
   project: Project
-) => Promise<void> = async (filePath, project) => {
-  const projectAsString = JSON.stringify(project);
+) => Promise<string>;
 
-  await writeFile(filePath, projectAsString);
-};
+const handleSaveProject: HandleSaveProject = async (ipcContext, project) => {
+  const { mainWindow } = ipcContext;
 
-const handleSaveProject: (
-  mainWindow: BrowserWindow | null,
-  project: Project
-) => Promise<string> = async (mainWindow, project) => {
-  const filePath = await getSaveFilePath(mainWindow);
+  const filePath =
+    project.projectFilePath === null
+      ? await getSaveFilePath(mainWindow, project.name)
+      : project.projectFilePath;
 
-  await saveProjectToFile(filePath, project);
+  await saveProjectToFile(filePath, { ...project, projectFilePath: filePath });
 
   return filePath;
 };

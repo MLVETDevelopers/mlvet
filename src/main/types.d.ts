@@ -1,3 +1,5 @@
+import { BrowserWindow } from 'electron';
+
 declare module '@ffprobe-installer/ffprobe';
 
 export interface SnakeCaseWord {
@@ -9,4 +11,9 @@ export interface SnakeCaseWord {
 export interface JSONTranscription {
   confidence: number;
   words: SnakeCaseWord[];
+}
+
+// Context to be passed into the IPC handlers when they are initialised from main
+export interface IpcContext {
+  mainWindow: BrowserWindow;
 }

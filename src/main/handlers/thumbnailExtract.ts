@@ -7,9 +7,9 @@ import ffmpeg from 'fluent-ffmpeg';
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-export default function extractThumbnail(
-  absolutePathToVideoFile: string
-): Promise<string> {
+type ExtractThumbnail = (absolutePathToVideoFile: string) => Promise<string>;
+
+const extractThumbnail: ExtractThumbnail = (absolutePathToMediaFile) => {
   const pathToSaveMedia = path.join(process.cwd(), 'assets', 'thumbnails');
 
   console.log('Started thumbnail extraction');
@@ -37,4 +37,6 @@ export default function extractThumbnail(
       reject(stderr);
     });
   });
-}
+};
+
+export default extractThumbnail;

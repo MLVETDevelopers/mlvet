@@ -3,8 +3,8 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Forward10Icon from '@mui/icons-material/Forward10';
 import Replay10Icon from '@mui/icons-material/Replay10';
 import PauseIcon from '@mui/icons-material/Pause';
-import colors from '../colors';
 import { useState } from 'react';
+import colors from '../colors';
 
 const VideoControllerBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -27,9 +27,8 @@ const VideoController = () => {
       return (
         <PlayArrowIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />
       );
-    } else {
-      return <PauseIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
     }
+    return <PauseIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
   };
 
   return (

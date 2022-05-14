@@ -21,7 +21,6 @@ import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
 import { extractAudio } from './handlers';
-// import handleExportProject from './exportProjectHandler';
 
 export default class AppUpdater {
   constructor() {

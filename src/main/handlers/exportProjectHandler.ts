@@ -1,10 +1,8 @@
-import { writeFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import path from 'path';
 import { Project } from '../../sharedTypes';
 import { exportEDL } from '../export';
 
-const getSaveFilePath: (
+const getExportFilePath: (
   mainWindow: BrowserWindow | null
 ) => Promise<string> = async (mainWindow) => {
   if (mainWindow === null) {
@@ -12,9 +10,9 @@ const getSaveFilePath: (
   }
 
   const dialogResponse = await dialog.showSaveDialog(mainWindow, {
-    filters: [{ name: 'MLVET Files', extensions: ['mlvet'] }],
-    buttonLabel: 'Save',
-    title: 'Save Project',
+    filters: [{ name: '.edl Files', extensions: ['edl'] }],
+    buttonLabel: 'Export',
+    title: 'Export Project',
     properties: ['createDirectory'],
   });
 
@@ -30,7 +28,6 @@ const exportProjectToFile: (
   mainWindow: BrowserWindow | null,
   project: Project
 ) => Promise<void> = async (filePath, mainWindow, project) => {
-  // project.exportFilePath = path.dirname(filePath);
   project.exportFilePath = filePath;
 
   exportEDL(mainWindow, project);
@@ -40,7 +37,7 @@ const handleExportProject: (
   mainWindow: BrowserWindow | null,
   project: Project
 ) => Promise<void> = async (mainWindow, project) => {
-  const filePath = await getSaveFilePath(mainWindow);
+  const filePath = await getExportFilePath(mainWindow);
 
   await exportProjectToFile(filePath, mainWindow, project);
 };

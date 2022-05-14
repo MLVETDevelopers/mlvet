@@ -207,6 +207,36 @@ const ProjectPage = () => {
     }
   }
 
+  // TODO: confirm the transctionData format
+  function getCutIndexFromCutStartTime(
+    cutStartTime: number,
+    transcriptionData: any
+  ) {
+    for (let i = 0; i < transcriptionData.length(); i += 1) {
+      if (transcriptionData[i].startTime === cutStartTime) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+  // TODO: confirm the transctionData format
+  function getCutIndexFromSystemTime(
+    systemTime: number,
+    transcriptionData: any
+  ) {
+    for (let i = 0; i < transcriptionData.length(); i += 1) {
+      if (
+        transcriptionData[i].startTime <=
+        systemTime <=
+        transcriptionData[i].endTime
+      ) {
+        return i;
+      }
+    }
+    return null;
+  }
+
   function play() {
     if (!cccRef.current.isRunning) {
       cccRef.current.isRunning = true;

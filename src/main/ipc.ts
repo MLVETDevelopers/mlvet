@@ -10,6 +10,7 @@ import {
   writeRecentProjects,
   retrieveProjectMetadata,
   handleOsQuery,
+  getFileNameWithExtension,
 } from './handlers';
 
 const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
@@ -42,6 +43,10 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
   );
 
   ipcMain.handle('user-os', async () => handleOsQuery());
+
+  ipcMain.handle('file-name-with-ext', async (_event, filePath) =>
+    getFileNameWithExtension(filePath)
+  );
 
   ipcMain.handle('extract-audio', async (_event, project) =>
     extractAudio(project)

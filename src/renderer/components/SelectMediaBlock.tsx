@@ -1,7 +1,8 @@
 import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import colors from 'renderer/colors';
-import { extractFileNameWithExtension } from 'renderer/util';
+
+const { getFileNameWithExtension } = window.electron;
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
@@ -41,7 +42,7 @@ const SelectMediaBlock = ({
 
     setMediaFilePath(selectedMedia);
 
-    const fileName = await extractFileNameWithExtension(selectedMedia);
+    const fileName = await getFileNameWithExtension(selectedMedia);
 
     setMediaFileName(fileName);
   };

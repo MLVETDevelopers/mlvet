@@ -10,6 +10,8 @@ import {
   PlaybackActions,
   VideoStreamState,
 } from 'vimond-replay/default-player/Replay';
+import 'vimond-replay/index.css';
+import './videoStyle.css';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/helpers';
 import colors from '../colors';
@@ -150,6 +152,8 @@ const ProjectPage = () => {
   const framesPerSecond = 30;
   const skip = 30;
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
   // DONE - Sets time of the video preview element to be newTime
   const setVideoTime = (newTime: number) => {
     if (videoActions?.current !== null) {
@@ -169,14 +173,15 @@ const ProjectPage = () => {
     }
   }
 
-  function pause() {
+  const pause = () => {
     if (cccRef.current.isRunning) {
       pauseVideo();
       clearInterval(cccRef.current.intervalRef);
       cccRef.current.intervalRef = null;
       cccRef.current.isRunning = false;
     }
-  }
+    setIsPlaying(false);
+  };
 
   function onFrame() {
     if (cccRef.current.isRunning) {
@@ -243,7 +248,7 @@ const ProjectPage = () => {
     return null;
   }
 
-  function play() {
+  const play = () => {
     if (!cccRef.current.isRunning) {
       cccRef.current.isRunning = true;
 
@@ -254,7 +259,8 @@ const ProjectPage = () => {
         Math.floor(1000 / framesPerSecond)
       );
     }
-  }
+    setIsPlaying(true);
+  };
 
   function startFromTime(newSystemTime: number) {
     pause();
@@ -265,7 +271,7 @@ const ProjectPage = () => {
       systemClockRef.current.startTime = performance.now() * 0.001;
 
       // TODO: get index from new system time
-      const newCut = 1;
+      const newCut = 0;
 
       cccRef.current.currentCutIndex = newCut;
       const currentCut = cuts[newCut];
@@ -277,6 +283,10 @@ const ProjectPage = () => {
       play();
     }
   }
+
+  const restart = () => {
+    startFromTime(0);
+  };
 
   const handlePlaybackActionsReady = (params: PlaybackActions) => {
     // {
@@ -319,10 +329,17 @@ const ProjectPage = () => {
   if (!currentProject?.transcription) {
     return null;
   }
+
   return (
     <>
-      <VideoController />
-
+      <VideoController
+        isPlaying={isPlaying}
+        play={play}
+        pause={pause}
+        restart={restart}
+        seekForward={forward}
+        seekBack={back}
+      />
       <Stack
         direction="row"
         sx={{
@@ -348,13 +365,6 @@ const ProjectPage = () => {
               options={{
                 controls: {
                   // includeControls: [],
-                  includeControls: [
-                    'playPauseButton',
-                    'timeline',
-                    'timeDisplay',
-                    'volume',
-                    'fullscreenButton',
-                  ],
                 },
               }}
               initialPlaybackProps={{ isPaused: true }}

@@ -1,10 +1,12 @@
 import { styled, Box, IconButton } from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Forward10Icon from '@mui/icons-material/Forward10';
-import Replay10Icon from '@mui/icons-material/Replay10';
-import PauseIcon from '@mui/icons-material/Pause';
+import {
+  SkipPrevious,
+  PlayArrow,
+  Forward10,
+  Replay10,
+  Pause,
+} from '@mui/icons-material';
 import colors from '../colors';
-import { useState } from 'react';
 
 const VideoControllerBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -19,16 +21,39 @@ const VideoControllerBox = styled(Box)`
   // column-gap: 24px;
 `;
 
-const VideoController = () => {
-  const [playVideo, setPlayState] = useState(false);
+interface TogglePlayButtonProps {
+  isPlaying: boolean;
+}
 
-  const togglePlayButton = () => {
-    if (playVideo) {
-      return (
-        <PlayArrowIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />
-      );
+const TogglePlayButton = ({ isPlaying }: TogglePlayButtonProps) => {
+  if (!isPlaying) {
+    return <PlayArrow sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+  }
+  return <Pause sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+};
+
+interface Props {
+  isPlaying: boolean;
+  play: () => void;
+  pause: () => void;
+  restart: () => void;
+  seekForward: () => void;
+  seekBack: () => void;
+}
+
+const VideoController = ({
+  isPlaying,
+  play,
+  pause,
+  restart,
+  seekForward,
+  seekBack,
+}: Props) => {
+  const onClickPlayPause = () => {
+    if (isPlaying) {
+      pause();
     } else {
-      return <PauseIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+      play();
     }
   };
 
@@ -46,14 +71,17 @@ const VideoController = () => {
       >
         00:00:00
       </div>
-      <IconButton>
-        <Replay10Icon sx={{ fontSize: '36px', color: colors.grey[400] }} />
+      <IconButton onClick={seekBack}>
+        <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
-      <IconButton onClick={() => setPlayState(!playVideo)}>
-        {togglePlayButton()}
+      <IconButton onClick={onClickPlayPause}>
+        <TogglePlayButton isPlaying={isPlaying} />
       </IconButton>
-      <IconButton>
-        <Forward10Icon sx={{ fontSize: '36px', color: colors.grey[400] }} />
+      <IconButton onClick={restart}>
+        <SkipPrevious sx={{ fontSize: '36px', color: colors.grey[400] }} />
+      </IconButton>
+      <IconButton onClick={seekForward}>
+        <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
     </VideoControllerBox>
   );

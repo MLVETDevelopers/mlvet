@@ -8,6 +8,7 @@ import {
   readRecentProjects,
   writeRecentProjects,
   retrieveProjectMetadata,
+  handleOsQuery,
 } from './handlers';
 
 const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
@@ -38,6 +39,8 @@ const initialiseIpcHandlers: (mainWindow: BrowserWindow) => void = (
   ipcMain.handle('retrieve-project-metadata', async (_event, project) =>
     retrieveProjectMetadata(project)
   );
+
+  ipcMain.handle('user-os', async () => handleOsQuery());
 };
 
 export default initialiseIpcHandlers;

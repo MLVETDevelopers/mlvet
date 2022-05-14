@@ -23,7 +23,7 @@ const constructEDL: (
   const entries = words.length;
   output += words
     .map((word, i) => {
-      const edlEntry = `${padZeros(i + 1, entries)}\tAX\tAA/V\tC`;
+      const edlEntry = `${padZeros(i + 1, Math.floor(Math.log10(entries)) + 1)}\tAX\tAA/V\tC`;
 
       const editStart = secondToTimestamp(word.startTime);
       const editEnd = secondToTimestamp(word.startTime + word.duration);

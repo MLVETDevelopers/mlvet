@@ -42,10 +42,22 @@ export interface Clip {
   fileName: string;
 }
 
+export interface Cut {
+  startTime: number;
+  duration: number;
+}
+
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;
 
 export enum OperatingSystems {
   MACOS = 'darwin',
   WINDOWS = 'win32',
   LINUX = 'linux',
+}
+
+export enum AsyncState {
+  READY = 'READY',
+  LOADING = 'LOADING',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
 }

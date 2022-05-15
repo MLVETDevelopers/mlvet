@@ -1,6 +1,6 @@
 // Let TypeScript know that the ipcRenderer is on the window object.
-// If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron.
 // IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
+// If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
 import { IpcRendererEvent } from 'electron';
 import {

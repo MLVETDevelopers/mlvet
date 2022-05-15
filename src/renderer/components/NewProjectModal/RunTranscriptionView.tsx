@@ -8,8 +8,9 @@ import { transcriptionCreated } from '../../store/actions';
 import { ApplicationStore } from '../../store/helpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
+import ipc from '../../ipc';
 
-const { requestTranscription, getFileNameWithExtension } = window.electron;
+const { requestTranscription, getFileNameWithExtension } = ipc;
 
 const CustomStack = styled(Stack)`
   width: 100%;

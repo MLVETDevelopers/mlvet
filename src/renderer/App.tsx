@@ -29,10 +29,14 @@ function Router() {
   return pageComponents[currentPage];
 }
 
-export default function App() {
+interface Props {
+  hasStoreChangeObserver: boolean; // used for testing
+}
+
+export default function App({ hasStoreChangeObserver }: Props) {
   return (
     <Provider store={applicationStore}>
-      <StoreChangeObserver />
+      {hasStoreChangeObserver && <StoreChangeObserver />}
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <RootContainer>

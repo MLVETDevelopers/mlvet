@@ -6,6 +6,7 @@ import { ApplicationPage, ApplicationStore } from '../store/helpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';
+import { RecentProject } from '../../sharedTypes';
 
 const RecentProjectsBox = styled(Box)`
   width: calc(100vw - 40px);

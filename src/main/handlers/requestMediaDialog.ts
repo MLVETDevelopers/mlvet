@@ -1,9 +1,9 @@
 import { dialog } from 'electron';
 import { IpcContext } from '../types';
 
-type ShowImportMediaDialog = (ipcContext: IpcContext) => Promise<string | null>;
+type RequestMediaDialog = (ipcContext: IpcContext) => Promise<string | null>;
 
-const showImportMediaDialog: ShowImportMediaDialog = async (ipcContext) => {
+const requestMediaDialog: RequestMediaDialog = async (ipcContext) => {
   const { mainWindow } = ipcContext;
 
   const dialogResponse = await dialog.showOpenDialog(mainWindow, {
@@ -22,4 +22,4 @@ const showImportMediaDialog: ShowImportMediaDialog = async (ipcContext) => {
   return dialogResponse.filePaths[0];
 };
 
-export default showImportMediaDialog;
+export default requestMediaDialog;

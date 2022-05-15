@@ -19,8 +19,6 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
-      showImportMediaDialog: () => Promise<string | null>;
-
       getFileNameWithExtension: (filePath: string | null) => string;
 
       handleOpenProject: (
@@ -35,9 +33,15 @@ declare global {
 
       readRecentProjects: () => Promise<RecentProject[]>;
 
+      requestMediaDialog: () => Promise<string | null>;
+
       handleSaveAsProject: (project: Project) => Promise<string>;
 
-      handleSaveProject: (project: Project) => Promise<string>;
+      saveProject: (project: Project) => Promise<string>;
+
+      setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
+
+      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 

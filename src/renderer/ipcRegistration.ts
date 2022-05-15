@@ -12,6 +12,7 @@ import {
 import { ApplicationPage } from './store/helpers';
 import { dispatchRedo, dispatchUndo } from './store/opHelpers';
 import store from './store/store';
+import { removeExtension } from './util';
 
 /**
  * Used by backend to initiate saves from front end
@@ -59,6 +60,15 @@ window.electron.on('initiate-save-as-project', async () => {
   // TODO(patrick): regenerate thumbnail and audio extract
 
   const filePath = await window.electron.saveAsProject(newProject);
+
+  const savedFileNameWithExtension = await ipc.getFileNameWithExtension(
+    filePath
+  );
+
+  const savedFileName = removeExtension(savedFileNameWithExtension);
+
+  // Update the saved file name to the name that it was actually saved as, rather than the default 'Copy of ...'
+  newProject.name = savedFileName;
 
   // Add to recent projects
   const projectMetadata = await window.electron.retrieveProjectMetadata({

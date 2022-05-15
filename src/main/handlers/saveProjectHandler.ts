@@ -3,11 +3,6 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import { Project } from '../../sharedTypes';
 
-const extractFileName: (filePath: string) => string = (filePath) => {
-  const split = filePath.split(path.delimiter);
-  return split[split.length - 1];
-};
-
 const getSaveFilePath: (
   mainWindow: BrowserWindow | null,
   proposedFileName: string
@@ -61,9 +56,7 @@ export const handleSaveAsProject: (
     throw new Error('Cannot "save as" on a file without an existing file path');
   }
 
-  const proposedFileName = `Copy of ${extractFileName(
-    project.projectFilePath
-  )}`;
+  const proposedFileName = `Copy of ${path.basename(project.projectFilePath)}`;
 
   const filePath = await getSaveFilePath(mainWindow, proposedFileName);
 

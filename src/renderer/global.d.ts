@@ -44,7 +44,7 @@ declare global {
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
       retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
-      getFileNameWithExtension: (filePath: string | null) => string;
+      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
       extractAudio: (project: Project) => Promise<string>;
 
       on: (

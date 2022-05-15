@@ -1,8 +1,8 @@
 import path from 'path';
 
-export const getFileNameWithExtension: (filePath: string | null) => string = (
-  filePath
-) => {
+export const getFileNameWithExtension: (
+  filePath: string | null
+) => Promise<string> = async (filePath) => {
   if (filePath === null) {
     return '';
   }

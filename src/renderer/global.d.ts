@@ -41,7 +41,7 @@ declare global {
 
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 
-      handleTranscription: (project: Project) => Promise<Transcription | null>;
+      requestTranscription: (project: Project) => Promise<Transcription | null>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       // END GENERATED CODE

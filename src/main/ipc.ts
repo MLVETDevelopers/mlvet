@@ -13,9 +13,9 @@ import handleOsQuery from './handlers/osQuery';
 import retrieveProjectMetadata from './handlers/projectMetadataHandler';
 import readRecentProjects from './handlers/readRecentProjects';
 import handleSaveAsProject from './handlers/saveAsProjectHandler';
-import handleSaveProject from './handlers/saveProjectHandler';
+import saveProject from './handlers/saveProjectHandler';
 import extractThumbnail from './handlers/thumbnailExtract';
-import handleTranscription from './handlers/transcriptionHandler';
+import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
 // END GENERATED CODE PART 1
 
@@ -52,15 +52,15 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('handle-save-project', async (_event, project) =>
-    handleSaveProject(ipcContext, project)
+    saveProject(ipcContext, project)
   );
 
   ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
     extractThumbnail(absolutePathToMediaFile)
   );
 
-  ipcMain.handle('handle-transcription', async (_event, project) =>
-    handleTranscription(project)
+  ipcMain.handle('request-transcription', async (_event, project) =>
+    requestTranscription(project)
   );
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>

@@ -48,9 +48,9 @@ const validateJsonTranscriptionContainer = <
   transcription.transcripts.length === 1 &&
   validateJsonTranscription(transcription.transcripts[0]));
 
-type HandleTranscription = (project: Project) => Promise<Transcription | null>;
+type RequestTranscription = (project: Project) => Promise<Transcription | null>;
 
-const handleTranscription: HandleTranscription = async (project) => {
+const requestTranscription: RequestTranscription = async (project) => {
   // TODO: replace hard coded media path with parameter passed in
 
   if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
@@ -83,4 +83,4 @@ const handleTranscription: HandleTranscription = async (project) => {
   return processedTranscript;
 };
 
-export default handleTranscription;
+export default requestTranscription;

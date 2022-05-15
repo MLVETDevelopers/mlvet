@@ -10,7 +10,7 @@
  */
 import { ChildProcess } from 'child_process';
 import dotenv from 'dotenv';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
@@ -85,12 +85,6 @@ const createWindow = async () => {
     },
   });
 
-  const ipcContext: IpcContext = {
-    mainWindow,
-  };
-
-  initialiseIpcHandlers(ipcContext);
-
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', async () => {
@@ -134,7 +128,13 @@ const createWindow = async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();
-  menuBuilder.setListeners(menu, ipcMain);
+
+  const ipcContext: IpcContext = {
+    mainWindow,
+    menu,
+  };
+
+  initialiseIpcHandlers(ipcContext);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

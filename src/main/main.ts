@@ -20,7 +20,6 @@ import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
-import { extractAudio } from './handlers';
 
 export default class AppUpdater {
   constructor() {

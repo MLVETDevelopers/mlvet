@@ -1,4 +1,5 @@
 import { BrowserWindow, dialog } from 'electron';
+import { IpcContext } from 'main/types';
 import { Project } from '../../sharedTypes';
 import { exportEDL } from '../export';
 
@@ -11,7 +12,7 @@ const getExportFilePath: (
   }
 
   const dialogResponse = await dialog.showSaveDialog(mainWindow, {
-    defaultPath: `${project.name}.edl`,
+    defaultPath: project.name,
     filters: [{ name: '.edl Files', extensions: ['edl'] }],
     buttonLabel: 'Export',
     title: 'Export Project',
@@ -36,9 +37,11 @@ const exportProjectToFile: (
 };
 
 const handleExportProject: (
-  mainWindow: BrowserWindow | null,
+  ipcContext: IpcContext,
   project: Project
-) => Promise<string> = async (mainWindow, project) => {
+) => Promise<string> = async (ipcContext, project) => {
+  const { mainWindow } = ipcContext;
+
   const filePath = await getExportFilePath(mainWindow, project);
 
   await exportProjectToFile(filePath, mainWindow, project);

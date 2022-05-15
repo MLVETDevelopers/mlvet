@@ -17,6 +17,7 @@ export const PAGE_CHANGED = 'PAGE_CHANGED';
 export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
 export const PROJECT_SAVED = 'PROJECT_SAVED';
 export const PROJECT_SAVED_FIRST_TIME = 'PROJECT_SAVED_FIRST_TIME';
+export const PROJECT_DELETED = 'PROJECT_DELETED';
 
 export const START_EXPORT = 'START_EXPORT';
 export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
@@ -71,6 +72,11 @@ export const projectSavedFirstTime: (
 export const currentProjectClosed: () => Action<null> = () => ({
   type: CURRENT_PROJECT_CLOSED,
   payload: null,
+});
+
+export const projectDeleted: (id: string) => Action<{ id: string }> = (id) => ({
+  type: PROJECT_DELETED,
+  payload: { id },
 });
 
 export const recentProjectAdded: (

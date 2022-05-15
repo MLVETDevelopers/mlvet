@@ -21,11 +21,13 @@ declare global {
 
       closeWindow: () => void;
 
+      deleteProject: (project: Project) => Promise<void>;
+
       getFileNameWithExtension: (filePath: string | null) => string;
 
       openProject: (
         filePath: string | null
-      ) => Promise<{ project: Project; filePath: string }>;
+      ) => Promise<{ project: Project | null; filePath: string }>;
 
       handleOsQuery: () => OperatingSystems | null;
 
@@ -49,6 +51,8 @@ declare global {
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
+
+      showConfirmation: (message: string, detail: string) => Promise<boolean>;
 
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 

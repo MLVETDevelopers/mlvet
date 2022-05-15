@@ -37,6 +37,7 @@ const readRecentProjects: ReadRecentProjects = async () => {
 
     return recentProjectsWithMetadata;
   } catch (err) {
+    console.error(err);
     return [];
   }
 };

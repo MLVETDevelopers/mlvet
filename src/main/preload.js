@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   closeWindow: () => ipcRenderer.invoke('close-window'),
 
+  deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
+
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
@@ -38,6 +40,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
+
+  showConfirmation: (message, detail) =>
+    ipcRenderer.invoke('show-confirmation', message, detail),
 
   extractThumbnail: (absolutePathToMediaFile) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),

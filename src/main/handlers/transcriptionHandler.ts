@@ -3,7 +3,7 @@ import fs from 'fs';
 import { io } from 'socket.io-client';
 import { app } from 'electron';
 import getAudioDurationInSeconds from 'get-audio-duration';
-import { Transcription } from '../../sharedTypes';
+import { Project, Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
@@ -63,8 +63,8 @@ const validateJsonTranscriptionContainer = <
   validateJsonTranscription(transcription.transcripts[0]));
 
 const handleTranscription: (
-  filePath: string
-) => Promise<Transcription> = async (filePath: string) => {
+  project: Project
+) => Promise<Transcription | null> = async (project: Project) => {
   // TODO: replace hard coded media path with parameter passed in
 
   const transcript = await transcribeRequest();
@@ -75,16 +75,9 @@ const handleTranscription: (
     throw new Error('JSON transcript is invalid');
   }
 
-  const pathToSaveMedia = path.join(
-    process.cwd(),
-    'assets',
-    'audio',
-    'audio.wav'
-  );
   const duration: number =
-    (await getAudioDurationInSeconds(pathToSaveMedia)) || 0;
-  const fileName = path.basename(filePath);
-
+    (await getAudioDurationInSeconds(project.audioExtractFilePath)) || 0;
+  const fileName = path.basename(project.mediaFilePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
     duration,

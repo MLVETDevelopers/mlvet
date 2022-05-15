@@ -19,7 +19,6 @@ import MenuBuilder from './menu';
 import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
-import { extractAudio } from './handlers';
 
 export default class AppUpdater {
   constructor() {
@@ -98,11 +97,6 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
-
-    const extractedPath = await extractAudio(
-      path.join(process.cwd(), 'assets/videos/demo-video.mp4')
-    );
-    console.log(`Extracted audio to: ${extractedPath}`);
 
     pyServer = startServer();
 

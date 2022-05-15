@@ -2,9 +2,7 @@
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
-import os from 'os';
 import { app } from 'electron';
-import { OperatingSystems } from '../sharedTypes';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -41,6 +39,9 @@ export const mkdir = (dirPath: string) => {
 
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
+
+export const audioExtractStoragePath: () => string = () =>
+  path.join(appDataStoragePath(), 'audioExtracts');
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>

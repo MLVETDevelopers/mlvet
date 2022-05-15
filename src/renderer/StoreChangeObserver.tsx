@@ -48,13 +48,13 @@ export default function StoreChangeObserver() {
   useEffect(() => {
     if (currentProject === null) {
       // Can't save or save as when there is no project open
-      window.electron.setSaveEnabled(false, false);
+      ipc.setSaveEnabled(false, false);
     } else if (currentProject.projectFilePath === null) {
       // Can save, but not save as, when the project hasn't been saved yet
-      window.electron.setSaveEnabled(true, false);
+      ipc.setSaveEnabled(true, false);
     } else {
       // Can do either if the project has been saved already
-      window.electron.setSaveEnabled(true, true);
+      ipc.setSaveEnabled(true, true);
     }
   }, [currentProject]);
 

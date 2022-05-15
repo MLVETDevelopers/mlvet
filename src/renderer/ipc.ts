@@ -3,6 +3,7 @@
 const mockIpc = {
   readRecentProjects: async () => [],
   writeRecentProjects: async () => null,
+  setSaveEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

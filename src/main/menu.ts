@@ -120,7 +120,7 @@ export default class MenuBuilder {
       {
         id: 'export',
         label: 'Export Project',
-        accelerator: 'CommandOrControl+Shift+E',
+        accelerator: 'CommandOrControl+E',
         click: () => {
           this.mainWindow.webContents.send('initiate-export-project');
         },

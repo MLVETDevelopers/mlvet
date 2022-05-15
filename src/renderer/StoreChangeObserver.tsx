@@ -18,6 +18,8 @@ export default function StoreChangeObserver() {
   const [hasLoadedRecentProjects, setHasLoadedRecentProjects] =
     useState<boolean>(false);
 
+  const [isProjectEdited, setProjectEdited] = useState<boolean>(false);
+
   const dispatch = useDispatch();
 
   // Load the recent projects from the back end when the app starts
@@ -49,14 +51,26 @@ export default function StoreChangeObserver() {
     if (currentProject === null) {
       // Can't save or save as when there is no project open
       ipc.setSaveEnabled(false, false);
+
+      // No file is represented
+      ipc.setFileRepresentation(null, false);
     } else if (currentProject.projectFilePath === null) {
       // Can save, but not save as, when the project hasn't been saved yet
       ipc.setSaveEnabled(true, false);
+
+      // No file is represented as the project hasn't been saved yet - however, we mark the window as 'dirty'
+      ipc.setFileRepresentation(null, true);
     } else {
       // Can do either if the project has been saved already
       ipc.setSaveEnabled(true, true);
+
+      // File is represented, dirty depends on if the project has been edited
+      ipc.setFileRepresentation(
+        currentProject.projectFilePath,
+        currentProject.isEdited
+      );
     }
-  }, [currentProject]);
+  }, [currentProject, isProjectEdited, setProjectEdited]);
 
   // Component doesn't render anything
   return null;

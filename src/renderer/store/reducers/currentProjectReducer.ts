@@ -22,22 +22,22 @@ const currentProjectReducer: Reducer<
   if (action.type === PROJECT_OPENED) {
     return {
       ...(action.payload.project as Project),
+      isEdited: false,
       projectFilePath: action.payload.filePath,
     };
   }
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
-    const { projectId, filePath } = action.payload as {
+    const { filePath } = action.payload as {
       projectId: string;
       filePath: string;
     };
 
-    return projectId === currentProject.id
-      ? {
-          ...currentProject,
-          projectFilePath: filePath,
-        }
-      : currentProject;
+    return {
+      ...currentProject,
+      isEdited: false,
+      projectFilePath: filePath,
+    };
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {
@@ -53,6 +53,7 @@ const currentProjectReducer: Reducer<
   ) {
     return {
       ...currentProject,
+      isEdited: true,
       transcription: transcriptionReducer(currentProject.transcription, action),
     };
   }

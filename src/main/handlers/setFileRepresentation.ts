@@ -1,3 +1,4 @@
+import path from 'path';
 import { IpcContext } from '../types';
 
 type SetFileRepresentation = (
@@ -13,6 +14,11 @@ const setFileRepresentation: SetFileRepresentation = (
 ) => {
   const { mainWindow } = ipcContext;
 
+  mainWindow.setTitle(
+    representedFilePath === null
+      ? 'Machine Learning Video Editor Toolkit'
+      : path.basename(representedFilePath)
+  );
   mainWindow.setRepresentedFilename(representedFilePath ?? '');
   mainWindow.setDocumentEdited(isEdited);
 };

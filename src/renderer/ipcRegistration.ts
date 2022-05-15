@@ -23,11 +23,11 @@ ipc.on('initiate-save-project', async () => {
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  const filePath = await window.electron.saveProject(currentProject);
+  const filePath = await ipc.saveProject(currentProject);
 
   // Add to recent projects if project was saved for the first time
   if (filePath !== currentProject.projectFilePath) {
-    const projectMetadata = await window.electron.retrieveProjectMetadata({
+    const projectMetadata = await ipc.retrieveProjectMetadata({
       ...currentProject,
       projectFilePath: filePath,
     });
@@ -38,12 +38,14 @@ ipc.on('initiate-save-project', async () => {
   }
 
   store.dispatch(projectSaved(currentProject.id, filePath));
+
+  ipc.setFileRepresentation(filePath, false);
 });
 
 /**
  * Used by backend to initiate save-as from front end
  */
-window.electron.on('initiate-save-as-project', async () => {
+ipc.on('initiate-save-as-project', async () => {
   // Retrieve current project state from redux
   const { currentProject } = store.getState();
 
@@ -58,16 +60,18 @@ window.electron.on('initiate-save-as-project', async () => {
 
   // TODO(patrick): regenerate thumbnail and audio extract
 
-  const filePath = await window.electron.saveAsProject(newProject);
+  const filePath = await ipc.saveAsProject(newProject);
 
   // Add to recent projects
-  const projectMetadata = await window.electron.retrieveProjectMetadata({
+  const projectMetadata = await ipc.retrieveProjectMetadata({
     ...currentProject,
     projectFilePath: filePath,
   });
 
   store.dispatch(projectSavedFirstTime(newProject, projectMetadata, filePath));
   store.dispatch(projectOpened(newProject, filePath));
+
+  ipc.setFileRepresentation(filePath, false);
 });
 
 /**

@@ -1,8 +1,5 @@
-import {
-  extractFileName,
-  getSaveFilePath,
-  saveProjectToFile,
-} from './helpers/saveUtils';
+import path from 'path';
+import { getSaveFilePath, saveProjectToFile } from './helpers/saveUtils';
 import { Project } from '../../sharedTypes';
 import { IpcContext } from '../types';
 
@@ -18,9 +15,7 @@ const saveAsProject: SaveAsProject = async (ipcContext, project) => {
     throw new Error('Cannot "save as" on a file without an existing file path');
   }
 
-  const proposedFileName = `Copy of ${extractFileName(
-    project.projectFilePath
-  )}`;
+  const proposedFileName = `Copy of ${path.basename(project.projectFilePath)}`;
 
   const filePath = await getSaveFilePath(mainWindow, proposedFileName);
 

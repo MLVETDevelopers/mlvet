@@ -1,12 +1,6 @@
 import { BrowserWindow, dialog } from 'electron';
 import { writeFile } from 'fs/promises';
-import path from 'path';
 import { Project } from '../../../sharedTypes';
-
-export const extractFileName: (filePath: string) => string = (filePath) => {
-  const split = filePath.split(path.delimiter);
-  return split[split.length - 1];
-};
 
 export const getSaveFilePath: (
   mainWindow: BrowserWindow | null,

@@ -73,6 +73,7 @@ export const makeProject: (
     projectFilePath: null,
     exportFilePath: null,
     audioExtractFilePath: null,
+    isEdited: false,
   };
 
   return project;
@@ -93,6 +94,7 @@ export const makeProjectWithoutMedia: (
     mediaFileExtension: 'mp3',
     thumbnailFilePath: null,
     audioExtractFilePath: null,
+    isEdited: false,
   };
 
   return project;

@@ -10,6 +10,7 @@ export interface Project {
   mediaType: 'audio' | 'video';
   mediaFileExtension: AudioFileExtension | VideoFileExtension;
   thumbnailFilePath: string | null;
+  isEdited: boolean;
 }
 
 export interface ProjectMetadata {

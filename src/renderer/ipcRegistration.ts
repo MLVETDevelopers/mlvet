@@ -16,7 +16,7 @@ import store from './store/store';
 /**
  * Used by backend to initiate saves from front end
  */
-ipc.on('initiate-save-project', async () => {
+ipc.on('initiate-save-project', async (_event, shouldCloseAfter: boolean) => {
   // Retrieve current project state from redux
   const { currentProject } = store.getState();
 
@@ -40,6 +40,10 @@ ipc.on('initiate-save-project', async () => {
   store.dispatch(projectSaved(currentProject.id, filePath));
 
   ipc.setFileRepresentation(filePath, false);
+
+  if (shouldCloseAfter) {
+    ipc.closeWindow();
+  }
 });
 
 /**

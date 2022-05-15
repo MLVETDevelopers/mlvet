@@ -6,6 +6,8 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
+  closeWindow: () => ipcRenderer.invoke('close-window'),
+
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 

@@ -20,6 +20,7 @@ import startServer from './pyServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
+import promptToSaveWork from './promptToSaveWork';
 
 export default class AppUpdater {
   constructor() {
@@ -117,6 +118,19 @@ const createWindow = async () => {
         });
       });
     }
+  });
+
+  mainWindow.on('close', (event) => {
+    if (mainWindow === null) {
+      return; // let the close action go ahead as normal
+    }
+
+    // If the user has unsaved work, prompt them to save it
+    if (promptToSaveWork(mainWindow)) {
+      return; // app can continue closing
+    }
+
+    event.preventDefault(); // app cannot close
   });
 
   mainWindow.on('closed', () => {

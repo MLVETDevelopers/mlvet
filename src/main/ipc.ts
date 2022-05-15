@@ -6,6 +6,7 @@ import { IpcContext } from './types';
 
 // START GENERATED CODE PART 1
 import extractAudio from './handlers/audioExtract';
+import closeWindow from './handlers/closeWindow';
 import getFileNameWithExtension from './handlers/getFileNameWithExtension';
 import openProject from './handlers/openProjectHandler';
 import handleOsQuery from './handlers/osQuery';
@@ -29,6 +30,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   ipcMain.handle('extract-audio', async (_event, project) =>
     extractAudio(project)
   );
+
+  ipcMain.handle('close-window', async () => closeWindow(ipcContext));
 
   ipcMain.handle('get-file-name-with-extension', async (_event, filePath) =>
     getFileNameWithExtension(filePath)

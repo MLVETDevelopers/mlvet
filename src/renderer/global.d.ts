@@ -19,6 +19,8 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
+      closeWindow: () => void;
+
       getFileNameWithExtension: (filePath: string | null) => string;
 
       openProject: (

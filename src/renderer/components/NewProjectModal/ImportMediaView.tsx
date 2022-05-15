@@ -4,8 +4,9 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ApplicationStore } from 'renderer/store/helpers';
-import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { projectCreated } from 'renderer/store/currentProject/actions';
+import { recentProjectAdded } from 'renderer/store/recentProjects/actions';
 import { Project } from 'sharedTypes';
 import {
   updateProjectWithMedia,

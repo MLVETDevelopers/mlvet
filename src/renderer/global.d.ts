@@ -35,7 +35,7 @@ declare global {
 
       requestMediaDialog: () => Promise<string | null>;
 
-      handleSaveAsProject: (project: Project) => Promise<string>;
+      saveAsProject: (project: Project) => Promise<string>;
 
       saveProject: (project: Project) => Promise<string>;
 

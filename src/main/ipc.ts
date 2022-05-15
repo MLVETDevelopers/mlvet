@@ -12,7 +12,7 @@ import handleOsQuery from './handlers/osQuery';
 import retrieveProjectMetadata from './handlers/projectMetadataHandler';
 import readRecentProjects from './handlers/readRecentProjects';
 import requestMediaDialog from './handlers/requestMediaDialog';
-import handleSaveAsProject from './handlers/saveAsProjectHandler';
+import saveAsProject from './handlers/saveAsProjectHandler';
 import saveProject from './handlers/saveProjectHandler';
 import setFileRepresentation from './handlers/setFileRepresentation';
 import setSaveEnabled from './handlers/setSaveEnabled';
@@ -50,8 +50,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     requestMediaDialog(ipcContext)
   );
 
-  ipcMain.handle('handle-save-as-project', async (_event, project) =>
-    handleSaveAsProject(ipcContext, project)
+  ipcMain.handle('save-as-project', async (_event, project) =>
+    saveAsProject(ipcContext, project)
   );
 
   ipcMain.handle('save-project', async (_event, project) =>

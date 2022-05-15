@@ -27,10 +27,17 @@ const currentProjectReducer: Reducer<
   }
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
-    return {
-      ...currentProject,
-      projectFilePath: action.payload as string,
+    const { projectId, filePath } = action.payload as {
+      projectId: string;
+      filePath: string;
     };
+
+    return projectId === currentProject.id
+      ? {
+          ...currentProject,
+          projectFilePath: filePath,
+        }
+      : currentProject;
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {

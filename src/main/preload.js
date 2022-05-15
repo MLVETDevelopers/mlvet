@@ -21,8 +21,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
-  handleSaveAsProject: (project) =>
-    ipcRenderer.invoke('handle-save-as-project', project),
+  saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 

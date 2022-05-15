@@ -4,18 +4,18 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ApplicationStore } from 'renderer/store/helpers';
-import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
-import { Project } from 'sharedTypes';
+import { ApplicationStore } from '../../store/helpers';
+import { projectCreated } from '../../store/actions';
+import { Project } from '../../../sharedTypes';
 import {
   updateProjectWithMedia,
   updateProjectWithExtractedAudio,
-} from 'renderer/util';
+} from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 import ipc from '../../ipc';
 
-const { retrieveProjectMetadata, extractAudio } = ipc;
+const { extractAudio } = ipc;
 
 interface Props {
   prevView: () => void;
@@ -62,10 +62,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = async (project: Project) => {
-    const projectMetadata = await retrieveProjectMetadata(project);
-    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
-  };
 
   const handleTranscribe = async () => {
     if (mediaFilePath === null) {
@@ -93,7 +89,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     }
 
     setCurrentProject(projectWithAudioExtract);
-    await addToRecentProjects(projectWithAudioExtract);
 
     nextView();
   };

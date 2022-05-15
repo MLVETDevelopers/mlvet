@@ -1,4 +1,9 @@
-import { Project, RecentProject, Transcription } from '../../sharedTypes';
+import {
+  Project,
+  ProjectMetadata,
+  RecentProject,
+  Transcription,
+} from '../../sharedTypes';
 import { Action, ApplicationPage, Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
 
@@ -11,6 +16,7 @@ export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
 export const PAGE_CHANGED = 'PAGE_CHANGED';
 export const RECENT_PROJECTS_LOADED = 'RECENT_PROJECTS_LOADED';
 export const PROJECT_SAVED = 'PROJECT_SAVED';
+export const PROJECT_SAVED_FIRST_TIME = 'PROJECT_SAVED_FIRST_TIME';
 
 export const START_EXPORT = 'START_EXPORT';
 export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
@@ -47,6 +53,19 @@ export const projectSaved: (
 }> = (projectId, filePath) => ({
   type: PROJECT_SAVED,
   payload: { projectId, filePath },
+});
+
+export const projectSavedFirstTime: (
+  project: Project,
+  metadata: ProjectMetadata,
+  filePath: string
+) => Action<{
+  project: Project;
+  metadata: ProjectMetadata;
+  filePath: string;
+}> = (project, metadata, filePath) => ({
+  type: PROJECT_SAVED_FIRST_TIME,
+  payload: { project, metadata, filePath },
 });
 
 export const currentProjectClosed: () => Action<null> = () => ({

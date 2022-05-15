@@ -54,8 +54,7 @@ type HandleOpenProject = (
 const handleOpenProject: HandleOpenProject = async (ipcContext, filePath) => {
   const { mainWindow } = ipcContext;
 
-  const openFilePath =
-    filePath === null ? await getOpenFilePath(mainWindow) : filePath;
+  const openFilePath = filePath ?? (await getOpenFilePath(mainWindow));
 
   const project = await openProjectFromFile(openFilePath);
 

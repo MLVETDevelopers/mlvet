@@ -4,9 +4,9 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  IpcMain,
 } from 'electron';
 import handleOpenProject from './handlers/openProjectHandler';
+import { IpcContext } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -41,47 +41,6 @@ export default class MenuBuilder {
 
     return menu;
   }
-
-  setButtonEnabled: (
-    menu: Menu,
-    submenuId: string,
-    itemId: string,
-    enabled: boolean
-  ) => void = (menu, submenuId, itemId, isEnabled) => {
-    const foundSubmenu = menu.items.find((submenu) => submenu.id === submenuId);
-
-    if (!foundSubmenu) {
-      return;
-    }
-
-    const button = foundSubmenu.submenu?.items.find(
-      (item) => item.id === itemId
-    );
-
-    if (!button) {
-      return;
-    }
-
-    button.enabled = isEnabled;
-  };
-
-  setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
-    ipcMain.handle(
-      'set-save-enabled',
-      (_event, saveEnabled: boolean, saveAsEnabled: boolean) => {
-        this.setButtonEnabled(menu, 'file', 'save', saveEnabled);
-        this.setButtonEnabled(menu, 'file', 'saveAs', saveAsEnabled);
-      }
-    );
-
-    ipcMain.handle(
-      'set-undo-redo-enabled',
-      (_event, undoEnabled: boolean, redoEnabled: boolean) => {
-        this.setButtonEnabled(menu, 'edit', 'undo', undoEnabled);
-        this.setButtonEnabled(menu, 'edit', 'redo', redoEnabled);
-      }
-    );
-  };
 
   setupDevelopmentEnvironment(): void {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
@@ -131,7 +90,7 @@ export default class MenuBuilder {
         accelerator: 'CommandOrControl+O',
         click: async () => {
           const { project, filePath } = await handleOpenProject(
-            { mainWindow: this.mainWindow },
+            { mainWindow: this.mainWindow } as IpcContext,
             null
           );
 

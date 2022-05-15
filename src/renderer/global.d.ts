@@ -1,6 +1,6 @@
 // Let TypeScript know that the ipcRenderer is on the window object.
-// If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron.
 // IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
+// If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
 import { IpcRendererEvent } from 'electron';
 import {
@@ -19,8 +19,6 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
-      showImportMediaDialog: () => Promise<string | null>;
-
       getFileNameWithExtension: (filePath: string | null) => string;
 
       handleOpenProject: (
@@ -35,13 +33,19 @@ declare global {
 
       readRecentProjects: () => Promise<RecentProject[]>;
 
+      requestMediaDialog: () => Promise<string | null>;
+
       handleSaveAsProject: (project: Project) => Promise<string>;
 
-      handleSaveProject: (project: Project) => Promise<string>;
+      saveProject: (project: Project) => Promise<string>;
+
+      setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
+
+      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 
-      handleTranscription: (project: Project) => Promise<Transcription | null>;
+      requestTranscription: (project: Project) => Promise<Transcription | null>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       // END GENERATED CODE

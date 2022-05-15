@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, Menu } from 'electron';
 
 declare module '@ffprobe-installer/ffprobe';
 
@@ -16,4 +16,5 @@ export interface JSONTranscription {
 // Context to be passed into the IPC handlers when they are initialised from main
 export interface IpcContext {
   mainWindow: BrowserWindow;
+  menu: Menu;
 }

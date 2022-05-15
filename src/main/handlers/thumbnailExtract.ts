@@ -17,7 +17,7 @@ const extractThumbnail: ExtractThumbnail = (absolutePathToMediaFile) => {
   const filename = 'thumbnail.png';
 
   // By Default the image is picked from the middle of the video.
-  const command = ffmpeg(absolutePathToVideoFile).thumbnails({
+  const command = ffmpeg(absolutePathToMediaFile).thumbnails({
     count: 1,
     filename,
     folder: pathToSaveMedia,

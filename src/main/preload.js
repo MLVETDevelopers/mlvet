@@ -6,8 +6,6 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
-  showImportMediaDialog: () => ipcRenderer.invoke('show-import-media-dialog'),
-
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
@@ -21,17 +19,24 @@ contextBridge.exposeInMainWorld('electron', {
 
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 
+  requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
+
   handleSaveAsProject: (project) =>
     ipcRenderer.invoke('handle-save-as-project', project),
 
-  handleSaveProject: (project) =>
-    ipcRenderer.invoke('handle-save-project', project),
+  saveProject: (project) => ipcRenderer.invoke('save-project', project),
+
+  setSaveEnabled: (saveEnabled, saveAsEnabled) =>
+    ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
+
+  setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
+    ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
   extractThumbnail: (absolutePathToMediaFile) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
 
-  handleTranscription: (project) =>
-    ipcRenderer.invoke('handle-transcription', project),
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('request-transcription', project),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),

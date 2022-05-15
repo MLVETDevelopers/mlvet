@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { Project, RecentProject } from '../../sharedTypes';
 import retrieveMetadata from './projectMetadataHandler';
 import makeRecentProject from '../../sharedUtils';
-import { RECENT_PROJECTS_PATH } from '../util';
+import { getRecentProjectsPath } from '../util';
 
 /**
  * Type for project persisted to disk in the recent projects list -
@@ -16,7 +16,7 @@ type ReadRecentProjects = () => Promise<RecentProject[]>;
 const readRecentProjects: ReadRecentProjects = async () => {
   try {
     const recentProjectsJson = (
-      await fs.readFile(RECENT_PROJECTS_PATH)
+      await fs.readFile(getRecentProjectsPath())
     ).toString();
     const recentProjects = JSON.parse(recentProjectsJson);
 

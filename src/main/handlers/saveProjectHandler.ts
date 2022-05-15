@@ -2,12 +2,12 @@ import { IpcContext } from '../types';
 import { Project } from '../../sharedTypes';
 import { getSaveFilePath, saveProjectToFile } from './helpers/saveUtils';
 
-type HandleSaveProject = (
+type SaveProject = (
   ipcContext: IpcContext,
   project: Project
 ) => Promise<string>;
 
-const handleSaveProject: HandleSaveProject = async (ipcContext, project) => {
+const saveProject: SaveProject = async (ipcContext, project) => {
   const { mainWindow } = ipcContext;
 
   const filePath =
@@ -20,4 +20,4 @@ const handleSaveProject: HandleSaveProject = async (ipcContext, project) => {
   return filePath;
 };
 
-export default handleSaveProject;
+export default saveProject;

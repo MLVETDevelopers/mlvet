@@ -5,8 +5,9 @@ import {
   Project,
   VideoFileExtension,
 } from '../sharedTypes';
+import ipc from './ipc';
 
-const { extractThumbnail } = window.electron;
+const { extractThumbnail } = ipc;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath

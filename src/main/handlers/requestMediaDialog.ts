@@ -1,11 +1,10 @@
-import { BrowserWindow, dialog } from 'electron';
+import { dialog } from 'electron';
+import { IpcContext } from '../types';
 
-const showImportMediaDialog: (
-  mainWindow: BrowserWindow | null
-) => Promise<string | null> = async (mainWindow) => {
-  if (mainWindow === null) {
-    return Promise.resolve(null);
-  }
+type RequestMediaDialog = (ipcContext: IpcContext) => Promise<string | null>;
+
+const requestMediaDialog: RequestMediaDialog = async (ipcContext) => {
+  const { mainWindow } = ipcContext;
 
   const dialogResponse = await dialog.showOpenDialog(mainWindow, {
     filters: [
@@ -23,4 +22,4 @@ const showImportMediaDialog: (
   return dialogResponse.filePaths[0];
 };
 
-export default showImportMediaDialog;
+export default requestMediaDialog;

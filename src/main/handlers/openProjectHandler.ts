@@ -2,6 +2,7 @@ import { readFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
 import { Project } from '../../sharedTypes';
 import { CURRENT_SCHEMA_VERSION } from '../../constants';
+import { IpcContext } from '../types';
 
 const getOpenFilePath: (
   mainWindow: BrowserWindow | null
@@ -45,14 +46,16 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
   }
 };
 
-const handleOpenProject: (
-  filePath: string | null,
-  mainWindow: BrowserWindow | null
-) => Promise<{ project: Project; filePath: string }> = async (
-  filePath,
-  mainWindow
-) => {
-  const openFilePath = filePath ?? (await getOpenFilePath(mainWindow));
+type HandleOpenProject = (
+  ipcContext: IpcContext,
+  filePath: string | null
+) => Promise<{ project: Project; filePath: string }>;
+
+const handleOpenProject: HandleOpenProject = async (ipcContext, filePath) => {
+  const { mainWindow } = ipcContext;
+
+  const openFilePath =
+    filePath === null ? await getOpenFilePath(mainWindow) : filePath;
 
   const project = await openProjectFromFile(openFilePath);
 

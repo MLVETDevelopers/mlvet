@@ -17,9 +17,11 @@ const retrieveSize: (filePath: string) => Promise<number> = async (
   return fileStats.size;
 };
 
-const retrieveProjectMetadata: (
+type RetrieveProjectMetadata = (
   project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
-) => Promise<ProjectMetadata> = async (project) => {
+) => Promise<ProjectMetadata>;
+
+const retrieveProjectMetadata: RetrieveProjectMetadata = async (project) => {
   const projectLastModified =
     project.projectFilePath === null
       ? null

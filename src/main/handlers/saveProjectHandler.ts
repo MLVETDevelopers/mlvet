@@ -1,44 +1,15 @@
-import { BrowserWindow, dialog } from 'electron';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { IpcContext } from '../types';
 import { Project } from '../../sharedTypes';
+import { getSaveFilePath, saveProjectToFile } from './helpers/saveUtils';
 
-const getSaveFilePath: (
-  mainWindow: BrowserWindow | null,
-  proposedFileName: string
-) => Promise<string> = async (mainWindow, proposedFileName) => {
-  if (mainWindow === null) {
-    throw new Error('Main window not defined');
-  }
-
-  const dialogResponse = await dialog.showSaveDialog(mainWindow, {
-    filters: [{ name: 'MLVET Files', extensions: ['mlvet'] }],
-    buttonLabel: 'Save',
-    title: 'Save Project',
-    properties: ['createDirectory'],
-    defaultPath: proposedFileName,
-  });
-
-  if (dialogResponse.canceled) {
-    throw new Error('Dialog cancelled');
-  }
-
-  return dialogResponse.filePath as string;
-};
-
-const saveProjectToFile: (
-  filePath: string,
+type SaveProject = (
+  ipcContext: IpcContext,
   project: Project
-) => Promise<void> = async (filePath, project) => {
-  const projectAsString = JSON.stringify(project);
+) => Promise<string>;
 
-  await writeFile(filePath, projectAsString);
-};
+const saveProject: SaveProject = async (ipcContext, project) => {
+  const { mainWindow } = ipcContext;
 
-export const handleSaveProject: (
-  mainWindow: BrowserWindow | null,
-  project: Project
-) => Promise<string> = async (mainWindow, project) => {
   const filePath =
     project.projectFilePath ??
     (await getSaveFilePath(mainWindow, project.name));
@@ -48,19 +19,4 @@ export const handleSaveProject: (
   return filePath;
 };
 
-export const handleSaveAsProject: (
-  mainWindow: BrowserWindow | null,
-  project: Project
-) => Promise<string> = async (mainWindow, project) => {
-  if (project.projectFilePath === null) {
-    throw new Error('Cannot "save as" on a file without an existing file path');
-  }
-
-  const proposedFileName = `Copy of ${path.basename(project.projectFilePath)}`;
-
-  const filePath = await getSaveFilePath(mainWindow, proposedFileName);
-
-  await saveProjectToFile(filePath, project);
-
-  return filePath;
-};
+export default saveProject;

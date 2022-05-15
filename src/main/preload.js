@@ -1,22 +1,30 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-/*
- * When exposing a new method make sure to update global.d.ts
- * (src/renderer/global.d.ts) with the method signature with types
- * to help out typescipt
- */
-
 contextBridge.exposeInMainWorld('electron', {
-  requestMediaDialog: () => ipcRenderer.invoke('import-media'),
+  // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
-  requestTranscription: (project) =>
-    ipcRenderer.invoke('transcribe-media', project),
+  // START GENERATED CODE
+  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
+
+  getFileNameWithExtension: (filePath) =>
+    ipcRenderer.invoke('get-file-name-with-extension', filePath),
+
+  handleOpenProject: (filePath) =>
+    ipcRenderer.invoke('handle-open-project', filePath),
+
+  handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
+
+  retrieveProjectMetadata: (project) =>
+    ipcRenderer.invoke('retrieve-project-metadata', project),
+
+  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
+
+  requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
+
+  handleSaveAsProject: (project) =>
+    ipcRenderer.invoke('handle-save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
-
-  saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
-
-  openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
@@ -24,21 +32,16 @@ contextBridge.exposeInMainWorld('electron', {
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
-  extractThumbnail: (filePath) =>
-    ipcRenderer.invoke('extract-thumbnail', filePath),
+  extractThumbnail: (absolutePathToMediaFile) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
 
-  userOS: async () => ipcRenderer.invoke('user-os'),
-
-  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('request-transcription', project),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
+  // END GENERATED CODE
 
-  retrieveProjectMetadata: (project) =>
-    ipcRenderer.invoke('retrieve-project-metadata', project),
-  getFileNameWithExtension: (filePath) =>
-    ipcRenderer.invoke('file-name-with-ext', filePath),
-  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {
     return ipcRenderer.on(channel, listener);

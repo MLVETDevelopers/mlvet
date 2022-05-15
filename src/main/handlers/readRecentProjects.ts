@@ -1,22 +1,8 @@
-import path from 'path';
 import fs from 'fs/promises';
 import { Project, RecentProject } from '../../sharedTypes';
-import { appDataStoragePath } from '../util';
 import retrieveMetadata from './projectMetadataHandler';
 import makeRecentProject from '../../sharedUtils';
-
-const RECENT_PROJECTS_PATH = path.join(
-  appDataStoragePath(),
-  'recentProjects.json'
-);
-
-export const writeRecentProjects: (
-  recentProjects: RecentProject[]
-) => Promise<void> = async (recentProjects) => {
-  const recentProjectsJson = JSON.stringify(recentProjects);
-
-  await fs.writeFile(RECENT_PROJECTS_PATH, recentProjectsJson);
-};
+import { getRecentProjectsPath } from '../util';
 
 /**
  * Type for project persisted to disk in the recent projects list -
@@ -25,10 +11,12 @@ export const writeRecentProjects: (
  */
 type PersistedRecentProject = Pick<Project, keyof (Project | RecentProject)>;
 
-export const readRecentProjects: () => Promise<RecentProject[]> = async () => {
+type ReadRecentProjects = () => Promise<RecentProject[]>;
+
+const readRecentProjects: ReadRecentProjects = async () => {
   try {
     const recentProjectsJson = (
-      await fs.readFile(RECENT_PROJECTS_PATH)
+      await fs.readFile(getRecentProjectsPath())
     ).toString();
     const recentProjects = JSON.parse(recentProjectsJson);
 
@@ -52,3 +40,5 @@ export const readRecentProjects: () => Promise<RecentProject[]> = async () => {
     return [];
   }
 };
+
+export default readRecentProjects;

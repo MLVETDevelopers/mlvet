@@ -1,7 +1,9 @@
 import os from 'os';
 import { OperatingSystems } from '../../sharedTypes';
 
-export const handleOsQuery: () => OperatingSystems | null = () => {
+type HandleOsQuery = () => OperatingSystems | null;
+
+const handleOsQuery: HandleOsQuery = () => {
   const isDarwin = os.platform() === OperatingSystems.MACOS;
   const isWindows = os.platform() === OperatingSystems.WINDOWS;
   const isLinux = os.platform() === OperatingSystems.LINUX;

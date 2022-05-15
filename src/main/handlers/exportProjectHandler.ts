@@ -3,13 +3,15 @@ import { Project } from '../../sharedTypes';
 import { exportEDL } from '../export';
 
 const getExportFilePath: (
-  mainWindow: BrowserWindow | null
-) => Promise<string> = async (mainWindow) => {
+  mainWindow: BrowserWindow | null,
+  project: Project
+) => Promise<string> = async (mainWindow, project) => {
   if (mainWindow === null) {
     throw new Error('Main window not defined');
   }
 
   const dialogResponse = await dialog.showSaveDialog(mainWindow, {
+    defaultPath: `${project.name}.edl`,
     filters: [{ name: '.edl Files', extensions: ['edl'] }],
     buttonLabel: 'Export',
     title: 'Export Project',
@@ -36,10 +38,12 @@ const exportProjectToFile: (
 const handleExportProject: (
   mainWindow: BrowserWindow | null,
   project: Project
-) => Promise<void> = async (mainWindow, project) => {
-  const filePath = await getExportFilePath(mainWindow);
+) => Promise<string> = async (mainWindow, project) => {
+  const filePath = await getExportFilePath(mainWindow, project);
 
   await exportProjectToFile(filePath, mainWindow, project);
+
+  return filePath;
 };
 
 export default handleExportProject;

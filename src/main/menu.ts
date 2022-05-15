@@ -287,6 +287,7 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const templateDefault = [
       {
+        id: 'file',
         label: '&File',
         submenu: this.buildFileOptions(),
       },
@@ -296,6 +297,7 @@ export default class MenuBuilder {
         submenu: this.buildUndoRedoOptions(),
       },
       {
+        id: 'view',
         label: '&View',
         submenu:
           process.env.NODE_ENV === 'development' ||
@@ -338,6 +340,7 @@ export default class MenuBuilder {
               ],
       },
       {
+        id: 'help',
         label: 'Help',
         submenu: [
           {

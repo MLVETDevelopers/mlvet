@@ -8,6 +8,7 @@ import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';
+import { RecentProject } from '../../sharedTypes';
 
 const RecentProjectsBox = styled(Box)`
   width: calc(100vw - 40px);

@@ -8,14 +8,9 @@ import {
   PROJECT_OPENED,
   PROJECT_SAVED,
 } from './actions';
-import {
-  CHANGE_WORD_TO_SWAMP,
-  DELETE_EVERY_SECOND_WORD,
-  UNDO_CHANGE_WORD_TO_SWAMP,
-  UNDO_DELETE_EVERY_SECOND_WORD,
-} from '../undoStack/ops';
 import transcriptionReducer from '../transcription/reducer';
 import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -45,13 +40,9 @@ const currentProjectReducer: Reducer<
 
   // Delegate transcription-related actions to transcription reducer
   if (
-    [
-      TRANSCRIPTION_CREATED,
-      DELETE_EVERY_SECOND_WORD,
-      UNDO_DELETE_EVERY_SECOND_WORD,
-      CHANGE_WORD_TO_SWAMP,
-      UNDO_CHANGE_WORD_TO_SWAMP,
-    ].includes(action.type) &&
+    [TRANSCRIPTION_CREATED, DELETE_WORD, UNDO_DELETE_WORD].includes(
+      action.type
+    ) &&
     currentProject !== null
   ) {
     return {

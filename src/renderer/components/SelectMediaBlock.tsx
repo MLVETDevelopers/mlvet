@@ -1,7 +1,9 @@
 import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
-import colors from 'renderer/colors';
-import { extractFileNameWithExtension } from 'renderer/util';
+import colors from '../colors';
+import ipc from '../ipc';
+
+const { getFileNameWithExtension } = ipc;
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
@@ -33,7 +35,7 @@ const SelectMediaBlock = ({
   setIsAwaitingMedia,
 }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
-    const selectedMedia = await window.electron.requestMediaDialog();
+    const selectedMedia = await ipc.requestMediaDialog();
 
     if (selectMedia !== null) {
       setIsAwaitingMedia(false);
@@ -41,7 +43,7 @@ const SelectMediaBlock = ({
 
     setMediaFilePath(selectedMedia);
 
-    const fileName = await extractFileNameWithExtension(selectedMedia);
+    const fileName = await getFileNameWithExtension(selectedMedia);
 
     setMediaFileName(fileName);
   };

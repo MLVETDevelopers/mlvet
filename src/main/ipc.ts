@@ -14,6 +14,7 @@ import readRecentProjects from './handlers/readRecentProjects';
 import requestMediaDialog from './handlers/requestMediaDialog';
 import handleSaveAsProject from './handlers/saveAsProjectHandler';
 import saveProject from './handlers/saveProjectHandler';
+import setFileRepresentation from './handlers/setFileRepresentation';
 import setSaveEnabled from './handlers/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
 import extractThumbnail from './handlers/thumbnailExtract';
@@ -55,6 +56,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
+  );
+
+  ipcMain.handle(
+    'set-file-representation',
+    async (_event, representedFilePath, isEdited) =>
+      setFileRepresentation(ipcContext, representedFilePath, isEdited)
   );
 
   ipcMain.handle(

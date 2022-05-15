@@ -26,6 +26,13 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
+  setFileRepresentation: (representedFilePath, isEdited) =>
+    ipcRenderer.invoke(
+      'set-file-representation',
+      representedFilePath,
+      isEdited
+    ),
+
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 

@@ -39,6 +39,11 @@ declare global {
 
       saveProject: (project: Project) => Promise<string>;
 
+      setFileRepresentation: (
+        representedFilePath: string | null,
+        isEdited: boolean
+      ) => void;
+
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;

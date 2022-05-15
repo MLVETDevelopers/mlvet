@@ -5,6 +5,7 @@ import extractThumbnail_ from './thumbnailExtract';
 import retrieveProjectMetadata_ from './projectMetadataHandler';
 import showImportMediaDialog_ from './fileDialog';
 import handleOsQuery_ from './osQuery';
+import getFileNameWithExtension_ from './getFileNameWithExtension';
 
 export {
   readRecentProjects,
@@ -22,3 +23,4 @@ export const extractThumbnail = extractThumbnail_;
 export const retrieveProjectMetadata = retrieveProjectMetadata_;
 export const showImportMediaDialog = showImportMediaDialog_;
 export const handleOsQuery = handleOsQuery_;
+export const getFileNameWithExtension = getFileNameWithExtension_;

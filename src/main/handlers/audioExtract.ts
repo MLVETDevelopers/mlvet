@@ -6,7 +6,9 @@ import { audioExtractStoragePath, mkdir } from '../util';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-export default function extractAudio(project: Project): Promise<string> {
+type ExtractAudio = (project: Project) => Promise<string>;
+
+const extractAudio: ExtractAudio = (project) => {
   if (project.mediaFilePath === null || project.id === null) {
     return new Promise((_resolve, reject) => {
       const errorMessage = 'Project mediaFilePath or ID cannot be null';
@@ -43,4 +45,6 @@ export default function extractAudio(project: Project): Promise<string> {
       reject(stderr);
     });
   });
-}
+};
+
+export default extractAudio;

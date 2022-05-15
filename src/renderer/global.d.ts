@@ -21,7 +21,7 @@ declare global {
 
       getFileNameWithExtension: (filePath: string | null) => string;
 
-      handleOpenProject: (
+      openProject: (
         filePath: string | null
       ) => Promise<{ project: Project; filePath: string }>;
 

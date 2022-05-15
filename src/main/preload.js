@@ -9,8 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
-  handleOpenProject: (filePath) =>
-    ipcRenderer.invoke('handle-open-project', filePath),
+  openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 

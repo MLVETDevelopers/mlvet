@@ -46,12 +46,12 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
   }
 };
 
-type HandleOpenProject = (
+type OpenProject = (
   ipcContext: IpcContext,
   filePath: string | null
 ) => Promise<{ project: Project; filePath: string }>;
 
-const handleOpenProject: HandleOpenProject = async (ipcContext, filePath) => {
+const openProject: OpenProject = async (ipcContext, filePath) => {
   const { mainWindow } = ipcContext;
 
   const openFilePath = filePath ?? (await getOpenFilePath(mainWindow));
@@ -61,4 +61,4 @@ const handleOpenProject: HandleOpenProject = async (ipcContext, filePath) => {
   return { project, filePath: openFilePath };
 };
 
-export default handleOpenProject;
+export default openProject;

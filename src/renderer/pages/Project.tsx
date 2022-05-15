@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import { transcriptionCreated } from 'renderer/store/actions';
 import { Transcription } from 'sharedTypes';
+import VideoController from 'renderer/components/VideoController';
 import ExportCard from '../components/ExportCard';
-import { dispatchOp } from '../store/opHelpers';
 import { ApplicationStore } from '../store/helpers';
+import colors from '../colors';
 import {
   makeChangeWordToSwampOp,
   makeDeleteEverySecondWordOp,
@@ -26,8 +27,6 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
-
-  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   // RK: I really shouldn't use transcriptionCreated here - but i'm lazy and it works
   const saveTranscription: (transcription: Transcription) => void = useCallback(
@@ -88,30 +87,10 @@ const ProjectPage = () => {
     return currentProject.transcription?.words[wordIndex];
   };
 
-  const deleteEverySecondWord: () => void = () => {
-    if (currentProject.transcription === null) {
-      return;
-    }
-
-    dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
-  };
-
-  const changeRandomWordToSwamp: () => void = () => {
-    if (currentProject.transcription === null) {
-      return;
-    }
-
-    const wordIndex = Math.floor(
-      Math.random() * currentProject.transcription.words.length
-    );
-
-    dispatchOp(
-      makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
-    );
-  };
-
   return (
     <>
+      <VideoController />
+
       <Stack
         direction="row"
         sx={{
@@ -127,7 +106,7 @@ const ProjectPage = () => {
             onWordClick={onWordClick}
           />
         </Stack>
-        <Box sx={{ width: '2px', backgroundColor: 'gray' }} />
+        <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}

@@ -17,12 +17,7 @@ import { get } from 'http';
 import path from 'path';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
-import {
-  appDataStoragePath,
-  mkdir,
-  resolveHtmlPath,
-  handleOSQuery,
-} from './util';
+import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { extractAudio } from './handlers';
 
@@ -40,8 +35,6 @@ dotenv.config();
 
 // If app data storage path doesn't exist, create it
 mkdir(appDataStoragePath());
-
-ipcMain.handle('user-os', async () => handleOSQuery());
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

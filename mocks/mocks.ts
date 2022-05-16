@@ -9,6 +9,7 @@ export const mockProject: Project = {
   exportFilePath: 'test-export-file-path',
   audioExtractFilePath: 'test-audio-file-path',
   mediaFilePath: 'test-media-file-path',
+  isEdited: false,
   transcription: {
     confidence: 123456789,
     words: [

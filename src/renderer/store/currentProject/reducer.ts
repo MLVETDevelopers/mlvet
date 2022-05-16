@@ -1,15 +1,16 @@
 import { Reducer } from 'redux';
-import { Project } from '../../../sharedTypes';
+import { Project, ProjectMetadata } from '../../../sharedTypes';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
   PROJECT_OPENED,
   PROJECT_SAVED,
-  TRANSCRIPTION_CREATED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
-import { DELETE_WORD, UNDO_DELETE_WORD } from '../ops';
-import transcriptionReducer from './transcriptionReducer';
+} from './actions';
+import transcriptionReducer from '../transcription/reducer';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -28,16 +29,19 @@ const currentProjectReducer: Reducer<
   }
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
-    const { filePath } = action.payload as {
-      projectId: string;
+    const { project, filePath } = action.payload as {
+      project: Project;
+      metadata: ProjectMetadata;
       filePath: string;
     };
 
-    return {
-      ...currentProject,
-      isEdited: false,
-      projectFilePath: filePath,
-    };
+    return project.id === currentProject.id
+      ? {
+          ...currentProject,
+          isEdited: false,
+          projectFilePath: filePath,
+        }
+      : currentProject;
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {

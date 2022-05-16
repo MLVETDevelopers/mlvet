@@ -5,6 +5,7 @@ const mockIpc = {
   writeRecentProjects: async () => null,
   setSaveEnabled: async () => null,
   setFileRepresentation: () => null,
+  openProject: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

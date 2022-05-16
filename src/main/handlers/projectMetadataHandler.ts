@@ -6,6 +6,7 @@ const retrieveDateModified: (filePath: string) => Promise<Date | null> = async (
 ) => {
   try {
     const fileStats = await fs.stat(filePath);
+
     return fileStats.mtime;
   } catch (err) {
     return null;
@@ -17,6 +18,7 @@ const retrieveSize: (filePath: string) => Promise<number | null> = async (
 ) => {
   try {
     const fileStats = await fs.stat(filePath);
+
     return fileStats.size;
   } catch (err) {
     return null;

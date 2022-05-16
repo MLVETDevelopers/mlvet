@@ -23,7 +23,7 @@ declare global {
 
       deleteProject: (project: Project) => Promise<void>;
 
-      getFileNameWithExtension: (filePath: string | null) => string;
+      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       openProject: (
         filePath: string | null

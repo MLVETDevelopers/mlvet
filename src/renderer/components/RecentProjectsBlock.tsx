@@ -9,8 +9,11 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { projectOpened, pageChanged, projectDeleted } from '../store/actions';
-import { ApplicationPage, ApplicationStore } from '../store/helpers';
+import { pageChanged } from 'renderer/store/currentPage/actions';
+import { ApplicationPage } from 'renderer/store/currentPage/helpers';
+import { projectOpened } from 'renderer/store/currentProject/actions';
+import { projectDeleted } from 'renderer/store/recentProjects/actions';
+import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';

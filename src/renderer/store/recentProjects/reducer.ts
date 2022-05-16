@@ -3,12 +3,12 @@ import makeRecentProject from '../../../sharedUtils';
 import { Project, ProjectMetadata, RecentProject } from '../../../sharedTypes';
 import {
   PROJECT_DELETED,
-  PROJECT_OPENED,
-  PROJECT_SAVED_FIRST_TIME,
   RECENT_PROJECTS_LOADED,
   RECENT_PROJECT_ADDED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
+} from './actions';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
+import { PROJECT_OPENED, PROJECT_SAVED } from '../currentProject/actions';
 
 const recentProjectsReducer: Reducer<
   ApplicationStore['recentProjects'],
@@ -35,7 +35,7 @@ const recentProjectsReducer: Reducer<
     );
   }
 
-  if (action.type === PROJECT_SAVED_FIRST_TIME) {
+  if (action.type === PROJECT_SAVED) {
     const { project, metadata, filePath } = action.payload as {
       project: Project;
       metadata: ProjectMetadata;

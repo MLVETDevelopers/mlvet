@@ -93,9 +93,9 @@ const extractType: (typeString: string) => string = (typeString) => {
 const extractHandlersMetadata: () => Promise<
   GencodeIpcHandler[]
 > = async () => {
-  // Load list of file paths in handlers directory, skipping index and subfolders
-  const fileNames = (await fs.readdir(HANDLERS_DIRECTORY)).filter(
-    (name) => name.includes('.ts') && name !== 'index.ts'
+  // Load list of file paths in handlers directory, skipping subfolders
+  const fileNames = (await fs.readdir(HANDLERS_DIRECTORY)).filter((name) =>
+    name.includes('.ts')
   );
 
   const handlers = await Promise.all(

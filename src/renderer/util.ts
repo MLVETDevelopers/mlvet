@@ -163,3 +163,8 @@ export const formatDate: (date: Date) => string = (date) => {
 
   return [dd, mm, yy].map(pad).join('/');
 };
+
+export const removeExtension: (fileName: string) => string = (fileName) => {
+  const split = fileName.split('.');
+  return split.slice(0, split.length - 1).join('.');
+};

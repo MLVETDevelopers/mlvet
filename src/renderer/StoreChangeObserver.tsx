@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { recentProjectsLoaded } from './store/recentProjects/actions';
+import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
-import { recentProjectsLoaded } from './store/actions';
-import { ApplicationStore } from './store/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 

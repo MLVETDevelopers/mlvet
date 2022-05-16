@@ -1,47 +1,37 @@
-import { Box, styled, Typography, colors, Button } from '@mui/material';
+import { Box, styled, Stack, Typography, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import colors from 'renderer/colors';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
-import { transcriptionCreated } from '../../store/actions';
-import { ApplicationStore } from '../../store/helpers';
-import { Transcription } from '../../../sharedTypes';
+import { transcriptionCreated } from '../../store/transcription/actions';
+import { ApplicationStore } from '../../store/sharedHelpers';
+import { Transcription, AsyncState } from '../../../sharedTypes';
+import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
+import ipc from '../../ipc';
 
-const ButtonContainer = styled(Box)`
-  display: flex;
-  justify-content: right;
+const { requestTranscription, getFileNameWithExtension } = ipc;
+
+const CustomStack = styled(Stack)`
   width: 100%;
 `;
 
-const CustomButtonBase = styled(Button)`
-  border-radius: 0;
-  font-weight: bold;
-  color: ${colors.grey[900]};
-  text-transform: none;
-  margin: 20px 10px;
-  padding: 10px;
+const CustomColumnStack = styled(CustomStack)`
+  flex-direction: column;
 `;
 
-const CancelButton = styled(CustomButtonBase)`
-  background: ${colors.grey[400]};
-
-  &:hover {
-    background: ${colors.grey[600]};
-  }
+const CustomRowStack = styled(CustomStack)`
+  flex-direction: row;
+  align-items: center;
 `;
 
-const ActionButton = styled(CustomButtonBase)`
-  background: ${colors.lightBlue[500]};
-
-  &:hover {
-    background: ${colors.lightBlue[700]};
-  }
+const Container = styled(Box)`
+  background-color: ${colors.grey[700]};
 `;
 
-enum AsyncState {
-  READY = 'READY',
-  LOADING = 'LOADING',
-  DONE = 'DONE',
-  ERROR = 'ERROR',
-}
+const CustomButton = styled(Button)`
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
+`;
 
 interface Props {
   closeModal: () => void;
@@ -50,6 +40,7 @@ interface Props {
 
 const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   const [asyncState, setAsyncState] = useState<AsyncState>(AsyncState.READY);
+  const [mediaFileName, setMediaFileName] = useState<string | null>(null);
 
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
@@ -71,15 +62,14 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       return;
     }
 
-    if (currentProject.mediaFilePath === null) {
-      return;
-    }
-
     setAsyncState(AsyncState.LOADING);
 
-    window.electron
-      .requestTranscription(currentProject.mediaFilePath)
+    requestTranscription(currentProject)
       .then((transcription) => {
+        if (transcription === null) {
+          return null;
+        }
+
         setAsyncState(AsyncState.DONE);
         setTranscription(transcription);
         return null;
@@ -91,22 +81,62 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     return null;
   }
 
+  const getFileName = async () => {
+    const name = await getFileNameWithExtension(currentProject.mediaFilePath);
+    setMediaFileName(name);
+  };
+
+  const projectName = currentProject.name;
+  getFileName();
+
+  const completedButton = (
+    <CustomButton color="primary" onClick={nextView} sx={{ width: '100%' }}>
+      Get Started
+    </CustomButton>
+  );
+
   return (
-    <>
-      <Typography fontWeight="bold">{currentProject.name}</Typography>
-      <Typography>Please wait while we transcribe your video</Typography>
-      {asyncState}
-      <pre>{JSON.stringify(currentProject)}</pre>
-      <ButtonContainer>
-        <CancelButton onClick={closeModal}>Cancel</CancelButton>
-        <ActionButton
-          onClick={nextView}
-          disabled={asyncState !== AsyncState.DONE}
-        >
-          Done
-        </ActionButton>
-      </ButtonContainer>
-    </>
+    <Container sx={{ height: { xs: 400 } }}>
+      <CustomColumnStack
+        alignItems="flex-start"
+        justifyContent="space-between"
+        sx={{ height: '15%' }}
+      >
+        <CustomRowStack justifyContent="space-between">
+          <Typography
+            overflow="hidden"
+            textOverflow="ellipsis"
+            variant="h1"
+            sx={{ color: colors.grey[400] }}
+          >
+            {projectName}
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 20 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
+        </CustomRowStack>
+        <Typography variant="p-400" sx={{ color: colors.grey[300] }}>
+          Please wait while we transcribe your video
+        </Typography>
+      </CustomColumnStack>
+      <CustomColumnStack
+        alignItems="baseline"
+        justifyContent="flex-start"
+        marginTop="25px"
+        sx={{ height: '70%' }}
+      >
+        <MediaDisplayTranscribeProgress
+          fileName={mediaFileName}
+          asyncState={asyncState}
+        />
+      </CustomColumnStack>
+      <CustomRowStack>
+        {asyncState === AsyncState.DONE ? completedButton : <></>}
+      </CustomRowStack>
+    </Container>
   );
 };
 

@@ -2,9 +2,7 @@
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
-import os from 'os';
 import { app } from 'electron';
-import { OperatingSystems } from '../sharedTypes';
 
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
@@ -39,30 +37,18 @@ export const mkdir = (dirPath: string) => {
   }
 };
 
-export const handleOSQuery: () => OperatingSystems | null = () => {
-  const isDarwin = os.platform() === OperatingSystems.MACOS;
-  const isWindows = os.platform() === OperatingSystems.WINDOWS;
-  const isLinux = os.platform() === OperatingSystems.LINUX;
-
-  if (isDarwin) {
-    return OperatingSystems.MACOS;
-  }
-  if (isWindows) {
-    return OperatingSystems.WINDOWS;
-  }
-  if (isLinux) {
-    return OperatingSystems.LINUX;
-  }
-
-  return null;
-};
-
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
+
+export const audioExtractStoragePath: () => string = () =>
+  path.join(appDataStoragePath(), 'audioExtracts');
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
+
+export const getRecentProjectsPath: () => string = () =>
+  path.join(appDataStoragePath(), 'recentProjects.json');
 
 /** Utility types */
 

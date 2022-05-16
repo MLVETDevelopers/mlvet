@@ -4,9 +4,9 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  IpcMain,
 } from 'electron';
-import { handleOpenProject } from './handlers';
+import handleOpenProject from './handlers/openProjectHandler';
+import { IpcContext } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -41,33 +41,6 @@ export default class MenuBuilder {
 
     return menu;
   }
-
-  setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
-    ipcMain.handle(
-      'set-undo-redo-enabled',
-      (_event, undoEnabled: boolean, redoEnabled: boolean) => {
-        const editSubmenu = menu.items.find((submenu) => submenu.id === 'edit');
-
-        if (!editSubmenu) {
-          return;
-        }
-
-        const undoButton = editSubmenu.submenu?.items.find(
-          (item) => item.id === 'undo'
-        );
-        const redoButton = editSubmenu.submenu?.items.find(
-          (item) => item.id === 'redo'
-        );
-
-        if (!undoButton || !redoButton) {
-          return;
-        }
-
-        undoButton.enabled = undoEnabled;
-        redoButton.enabled = redoEnabled;
-      }
-    );
-  };
 
   setupDevelopmentEnvironment(): void {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
@@ -109,6 +82,44 @@ export default class MenuBuilder {
     ];
   }
 
+  buildFileOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'open',
+        label: 'Open...',
+        accelerator: 'CommandOrControl+O',
+        click: async () => {
+          const { project, filePath } = await handleOpenProject(
+            { mainWindow: this.mainWindow } as IpcContext,
+            null
+          );
+
+          this.mainWindow.webContents.send('project-opened', project, filePath);
+        },
+      },
+      {
+        id: 'save',
+        label: 'Save',
+        accelerator: 'CommandOrControl+S',
+        click: () => {
+          // Tell the renderer to initiate a save
+          this.mainWindow.webContents.send('initiate-save-project');
+        },
+        enabled: false,
+      },
+      {
+        id: 'saveAs',
+        label: 'Save As...',
+        accelerator: 'CommandOrControl+Shift+S',
+        click: () => {
+          // Tell the renderer to initiate a save-as
+          this.mainWindow.webContents.send('initiate-save-as-project');
+        },
+        enabled: false,
+      },
+    ];
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'MLVET',
@@ -141,32 +152,9 @@ export default class MenuBuilder {
     };
 
     const subMenuFile: DarwinMenuItemConstructorOptions = {
+      id: 'file',
       label: 'File',
-      submenu: [
-        {
-          label: 'Save Project',
-          accelerator: 'CommandOrControl+S',
-          click: () => {
-            // Tell the renderer to initiate a save
-            this.mainWindow.webContents.send('initiate-save-project');
-          },
-        },
-        {
-          label: 'Open Project',
-          accelerator: 'CommandOrControl+O',
-          click: async () => {
-            const { project, filePath } = await handleOpenProject(
-              this.mainWindow
-            );
-
-            this.mainWindow.webContents.send(
-              'project-opened',
-              project,
-              filePath
-            );
-          },
-        },
-      ],
+      submenu: this.buildFileOptions(),
     };
 
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
@@ -259,19 +247,7 @@ export default class MenuBuilder {
     const templateDefault = [
       {
         label: '&File',
-        submenu: [
-          {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
-          },
-          {
-            label: '&Close',
-            accelerator: 'Ctrl+W',
-            click: () => {
-              this.mainWindow.close();
-            },
-          },
-        ],
+        submenu: this.buildFileOptions(),
       },
       {
         id: 'edit',

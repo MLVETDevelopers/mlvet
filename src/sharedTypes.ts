@@ -4,6 +4,7 @@ export interface Project {
   name: string;
   projectFilePath: string | null;
   exportFilePath: string | null;
+  audioExtractFilePath: string | null;
   mediaFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
@@ -53,4 +54,11 @@ export enum OperatingSystems {
   MACOS = 'darwin',
   WINDOWS = 'win32',
   LINUX = 'linux',
+}
+
+export enum AsyncState {
+  READY = 'READY',
+  LOADING = 'LOADING',
+  DONE = 'DONE',
+  ERROR = 'ERROR',
 }

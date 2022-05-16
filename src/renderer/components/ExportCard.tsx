@@ -18,7 +18,7 @@ interface Props {
 const ExportCard = ({ progress }: Props) => {
   return (
     <Card>
-      <Typography variant="h-300" color="primary.main">
+      <Typography variant="h3" color="primary.main">
         Exporting...
       </Typography>
       <ProgressBar variant="determinate" value={progress * 100} />

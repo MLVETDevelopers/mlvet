@@ -1,8 +1,8 @@
 import { Modal, styled, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { pageChanged } from '../../store/actions';
-import { ApplicationPage } from '../../store/helpers';
+import { pageChanged } from '../../store/currentPage/actions';
+import { ApplicationPage } from '../../store/currentPage/helpers';
 import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
@@ -16,7 +16,7 @@ const CustomModal = styled(Modal)`
 
 const CustomModalInner = styled(Box)`
   background: ${colors.grey[700]};
-  padding: 30px;
+  padding: 15px 30px 30px 30px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;

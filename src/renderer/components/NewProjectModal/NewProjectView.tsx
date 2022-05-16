@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
-import { projectCreated } from 'renderer/store/actions';
+import { projectCreated } from 'renderer/store/currentProject/actions';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
 
@@ -97,7 +97,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   return (
     <Container>
       <CustomColumnStack>
-        <CustomRowStack sx={{ alignItems: 'flex-start' }}>
+        <CustomRowStack sx={{ alignItems: 'flex-start', paddingTop: '5px' }}>
           <Typography variant="h1" sx={{ color: colors.grey[400] }}>
             New Project
           </Typography>

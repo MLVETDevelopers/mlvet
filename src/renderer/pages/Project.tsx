@@ -2,7 +2,6 @@ import { Box, Stack } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import { transcriptionCreated } from 'renderer/store/actions';
 import VideoController from 'renderer/components/VideoController';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeDeleteWord } from 'renderer/store/undoStack/ops';
@@ -15,13 +14,6 @@ import {
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import { ApplicationStore } from '../store/helpers';
-import { dispatchOp } from '../store/opHelpers';
-import {
-  makeDeleteWord,
-  makeChangeWordToSwampOp,
-  makeDeleteEverySecondWordOp,
-} from '../store/ops';
 import cuts from './cuts';
 
 export interface SystemClock {
@@ -96,25 +88,6 @@ const ProjectPage = () => {
     if (currentProject !== null) {
       // return currentProject.transcription?.words[wordIndex];
     }
-  };
-
-  const deleteEverySecondWord: () => void = () => {
-    // if (currentProject.transcription === null) {
-    //   return;
-    // }
-    // dispatchOp(makeDeleteEverySecondWordOp(currentProject.transcription));
-  };
-
-  const changeRandomWordToSwamp: () => void = () => {
-    // if (currentProject.transcription === null) {
-    //   return;
-    // }
-    // const wordIndex = Math.floor(
-    //   Math.random() * currentProject.transcription.words.length
-    // );
-    // dispatchOp(
-    //   makeChangeWordToSwampOp(currentProject.transcription, wordIndex)
-    // );
   };
 
   // Global / system clock refs

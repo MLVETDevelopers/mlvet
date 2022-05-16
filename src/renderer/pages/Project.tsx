@@ -202,7 +202,7 @@ const ProjectPage = () => {
       if (
         transcriptionData[i].startTime <=
         systemTime <=
-        transcriptionData[i].endTime
+        transcriptionData[i].startTime + transcriptionData[i].duration
       ) {
         return i;
       }

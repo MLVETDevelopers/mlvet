@@ -10,6 +10,11 @@ import {
 } from './actions';
 import transcriptionReducer from '../transcription/reducer';
 import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import {
+  EXPORT_PROGRESS_UPDATE,
+  START_EXPORT,
+  FINISH_EXPORT,
+} from '../exportIo/actions';
 import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
@@ -35,6 +40,24 @@ const currentProjectReducer: Reducer<
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {
+    return null;
+  }
+
+  if (action.type === START_EXPORT && currentProject !== null) {
+    return {
+      ...currentProject,
+      exportFilePath: action.payload.exportFilePath,
+    };
+  }
+
+  if (action.type === EXPORT_PROGRESS_UPDATE && currentProject !== null) {
+    return {
+      ...currentProject,
+      progress: action.payload.progress,
+    };
+  }
+
+  if (action.type === FINISH_EXPORT) {
     return null;
   }
 

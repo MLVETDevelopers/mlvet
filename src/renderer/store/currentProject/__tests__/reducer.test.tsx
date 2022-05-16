@@ -31,7 +31,7 @@ describe('Current Project reducer', () => {
     expect(
       currentProjectReducer(mockProject, {
         type: PROJECT_SAVED,
-        payload: { id: 'test-id', filePath: newFilePath },
+        payload: { projectId: 'test-id', filePath: newFilePath },
       })
     ).toEqual({ ...mockProject, projectFilePath: newFilePath });
   });

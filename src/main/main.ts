@@ -17,6 +17,7 @@ import { get } from 'http';
 import path from 'path';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
+import startExpressServer from './expressServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
@@ -31,6 +32,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+let expressServer: ChildProcess | null = null;
 
 dotenv.config();
 
@@ -118,6 +120,20 @@ const createWindow = async () => {
         });
       });
     }
+
+    expressServer = startExpressServer();
+
+    if (expressServer !== null) {
+      get(`http://localhost:${process.env.EXPRESS_PORT}`, (res) => {
+        if (res.statusCode === 200) {
+          console.log('Express server is running');
+        } else {
+          throw new Error(
+            `Express server has an error, response to a get '/' expected code 200 got ${res.statusCode}`
+          );
+        }
+      });
+    }
   });
 
   mainWindow.on('closed', () => {
@@ -126,8 +142,6 @@ const createWindow = async () => {
       pyServer.kill();
     }
   });
-
-  require('./expressServer');
 
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();

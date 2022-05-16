@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChildProcess, spawn } from 'child_process';
-import path from 'path';
+import app from '../expressServer/server';
 
-export default function startExpressServer(): ChildProcess {
-  const pathToServer = path.join(process.cwd(), 'src', 'expressServer');
+export default function startExpressServer() {
+  const port = process.env.EXPRESS_PORT;
 
-  return spawn('node', ['server.js'], { cwd: pathToServer });
+  if (port !== undefined) {
+    app.listen(port, () => {
+      console.log(`Express Server listening on port :${port}!\n`);
+    });
+  } else {
+    app.listen(() => {
+      console.log(`EXPRESS_PORT undefined`);
+    });
+  }
 }

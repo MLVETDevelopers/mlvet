@@ -3,14 +3,13 @@ import { Project } from '../sharedTypes';
 import ipc from './ipc';
 import {
   projectOpened,
-  pageChanged,
   projectSaved,
-  updateExportProgress,
-  finishExport,
   projectSavedFirstTime,
-} from './store/actions';
-import { ApplicationPage } from './store/helpers';
-import { dispatchRedo, dispatchUndo } from './store/opHelpers';
+} from './store/currentProject/actions';
+import { pageChanged } from './store/currentPage/actions';
+import { updateExportProgress, finishExport } from './store/exportIo/actions';
+import { ApplicationPage } from './store/currentPage/helpers';
+import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
 

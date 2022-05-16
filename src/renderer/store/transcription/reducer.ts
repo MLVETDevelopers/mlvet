@@ -1,9 +1,9 @@
 import { Reducer } from 'redux';
-import { TRANSCRIPTION_CREATED } from '../actions';
-import { DELETE_WORD, UNDO_DELETE_WORD } from '../ops';
+import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription } from '../../../sharedTypes';
-import { Action } from '../helpers';
-import { DeleteWordsPayload } from '../opPayloads';
+import { Action } from '../action';
+import { DeleteWordsPayload } from '../undoStack/opPayloads';
+import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 /**
  *  Nested reducer for handling transcriptions

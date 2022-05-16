@@ -1,13 +1,13 @@
 import { Reducer } from 'redux';
 import makeRecentProject from '../../../sharedUtils';
 import { Project, ProjectMetadata, RecentProject } from '../../../sharedTypes';
+import { RECENT_PROJECTS_LOADED, RECENT_PROJECT_ADDED } from './actions';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
 import {
   PROJECT_OPENED,
   PROJECT_SAVED_FIRST_TIME,
-  RECENT_PROJECTS_LOADED,
-  RECENT_PROJECT_ADDED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
+} from '../currentProject/actions';
 
 const recentProjectsReducer: Reducer<
   ApplicationStore['recentProjects'],

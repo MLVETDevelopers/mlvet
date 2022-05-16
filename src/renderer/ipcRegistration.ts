@@ -1,11 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
-import {
-  projectOpened,
-  projectSaved,
-  projectSavedFirstTime,
-} from './store/currentProject/actions';
+import { projectOpened, projectSaved } from './store/currentProject/actions';
 import { pageChanged } from './store/currentPage/actions';
 import { updateExportProgress, finishExport } from './store/exportIo/actions';
 import { ApplicationPage } from './store/currentPage/helpers';
@@ -25,19 +21,12 @@ ipc.on('initiate-save-project', async () => {
 
   const filePath = await window.electron.saveProject(currentProject);
 
-  // Add to recent projects if project was saved for the first time
-  if (filePath !== currentProject.projectFilePath) {
-    const projectMetadata = await window.electron.retrieveProjectMetadata({
-      ...currentProject,
-      projectFilePath: filePath,
-    });
+  const projectMetadata = await window.electron.retrieveProjectMetadata({
+    ...currentProject,
+    projectFilePath: filePath,
+  });
 
-    store.dispatch(
-      projectSavedFirstTime(currentProject, projectMetadata, filePath)
-    );
-  }
-
-  store.dispatch(projectSaved(currentProject.id, filePath));
+  store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
 });
 
 /**
@@ -75,7 +64,7 @@ window.electron.on('initiate-save-as-project', async () => {
     projectFilePath: filePath,
   });
 
-  store.dispatch(projectSavedFirstTime(newProject, projectMetadata, filePath));
+  store.dispatch(projectSaved(newProject, projectMetadata, filePath));
   store.dispatch(projectOpened(newProject, filePath));
 });
 

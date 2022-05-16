@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import VideoController from 'renderer/components/VideoController';
+import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
+import { makeDeleteWord } from 'renderer/store/undoStack/ops';
 import ExportCard from '../components/ExportCard';
+import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import { ApplicationStore } from '../store/helpers';
-import { dispatchOp } from '../store/opHelpers';
-import { makeDeleteWord } from '../store/ops';
 
 /*
 This is the page that gets displayed while you are editing a video.

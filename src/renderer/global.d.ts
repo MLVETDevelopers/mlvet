@@ -21,7 +21,7 @@ declare global {
 
       closeWindow: () => void;
 
-      getFileNameWithExtension: (filePath: string | null) => string;
+      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       openProject: (
         filePath: string | null

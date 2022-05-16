@@ -1,17 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
-import {
-  projectOpened,
-  pageChanged,
-  projectSaved,
-  updateExportProgress,
-  finishExport,
-  projectSavedFirstTime,
-} from './store/actions';
-import { ApplicationPage } from './store/helpers';
-import { dispatchRedo, dispatchUndo } from './store/opHelpers';
+import { projectOpened, projectSaved } from './store/currentProject/actions';
+import { pageChanged } from './store/currentPage/actions';
+import { updateExportProgress, finishExport } from './store/exportIo/actions';
+import { ApplicationPage } from './store/currentPage/helpers';
+import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
+import { removeExtension } from './util';
 
 /**
  * Used by backend to initiate saves from front end
@@ -25,21 +21,14 @@ ipc.on('initiate-save-project', async (_event, shouldCloseAfter: boolean) => {
 
   const filePath = await ipc.saveProject(currentProject);
 
-  // Add to recent projects if project was saved for the first time
-  if (filePath !== currentProject.projectFilePath) {
-    const projectMetadata = await ipc.retrieveProjectMetadata({
-      ...currentProject,
-      projectFilePath: filePath,
-    });
-
-    store.dispatch(
-      projectSavedFirstTime(currentProject, projectMetadata, filePath)
-    );
-  }
-
-  store.dispatch(projectSaved(currentProject.id, filePath));
+  const projectMetadata = await window.electron.retrieveProjectMetadata({
+    ...currentProject,
+    projectFilePath: filePath,
+  });
 
   ipc.setFileRepresentation(filePath, false);
+
+  store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
 
   if (shouldCloseAfter) {
     ipc.closeWindow();
@@ -66,13 +55,22 @@ ipc.on('initiate-save-as-project', async () => {
 
   const filePath = await ipc.saveAsProject(newProject);
 
+  const savedFileNameWithExtension = await ipc.getFileNameWithExtension(
+    filePath
+  );
+
+  const savedFileName = removeExtension(savedFileNameWithExtension);
+
+  // Update the saved file name to the name that it was actually saved as, rather than the default 'Copy of ...'
+  newProject.name = savedFileName;
+
   // Add to recent projects
   const projectMetadata = await ipc.retrieveProjectMetadata({
     ...currentProject,
     projectFilePath: filePath,
   });
 
-  store.dispatch(projectSavedFirstTime(newProject, projectMetadata, filePath));
+  store.dispatch(projectSaved(newProject, projectMetadata, filePath));
   store.dispatch(projectOpened(newProject, filePath));
 
   ipc.setFileRepresentation(filePath, false);

@@ -1,13 +1,13 @@
 import { Reducer } from 'redux';
+import { UNDO_STACK_PUSHED, UNDO_STACK_POPPED, OP_REDONE } from './actions';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { DoPayload, UndoPayload } from './opPayloads';
+import { Action } from '../action';
 import {
-  PROJECT_OPENED,
   CURRENT_PROJECT_CLOSED,
-  UNDO_STACK_PUSHED,
-  UNDO_STACK_POPPED,
-  OP_REDONE,
-} from '../actions';
-import { Action, ApplicationStore, initialStore, Op } from '../helpers';
-import { DoPayload, UndoPayload } from '../opPayloads';
+  PROJECT_OPENED,
+} from '../currentProject/actions';
+import { Op } from './helpers';
 
 const undoStackReducer: Reducer<ApplicationStore['undoStack'], Action<any>> = (
   undoStack = initialStore.undoStack,

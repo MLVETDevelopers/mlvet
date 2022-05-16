@@ -1,15 +1,16 @@
 import { Reducer } from 'redux';
 import { Project } from '../../../sharedTypes';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
   PROJECT_OPENED,
   PROJECT_SAVED,
-  TRANSCRIPTION_CREATED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
-import { DELETE_WORD, UNDO_DELETE_WORD } from '../ops';
-import transcriptionReducer from './transcriptionReducer';
+} from './actions';
+import transcriptionReducer from '../transcription/reducer';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -29,7 +30,7 @@ const currentProjectReducer: Reducer<
   if (action.type === PROJECT_SAVED && currentProject !== null) {
     return {
       ...currentProject,
-      projectFilePath: action.payload as string,
+      projectFilePath: action.payload.filePath,
     };
   }
 

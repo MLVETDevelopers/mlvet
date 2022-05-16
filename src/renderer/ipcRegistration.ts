@@ -1,14 +1,10 @@
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
-import {
-  projectOpened,
-  pageChanged,
-  projectSaved,
-  updateExportProgress,
-  finishExport,
-} from './store/actions';
-import { ApplicationPage } from './store/helpers';
-import { dispatchRedo, dispatchUndo } from './store/opHelpers';
+import { projectOpened, projectSaved } from './store/currentProject/actions';
+import { pageChanged } from './store/currentPage/actions';
+import { updateExportProgress, finishExport } from './store/exportIo/actions';
+import { ApplicationPage } from './store/currentPage/helpers';
+import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 
 /**

@@ -2,7 +2,11 @@ import { Project } from '../sharedTypes';
 import ipc from './ipc';
 import { projectOpened, projectSaved } from './store/currentProject/actions';
 import { pageChanged } from './store/currentPage/actions';
-import { updateExportProgress, finishExport } from './store/exportIo/actions';
+import {
+  updateExportProgress,
+  finishExport,
+  startExport,
+} from './store/exportIo/actions';
 import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
@@ -69,5 +73,7 @@ ipc.on('initiate-export-project', async () => {
   // Don't export if we don't have a project open
   if (currentProject === null) return;
 
-  await window.electron.exportProject(currentProject);
+  const filePath = await ipc.exportProject(currentProject);
+
+  store.dispatch(startExport(currentProject.id, filePath));
 });

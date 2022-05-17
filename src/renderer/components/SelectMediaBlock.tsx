@@ -48,8 +48,40 @@ const SelectMediaBlock = ({
     setMediaFileName(fileName);
   };
 
+  // const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  // };
+  // const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  // };
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const draggedFiles = e.dataTransfer.files;
+    if (draggedFiles.length > 0) {
+      /* Currently only supporting single file import */
+      const fileName = draggedFiles[0].name;
+      const filePath = draggedFiles[0].path;
+      setMediaFilePath(filePath);
+      setMediaFileName(fileName);
+      setIsAwaitingMedia(false);
+    }
+  };
+
   return (
-    <SelectMediaBox onClick={selectMedia}>
+    <SelectMediaBox
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      // onDragEnter={handleDragEnter}
+      // onDragLeave={handleDragLeave}
+    >
       <InnerBox>
         <Stack
           direction="column"
@@ -59,7 +91,9 @@ const SelectMediaBlock = ({
         >
           <Typography variant="p-300">Drag and drop file here</Typography>
           <Typography variant="p-300">or</Typography>
-          <Button color="primary">Browse</Button>
+          <Button color="primary" onClick={selectMedia}>
+            Browse
+          </Button>
         </Stack>
       </InnerBox>
     </SelectMediaBox>

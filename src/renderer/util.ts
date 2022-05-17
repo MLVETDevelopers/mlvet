@@ -4,10 +4,10 @@ import {
   AudioFileExtension,
   Project,
   VideoFileExtension,
-  OperatingSystems,
 } from '../sharedTypes';
+import ipc from './ipc';
 
-const { extractThumbnail, userOS } = window.electron;
+const { extractThumbnail } = ipc;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -18,35 +18,6 @@ export const extractFileExtension: (filePath: string) => string | null = (
     return null;
   }
   return extension;
-};
-
-export const extractFileNameWithExtension: (
-  filePath: string | null
-) => Promise<string | null> = async (filePath) => {
-  if (filePath === null) {
-    return null;
-  }
-  const userOperatingSystem = await userOS();
-
-  let delimiter: string | null = null;
-
-  if (
-    userOperatingSystem === OperatingSystems.MACOS ||
-    userOperatingSystem === OperatingSystems.LINUX
-  ) {
-    delimiter = '/';
-  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
-    delimiter = '\\';
-  }
-
-  if (delimiter === null) {
-    return null;
-  }
-
-  const filePathSplit = filePath.split(delimiter);
-  const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
-
-  return fileNameWithExtension;
 };
 
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (

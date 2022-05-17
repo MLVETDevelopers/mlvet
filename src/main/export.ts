@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
-import { join } from 'path';
+import path, { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
 import { padZeros, integerDivide, mkdir } from './util';
 
@@ -23,7 +23,10 @@ const constructEDL: (
   const entries = words.length;
   output += words
     .map((word, i) => {
-      const edlEntry = `${padZeros(i + 1, Math.floor(Math.log10(entries)) + 1)}\tAX\tAA/V\tC`;
+      const edlEntry = `${padZeros(
+        i + 1,
+        Math.floor(Math.log10(entries)) + 1
+      )}\tAX\tAA/V\tC`;
 
       const editStart = secondToTimestamp(word.startTime);
       const editEnd = secondToTimestamp(word.startTime + word.duration);
@@ -47,11 +50,16 @@ export const exportEDL: (
     return;
   }
 
-  mkdir(project.exportFilePath);
+  const exportFilepath = path.dirname(project.exportFilePath);
+  mkdir(exportFilepath);
+  const exportFilename = path.basename(
+    project.exportFilePath,
+    path.extname(project.exportFilePath)
+  );
 
   if (project.transcription) {
     writeFileSync(
-      join(project.exportFilePath, `${project.name}.edl`),
+      join(exportFilepath, `${exportFilename}.edl`),
       constructEDL(
         project.name,
         project.transcription,

@@ -1,3 +1,7 @@
 .replay-controls-bar {
   display: none;
 }
+
+video {
+  width: 100%;
+}

@@ -1,16 +1,12 @@
 import { Box, Stack } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import VideoController from 'renderer/components/VideoController';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeDeleteWord } from 'renderer/store/undoStack/ops';
-import { Transcription, Word } from 'sharedTypes';
-import { Replay } from 'vimond-replay';
-import {
-  PlaybackActions,
-  VideoStreamState,
-} from 'vimond-replay/default-player/Replay';
+import { Cut } from 'sharedTypes';
+import VideoPreview from 'renderer/components/VideoPreview';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
@@ -42,6 +38,9 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+
+  const videoPreviewRef = useRef<any>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
@@ -106,46 +105,33 @@ const ProjectPage = () => {
     intervalRef: null,
   });
 
-  // Video preview refs
-  const videoActions = useRef<null | PlaybackActions>(null);
-  // const setVideoProperties = useRef<null | any>(null);
-
   // UI states
   const [time, setTime] = useState<string>('0');
   const [cccTimeRemaining, setCccTimeRemaining] = useState<string>('0');
 
   const framesPerSecond = 30;
-  const skip = 30;
+  const skip = 10;
 
-  // DONE - Sets time of the video preview element to be newTime
-  const setVideoTime = (newTime: number) => {
-    if (videoActions?.current !== null) {
-      videoActions.current.setPosition(newTime);
-    }
+  const getCutIndexFromSystemTime = (systemTime: number, cutsArr: Cut[]) => {
+    const index = cutsArr.findIndex(
+      (cut) =>
+        cut.startTime <= systemTime &&
+        systemTime <= cut.startTime + cut.duration
+    );
+    return index === -1 ? 0 : index;
   };
 
-  function pauseVideo() {
-    if (videoActions.current) {
-      videoActions.current.pause();
-    }
-  }
-
-  function playVideo() {
-    if (videoActions.current) {
-      videoActions.current.play();
-    }
-  }
-
-  function pause() {
+  const pause = () => {
     if (cccRef.current.isRunning) {
-      pauseVideo();
+      videoPreviewRef.current.pause();
       clearInterval(cccRef.current.intervalRef);
       cccRef.current.intervalRef = null;
       cccRef.current.isRunning = false;
+      setIsPlaying(false);
     }
-  }
+  };
 
-  function onFrame() {
+  const onFrame = () => {
     if (cccRef.current.isRunning) {
       cccRef.current.time =
         performance.now() * 0.001 - cccRef.current.performanceStartTime;
@@ -171,59 +157,31 @@ const ProjectPage = () => {
         } else {
           cccRef.current.currentCutIndex += 1;
           const currentCut = cuts[cccRef.current.currentCutIndex];
-          cccRef.current.currentCutDuration = currentCut.end - currentCut.start;
-          setVideoTime(currentCut.start);
+          cccRef.current.currentCutDuration = currentCut.duration;
+          videoPreviewRef.current.setCurrentTime(currentCut.startTime);
 
           console.log(currentCut);
         }
       }
     }
-  }
+  };
 
-  // TODO: confirm the transctionData format
-  function getCutIndexFromCutStartTime(
-    cutStartTime: number,
-    transcriptionData: any
-  ) {
-    for (let i = 0; i < transcriptionData.length(); i += 1) {
-      if (transcriptionData[i].startTime === cutStartTime) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  // TODO: confirm the transctionData format
-  function getCutIndexFromSystemTime(
-    systemTime: number,
-    transcriptionData: any
-  ) {
-    for (let i = 0; i < transcriptionData.length(); i += 1) {
-      if (
-        transcriptionData[i].startTime <=
-        systemTime <=
-        transcriptionData[i].startTime + transcriptionData[i].duration
-      ) {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  function play() {
+  const play = () => {
     if (!cccRef.current.isRunning) {
       cccRef.current.isRunning = true;
 
-      playVideo();
+      videoPreviewRef.current.play();
 
       cccRef.current.intervalRef = setInterval(
         onFrame,
         Math.floor(1000 / framesPerSecond)
       );
-    }
-  }
 
-  function startFromTime(newSystemTime: number) {
+      setIsPlaying(true);
+    }
+  };
+
+  const startFromTime = (newSystemTime: number) => {
     pause();
 
     if (!cccRef.current.isRunning) {
@@ -231,56 +189,40 @@ const ProjectPage = () => {
       cccRef.current.performanceStartTime = performance.now() * 0.001;
       systemClockRef.current.startTime = performance.now() * 0.001;
 
-      // TODO: get index from new system time
-      const newCut = 1;
+      const newCut = getCutIndexFromSystemTime(
+        newSystemTime,
+        currentProject?.transcription?.words ?? []
+      );
+      console.log('newCut', newCut);
 
       cccRef.current.currentCutIndex = newCut;
       const currentCut = cuts[newCut];
-      cccRef.current.currentCutDuration = currentCut.end - currentCut.start;
+      cccRef.current.currentCutDuration = currentCut.duration;
 
       setTime(newSystemTime.toFixed(2));
-      setVideoTime(currentCut.start);
+      videoPreviewRef.current.setCurrentTime(currentCut.startTime);
+
+      videoPreviewRef.current.play();
 
       play();
     }
-  }
-
-  const handlePlaybackActionsReady = (params: PlaybackActions) => {
-    // {
-    //   setPlaybackProperties: any,
-    //   ...actions
-    // }
-    videoActions.current = params;
-    // setVideoProperties.current = params.setPlaybackProperties;
   };
 
-  const handleStreamStateChange = (stateProperties: VideoStreamState) => {
-    if (stateProperties) {
-      if ('position' in stateProperties) {
-        // console.log(
-        // 	'Stream observation example: Playback position is ' +
-        // 		stateProperties.position.toFixed(1),
-        // );
-      }
-      if (stateProperties.isPaused) {
-        console.log('Stream observation example: The playback was paused.');
-      }
-      if (stateProperties.isPaused === false) {
-        console.log('Stream observation example: The playback was resumed.');
-      }
-      if (stateProperties.playState === 'inactive') {
-        console.log('Stream observation example: The playback has ended.');
-      }
-    }
+  const restart = () => {
+    startFromTime(0);
   };
 
-  const forward = () => {
-    setVideoTime(systemClockRef.current.time + skip * 60);
+  const seekForward = () => {
+    startFromTime(systemClockRef.current.time + skip);
   };
 
-  const back = () => {
-    setVideoTime(systemClockRef.current.time - skip * 60);
+  const seekBack = () => {
+    startFromTime(systemClockRef.current.time - skip);
   };
+
+  useEffect(() => {
+    console.log(videoPreviewRef.current);
+  }, [videoPreviewRef]);
 
   // TODO: Error handling
   if (!currentProject?.transcription) {
@@ -288,7 +230,14 @@ const ProjectPage = () => {
   }
   return (
     <>
-      <VideoController />
+      <VideoController
+        isPlaying={isPlaying}
+        play={play}
+        pause={pause}
+        restart={restart}
+        seekForward={seekForward}
+        seekBack={seekBack}
+      />
 
       <Stack
         direction="row"
@@ -310,23 +259,9 @@ const ProjectPage = () => {
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
           >
-            <Replay
-              source="http://localhost:5003/video"
-              options={{
-                controls: {
-                  // includeControls: [],
-                  includeControls: [
-                    'playPauseButton',
-                    'timeline',
-                    'timeDisplay',
-                    'volume',
-                    'fullscreenButton',
-                  ],
-                },
-              }}
-              initialPlaybackProps={{ isPaused: true }}
-              onStreamStateChange={handleStreamStateChange}
-              onPlaybackActionsReady={handlePlaybackActionsReady}
+            <VideoPreview
+              src="http://localhost:5003/video"
+              ref={videoPreviewRef}
             />
           </Box>
         </Stack>

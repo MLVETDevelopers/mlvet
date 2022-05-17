@@ -6,6 +6,7 @@ import {
   Replay10,
   Pause,
 } from '@mui/icons-material';
+import { useEffect } from 'react';
 import colors from '../colors';
 
 const VideoControllerBox = styled(Box)`

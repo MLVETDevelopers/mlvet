@@ -10,7 +10,7 @@ interface Props {
   src: string;
 }
 
-interface VideoPreviewRef {
+export interface VideoPreviewRef {
   play: () => void;
   pause: () => void;
   setCurrentTime: (newTime: number) => void;

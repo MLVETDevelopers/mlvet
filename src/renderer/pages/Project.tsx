@@ -6,24 +6,57 @@ import VideoController from 'renderer/components/VideoController';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeDeleteWord } from 'renderer/store/undoStack/ops';
 import { Cut } from 'sharedTypes';
-import VideoPreview from 'renderer/components/VideoPreview';
+import VideoPreview, {
+  VideoPreviewRef,
+} from 'renderer/components/VideoPreview';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import cuts from './cuts';
 
 export interface SystemClock {
-  startTime: number;
+  prevIntervalTime: number;
   time: number;
 }
 export interface CurrentCutClock {
   currentCutDuration: number;
   currentCutIndex: number;
   time: number;
-  performanceStartTime: number;
+  prevIntervalTime: number;
   isRunning: boolean;
   intervalRef: null | any;
 }
+
+interface ExtendedCut extends Cut {
+  remainingDuration: number;
+  index: number;
+}
+
+type GetCutFromSystemTime = (systemTime: number, cutsArr: Cut[]) => ExtendedCut;
+
+const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cutsArr) => {
+  let totalCutsTime = 0;
+
+  for (let i = 0; i < cutsArr.length; i += 1) {
+    const newTotalCutsTime = totalCutsTime + cutsArr[i].duration;
+    if (systemTime <= newTotalCutsTime) {
+      const systemTimeDiff = Math.max(systemTime, 0) - totalCutsTime;
+      return {
+        ...cutsArr[i],
+        remainingDuration: cutsArr[i].duration - systemTimeDiff,
+        index: i,
+      };
+    }
+    totalCutsTime = newTotalCutsTime;
+  }
+
+  const endCutIndex = cutsArr.length - 1;
+  return {
+    ...cutsArr[endCutIndex],
+    remainingDuration: 0,
+    index: endCutIndex,
+  };
+};
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -39,8 +72,31 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.exportIo
   );
 
-  const videoPreviewRef = useRef<any>(null);
+  // UI states
+  const [skip, setSkip] = useState(10);
+  const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const framesPerSecond = 30;
+  const videoPreviewRef = useRef<VideoPreviewRef>(null);
+
+  // Global / system clock refs
+  const systemClockRef = useRef<SystemClock>({
+    prevIntervalTime: 0,
+    time: 0,
+  });
+
+  // Cut Countdown Clock (ccc) refs
+  const cccRef = useRef<CurrentCutClock>({
+    currentCutDuration: 0,
+    currentCutIndex: 0,
+    time: 0,
+    prevIntervalTime: 0,
+    intervalRef: null,
+    isRunning: false,
+  });
+
+  const getPerformanceTime = () => performance.now() * 0.001;
 
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
@@ -89,43 +145,13 @@ const ProjectPage = () => {
     }
   };
 
-  // Global / system clock refs
-  const systemClockRef = useRef<SystemClock>({
-    startTime: 0,
-    time: 0,
-  });
-
-  // Cut Countdown Clock (ccc) refs
-  const cccRef = useRef<CurrentCutClock>({
-    currentCutDuration: 0,
-    currentCutIndex: 0,
-    time: 0,
-    performanceStartTime: 0,
-    isRunning: false,
-    intervalRef: null,
-  });
-
-  // UI states
-  const [time, setTime] = useState<string>('0');
-  const [cccTimeRemaining, setCccTimeRemaining] = useState<string>('0');
-
-  const framesPerSecond = 30;
-  const skip = 10;
-
-  const getCutIndexFromSystemTime = (systemTime: number, cutsArr: Cut[]) => {
-    const index = cutsArr.findIndex(
-      (cut) =>
-        cut.startTime <= systemTime &&
-        systemTime <= cut.startTime + cut.duration
-    );
-    return index === -1 ? 0 : index;
-  };
-
-  const pause = () => {
+  const Pause = () => {
     if (cccRef.current.isRunning) {
-      videoPreviewRef.current.pause();
       clearInterval(cccRef.current.intervalRef);
+      videoPreviewRef?.current?.pause();
       cccRef.current.intervalRef = null;
+      cccRef.current.prevIntervalTime = 0; // Not actually necessary
+      systemClockRef.current.prevIntervalTime = 0; // Not actually necessary
       cccRef.current.isRunning = false;
       setIsPlaying(false);
     }
@@ -133,96 +159,103 @@ const ProjectPage = () => {
 
   const onFrame = () => {
     if (cccRef.current.isRunning) {
-      cccRef.current.time =
-        performance.now() * 0.001 - cccRef.current.performanceStartTime;
-      systemClockRef.current.time =
-        performance.now() * 0.001 - cccRef.current.performanceStartTime;
-      setTime(systemClockRef.current.time.toFixed(2));
+      cccRef.current.time +=
+        getPerformanceTime() - cccRef.current.prevIntervalTime;
+      systemClockRef.current.time +=
+        getPerformanceTime() - systemClockRef.current.prevIntervalTime;
+
+      systemClockRef.current.prevIntervalTime = getPerformanceTime();
+      cccRef.current.prevIntervalTime = getPerformanceTime();
+
+      setTime(systemClockRef.current.time);
 
       // Has cut finished
       if (cccRef.current.time >= cccRef.current.currentCutDuration) {
-        // console.log('CCC: ', cccTimeRef.current);
-        // console.log('Duration: ', currentCutDurationRef.current.toFixed(4));
-        console.log(
-          'Diff: ',
-          (cccRef.current.time - cccRef.current.currentCutDuration).toFixed(4)
-        );
+        // console.log(
+        //   'Diff: ',
+        //   (cccRef.current.time - cccRef.current.currentCutDuration).toFixed(4)
+        // );
 
-        cccRef.current.performanceStartTime = performance.now() * 0.001;
+        cccRef.current.prevIntervalTime = getPerformanceTime();
         cccRef.current.time = 0;
 
         // Is this the last cut
         if (cccRef.current.currentCutIndex + 1 >= cuts.length) {
-          pause();
+          Pause();
         } else {
           cccRef.current.currentCutIndex += 1;
           const currentCut = cuts[cccRef.current.currentCutIndex];
           cccRef.current.currentCutDuration = currentCut.duration;
-          videoPreviewRef.current.setCurrentTime(currentCut.startTime);
-
-          console.log(currentCut);
+          videoPreviewRef?.current?.setCurrentTime(currentCut.startTime);
         }
       }
     }
   };
 
-  const play = () => {
+  const Play = () => {
     if (!cccRef.current.isRunning) {
       cccRef.current.isRunning = true;
 
-      videoPreviewRef.current.play();
+      videoPreviewRef?.current?.play();
 
       cccRef.current.intervalRef = setInterval(
         onFrame,
         Math.floor(1000 / framesPerSecond)
       );
 
+      cccRef.current.prevIntervalTime = getPerformanceTime();
+      systemClockRef.current.prevIntervalTime = getPerformanceTime();
+
       setIsPlaying(true);
     }
   };
 
-  const startFromTime = (newSystemTime: number) => {
-    pause();
+  const SetPlaybackTime = (newSystemTime: number) => {
+    const { isRunning } = cccRef.current;
+    if (isRunning) {
+      Pause();
+    }
 
-    if (!cccRef.current.isRunning) {
-      cccRef.current.time = 0;
-      cccRef.current.performanceStartTime = performance.now() * 0.001;
-      systemClockRef.current.startTime = performance.now() * 0.001;
+    const newExtendedCut = getCutFromSystemTime(newSystemTime, cuts ?? []);
 
-      const newCut = getCutIndexFromSystemTime(
-        newSystemTime,
-        currentProject?.transcription?.words ?? []
-      );
-      console.log('newCut', newCut);
+    cccRef.current.time =
+      newExtendedCut.duration - newExtendedCut.remainingDuration;
+    cccRef.current.prevIntervalTime = getPerformanceTime();
 
-      cccRef.current.currentCutIndex = newCut;
-      const currentCut = cuts[newCut];
-      cccRef.current.currentCutDuration = currentCut.duration;
+    systemClockRef.current.prevIntervalTime = getPerformanceTime();
+    systemClockRef.current.time = Math.min(
+      newExtendedCut.startTime + newExtendedCut.duration,
+      Math.max(newSystemTime, 0)
+    );
+    setTime(systemClockRef.current.time);
 
-      setTime(newSystemTime.toFixed(2));
-      videoPreviewRef.current.setCurrentTime(currentCut.startTime);
+    cccRef.current.currentCutIndex = newExtendedCut.index;
+    cccRef.current.currentCutDuration = newExtendedCut.remainingDuration;
 
-      videoPreviewRef.current.play();
+    videoPreviewRef?.current?.setCurrentTime(newExtendedCut.startTime);
 
-      play();
+    if (isRunning) {
+      Play();
     }
   };
 
-  const restart = () => {
-    startFromTime(0);
+  const StartFromTime = (newSystemTime: number) => {
+    Pause();
+    SetPlaybackTime(newSystemTime);
+    Play();
   };
 
-  const seekForward = () => {
-    startFromTime(systemClockRef.current.time + skip);
+  const Restart = () => {
+    SetPlaybackTime(0);
   };
 
-  const seekBack = () => {
-    startFromTime(systemClockRef.current.time - skip);
+  const SeekForward = () => {
+    SetPlaybackTime(systemClockRef.current.time + skip);
   };
 
-  useEffect(() => {
-    console.log(videoPreviewRef.current);
-  }, [videoPreviewRef]);
+  const SeekBack = () => {
+    SetPlaybackTime(systemClockRef.current.time - skip);
+  };
 
   // TODO: Error handling
   if (!currentProject?.transcription) {
@@ -231,12 +264,13 @@ const ProjectPage = () => {
   return (
     <>
       <VideoController
+        time={time}
         isPlaying={isPlaying}
-        play={play}
-        pause={pause}
-        restart={restart}
-        seekForward={seekForward}
-        seekBack={seekBack}
+        play={Play}
+        pause={Pause}
+        restart={Restart}
+        seekForward={SeekForward}
+        seekBack={SeekBack}
       />
 
       <Stack

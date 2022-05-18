@@ -1,12 +1,12 @@
-import { styled, Box, IconButton } from '@mui/material';
 import {
-  SkipPrevious,
-  PlayArrow,
   Forward10,
-  Replay10,
   Pause,
+  PlayArrow,
+  Replay10,
+  SkipPrevious,
 } from '@mui/icons-material';
-import { useEffect } from 'react';
+import { Box, IconButton, styled } from '@mui/material';
+import { integerDivide, padZeros } from 'main/timeUtils';
 import colors from '../colors';
 
 const VideoControllerBox = styled(Box)`
@@ -34,6 +34,7 @@ const TogglePlayButton = ({ isPlaying }: TogglePlayButtonProps) => {
 };
 
 interface Props {
+  time: number;
   isPlaying: boolean;
   play: () => void;
   pause: () => void;
@@ -42,7 +43,31 @@ interface Props {
   seekBack: () => void;
 }
 
+const formatTime = (time: number): string => {
+  const pad = (n: number) => padZeros(n, 2);
+
+  let timeRemaining = time;
+  const timeHours = integerDivide(timeRemaining, 3600);
+  timeRemaining %= 3600;
+
+  const timeMins = integerDivide(timeRemaining, 60);
+  timeRemaining %= 60;
+
+  const timeSeconds = Math.floor(timeRemaining);
+  timeRemaining -= timeSeconds;
+
+  const timeMilliSeconds = Math.round(timeRemaining * 100);
+
+  const formattedTime = `${pad(timeHours)}:${pad(timeMins)}:${pad(
+    timeSeconds
+  )}.${pad(timeMilliSeconds)}`;
+
+  // Include hours if video is larger than 1 hr
+  return timeHours > 0 ? formattedTime : formattedTime.substring(3);
+};
+
 const VideoController = ({
+  time,
   isPlaying,
   play,
   pause,
@@ -68,9 +93,11 @@ const VideoController = ({
           borderRadius: '5px',
           padding: '0 19px',
           marginRight: '47px',
+          width: '152px',
+          textAlign: 'left',
         }}
       >
-        00:00:00
+        {formatTime(time)}
       </div>
       <IconButton onClick={seekBack}>
         <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />

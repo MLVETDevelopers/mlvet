@@ -14,7 +14,10 @@ def connect():
 @socketio.on('transcribe')
 def transcribeHandler(data):
     print('transcribe', data)
-    return transcribe(data)
+    filepath = "\"%s\""%data
+    transcription = transcribe(filepath)
+    print(transcription)
+    return transcription
 
 
 @socketio.event

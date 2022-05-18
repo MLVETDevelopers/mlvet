@@ -17,9 +17,10 @@ def connect():
 
 
 @socketio.on('transcribe')
-def transcribeHandler(data):
-    print('transcribe', data)
-    return transcribe(data)
+def transcribeHandler(audio_file_path):
+    audio_file_path = "\"%s\""%audio_file_path
+    print('transcribe', audio_file_path)
+    return transcribe(audio_file_path)
 
 
 @socketio.event

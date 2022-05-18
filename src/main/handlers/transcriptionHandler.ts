@@ -19,13 +19,14 @@ interface JSONTranscriptionContainer {
 const sleep: (n: number) => Promise<void> = (n) =>
   new Promise((resolve) => setTimeout(resolve, n * 1000));
 
-const transcribeRequest: () => Promise<string> = async () => {
+const transcribeRequest: (project: Project) => Promise<string> = async (
+  project
+) => {
   const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
   return new Promise((resolve) => {
     socket.emit(
       'transcribe',
-      // project.audioExtractFilePath,
-      'audio/2830-3980-0043.wav',
+      project.audioExtractFilePath,
       (transcription: string) => {
         resolve(transcription);
       }
@@ -72,7 +73,7 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = await transcribeRequest();
+  const transcript = await transcribeRequest(project);
   const jsonTranscript = JSON.parse(transcript);
   console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
 

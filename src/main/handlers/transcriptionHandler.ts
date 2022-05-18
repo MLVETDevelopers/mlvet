@@ -16,8 +16,6 @@ interface JSONTranscriptionContainer {
  * @param n seconds to sleep
  * @returns promise resolving after n seconds
  */
-const sleep: (n: number) => Promise<void> = (n) =>
-  new Promise((resolve) => setTimeout(resolve, n * 1000));
 
 const transcribeRequest: (project: Project) => Promise<string> = async (
   project
@@ -67,8 +65,6 @@ const validateJsonTranscriptionContainer = <
 type RequestTranscription = (project: Project) => Promise<Transcription | null>;
 
 const requestTranscription: RequestTranscription = async (project) => {
-  // TODO: replace hard coded media path with parameter passed in
-
   if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
     return null;
   }

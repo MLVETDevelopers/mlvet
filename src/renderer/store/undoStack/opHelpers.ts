@@ -1,8 +1,8 @@
-import ipc from '../ipc';
+import ipc from '../../ipc';
 import { undoStackPopped, undoStackPushed, opRedone } from './actions';
 import { Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
-import store from './store';
+import store from '../store';
 
 const { setUndoRedoEnabled } = ipc;
 const { dispatch } = store;

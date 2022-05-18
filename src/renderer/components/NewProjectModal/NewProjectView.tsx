@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from 'renderer/util';
-import { projectCreated } from 'renderer/store/actions';
+import { projectCreated } from 'renderer/store/currentProject/actions';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
 

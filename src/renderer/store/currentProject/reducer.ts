@@ -1,15 +1,21 @@
 import { Reducer } from 'redux';
 import { Project } from '../../../sharedTypes';
+import { ApplicationStore, initialStore } from '../sharedHelpers';
+import { Action } from '../action';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_CREATED,
   PROJECT_OPENED,
   PROJECT_SAVED,
-  TRANSCRIPTION_CREATED,
-} from '../actions';
-import { Action, ApplicationStore, initialStore } from '../helpers';
-import { DELETE_WORD, UNDO_DELETE_WORD } from '../ops';
-import transcriptionReducer from './transcriptionReducer';
+} from './actions';
+import transcriptionReducer from '../transcription/reducer';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import {
+  EXPORT_PROGRESS_UPDATE,
+  START_EXPORT,
+  FINISH_EXPORT,
+} from '../exportIo/actions';
+import { DELETE_WORD, UNDO_DELETE_WORD } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -29,11 +35,29 @@ const currentProjectReducer: Reducer<
   if (action.type === PROJECT_SAVED && currentProject !== null) {
     return {
       ...currentProject,
-      projectFilePath: action.payload as string,
+      projectFilePath: action.payload.filePath,
     };
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {
+    return null;
+  }
+
+  if (action.type === START_EXPORT && currentProject !== null) {
+    return {
+      ...currentProject,
+      exportFilePath: action.payload.exportFilePath,
+    };
+  }
+
+  if (action.type === EXPORT_PROGRESS_UPDATE && currentProject !== null) {
+    return {
+      ...currentProject,
+      progress: action.payload.progress,
+    };
+  }
+
+  if (action.type === FINISH_EXPORT) {
     return null;
   }
 

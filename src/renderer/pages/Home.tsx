@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import NewProjectBlock from '../components/NewProjectBlock';
 import RecentProjectsBlock from '../components/RecentProjectsBlock';
-import { ApplicationStore } from '../store/helpers';
+import { ApplicationStore } from '../store/sharedHelpers';
 
 const HomePage = () => {
   const hasRecentProjects = useSelector(

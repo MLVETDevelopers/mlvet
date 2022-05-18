@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import currentPageReducer from './currentPageReducer';
-import currentProjectReducer from './currentProjectReducer';
-import exportIoReducer from './exportIoReducer';
-import recentProjectsReducer from './recentProjectsReducer';
-import undoStackReducer from './undoStackReducer';
+import currentPageReducer from './currentPage/reducer';
+import currentProjectReducer from './currentProject/reducer';
+import exportIoReducer from './exportIo/reducer';
+import recentProjectsReducer from './recentProjects/reducer';
+import undoStackReducer from './undoStack/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,

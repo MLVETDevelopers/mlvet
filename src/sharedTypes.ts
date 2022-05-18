@@ -37,12 +37,6 @@ export interface Word {
   fileName: string;
 }
 
-export interface Clip {
-  startTime: number;
-  duration: number;
-  fileName: string;
-}
-
 export interface Cut {
   startTime: number;
   duration: number;

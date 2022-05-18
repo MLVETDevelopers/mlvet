@@ -1,8 +1,8 @@
 import path from 'path';
 
-export const getFileNameWithExtension: (filePath: string | null) => string = (
-  filePath
-) => {
+type GetFileNameWithExtension = (filePath: string | null) => string;
+
+const getFileNameWithExtension: GetFileNameWithExtension = (filePath) => {
   if (filePath === null) {
     return '';
   }

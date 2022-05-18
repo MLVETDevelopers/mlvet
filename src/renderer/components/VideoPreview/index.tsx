@@ -18,7 +18,6 @@ export interface VideoPreviewRef {
 
 const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
   const videoActions = useRef<null | PlaybackActions>(null);
-  // const setVideoProperties = useRef<null | any>(null);
 
   const setCurrentTime = (newTime: number) =>
     videoActions?.current?.setPosition(newTime);
@@ -33,7 +32,6 @@ const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
 
   const handlePlaybackActionsReady = (params: PlaybackActions) => {
     videoActions.current = params;
-    // setVideoProperties.current = params.setPlaybackProperties;
   };
 
   const handleStreamStateChange = (stateProperties: VideoStreamState) => {
@@ -61,14 +59,7 @@ const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
       source={src}
       options={{
         controls: {
-          // includeControls: [],
-          includeControls: [
-            'playPauseButton',
-            'timeline',
-            'timeDisplay',
-            'volume',
-            'fullscreenButton',
-          ],
+          includeControls: [],
         },
       }}
       initialPlaybackProps={{ isPaused: true }}

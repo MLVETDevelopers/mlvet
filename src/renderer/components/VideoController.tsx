@@ -6,7 +6,7 @@ import {
   SkipPrevious,
 } from '@mui/icons-material';
 import { Box, IconButton, styled } from '@mui/material';
-import { integerDivide, padZeros } from 'main/timeUtils';
+import { secondToTimestampUI } from 'main/timeUtils';
 import colors from '../colors';
 
 const VideoControllerBox = styled(Box)`
@@ -19,7 +19,6 @@ const VideoControllerBox = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
-  // column-gap: 24px;
 `;
 
 interface TogglePlayButtonProps {
@@ -42,29 +41,6 @@ interface Props {
   seekForward: () => void;
   seekBack: () => void;
 }
-
-const formatTime = (time: number): string => {
-  const pad = (n: number) => padZeros(n, 2);
-
-  let timeRemaining = time;
-  const timeHours = integerDivide(timeRemaining, 3600);
-  timeRemaining %= 3600;
-
-  const timeMins = integerDivide(timeRemaining, 60);
-  timeRemaining %= 60;
-
-  const timeSeconds = Math.floor(timeRemaining);
-  timeRemaining -= timeSeconds;
-
-  const timeMilliSeconds = Math.round(timeRemaining * 100);
-
-  const formattedTime = `${pad(timeHours)}:${pad(timeMins)}:${pad(
-    timeSeconds
-  )}.${pad(timeMilliSeconds)}`;
-
-  // Include hours if video is larger than 1 hr
-  return timeHours > 0 ? formattedTime : formattedTime.substring(3);
-};
 
 const VideoController = ({
   time,
@@ -97,7 +73,7 @@ const VideoController = ({
           textAlign: 'left',
         }}
       >
-        {formatTime(time)}
+        {secondToTimestampUI(time)}
       </div>
       <IconButton onClick={seekBack}>
         <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />

@@ -72,10 +72,12 @@ const ProjectPage = () => {
   });
 
   // TODO: figure out return type
-  const onWordClick: (wordIndex: number) => void = () => {
-    // TODO: Implement onWordClick
-    if (currentProject !== null) {
+  const onWordClick: (wordIndex: number) => void = (wordIndex) => {
+    if (currentProject !== null && currentProject?.transcription !== null) {
       // return currentProject.transcription?.words[wordIndex];
+      const newTime =
+        currentProject.transcription.words[wordIndex].outputStartTime;
+      videoPreviewControllerRef?.current?.startFromTime(newTime);
     }
   };
 

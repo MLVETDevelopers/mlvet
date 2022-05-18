@@ -1,6 +1,5 @@
 import { useRef, useImperativeHandle, Ref, forwardRef, useEffect } from 'react';
 import { Cut } from 'sharedTypes';
-// import cuts from '../../../../mocks/cuts';
 import convertTranscriptToCuts from 'main/processing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
@@ -183,7 +182,7 @@ const VideoPreviewControllerBase = (
   useImperativeHandle(ref, () => ({
     play,
     pause,
-    startFromTime,
+    startFromTime: setPlaybackTime,
     seekForward,
     seekBack,
   }));

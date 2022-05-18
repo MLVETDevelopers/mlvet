@@ -3,6 +3,7 @@ import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'main/processing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { clamp } from 'main/timeUtils';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -15,7 +16,7 @@ export interface Clock {
 export interface VideoPreviewControllerRef {
   play: () => void;
   pause: () => void;
-  startFromTime: (time: number) => void;
+  setPlaybackTime: (time: number) => void;
   seekForward: () => void;
   seekBack: () => void;
 }
@@ -48,11 +49,8 @@ const VideoPreviewControllerBase = (
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
 
-  const clampSystemTime = (time: number) => {
-    let newTime = Math.max(0, time);
-    newTime = Math.min(outputVideoLength.current, newTime);
-    return newTime;
-  };
+  const clampSystemTime = (time: number) =>
+    clamp(time, 0, outputVideoLength.current);
 
   const clockRef = useRef<Clock>({
     isRunning: false,
@@ -68,18 +66,21 @@ const VideoPreviewControllerBase = (
     duration: 1,
   });
 
+  // Stops timer
   const stopTimer = () => {
     clearInterval(clockRef.current.intervalRef);
     clockRef.current.intervalRef = null;
     clockRef.current.isRunning = false;
   };
 
+  // Stops video, timer & UI
   const pause = () => {
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
   };
 
+  // Called on every frame (by timer setInterval)
   const onFrame = () => {
     if (clockRef.current.isRunning) {
       clockRef.current.time +=
@@ -115,6 +116,7 @@ const VideoPreviewControllerBase = (
     }
   };
 
+  // Start timer (setInterval)
   const startTimer = () => {
     clockRef.current.intervalRef = setInterval(
       onFrame,
@@ -124,6 +126,7 @@ const VideoPreviewControllerBase = (
     clockRef.current.isRunning = true;
   };
 
+  // Starts video, timer & UI
   const play = () => {
     if (!clockRef.current.isRunning) {
       if (clockRef.current.time < outputVideoLength.current) {
@@ -134,6 +137,7 @@ const VideoPreviewControllerBase = (
     }
   };
 
+  // Sets the video, timer & UI playback time
   const setPlaybackTime = (time: number) => {
     const { isRunning } = clockRef.current;
     stopTimer();
@@ -163,18 +167,12 @@ const VideoPreviewControllerBase = (
     }
   };
 
-  const startFromTime = (newSystemTime: number) => {
-    pause();
-    setPlaybackTime(newSystemTime);
-    if (newSystemTime < outputVideoLength.current) {
-      play();
-    }
-  };
-
+  // Skips forward 'n' seconds
   const seekForward = () => {
     setPlaybackTime(clockRef.current.time + skip.current);
   };
 
+  // Skips backward 'n' seconds
   const seekBack = () => {
     setPlaybackTime(clockRef.current.time - skip.current);
   };
@@ -182,7 +180,7 @@ const VideoPreviewControllerBase = (
   useImperativeHandle(ref, () => ({
     play,
     pause,
-    startFromTime: setPlaybackTime,
+    setPlaybackTime,
     seekForward,
     seekBack,
   }));

@@ -32,6 +32,13 @@ const ProjectPage = () => {
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
+  const play = () => videoPreviewControllerRef?.current?.play();
+  const pause = () => videoPreviewControllerRef?.current?.pause();
+  const setPlaybackTime = (newPlaybackTime: number) =>
+    videoPreviewControllerRef?.current?.setPlaybackTime(newPlaybackTime);
+  const seekForward = () => videoPreviewControllerRef?.current?.seekForward();
+  const seekBack = () => videoPreviewControllerRef?.current?.seekBack();
+
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
       dispatchOp(makeDeleteWord(firstWordIndex, lastWordIndex));
@@ -77,15 +84,9 @@ const ProjectPage = () => {
       // return currentProject.transcription?.words[wordIndex];
       const newTime =
         currentProject.transcription.words[wordIndex].outputStartTime;
-      videoPreviewControllerRef?.current?.startFromTime(newTime);
+      setPlaybackTime(newTime);
     }
   };
-
-  const play = () => videoPreviewControllerRef?.current?.play();
-  const pause = () => videoPreviewControllerRef?.current?.pause();
-  const restart = () => videoPreviewControllerRef?.current?.startFromTime(0);
-  const seekForward = () => videoPreviewControllerRef?.current?.seekForward();
-  const seekBack = () => videoPreviewControllerRef?.current?.seekBack();
 
   // TODO: Error handling
   if (!currentProject?.transcription) {
@@ -98,7 +99,6 @@ const ProjectPage = () => {
         isPlaying={isPlaying}
         play={play}
         pause={pause}
-        restart={restart}
         seekForward={seekForward}
         seekBack={seekBack}
       />

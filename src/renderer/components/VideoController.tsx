@@ -37,7 +37,6 @@ interface Props {
   isPlaying: boolean;
   play: () => void;
   pause: () => void;
-  restart: () => void;
   seekForward: () => void;
   seekBack: () => void;
 }
@@ -47,7 +46,6 @@ const VideoController = ({
   isPlaying,
   play,
   pause,
-  restart,
   seekForward,
   seekBack,
 }: Props) => {
@@ -80,9 +78,6 @@ const VideoController = ({
       </IconButton>
       <IconButton onClick={onClickPlayPause}>
         <TogglePlayButton isPlaying={isPlaying} />
-      </IconButton>
-      <IconButton onClick={restart}>
-        <SkipPrevious sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
       <IconButton onClick={seekForward}>
         <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />

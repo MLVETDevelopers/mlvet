@@ -35,3 +35,8 @@ export const secondToTimestampUI = (time: number): string => {
   // Include hours if video is larger than 1 hr
   return timeHours > 0 ? formattedTime : formattedTime.substring(3);
 };
+
+export const clamp = (num: number, min = 0, max = 1) => {
+  const newVal = Math.max(min, num);
+  return Math.min(max, newVal);
+};

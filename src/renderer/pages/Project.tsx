@@ -30,7 +30,6 @@ const ProjectPage = () => {
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const framesPerSecond = 30;
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {

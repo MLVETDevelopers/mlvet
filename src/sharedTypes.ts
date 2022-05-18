@@ -40,6 +40,7 @@ export interface Word {
 export interface Cut {
   startTime: number;
   duration: number;
+  outputStartTime: number;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

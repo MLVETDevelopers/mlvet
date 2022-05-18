@@ -102,9 +102,6 @@ const VideoPreviewControllerBase = (
 
         // Is this the last cut
         if (currentCutRef.current.index + 1 >= cuts.current.length) {
-          console.log('===============================================');
-          console.log('===============================================');
-          console.log('===============================================');
           pause();
         } else {
           currentCutRef.current = cuts.current[currentCutRef.current.index + 1];

@@ -38,20 +38,11 @@ const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
 
   const handleStreamStateChange = (stateProperties: VideoStreamState) => {
     if (stateProperties) {
-      if ('position' in stateProperties) {
-        // console.log(
-        // 	'Stream observation example: Playback position is ' +
-        // 		stateProperties.position.toFixed(1),
-        // );
-      }
       if (stateProperties.isPaused) {
-        console.log('Stream observation example: The playback was paused.');
+        // console.log('Stream observation example: The playback was paused.');
       }
       if (stateProperties.isPaused === false) {
-        console.log('Stream observation example: The playback was resumed.');
-      }
-      if (stateProperties.playState === 'inactive') {
-        console.log('Stream observation example: The playback has ended.');
+        // console.log('Stream observation example: The playback was resumed.');
       }
     }
   };

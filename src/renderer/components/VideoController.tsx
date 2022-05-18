@@ -1,10 +1,4 @@
-import {
-  Forward10,
-  Pause,
-  PlayArrow,
-  Replay10,
-  SkipPrevious,
-} from '@mui/icons-material';
+import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
 import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from '../colors';

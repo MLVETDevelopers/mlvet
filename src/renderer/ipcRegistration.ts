@@ -2,7 +2,11 @@ import { Project } from '../sharedTypes';
 import ipc from './ipc';
 import { projectOpened, projectSaved } from './store/currentProject/actions';
 import { pageChanged } from './store/currentPage/actions';
-import { updateExportProgress, finishExport } from './store/exportIo/actions';
+import {
+  updateExportProgress,
+  finishExport,
+  startExport,
+} from './store/exportIo/actions';
 import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
@@ -57,4 +61,19 @@ ipc.on('initiate-undo', async () => {
  */
 ipc.on('initiate-redo', async () => {
   dispatchRedo();
+});
+
+/**
+ * Used by backend to initiate export from front end
+ */
+ipc.on('initiate-export-project', async () => {
+  // Retrieve current project state from redux
+  const { currentProject } = store.getState();
+
+  // Don't export if we don't have a project open
+  if (currentProject === null) return;
+
+  const filePath = await ipc.exportProject(currentProject);
+
+  store.dispatch(startExport(currentProject.id, filePath));
 });

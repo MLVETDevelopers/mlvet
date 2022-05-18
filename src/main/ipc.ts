@@ -19,6 +19,7 @@ import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
 import extractThumbnail from './handlers/thumbnailExtract';
 import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
+import exportProject from './handlers/exportProjectHandler';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -79,6 +80,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
     writeRecentProjects(recentProjects)
+  );
+
+  ipcMain.handle('export-project', async (_event, project) =>
+    exportProject(ipcContext, project)
   );
   // END GENERATED CODE PART 2
 };

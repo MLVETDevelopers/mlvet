@@ -20,6 +20,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
         startTime: currentStartWord.startTime,
         duration: currentDuration,
         outputStartTime: currentStartWord.outputStartTime,
+        index: cuts.length,
       };
       cuts.push(cut);
       currentStartWord = words[i + 1];
@@ -32,6 +33,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
     startTime: currentStartWord.startTime,
     duration: currentDuration,
     outputStartTime: currentStartWord.outputStartTime,
+    index: cuts.length,
   });
 
   return cuts;

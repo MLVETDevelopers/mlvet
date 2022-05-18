@@ -41,6 +41,7 @@ export interface Cut {
   startTime: number;
   duration: number;
   outputStartTime: number;
+  index: number;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

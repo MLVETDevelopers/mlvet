@@ -22,7 +22,9 @@ const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
   const setCurrentTime = (newTime: number) =>
     videoActions?.current?.setPosition(newTime);
 
-  const pause = () => videoActions?.current?.pause();
+  const pause = () => {
+    videoActions?.current?.pause();
+  };
 
   const play = () => {
     videoActions?.current?.play();

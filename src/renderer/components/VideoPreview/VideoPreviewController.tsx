@@ -6,22 +6,11 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import VideoPreview, { VideoPreviewRef } from '.';
 
-export interface SystemClock {
+export interface Clock {
   prevIntervalTime: number;
   time: number;
-}
-export interface CurrentCutClock {
-  currentCutDuration: number;
-  currentCutIndex: number;
-  time: number;
-  prevIntervalTime: number;
   isRunning: boolean;
   intervalRef: null | any;
-}
-
-interface ExtendedCut extends Cut {
-  remainingDuration: number;
-  index: number;
 }
 
 export interface VideoPreviewControllerRef {
@@ -37,25 +26,10 @@ interface Props {
   setIsPlaying: (isPlaying: boolean) => void;
 }
 
-type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => ExtendedCut;
+type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;
 const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cuts) => {
-  for (let i = 0; i < cuts.length; i += 1) {
-    if (systemTime <= cuts[i].outputStartTime) {
-      return {
-        ...cuts[i],
-        remainingDuration:
-          cuts[i].duration - systemTime + cuts[i].outputStartTime,
-        index: i,
-      };
-    }
-  }
-
-  const endCutIndex = cuts.length - 1;
-  return {
-    ...cuts[endCutIndex],
-    remainingDuration: 0,
-    index: endCutIndex,
-  };
+  const foundCut = cuts.find((cut) => cut.outputStartTime <= systemTime);
+  return foundCut ?? cuts[cuts.length - 1];
 };
 
 const getPerformanceTime = () => performance.now() * 0.001;
@@ -81,83 +55,79 @@ const VideoPreviewControllerBase = (
     return newTime;
   };
 
-  const systemClockRef = useRef<SystemClock>({
+  const clockRef = useRef<Clock>({
+    isRunning: false,
+    intervalRef: null,
     prevIntervalTime: 0,
     time: 0,
   });
 
-  const cccRef = useRef<CurrentCutClock>({
-    currentCutDuration: 0,
-    currentCutIndex: 0,
-    time: 0,
-    prevIntervalTime: 0,
-    intervalRef: null,
-    isRunning: false,
+  const currentCutRef = useRef<Cut>({
+    index: 0,
+    outputStartTime: 0,
+    startTime: 0,
+    duration: 1,
   });
 
   const stopTimer = () => {
-    clearInterval(cccRef.current.intervalRef);
-    cccRef.current.intervalRef = null;
+    clearInterval(clockRef.current.intervalRef);
+    clockRef.current.intervalRef = null;
+    clockRef.current.isRunning = false;
   };
 
   const pause = () => {
-    if (cccRef.current.isRunning) {
-      videoPreviewRef?.current?.pause();
-      cccRef.current.isRunning = false;
-      setIsPlaying(false);
-      stopTimer();
-    }
+    videoPreviewRef?.current?.pause();
+    setIsPlaying(false);
+    stopTimer();
   };
 
   const onFrame = () => {
-    if (cccRef.current.isRunning) {
-      cccRef.current.time +=
-        getPerformanceTime() - cccRef.current.prevIntervalTime;
-      systemClockRef.current.time +=
-        getPerformanceTime() - systemClockRef.current.prevIntervalTime;
+    if (clockRef.current.isRunning) {
+      clockRef.current.time +=
+        getPerformanceTime() - clockRef.current.prevIntervalTime;
 
-      systemClockRef.current.prevIntervalTime = getPerformanceTime();
-      cccRef.current.prevIntervalTime = getPerformanceTime();
+      clockRef.current.prevIntervalTime = getPerformanceTime();
 
-      setTime(systemClockRef.current.time);
+      setTime(clockRef.current.time);
 
       // Has cut finished
-      if (cccRef.current.time >= cccRef.current.currentCutDuration) {
+      if (
+        clockRef.current.time >=
+        currentCutRef.current?.outputStartTime + currentCutRef.current?.duration
+      ) {
         // console.log(
         //   'Diff: ',
         //   (cccRef.current.time - cccRef.current.currentCutDuration).toFixed(4)
         // );
 
-        cccRef.current.prevIntervalTime = getPerformanceTime();
-        cccRef.current.time = 0;
-
         // Is this the last cut
-        if (cccRef.current.currentCutIndex + 1 >= cuts.current.length) {
+        if (currentCutRef.current.index + 1 >= cuts.current.length) {
+          console.log('===============================================');
+          console.log('===============================================');
+          console.log('===============================================');
           pause();
         } else {
-          cccRef.current.currentCutIndex += 1;
-          const currentCut = cuts.current[cccRef.current.currentCutIndex];
-          cccRef.current.currentCutDuration = currentCut.duration;
-          videoPreviewRef?.current?.setCurrentTime(currentCut.startTime);
+          currentCutRef.current = cuts.current[currentCutRef.current.index + 1];
+          videoPreviewRef?.current?.setCurrentTime(
+            currentCutRef.current.startTime
+          );
         }
       }
     }
   };
 
   const startTimer = () => {
-    cccRef.current.intervalRef = setInterval(
+    clockRef.current.intervalRef = setInterval(
       onFrame,
       Math.floor(1000 / framesPerSecond)
     );
-
-    cccRef.current.prevIntervalTime = getPerformanceTime();
-    systemClockRef.current.prevIntervalTime = getPerformanceTime();
+    clockRef.current.prevIntervalTime = getPerformanceTime();
+    clockRef.current.isRunning = true;
   };
 
   const play = () => {
-    if (!cccRef.current.isRunning) {
-      if (systemClockRef.current.time < outputVideoLength.current) {
-        cccRef.current.isRunning = true;
+    if (!clockRef.current.isRunning) {
+      if (clockRef.current.time < outputVideoLength.current) {
         videoPreviewRef?.current?.play();
         startTimer();
         setIsPlaying(true);
@@ -166,49 +136,48 @@ const VideoPreviewControllerBase = (
   };
 
   const setPlaybackTime = (time: number) => {
-    const { isRunning } = cccRef.current;
+    const { isRunning } = clockRef.current;
     stopTimer();
 
     const newSystemTime = clampSystemTime(time);
-    const newExtendedCut = getCutFromSystemTime(
+    currentCutRef.current = getCutFromSystemTime(
       newSystemTime,
       cuts.current ?? []
     );
 
-    cccRef.current.time =
-      newExtendedCut.duration - newExtendedCut.remainingDuration;
-    cccRef.current.prevIntervalTime = getPerformanceTime();
+    clockRef.current.prevIntervalTime = getPerformanceTime();
+    clockRef.current.time = newSystemTime;
 
-    systemClockRef.current.prevIntervalTime = getPerformanceTime();
-    systemClockRef.current.time = newSystemTime;
-
-    setTime(systemClockRef.current.time);
-
-    cccRef.current.currentCutIndex = newExtendedCut.index;
-    cccRef.current.currentCutDuration = newExtendedCut.remainingDuration;
+    setTime(clockRef.current.time);
 
     if (newSystemTime < outputVideoLength.current) {
-      videoPreviewRef?.current?.setCurrentTime(newExtendedCut.startTime);
+      const inCutStartTime =
+        currentCutRef.current.startTime +
+        (clockRef.current.time - currentCutRef.current.outputStartTime);
+      videoPreviewRef?.current?.setCurrentTime(inCutStartTime);
 
       if (isRunning) {
         startTimer();
       }
+    } else {
+      pause();
     }
   };
 
   const startFromTime = (newSystemTime: number) => {
+    pause();
     setPlaybackTime(newSystemTime);
     if (newSystemTime < outputVideoLength.current) {
-      startTimer();
+      play();
     }
   };
 
   const seekForward = () => {
-    setPlaybackTime(systemClockRef.current.time + skip.current);
+    setPlaybackTime(clockRef.current.time + skip.current);
   };
 
   const seekBack = () => {
-    setPlaybackTime(systemClockRef.current.time - skip.current);
+    setPlaybackTime(clockRef.current.time - skip.current);
   };
 
   useImperativeHandle(ref, () => ({
@@ -224,7 +193,7 @@ const VideoPreviewControllerBase = (
       cuts.current = convertTranscriptToCuts(transcription);
       const lastCut = cuts.current[cuts.current.length - 1];
       outputVideoLength.current = lastCut.startTime + lastCut.duration;
-      setPlaybackTime(systemClockRef.current.time);
+      setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcription]);

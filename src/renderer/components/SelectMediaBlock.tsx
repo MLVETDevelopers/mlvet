@@ -1,5 +1,5 @@
 import { Box, styled, Typography, Stack, Button } from '@mui/material';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import colors from '../colors';
 import ipc from '../ipc';
 
@@ -7,6 +7,10 @@ const { getFileNameWithExtension } = ipc;
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
+
+  &:hover {
+    background: ${colors.grey[600]};
+  }
 `;
 
 const InnerBox = styled(Box)`
@@ -36,7 +40,6 @@ const SelectMediaBlock = ({
 }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await ipc.requestMediaDialog();
-
     if (selectMedia !== null) {
       setIsAwaitingMedia(false);
     }
@@ -48,14 +51,20 @@ const SelectMediaBlock = ({
     setMediaFileName(fileName);
   };
 
-  // const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  // };
-  // const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  // };
+  // const [isDragOver, setDragOver] = useState<boolean>(false);
+
+  // // const exitDragOver = () => setDragOver(false);
+  // // const enterDragOver = () => setDragOver(true);
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -79,8 +88,8 @@ const SelectMediaBlock = ({
     <SelectMediaBox
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      // onDragEnter={handleDragEnter}
-      // onDragLeave={handleDragLeave}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
     >
       <InnerBox>
         <Stack

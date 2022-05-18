@@ -2,7 +2,7 @@ import { Cut } from 'sharedTypes';
 
 const cuts: Cut[] = [
   {
-    startTime: 459.2,
+    startTime: 3.2,
     duration: 3.2, // 0
   },
   {
@@ -10,7 +10,7 @@ const cuts: Cut[] = [
     duration: 3.3, // 3.2
   },
   {
-    startTime: 459.2,
+    startTime: 8.2,
     duration: 0.3, // 6.5
   },
   {
@@ -22,15 +22,15 @@ const cuts: Cut[] = [
     duration: 1.2, // 7.7
   },
   {
-    startTime: 459.2,
+    startTime: 8.2,
     duration: 0.6, // 8.9
   },
   {
-    startTime: 10.8,
+    startTime: 7.8,
     duration: 4.8, // 9.5
   },
   {
-    startTime: 16,
+    startTime: 1,
     duration: 4.8, // 14.3
   },
 ];

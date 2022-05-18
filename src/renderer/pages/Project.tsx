@@ -12,7 +12,7 @@ import VideoPreview, {
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import cuts from './cuts';
+import cuts from '../../../mocks/cuts';
 
 export interface SystemClock {
   prevIntervalTime: number;

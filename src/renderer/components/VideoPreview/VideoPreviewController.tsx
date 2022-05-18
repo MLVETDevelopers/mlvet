@@ -85,22 +85,16 @@ const VideoPreviewControllerBase = (
     if (clockRef.current.isRunning) {
       clockRef.current.time +=
         getPerformanceTime() - clockRef.current.prevIntervalTime;
-
-      clockRef.current.prevIntervalTime = getPerformanceTime();
-
       setTime(clockRef.current.time);
+      clockRef.current.prevIntervalTime = getPerformanceTime();
 
       // Has cut finished
       if (
         clockRef.current.time >=
         currentCutRef.current?.outputStartTime + currentCutRef.current?.duration
       ) {
-        // console.log(
-        //   'Diff: ',
-        //   (cccRef.current.time - cccRef.current.currentCutDuration).toFixed(4)
-        // );
-
-        // Is this the last cut
+        // If last put - pause
+        // If not - update video
         if (currentCutRef.current.index + 1 >= cuts.current.length) {
           pause();
         } else {
@@ -147,7 +141,6 @@ const VideoPreviewControllerBase = (
 
     clockRef.current.prevIntervalTime = getPerformanceTime();
     clockRef.current.time = newSystemTime;
-
     setTime(clockRef.current.time);
 
     if (newSystemTime < outputVideoLength.current) {
@@ -191,8 +184,6 @@ const VideoPreviewControllerBase = (
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcription]);
-
-  useEffect(() => {}, [cuts]);
 
   return (
     <VideoPreview src="http://localhost:5003/video" ref={videoPreviewRef} />

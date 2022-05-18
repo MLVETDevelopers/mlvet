@@ -7,6 +7,7 @@ router.get('/', (_, res) => {
   res.send('Server Running');
 });
 
+// TODO: After defining req and res, add types to them
 const streamVideo: (req: any, res: any) => void = (req, res) => {
   const encodeFilePath = req.params.name;
   const sourcePath = Buffer.from(encodeFilePath, 'base64').toString('utf-8');

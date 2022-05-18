@@ -20,10 +20,11 @@ const sleep: (n: number) => Promise<void> = (n) =>
   new Promise((resolve) => setTimeout(resolve, n * 1000));
 
 const transcribeRequest: () => Promise<string> = async () => {
-  const socket = io('http://localhost:5000');
+  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
   return new Promise((resolve) => {
     socket.emit(
       'transcribe',
+      // project.audioExtractFilePath,
       'audio/2830-3980-0043.wav',
       (transcription: string) => {
         resolve(transcription);

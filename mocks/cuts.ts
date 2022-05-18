@@ -29,12 +29,12 @@ const cuts: Cut[] = [
     startTime: 7.8,
     duration: 4.8, // 9.5
   },
-  {
-    startTime: 1,
-    duration: 4.8, // 14.3
-  },
+  // {
+  //   startTime: 1,
+  //   duration: 4.8, // 14.3 (KEEPS BEING 14.45)
+  // },
 ];
 
-// Total Length = 19.1
+// Total Length = 19.1 (KEEPS BEING 19.27)
 
 export default cuts;

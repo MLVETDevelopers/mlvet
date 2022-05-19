@@ -49,8 +49,8 @@ export const confirmSave: (
   }
 
   const confirmSaveDialogResponse = await dialog.showMessageBox(mainWindow, {
-    title: `Do you want to save the changes you have made to ${proposedFileName}?`,
-    message: "Your changes will be lost if you don't save them",
+    message: `Do you want to save the changes you have made to ${proposedFileName}?`,
+    detail: "Your changes will be lost if you don't save them",
     buttons: ['Save', "Don't save", 'Cancel'],
     defaultId: 0,
   });

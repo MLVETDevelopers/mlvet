@@ -1,20 +1,28 @@
 import fs from 'fs/promises';
 import { Project, ProjectMetadata } from '../../sharedTypes';
 
-const retrieveDateModified: (filePath: string) => Promise<Date> = async (
+const retrieveDateModified: (filePath: string) => Promise<Date | null> = async (
   filePath
 ) => {
-  const fileStats = await fs.stat(filePath);
+  try {
+    const fileStats = await fs.stat(filePath);
 
-  return fileStats.mtime;
+    return fileStats.mtime;
+  } catch (err) {
+    return null;
+  }
 };
 
-const retrieveSize: (filePath: string) => Promise<number> = async (
+const retrieveSize: (filePath: string) => Promise<number | null> = async (
   filePath
 ) => {
-  const fileStats = await fs.stat(filePath);
+  try {
+    const fileStats = await fs.stat(filePath);
 
-  return fileStats.size;
+    return fileStats.size;
+  } catch (err) {
+    return null;
+  }
 };
 
 type RetrieveProjectMetadata = (

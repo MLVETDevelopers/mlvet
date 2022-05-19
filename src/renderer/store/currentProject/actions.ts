@@ -1,4 +1,4 @@
-import { Project } from '../../../sharedTypes';
+import { Project, ProjectMetadata } from '../../../sharedTypes';
 import { Action } from '../action';
 
 export const PROJECT_CREATED = 'PROJECT_CREATED';
@@ -25,14 +25,16 @@ export const projectOpened: (
 });
 
 export const projectSaved: (
-  projectId: string,
+  project: Project,
+  metadata: ProjectMetadata,
   filePath: string
 ) => Action<{
-  projectId: string;
+  project: Project;
+  metadata: ProjectMetadata;
   filePath: string;
-}> = (projectId, filePath) => ({
+}> = (project, metadata, filePath) => ({
   type: PROJECT_SAVED,
-  payload: { projectId, filePath },
+  payload: { project, metadata, filePath },
 });
 
 export const currentProjectClosed: () => Action<null> = () => ({

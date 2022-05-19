@@ -5,7 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
-import handleOpenProject from './handlers/openProjectHandler';
+import openProject from './handlers/openProjectHandler';
 import { IpcContext } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -89,7 +89,7 @@ export default class MenuBuilder {
         label: 'Open...',
         accelerator: 'CommandOrControl+O',
         click: async () => {
-          const { project, filePath } = await handleOpenProject(
+          const { project, filePath } = await openProject(
             { mainWindow: this.mainWindow } as IpcContext,
             null
           );
@@ -254,6 +254,7 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const templateDefault = [
       {
+        id: 'file',
         label: '&File',
         submenu: this.buildFileOptions(),
       },
@@ -263,6 +264,7 @@ export default class MenuBuilder {
         submenu: this.buildUndoRedoOptions(),
       },
       {
+        id: 'view',
         label: '&View',
         submenu:
           process.env.NODE_ENV === 'development' ||
@@ -305,6 +307,7 @@ export default class MenuBuilder {
               ],
       },
       {
+        id: 'help',
         label: 'Help',
         submenu: [
           {

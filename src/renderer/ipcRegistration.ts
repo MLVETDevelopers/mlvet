@@ -1,7 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
-import { projectOpened, projectSaved } from './store/currentProject/actions';
+import {
+  currentProjectClosed,
+  projectOpened,
+  projectSaved,
+} from './store/currentProject/actions';
 import { pageChanged } from './store/currentPage/actions';
 import {
   updateExportProgress,
@@ -147,4 +151,5 @@ window.electron.on('initiate-return-to-home', async () => {
     store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
   }
   store.dispatch(pageChanged(ApplicationPage.HOME));
+  store.dispatch(currentProjectClosed());
 });

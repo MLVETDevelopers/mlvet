@@ -7,12 +7,12 @@ import { IpcContext } from './types';
 // START GENERATED CODE PART 1
 import extractAudio from './handlers/audioExtract';
 import getFileNameWithExtension from './handlers/getFileNameWithExtension';
-import handleOpenProject from './handlers/openProjectHandler';
+import openProject from './handlers/openProjectHandler';
 import handleOsQuery from './handlers/osQuery';
 import retrieveProjectMetadata from './handlers/projectMetadataHandler';
 import readRecentProjects from './handlers/readRecentProjects';
 import requestMediaDialog from './handlers/requestMediaDialog';
-import handleSaveAsProject from './handlers/saveAsProjectHandler';
+import saveAsProject from './handlers/saveAsProjectHandler';
 import saveProject from './handlers/saveProjectHandler';
 import setSaveEnabled from './handlers/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
@@ -34,8 +34,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     getFileNameWithExtension(filePath)
   );
 
-  ipcMain.handle('handle-open-project', async (_event, filePath) =>
-    handleOpenProject(ipcContext, filePath)
+  ipcMain.handle('open-project', async (_event, filePath) =>
+    openProject(ipcContext, filePath)
   );
 
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
@@ -50,8 +50,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     requestMediaDialog(ipcContext)
   );
 
-  ipcMain.handle('handle-save-as-project', async (_event, project) =>
-    handleSaveAsProject(ipcContext, project)
+  ipcMain.handle('save-as-project', async (_event, project) =>
+    saveAsProject(ipcContext, project)
   );
 
   ipcMain.handle('save-project', async (_event, project) =>

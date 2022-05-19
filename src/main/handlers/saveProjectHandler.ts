@@ -11,9 +11,8 @@ const saveProject: SaveProject = async (ipcContext, project) => {
   const { mainWindow } = ipcContext;
 
   const filePath =
-    project.projectFilePath === null
-      ? await getSaveFilePath(mainWindow, project.name)
-      : project.projectFilePath;
+    project.projectFilePath ??
+    (await getSaveFilePath(mainWindow, project.name));
 
   await saveProjectToFile(filePath, { ...project, projectFilePath: filePath });
 

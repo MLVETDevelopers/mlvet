@@ -39,3 +39,25 @@ export const saveProjectToFile: (
 
   await writeFile(filePath, projectAsString);
 };
+
+export const confirmSave: (
+  mainWindow: BrowserWindow | null,
+  proposedFileName: string
+) => Promise<number> = async (mainWindow, proposedFileName) => {
+  if (mainWindow === null) {
+    throw new Error('Main window not defined');
+  }
+
+  const confirmSaveDialogResponse = await dialog.showMessageBox(mainWindow, {
+    title: `Do you want to save the changes you have made to ${proposedFileName}?`,
+    message: "Your changes will be lost if you don't save them",
+    buttons: ['Save', "Don't save", 'Cancel'],
+    defaultId: 0,
+  });
+
+  if (confirmSaveDialogResponse.response === 2) {
+    throw new Error('Dialog cancelled');
+  }
+
+  return confirmSaveDialogResponse.response as number;
+};

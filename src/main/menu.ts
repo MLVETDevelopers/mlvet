@@ -231,7 +231,7 @@ export default class MenuBuilder {
           label: 'Home',
           accelerator: 'Shift+CommandOrControl+H',
           click: () => {
-            this.mainWindow.webContents.send('return-to-home');
+            this.mainWindow.webContents.send('initiate-return-to-home');
           },
         },
       ],

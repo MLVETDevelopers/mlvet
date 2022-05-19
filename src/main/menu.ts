@@ -128,6 +128,19 @@ export default class MenuBuilder {
     ];
   }
 
+  buildHistoryOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'home',
+        label: 'Home',
+        accelerator: 'Shift+CommandOrControl+H',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-return-to-home');
+        },
+      },
+    ];
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'MLVET',
@@ -225,16 +238,9 @@ export default class MenuBuilder {
       ],
     };
     const subMenuHistory: MenuItemConstructorOptions = {
+      id: 'history',
       label: 'History',
-      submenu: [
-        {
-          label: 'Home',
-          accelerator: 'Shift+CommandOrControl+H',
-          click: () => {
-            this.mainWindow.webContents.send('initiate-return-to-home');
-          },
-        },
-      ],
+      submenu: this.buildHistoryOptions(),
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
@@ -324,6 +330,11 @@ export default class MenuBuilder {
                   },
                 },
               ],
+      },
+      {
+        id: 'history',
+        label: '&History',
+        submenu: this.buildHistoryOptions(),
       },
       {
         id: 'help',

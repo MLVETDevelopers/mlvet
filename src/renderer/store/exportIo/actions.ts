@@ -4,9 +4,15 @@ export const START_EXPORT = 'START_EXPORT';
 export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
 export const FINISH_EXPORT = 'FINISH_UPDATE';
 
-export const startExport: () => Action<null> = () => ({
+export const startExport: (
+  projectId: string,
+  exportFilePath: string
+) => Action<{
+  projectId: string;
+  exportFilePath: string;
+}> = (projectId, exportFilePath) => ({
   type: START_EXPORT,
-  payload: null,
+  payload: { projectId, exportFilePath },
 });
 
 export const updateExportProgress: (progress: number) => Action<number> = (

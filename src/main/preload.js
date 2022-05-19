@@ -52,6 +52,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
+  exportProject: (project) => ipcRenderer.invoke('export-project', project),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

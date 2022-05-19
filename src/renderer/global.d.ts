@@ -59,6 +59,8 @@ declare global {
       requestTranscription: (project: Project) => Promise<Transcription | null>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
+
+      exportProject: (project: Project) => Promise<string>;
       // END GENERATED CODE
 
       on: (

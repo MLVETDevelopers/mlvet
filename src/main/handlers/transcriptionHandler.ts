@@ -11,12 +11,6 @@ interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
 }
 
-/**
- * util to simulate running of transcription
- * @param n seconds to sleep
- * @returns promise resolving after n seconds
- */
-
 const transcribeRequest: (project: Project) => Promise<string> = async (
   project
 ) => {
@@ -71,7 +65,6 @@ const requestTranscription: RequestTranscription = async (project) => {
 
   const transcript = await transcribeRequest(project);
   const jsonTranscript = JSON.parse(transcript);
-  console.assert(jsonTranscript.transcripts.length === 1); // TODO: add more error handling here
 
   if (!validateJsonTranscriptionContainer(jsonTranscript)) {
     throw new Error('JSON transcript is invalid');

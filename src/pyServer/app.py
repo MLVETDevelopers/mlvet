@@ -18,6 +18,7 @@ def connect():
 
 @socketio.on('transcribe')
 def transcribeHandler(audio_file_path):
+    # wrapping the file path in "" resolves issues that occur if there are spaces in the filepath on Windows
     audio_file_path = "\"%s\""%audio_file_path
     print('transcribe', audio_file_path)
     return transcribe(audio_file_path)

@@ -7,9 +7,7 @@ import { padZeros, integerDivide, mkdir } from './util';
 
 // 00:00:00:00
 const secondToTimestamp: (num: number) => string = (num) => {
-  return [3600, 60, 1, 0.01]
-    .map((mult) => padZeros(integerDivide(num, mult), 2))
-    .join(':');
+  return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
 };
 
 const constructEDL: (

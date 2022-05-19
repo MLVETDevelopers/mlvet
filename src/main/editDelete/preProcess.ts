@@ -108,11 +108,8 @@ const calculateAverageSilenceDuration = (
   totalDuration: number
 ): number => {
   let silenceSum = 0;
-  for (let i = 0; i < jsonTranscription.words.length; i += 1) {
-    const isLastWord = i === jsonTranscription.words.length - 1;
-    const endTime = isLastWord
-      ? totalDuration
-      : jsonTranscription.words[i + 1].start_time;
+  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
+    const endTime = jsonTranscription.words[i + 1].start_time;
     const silenceDuration =
       endTime -
       jsonTranscription.words[i].start_time -

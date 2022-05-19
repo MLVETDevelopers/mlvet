@@ -103,6 +103,25 @@ const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
     return wordAndSilence;
   };
 
+const calculateAverageSilenceDuration = (
+  jsonTranscription: JSONTranscription,
+  totalDuration: number
+): number => {
+  let silenceSum = 0;
+  for (let i = 0; i < jsonTranscription.words.length; i += 1) {
+    const isLastWord = i === jsonTranscription.words.length - 1;
+    const endTime = isLastWord
+      ? totalDuration
+      : jsonTranscription.words[i + 1].start_time;
+    const silenceDuration =
+      endTime -
+      jsonTranscription.words[i].start_time -
+      jsonTranscription.words[i].duration;
+    silenceSum += silenceDuration;
+  }
+  return silenceSum / jsonTranscription.words.length;
+};
+
 /**
  * Pre processes a JSON transcript from python for use in the front end
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
@@ -114,11 +133,15 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
+  const averageSilenceDuration: number = calculateAverageSilenceDuration(
+    jsonTranscript,
+    duration
+  );
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
-      .map(punctuate(duration))
+      .map(punctuate(duration, averageSilenceDuration))
       .map(injectAttributes(fileName))
       .map(addSpaces(duration))
       .flat(),

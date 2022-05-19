@@ -125,7 +125,7 @@ ipc.on('initiate-export-project', async () => {
 });
 
 /**
- *
+ * Used by backend to initiate return to home from front end
  */
 window.electron.on('initiate-return-to-home', async () => {
   const { currentProject } = store.getState();

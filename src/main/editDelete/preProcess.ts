@@ -104,8 +104,7 @@ const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
   };
 
 const calculateAverageSilenceDuration = (
-  jsonTranscription: JSONTranscription,
-  totalDuration: number
+  jsonTranscription: JSONTranscription
 ): number => {
   let silenceSum = 0;
   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
@@ -130,10 +129,8 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
-  const averageSilenceDuration: number = calculateAverageSilenceDuration(
-    jsonTranscript,
-    duration
-  );
+  const averageSilenceDuration: number =
+    calculateAverageSilenceDuration(jsonTranscript);
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words

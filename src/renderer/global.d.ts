@@ -19,9 +19,9 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
-      getFileNameWithExtension: (filePath: string | null) => string;
+      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
-      handleOpenProject: (
+      openProject: (
         filePath: string | null
       ) => Promise<{ project: Project; filePath: string }>;
 
@@ -35,7 +35,7 @@ declare global {
 
       requestMediaDialog: () => Promise<string | null>;
 
-      handleSaveAsProject: (project: Project) => Promise<string>;
+      saveAsProject: (project: Project) => Promise<string>;
 
       saveProject: (project: Project) => Promise<string>;
 

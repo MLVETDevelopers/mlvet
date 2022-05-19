@@ -9,8 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
-  handleOpenProject: (filePath) =>
-    ipcRenderer.invoke('handle-open-project', filePath),
+  openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
@@ -21,8 +20,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
-  handleSaveAsProject: (project) =>
-    ipcRenderer.invoke('handle-save-as-project', project),
+  saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 

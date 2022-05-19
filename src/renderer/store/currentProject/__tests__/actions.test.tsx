@@ -27,7 +27,13 @@ describe('Current Project actions', () => {
 
   it('saving project', () => {
     const newFilePath = 'test-new-file-path';
-    store.dispatch(projectSaved('test-id', newFilePath));
+    store.dispatch(
+      projectSaved(
+        mockProject,
+        { dateModified: new Date(), mediaSize: 0 },
+        newFilePath
+      )
+    );
     expect(store.getState()).toEqual({
       ...mockProject,
       projectFilePath: newFilePath,

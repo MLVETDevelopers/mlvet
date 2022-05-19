@@ -57,32 +57,32 @@ const SelectMediaBlock = ({
     setMediaFileName(fileName);
   };
 
-  const [isDragOver, setDragOver] = useState<boolean>(false);
+  const [isDragEvent, setDragEvent] = useState<boolean>(false);
 
-  const exitDragOver = () => setDragOver(false);
-  const enterDragOver = () => setDragOver(true);
+  const exitDragZone = () => setDragEvent(false);
+  const enterDragZone = () => setDragEvent(true);
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    enterDragOver();
+    enterDragZone();
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    exitDragOver();
+    exitDragZone();
   };
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    enterDragOver();
+    enterDragZone();
   };
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
 
-    exitDragOver();
+    exitDragZone();
 
     const draggedFiles = e.dataTransfer.files;
 
@@ -103,7 +103,7 @@ const SelectMediaBlock = ({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      {isDragOver && (
+      {isDragEvent && (
         <SelectMediaBoxOverlay onDrop={handleDrop}>
           <InnerBox>
             <Stack
@@ -119,7 +119,7 @@ const SelectMediaBlock = ({
           </InnerBox>
         </SelectMediaBoxOverlay>
       )}
-      {isDragOver === false && (
+      {isDragEvent === false && (
         <InnerBox>
           <Stack
             direction="column"

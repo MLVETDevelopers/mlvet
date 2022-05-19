@@ -126,32 +126,3 @@ const preProcessTranscript = (
 };
 
 export default preProcessTranscript;
-
-const jsonTranscript = {
-  confidence: -7,
-  words: [
-    {
-      word: 'heat',
-      start_time: 5,
-      duration: 2,
-    },
-    {
-      word: 'from',
-      start_time: 8,
-      duration: 3,
-    },
-    {
-      word: 'fire',
-      start_time: 11.2,
-      duration: 0.9,
-    },
-  ],
-};
-const duration = 15.77;
-
-const outputTranscript = preProcessTranscript(
-  jsonTranscript,
-  duration,
-  'PLACEHOLDER FILENAME'
-);
-console.log(outputTranscript);

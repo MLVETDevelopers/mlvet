@@ -6,7 +6,6 @@ type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 // TODO: use silence averaging to implement punctuation
 const lowerCommaThreshold = 0.1;
 const upperCommaThreshold = 0.17;
-const upperFullStopThreshold = 0.25;
 
 const capitalizeFirstLetter: (string: string) => string = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -29,13 +28,8 @@ const punctuate: (
       punctuation = '';
     } else if (silenceDuration < upperCommaThreshold) {
       punctuation = ',';
-    } else if (silenceDuration < upperFullStopThreshold) {
-      punctuation = '.';
-      if (!isLastWord) {
-        words[index + 1].word = capitalizeFirstLetter(words[index + 1].word);
-      }
     } else {
-      punctuation = '.\n';
+      punctuation = '.';
       if (!isLastWord) {
         words[index + 1].word = capitalizeFirstLetter(words[index + 1].word);
       }

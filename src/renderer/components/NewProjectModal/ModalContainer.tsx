@@ -1,8 +1,8 @@
 import { Modal, styled, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { pageChanged } from '../../store/actions';
-import { ApplicationPage } from '../../store/helpers';
+import { pageChanged } from '../../store/currentPage/actions';
+import { ApplicationPage } from '../../store/currentPage/helpers';
 import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';

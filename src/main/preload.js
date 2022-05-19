@@ -1,27 +1,45 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-/*
- * When exposing a new method make sure to update global.d.ts
- * (src/renderer/global.d.ts) with the method signature with types
- * to help out typescipt
- */
-
 contextBridge.exposeInMainWorld('electron', {
-  requestMediaDialog: () => ipcRenderer.invoke('import-media'),
-  requestTranscription: (filePath) =>
-    ipcRenderer.invoke('transcribe-media', filePath),
-  saveProject: (project) => ipcRenderer.invoke('save-project', project),
-  openProject: () => ipcRenderer.invoke('open-project'),
-  setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
-    ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
-  extractThumbnail: (filePath) =>
-    ipcRenderer.invoke('extract-thumbnail', filePath),
-  userOS: async () => ipcRenderer.invoke('user-os'),
-  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
-  writeRecentProjects: (recentProjects) =>
-    ipcRenderer.invoke('write-recent-projects', recentProjects),
+  // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
+
+  // START GENERATED CODE
+  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
+
+  getFileNameWithExtension: (filePath) =>
+    ipcRenderer.invoke('get-file-name-with-extension', filePath),
+
+  openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
+
+  handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
+
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
+
+  readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
+
+  requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
+
+  saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
+
+  saveProject: (project) => ipcRenderer.invoke('save-project', project),
+
+  setSaveEnabled: (saveEnabled, saveAsEnabled) =>
+    ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
+
+  setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
+    ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
+
+  extractThumbnail: (absolutePathToMediaFile) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('request-transcription', project),
+
+  writeRecentProjects: (recentProjects) =>
+    ipcRenderer.invoke('write-recent-projects', recentProjects),
+  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+  // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case
   on(channel, listener) {

@@ -4,11 +4,13 @@ import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
-import { extractFileNameWithExtension } from 'renderer/util';
-import { transcriptionCreated } from '../../store/actions';
-import { ApplicationStore } from '../../store/helpers';
+import { transcriptionCreated } from '../../store/transcription/actions';
+import { ApplicationStore } from '../../store/sharedHelpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
+import ipc from '../../ipc';
+
+const { requestTranscription, getFileNameWithExtension } = ipc;
 
 const CustomStack = styled(Stack)`
   width: 100%;
@@ -62,9 +64,12 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
 
     setAsyncState(AsyncState.LOADING);
 
-    window.electron
-      .requestTranscription(currentProject.mediaFilePath)
+    requestTranscription(currentProject)
       .then((transcription) => {
+        if (transcription === null) {
+          return null;
+        }
+
         setAsyncState(AsyncState.DONE);
         setTranscription(transcription);
         return null;
@@ -77,9 +82,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   }
 
   const getFileName = async () => {
-    const name = await extractFileNameWithExtension(
-      currentProject.mediaFilePath
-    );
+    const name = await getFileNameWithExtension(currentProject.mediaFilePath);
     setMediaFileName(name);
   };
 

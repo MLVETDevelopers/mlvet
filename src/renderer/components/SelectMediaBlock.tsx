@@ -1,10 +1,22 @@
 import { Box, styled, Typography, Stack, Button } from '@mui/material';
-import { Dispatch, SetStateAction } from 'react';
-import colors from 'renderer/colors';
-import { extractFileNameWithExtension } from 'renderer/util';
+import { Dispatch, SetStateAction, useState } from 'react';
+import colors from '../colors';
+import ipc from '../ipc';
+
+const { getFileNameWithExtension } = ipc;
 
 const SelectMediaBox = styled(Box)`
   width: 100%;
+
+  &:hover {
+    background: ${colors.grey[600]};
+  }
+`;
+
+const SelectMediaBoxOverlay = styled(Box)`
+  width: 100%;
+
+  background: ${colors.grey[600]};
 `;
 
 const InnerBox = styled(Box)`
@@ -33,33 +45,96 @@ const SelectMediaBlock = ({
   setIsAwaitingMedia,
 }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
-    const selectedMedia = await window.electron.requestMediaDialog();
-
+    const selectedMedia = await ipc.requestMediaDialog();
     if (selectMedia !== null) {
       setIsAwaitingMedia(false);
     }
 
     setMediaFilePath(selectedMedia);
 
-    const fileName = await extractFileNameWithExtension(selectedMedia);
+    const fileName = await getFileNameWithExtension(selectedMedia);
 
     setMediaFileName(fileName);
   };
 
+  const [isDragEvent, setDragEvent] = useState<boolean>(false);
+
+  const exitDragZone = () => setDragEvent(false);
+  const enterDragZone = () => setDragEvent(true);
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    enterDragZone();
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    exitDragZone();
+  };
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    enterDragZone();
+  };
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    exitDragZone();
+
+    const draggedFiles = e.dataTransfer.files;
+
+    if (draggedFiles.length > 0) {
+      /* Currently only supporting single file import - taking first file */
+      const fileName = draggedFiles[0].name;
+      const filePath = draggedFiles[0].path;
+
+      setMediaFilePath(filePath);
+      setMediaFileName(fileName);
+      setIsAwaitingMedia(false);
+    }
+  };
+
   return (
-    <SelectMediaBox onClick={selectMedia}>
-      <InnerBox>
-        <Stack
-          direction="column"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ height: '150px' }}
-        >
-          <Typography variant="p-300">Drag and drop file here</Typography>
-          <Typography variant="p-300">or</Typography>
-          <Button color="primary">Browse</Button>
-        </Stack>
-      </InnerBox>
+    <SelectMediaBox
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+    >
+      {isDragEvent && (
+        <SelectMediaBoxOverlay onDrop={handleDrop}>
+          <InnerBox>
+            <Stack
+              direction="column"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ height: '150px' }}
+            >
+              <Typography variant="p-300" padding="15%" fontSize="35px">
+                Drop here
+              </Typography>
+            </Stack>
+          </InnerBox>
+        </SelectMediaBoxOverlay>
+      )}
+      {isDragEvent === false && (
+        <InnerBox>
+          <Stack
+            direction="column"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ height: '150px' }}
+          >
+            <Typography variant="p-300">Drag and drop file here</Typography>
+            <Typography variant="p-300">or</Typography>
+            <Button color="primary" onClick={selectMedia}>
+              Browse
+            </Button>
+          </Stack>
+        </InnerBox>
+      )}
     </SelectMediaBox>
   );
 };

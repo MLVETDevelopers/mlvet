@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { app } from 'electron';
 import getAudioDurationInSeconds from 'get-audio-duration';
-import { Transcription } from '../../sharedTypes';
+import { Project, Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
@@ -48,10 +48,14 @@ const validateJsonTranscriptionContainer = <
   transcription.transcripts.length === 1 &&
   validateJsonTranscription(transcription.transcripts[0]));
 
-const handleTranscription: (
-  filePath: string
-) => Promise<Transcription> = async (filePath: string) => {
+type RequestTranscription = (project: Project) => Promise<Transcription | null>;
+
+const requestTranscription: RequestTranscription = async (project) => {
   // TODO: replace hard coded media path with parameter passed in
+
+  if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
+    return null;
+  }
 
   await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
 
@@ -67,15 +71,9 @@ const handleTranscription: (
     throw new Error('JSON transcript is invalid');
   }
 
-  const pathToSaveMedia = path.join(
-    process.cwd(),
-    'assets',
-    'audio',
-    'audio.wav'
-  );
   const duration: number =
-    (await getAudioDurationInSeconds(pathToSaveMedia)) || 0;
-  const fileName = path.basename(filePath);
+    (await getAudioDurationInSeconds(project.audioExtractFilePath)) || 0;
+  const fileName = path.basename(project.mediaFilePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
     duration,
@@ -85,4 +83,4 @@ const handleTranscription: (
   return processedTranscript;
 };
 
-export default handleTranscription;
+export default requestTranscription;

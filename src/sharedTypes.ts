@@ -4,6 +4,7 @@ export interface Project {
   name: string;
   projectFilePath: string | null;
   exportFilePath: string | null;
+  audioExtractFilePath: string | null;
   mediaFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
@@ -16,7 +17,11 @@ export interface ProjectMetadata {
   mediaSize: number | null; // bytes
 }
 
-export type RecentProject = Project & ProjectMetadata;
+export type RecentProject = Pick<
+  Project,
+  'id' | 'name' | 'projectFilePath' | 'mediaFilePath' | 'thumbnailFilePath'
+> &
+  ProjectMetadata;
 
 export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
@@ -33,12 +38,6 @@ export interface Word {
   outputStartTime: number;
   deleted: boolean;
   key: string;
-  fileName: string;
-}
-
-export interface Clip {
-  startTime: number;
-  duration: number;
   fileName: string;
 }
 

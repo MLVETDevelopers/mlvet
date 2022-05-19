@@ -1,28 +1,56 @@
 // Let TypeScript know that the ipcRenderer is on the window object.
-// If you need to use other modules from electron in the renderer, add their types here and then reference from window.electron
+// IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
+// If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
 import { IpcRendererEvent } from 'electron';
 import {
+  OperatingSystems,
   Project,
   ProjectMetadata,
-  Transcription,
-  OperatingSystems,
   RecentProject,
+  Transcription,
 } from '../sharedTypes';
 
 declare global {
   interface Window {
     electron: {
-      requestMediaDialog: () => Promise<string | null>;
-      requestTranscription: (filePath: string) => Promise<Transcription>;
-      saveProject: (project: Project) => Promise<string>; // Returns the file path
-      openProject: () => Promise<{ project: Project; filePath: string }>;
-      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
-      extractThumbnail: (filePath: string) => Promise<string>;
-      userOS: () => Promise<OperatingSystems>;
+      // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
+
+      // START GENERATED CODE
+      extractAudio: (project: Project) => Promise<string>;
+
+      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
+
+      openProject: (
+        filePath: string | null
+      ) => Promise<{ project: Project; filePath: string }>;
+
+      handleOsQuery: () => OperatingSystems | null;
+
+      retrieveProjectMetadata: (
+        project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
+      ) => Promise<ProjectMetadata>;
+
       readRecentProjects: () => Promise<RecentProject[]>;
+
+      requestMediaDialog: () => Promise<string | null>;
+
+      saveAsProject: (project: Project) => Promise<string>;
+
+      saveProject: (project: Project) => Promise<string>;
+
+      setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
+
+      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
+
+      extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
+
+      requestTranscription: (project: Project) => Promise<Transcription | null>;
+
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
-      retrieveProjectMetadata: (project: Project) => Promise<ProjectMetadata>;
+
+      exportProject: (project: Project) => Promise<string>;
+      // END GENERATED CODE
 
       on: (
         channel: string,

@@ -129,13 +129,14 @@ ipc.on('initiate-export-project', async () => {
  */
 window.electron.on('initiate-return-to-home', async () => {
   const { currentProject } = store.getState();
+  const saveChanges = 0;
 
   if (currentProject === null) return;
 
   const userSelection = await window.electron.returnToHome(currentProject);
 
   // if user wants to save unsaved changes
-  if (userSelection === 0) {
+  if (userSelection === saveChanges) {
     const filePath = await window.electron.saveProject(currentProject);
 
     const projectMetadata = await window.electron.retrieveProjectMetadata({

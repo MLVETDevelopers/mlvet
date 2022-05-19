@@ -48,6 +48,8 @@ export const confirmSave: (
     throw new Error('Main window not defined');
   }
 
+  const cancelled = 2;
+
   const confirmSaveDialogResponse = await dialog.showMessageBox(mainWindow, {
     message: `Do you want to save the changes you have made to ${proposedFileName}?`,
     detail: "Your changes will be lost if you don't save them",
@@ -55,7 +57,8 @@ export const confirmSave: (
     defaultId: 0,
   });
 
-  if (confirmSaveDialogResponse.response === 2) {
+  // if cancel button is selected
+  if (confirmSaveDialogResponse.response === cancelled) {
     throw new Error('Dialog cancelled');
   }
 

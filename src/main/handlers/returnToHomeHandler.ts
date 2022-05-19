@@ -20,7 +20,6 @@ const returnToHome: ReturnToHome = async (ipcContext, project) => {
     const userResponse = await confirmSave(mainWindow, project.name);
     return userResponse;
   }
-
   return PROJECT_ALREADY_SAVED;
 };
 

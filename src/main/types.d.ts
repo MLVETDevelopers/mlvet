@@ -1,4 +1,5 @@
 import { BrowserWindow, Menu } from 'electron';
+import AppState from './AppState';
 
 declare module '@ffprobe-installer/ffprobe';
 
@@ -17,4 +18,5 @@ export interface JSONTranscription {
 export interface IpcContext {
   mainWindow: BrowserWindow;
   menu: Menu;
+  appState: AppState;
 }

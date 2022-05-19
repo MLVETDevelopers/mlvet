@@ -21,6 +21,7 @@ import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
 import promptToSaveWork from './promptToSaveWork';
+import AppState from './AppState';
 
 export default class AppUpdater {
   constructor() {
@@ -120,19 +121,6 @@ const createWindow = async () => {
     }
   });
 
-  mainWindow.on('close', (event) => {
-    if (mainWindow === null) {
-      return; // let the close action go ahead as normal
-    }
-
-    // If the user has unsaved work, prompt them to save it
-    if (promptToSaveWork(mainWindow)) {
-      return; // app can continue closing
-    }
-
-    event.preventDefault(); // app cannot close
-  });
-
   mainWindow.on('closed', () => {
     mainWindow = null;
     if (pyServer !== null) {
@@ -143,12 +131,28 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();
 
+  const appState = new AppState(mainWindow);
+
   const ipcContext: IpcContext = {
     mainWindow,
     menu,
+    appState,
   };
 
   initialiseIpcHandlers(ipcContext);
+
+  mainWindow.on('close', (event) => {
+    if (mainWindow === null) {
+      return; // let the close action go ahead as normal
+    }
+
+    // If the user has unsaved work, prompt them to save it
+    if (promptToSaveWork(mainWindow, appState)) {
+      return; // app can continue closing
+    }
+
+    event.preventDefault(); // app cannot close
+  });
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

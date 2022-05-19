@@ -12,6 +12,8 @@ const PROJECT_ALREADY_SAVED = -1;
 const returnToHome: ReturnToHome = async (ipcContext, project) => {
   const { mainWindow } = ipcContext;
 
+  // Checking if project has a save file
+  // TODO: Check if any changes have been made since last save ('dirty feature')
   const filePath = project.projectFilePath;
 
   if (!filePath) {

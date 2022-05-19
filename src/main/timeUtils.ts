@@ -8,9 +8,7 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 
 // 00:00:00:00
 export const secondToTimestamp: (num: number) => string = (num) => {
-  return [3600, 60, 1, 0.01]
-    .map((mult) => padZeros(integerDivide(num, mult), 2))
-    .join(':');
+  return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
 };
 
 export const secondToTimestampUI = (time: number): string => {

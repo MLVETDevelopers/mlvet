@@ -1,6 +1,7 @@
 import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
+import punctuate from './punctuate';
 
 type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
@@ -117,6 +118,7 @@ const preProcessTranscript = (
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
+      .map(punctuate(duration))
       .map(injectAttributes(fileName))
       .map(addSpaces(duration))
       .flat(),

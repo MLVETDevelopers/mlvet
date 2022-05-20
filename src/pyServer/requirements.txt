@@ -1,3 +1,4 @@
 Flask==2.0.3
+Flask-SocketIO==5.1.2
 deepspeech==0.9.3
 pytest==7.1.2

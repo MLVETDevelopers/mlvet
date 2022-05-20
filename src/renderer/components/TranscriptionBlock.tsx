@@ -41,26 +41,20 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
           margin: 0,
         }}
       >
-        {transcription.words
-          .map((word, index) =>
-            word.deleted ? null : (
-              <Word
-                key={word.key.toString()}
-                data-index={index}
-                data-type="word"
-                onClick={() => {
-                  onWordClick(index);
-                }}
-              >
-                {word.word}
-              </Word>
-            )
+        {transcription.words.map((word, index) =>
+          word.deleted ? null : (
+            <Word
+              key={word.key.toString()}
+              data-index={index}
+              data-type="word"
+              onClick={() => {
+                onWordClick(index);
+              }}
+            >
+              {word.word}
+            </Word>
           )
-          .reduce((acc, curr) => (
-            <>
-              {acc} {curr}
-            </>
-          ))}
+        )}
       </p>
     </TranscriptionBox>
   );

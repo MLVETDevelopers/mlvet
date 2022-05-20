@@ -104,7 +104,8 @@ const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
   };
 
 const calculateAverageSilenceDuration = (
-  jsonTranscription: JSONTranscription
+  jsonTranscription: JSONTranscription,
+  totalDuration: number
 ): number => {
   let silenceSum = 0;
   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
@@ -115,7 +116,9 @@ const calculateAverageSilenceDuration = (
       jsonTranscription.words[i].duration;
     silenceSum += silenceDuration;
   }
-  return silenceSum / jsonTranscription.words.length;
+  return jsonTranscription.words.length !== 0
+    ? silenceSum / jsonTranscription.words.length
+    : totalDuration;
 };
 
 /**
@@ -129,8 +132,10 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
-  const averageSilenceDuration: number =
-    calculateAverageSilenceDuration(jsonTranscript);
+  const averageSilenceDuration: number = calculateAverageSilenceDuration(
+    jsonTranscript,
+    duration
+  );
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
@@ -143,3 +148,33 @@ const preProcessTranscript = (
 };
 
 export default preProcessTranscript;
+
+const jsonTranscript = {
+  confidence: -7,
+  words: [
+    {
+      word: 'heat',
+      start_time: 5,
+      duration: 2.5,
+    },
+    {
+      word: 'from',
+      start_time: 8,
+      duration: 3,
+    },
+    {
+      word: 'fire',
+      start_time: 11.2,
+      duration: 0.9,
+    },
+  ],
+};
+const duration = 15.77;
+
+const outputTranscript = preProcessTranscript(
+  jsonTranscript,
+  duration,
+  'PLACEHOLDER FILENAME'
+);
+
+console.log(outputTranscript);

@@ -4,10 +4,6 @@ import { Word } from '../../sharedTypes';
 type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 type Thresholds = { lowerCommaThreshold: number; upperCommaThreshold: number };
 
-// // TODO: use silence averaging to implement punctuation
-// const lowerCommaThreshold = 0.1;
-// const upperCommaThreshold = 0.17;
-
 const capitalizeFirstLetter: (string: string) => string = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };

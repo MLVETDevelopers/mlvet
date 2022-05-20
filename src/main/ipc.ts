@@ -21,6 +21,7 @@ import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
 import exportProject from './handlers/exportProjectHandler';
 import returnToHome from './handlers/returnToHomeHandler';
+import setHomeEnabled from './handlers/setHomeEnabled';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -69,6 +70,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-undo-redo-enabled',
     async (_event, undoEnabled, redoEnabled) =>
       setUndoRedoEnabled(ipcContext, undoEnabled, redoEnabled)
+  );
+
+  ipcMain.handle('set-home-enabled', async (_event, homeEnabled) =>
+    setHomeEnabled(ipcContext, homeEnabled)
   );
 
   ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>

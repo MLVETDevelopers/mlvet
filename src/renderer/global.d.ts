@@ -47,6 +47,8 @@ declare global {
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
+      setHomeEnabled: (homeEnabled: boolean) => void;
+
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 
       requestTranscription: (project: Project) => Promise<Transcription | null>;

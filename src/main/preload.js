@@ -32,6 +32,9 @@ contextBridge.exposeInMainWorld('electron', {
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
+  setHomeEnabled: (homeEnabled) =>
+    ipcRenderer.invoke('set-home-enabled', homeEnabled),
+
   extractThumbnail: (absolutePathToMediaFile) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
 

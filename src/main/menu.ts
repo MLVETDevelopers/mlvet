@@ -137,6 +137,7 @@ export default class MenuBuilder {
         click: () => {
           this.mainWindow.webContents.send('initiate-return-to-home');
         },
+        enabled: false,
       },
     ];
   }

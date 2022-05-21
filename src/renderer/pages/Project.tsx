@@ -97,6 +97,18 @@ const ProjectPage = () => {
     const [start, end] = await getIndexSelectedWords();
     if (start !== null && end !== null) {
       pasteWord(start, clipboard.start, clipboard.end);
+      // Have to update the clipboard indices because they've moved if a word
+      // is placed before them
+      if (start < clipboard.start) {
+        const pasteLength = clipboard.end - clipboard.start + 1;
+        setClipboard({
+          start: clipboard.start + pasteLength,
+          end: clipboard.end + pasteLength,
+        });
+        console.log(
+          `Updated clipboard. Start: ${clipboard.start} End: ${clipboard.end}`
+        );
+      }
     }
   };
 

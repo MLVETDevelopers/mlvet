@@ -40,10 +40,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     };
   }
 
-  if (
-    (action.type === PASTE_WORD || action.type === UNDO_PASTE_WORD) &&
-    transcription != null
-  ) {
+  if (action.type === PASTE_WORD && transcription != null) {
     const { toIndex, startIndex, endIndex } =
       action.payload as PasteWordsPayload;
 
@@ -58,6 +55,24 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       return {
         ...transcription,
         words: prefix?.concat(pasteyWords, suffix), // Concatonating the sub arrays
+      };
+    }
+  }
+
+  if (action.type === UNDO_PASTE_WORD && transcription != null) {
+    const { toIndex, startIndex, endIndex } =
+      action.payload as PasteWordsPayload;
+
+    // Getting the subarrays for the new transcription
+    const pasteLength = endIndex - startIndex + 1;
+    const prefix = transcription?.words.slice(0, toIndex);
+    const suffix = transcription?.words.slice(toIndex + pasteLength);
+
+    // Have to check this if to get rid of linter error
+    if (suffix !== undefined) {
+      return {
+        ...transcription,
+        words: prefix?.concat(suffix), // Concatonating the sub arrays
       };
     }
   }

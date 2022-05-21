@@ -83,10 +83,10 @@ const VideoPreviewControllerBase = (
   // Called on every frame (by timer setInterval)
   const onFrame = () => {
     if (clockRef.current.isRunning) {
-      clockRef.current.time +=
+      clockRef.current.time =
         getPerformanceTime() - clockRef.current.prevIntervalTime;
       setTime(clockRef.current.time);
-      clockRef.current.prevIntervalTime = getPerformanceTime();
+      // clockRef.current.prevIntervalTime = getPerformanceTime();
 
       // Has cut finished
       if (
@@ -139,7 +139,6 @@ const VideoPreviewControllerBase = (
       cuts.current ?? []
     );
 
-    clockRef.current.prevIntervalTime = getPerformanceTime();
     clockRef.current.time = newSystemTime;
     setTime(clockRef.current.time);
 

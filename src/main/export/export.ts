@@ -2,35 +2,49 @@
 import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
-import { Project, Transcription } from '../sharedTypes';
-import { mkdir } from './util';
-import { secondToTimestamp, padZeros } from './timeUtils';
+import { secondToTimestamp, padZeros } from '../timeUtils';
+import { Project, Transcription, Cut } from '../../sharedTypes';
+import { mkdir } from '../util';
+import convertTranscriptToCuts from '../processing/transcriptToCuts';
 
-const constructEDL: (
+export const constructEDL: (
   title: string,
   transcription: Transcription,
   source: string | null,
   mainWindow: BrowserWindow | null
 ) => string = (title, transcription, source, mainWindow) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
-  const { words } = transcription;
-  const entries = words.length;
-  output += words
-    .map((word, i) => {
+
+  const cuts: Array<Cut> = convertTranscriptToCuts(transcription);
+  const entries = cuts.length;
+
+  const timeline = {
+    start: 0,
+    end: 0,
+  };
+
+  output += cuts
+    .map((cut, i) => {
       const edlEntry = `${padZeros(
         i + 1,
-        Math.floor(Math.log10(entries)) + 1
-      )}\tAX\tAA/V\tC`;
+        Math.max(Math.floor(Math.log10(entries)) + 1, 3)
+      )}  AX       AA/V  C`;
 
-      const editStart = secondToTimestamp(word.startTime);
-      const editEnd = secondToTimestamp(word.startTime + word.duration);
+      const editStart = secondToTimestamp(cut.startTime);
+      const editEnd = secondToTimestamp(cut.startTime + cut.duration);
+
+      timeline.start = timeline.end;
+      timeline.end = timeline.start + cut.duration;
+
+      const timelineStart = secondToTimestamp(timeline.start);
+      const timelineEnd = secondToTimestamp(timeline.end);
 
       mainWindow?.webContents.send('export-progress-update', i / entries);
 
-      return `${edlEntry}\t${editStart}\t${editEnd}\n* FROM CLIP NAME: ${
+      return `${edlEntry}        ${editStart} ${editEnd} ${timelineStart} ${timelineEnd}\n* FROM CLIP NAME: ${
         source ?? 'FILE PATH NOT FOUND'
       }\n\n`;
-    })
+    }, timeline)
     .join('');
 
   return output;

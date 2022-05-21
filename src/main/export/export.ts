@@ -17,7 +17,6 @@ export const constructEDL: (
 
   const cuts: Array<Cut> = convertTranscriptToCuts(transcription);
   const entries = cuts.length;
-
   const timeline = {
     start: 0,
     end: 0,

@@ -39,6 +39,12 @@ const ProjectPage = () => {
     }
   };
 
+  // This function will return the index of the first word and the index of the last word
+  // selected on the transcription block. It will return values of null for each if no
+  // word is selected. It will return the same start and end value if only one value is
+  // selected.
+  //
+  // Currently a little janky and should be revised in a future iteration.
   const getIndexSelectedWords = async () => {
     const highlightedWords = window.getSelection();
     if (
@@ -67,6 +73,14 @@ const ProjectPage = () => {
     end: 0,
   });
 
+  const copyText = async () => {
+    const [start, end] = await getIndexSelectedWords();
+    if (start !== null && end !== null) {
+      setClipboard({ start, end });
+      console.log(`Updated clipboard. Start: ${start} End: ${end}`);
+    }
+  };
+
   const deleteText = async () => {
     const [start, end] = await getIndexSelectedWords();
     if (start !== null && end !== null) {
@@ -75,29 +89,30 @@ const ProjectPage = () => {
   };
 
   const cutText = async () => {
-    const [start, end] = await getIndexSelectedWords();
-    if (start !== null && end !== null) {
-      setClipboard({ start, end });
-      deleteText();
-    }
+    await copyText();
+    await deleteText();
   };
 
   const pasteText = async () => {
     const [start, end] = await getIndexSelectedWords();
     if (start !== null && end !== null) {
-      console.log(start);
-      console.log(clipboard);
       pasteWord(start, clipboard.start, clipboard.end);
     }
   };
 
   const onKeyDown = async (event: KeyboardEvent) => {
     if (event.key === 'Delete' || event.key === 'Backspace') {
+      console.log('Delete key pressed');
       deleteText();
     } else if (event.key === 'x') {
+      console.log('Key "x" pressed');
       cutText();
     } else if (event.key === 'v') {
+      console.log('Key "v" pressed');
       pasteText();
+    } else if (event.key === 'c') {
+      console.log('Key "c" pressed');
+      copyText();
     }
   };
 

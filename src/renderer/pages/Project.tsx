@@ -88,10 +88,6 @@ const ProjectPage = () => {
     }
   };
 
-  // TODO: Error handling
-  if (!currentProject?.transcription) {
-    return null;
-  }
   return (
     <>
       <VideoController
@@ -113,10 +109,12 @@ const ProjectPage = () => {
         }}
       >
         <Stack spacing={4} sx={{ flex: '5 1 0' }}>
-          <TranscriptionBlock
-            transcription={currentProject.transcription}
-            onWordClick={onWordClick}
-          />
+          {currentProject?.transcription && (
+            <TranscriptionBlock
+              transcription={currentProject.transcription}
+              onWordClick={onWordClick}
+            />
+          )}
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>

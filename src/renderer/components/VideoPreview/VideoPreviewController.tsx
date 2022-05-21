@@ -7,10 +7,11 @@ import { clamp } from 'main/timeUtils';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
-  prevIntervalTime: number;
   time: number;
   isRunning: boolean;
   intervalRef: null | any;
+  prevIntervalEndTime: number;
+  intervalStartTime: number;
 }
 
 export interface VideoPreviewControllerRef {
@@ -55,7 +56,8 @@ const VideoPreviewControllerBase = (
   const clockRef = useRef<Clock>({
     isRunning: false,
     intervalRef: null,
-    prevIntervalTime: 0,
+    prevIntervalEndTime: getPerformanceTime(),
+    intervalStartTime: getPerformanceTime(),
     time: 0,
   });
 
@@ -71,6 +73,7 @@ const VideoPreviewControllerBase = (
     clearInterval(clockRef.current.intervalRef);
     clockRef.current.intervalRef = null;
     clockRef.current.isRunning = false;
+    clockRef.current.prevIntervalEndTime = getPerformanceTime();
   };
 
   // Stops video, timer & UI
@@ -84,9 +87,10 @@ const VideoPreviewControllerBase = (
   const onFrame = () => {
     if (clockRef.current.isRunning) {
       clockRef.current.time =
-        getPerformanceTime() - clockRef.current.prevIntervalTime;
+        getPerformanceTime() - clockRef.current.intervalStartTime;
+
       setTime(clockRef.current.time);
-      // clockRef.current.prevIntervalTime = getPerformanceTime();
+      // TODO: Update UI to reflect changing time
 
       // Has cut finished
       if (
@@ -113,7 +117,8 @@ const VideoPreviewControllerBase = (
       onFrame,
       Math.floor(1000 / framesPerSecond)
     );
-    clockRef.current.prevIntervalTime = getPerformanceTime();
+    clockRef.current.intervalStartTime +=
+      getPerformanceTime() - clockRef.current.prevIntervalEndTime;
     clockRef.current.isRunning = true;
   };
 
@@ -131,13 +136,15 @@ const VideoPreviewControllerBase = (
   // Sets the video, timer & UI playback time
   const setPlaybackTime = (time: number) => {
     const { isRunning } = clockRef.current;
-    stopTimer();
+    if (isRunning) stopTimer();
 
     const newSystemTime = clampSystemTime(time);
     currentCutRef.current = getCutFromSystemTime(
       newSystemTime,
       cuts.current ?? []
     );
+
+    clockRef.current.intervalStartTime -= newSystemTime - clockRef.current.time;
 
     clockRef.current.time = newSystemTime;
     setTime(clockRef.current.time);
@@ -178,7 +185,7 @@ const VideoPreviewControllerBase = (
     if (transcription != null) {
       cuts.current = convertTranscriptToCuts(transcription);
       const lastCut = cuts.current[cuts.current.length - 1];
-      outputVideoLength.current = lastCut.startTime + lastCut.duration;
+      outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
       setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

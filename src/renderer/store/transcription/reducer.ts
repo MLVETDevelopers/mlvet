@@ -25,6 +25,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     // sets newDeleted bool to true for delete and false for undo
     const newDeletedBool = action.type === DELETE_WORD;
 
+    // TODO: Live processing here
+
     return {
       ...transcription,
       words: transcription.words.map((word, i) => ({

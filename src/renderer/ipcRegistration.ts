@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
 import { projectOpened, projectSaved } from './store/currentProject/actions';
@@ -10,6 +11,7 @@ import {
 import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
+import { removeExtension } from './util';
 
 /**
  * Used by backend to initiate saves from front end
@@ -21,9 +23,53 @@ ipc.on('initiate-save-project', async () => {
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  const filePath = await ipc.saveProject(currentProject);
+  const filePath = await window.electron.saveProject(currentProject);
 
-  store.dispatch(projectSaved(currentProject.id, filePath));
+  const projectMetadata = await window.electron.retrieveProjectMetadata({
+    ...currentProject,
+    projectFilePath: filePath,
+  });
+
+  store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
+});
+
+/**
+ * Used by backend to initiate save-as from front end
+ */
+window.electron.on('initiate-save-as-project', async () => {
+  // Retrieve current project state from redux
+  const { currentProject } = store.getState();
+
+  // Don't save-as if we don't have a project open or if the project doesn't have an existing save path
+  if (currentProject === null || currentProject.projectFilePath === null)
+    return;
+
+  // Generate a deep-copy of the project, with new ID and name
+  const newProject = JSON.parse(JSON.stringify(currentProject)) as Project;
+  newProject.name = `Copy of ${currentProject.name}`;
+  newProject.id = uuidv4();
+
+  // TODO(patrick): regenerate thumbnail and audio extract
+
+  const filePath = await window.electron.saveAsProject(newProject);
+
+  const savedFileNameWithExtension = await ipc.getFileNameWithExtension(
+    filePath
+  );
+
+  const savedFileName = removeExtension(savedFileNameWithExtension);
+
+  // Update the saved file name to the name that it was actually saved as, rather than the default 'Copy of ...'
+  newProject.name = savedFileName;
+
+  // Add to recent projects
+  const projectMetadata = await window.electron.retrieveProjectMetadata({
+    ...currentProject,
+    projectFilePath: filePath,
+  });
+
+  store.dispatch(projectSaved(newProject, projectMetadata, filePath));
+  store.dispatch(projectOpened(newProject, filePath));
 });
 
 /**

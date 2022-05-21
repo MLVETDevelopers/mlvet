@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { io } from 'socket.io-client';
 import { app } from 'electron';
 import getAudioDurationInSeconds from 'get-audio-duration';
 import { Project, Transcription } from '../../sharedTypes';
@@ -10,13 +11,20 @@ interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
 }
 
-/**
- * util to simulate running of transcription
- * @param n seconds to sleep
- * @returns promise resolving after n seconds
- */
-const sleep: (n: number) => Promise<void> = (n) =>
-  new Promise((resolve) => setTimeout(resolve, n * 1000));
+const transcribeRequest: (project: Project) => Promise<string> = async (
+  project
+) => {
+  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
+  return new Promise((resolve) => {
+    socket.emit(
+      'transcribe',
+      project.audioExtractFilePath,
+      (transcription: string) => {
+        resolve(transcription);
+      }
+    );
+  });
+};
 
 /**
  * This is an easy (but kind of annoying) approach to validating incoming JSON.
@@ -51,21 +59,12 @@ const validateJsonTranscriptionContainer = <
 type RequestTranscription = (project: Project) => Promise<Transcription | null>;
 
 const requestTranscription: RequestTranscription = async (project) => {
-  // TODO: replace hard coded media path with parameter passed in
-
   if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
     return null;
   }
 
-  await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
-
-  // Read from sample transcript. Replace this section with real transcript input
-  const transcriptionPath = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets/SampleTranscript.json')
-    : path.join(__dirname, '../../../assets/SampleTranscript.json');
-
-  const rawTranscription = fs.readFileSync(transcriptionPath).toString();
-  const jsonTranscript = JSON.parse(rawTranscription);
+  const transcript = await transcribeRequest(project);
+  const jsonTranscript = JSON.parse(transcript);
 
   if (!validateJsonTranscriptionContainer(jsonTranscript)) {
     throw new Error('JSON transcript is invalid');

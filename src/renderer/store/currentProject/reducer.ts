@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Project } from '../../../sharedTypes';
+import { Project, ProjectMetadata } from '../../../sharedTypes';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
 import {
@@ -38,10 +38,18 @@ const currentProjectReducer: Reducer<
   }
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
-    return {
-      ...currentProject,
-      projectFilePath: action.payload.filePath,
+    const { project, filePath } = action.payload as {
+      project: Project;
+      metadata: ProjectMetadata;
+      filePath: string;
     };
+
+    return project.id === currentProject.id
+      ? {
+          ...currentProject,
+          projectFilePath: filePath,
+        }
+      : currentProject;
   }
 
   if (action.type === CURRENT_PROJECT_CLOSED) {

@@ -1,5 +1,6 @@
 import { Reducer } from 'redux';
-import { Project, RecentProject } from '../../../sharedTypes';
+import makeRecentProject from '../../../sharedUtils';
+import { Project, ProjectMetadata, RecentProject } from '../../../sharedTypes';
 import { RECENT_PROJECTS_LOADED, RECENT_PROJECT_ADDED } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
@@ -31,16 +32,20 @@ const recentProjectsReducer: Reducer<
   }
 
   if (action.type === PROJECT_SAVED) {
-    const { projectId, filePath } = action.payload as {
-      projectId: string;
+    const { project, metadata, filePath } = action.payload as {
+      project: Project;
+      metadata: ProjectMetadata;
       filePath: string;
     };
 
-    return recentProjects.map((project) =>
-      project.id === projectId
-        ? { ...project, projectFilePath: filePath }
-        : project
+    const recentProject: RecentProject = makeRecentProject(
+      project,
+      metadata,
+      filePath
     );
+
+    // Append project to recent projects immutably
+    return recentProjects.concat([recentProject]);
   }
 
   return recentProjects;

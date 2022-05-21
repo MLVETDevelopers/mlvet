@@ -17,7 +17,11 @@ export interface ProjectMetadata {
   mediaSize: number | null; // bytes
 }
 
-export type RecentProject = Project & ProjectMetadata;
+export type RecentProject = Pick<
+  Project,
+  'id' | 'name' | 'projectFilePath' | 'mediaFilePath' | 'thumbnailFilePath'
+> &
+  ProjectMetadata;
 
 export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
@@ -40,6 +44,8 @@ export interface Word {
 export interface Cut {
   startTime: number;
   duration: number;
+  outputStartTime: number;
+  index: number;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

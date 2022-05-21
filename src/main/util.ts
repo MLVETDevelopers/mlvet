@@ -19,14 +19,6 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-export const padZeros: (num: number, len: number) => string = (num, len) => {
-  return String(num).padStart(len, '0');
-};
-
-export const integerDivide: (a: number, b: number) => number = (a, b) => {
-  return Math.floor(a / b);
-};
-
 export const mkdir = (dirPath: string) => {
   if (!existsSync(dirPath)) {
     try {

@@ -125,6 +125,9 @@ const ProjectPage = () => {
     } else if (event.key === 'c') {
       console.log('Key "c" pressed');
       copyText();
+    } else if (event.key === 'z') {
+      console.log('Key "z" pressed');
+      setClipboard({ start: 0, end: 0 }); // Clear the clipboard if there is an undo
     }
   };
 

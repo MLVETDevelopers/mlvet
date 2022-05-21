@@ -24,11 +24,16 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
+  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
+
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
+
+  setHomeEnabled: (homeEnabled) =>
+    ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
   extractThumbnail: (absolutePathToMediaFile) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),

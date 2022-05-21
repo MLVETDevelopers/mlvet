@@ -19,6 +19,8 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
+      exportProject: (project: Project) => Promise<string>;
+
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       openProject: (
@@ -35,6 +37,8 @@ declare global {
 
       requestMediaDialog: () => Promise<string | null>;
 
+      returnToHome: (project: Project) => Promise<number>;
+
       saveAsProject: (project: Project) => Promise<string>;
 
       saveProject: (project: Project) => Promise<string>;
@@ -43,13 +47,13 @@ declare global {
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
+      setHomeEnabled: (homeEnabled: boolean) => void;
+
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 
       requestTranscription: (project: Project) => Promise<Transcription | null>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
-
-      exportProject: (project: Project) => Promise<string>;
       // END GENERATED CODE
 
       on: (

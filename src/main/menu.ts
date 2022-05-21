@@ -128,6 +128,20 @@ export default class MenuBuilder {
     ];
   }
 
+  buildHistoryOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'home',
+        label: 'Home',
+        accelerator: 'Shift+CommandOrControl+H',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-return-to-home');
+        },
+        enabled: false,
+      },
+    ];
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'MLVET',
@@ -144,7 +158,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Hide Others',
-          accelerator: 'CommandOrControl+Shift+H',
+          accelerator: 'CommandOrControl+Alt+H',
           selector: 'hideOtherApplications:',
         },
         { label: 'Show All', selector: 'unhideAllApplications:' },
@@ -224,6 +238,11 @@ export default class MenuBuilder {
         },
       ],
     };
+    const subMenuHistory: MenuItemConstructorOptions = {
+      id: 'history',
+      label: 'History',
+      submenu: this.buildHistoryOptions(),
+    };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -248,7 +267,14 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuView, subMenuWindow];
+    return [
+      subMenuAbout,
+      subMenuFile,
+      subMenuEdit,
+      subMenuView,
+      subMenuHistory,
+      subMenuWindow,
+    ];
   }
 
   buildDefaultTemplate() {
@@ -305,6 +331,11 @@ export default class MenuBuilder {
                   },
                 },
               ],
+      },
+      {
+        id: 'history',
+        label: '&History',
+        submenu: this.buildHistoryOptions(),
       },
       {
         id: 'help',

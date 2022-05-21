@@ -20,6 +20,8 @@ import extractThumbnail from './handlers/thumbnailExtract';
 import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
 import exportProject from './handlers/exportProjectHandler';
+import returnToHome from './handlers/returnToHomeHandler';
+import setHomeEnabled from './handlers/setHomeEnabled';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -70,6 +72,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
       setUndoRedoEnabled(ipcContext, undoEnabled, redoEnabled)
   );
 
+  ipcMain.handle('set-home-enabled', async (_event, homeEnabled) =>
+    setHomeEnabled(ipcContext, homeEnabled)
+  );
+
   ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
     extractThumbnail(absolutePathToMediaFile)
   );
@@ -84,6 +90,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('export-project', async (_event, project) =>
     exportProject(ipcContext, project)
+  );
+
+  ipcMain.handle('return-to-home', async (_event, project) =>
+    returnToHome(ipcContext, project)
   );
   // END GENERATED CODE PART 2
 };

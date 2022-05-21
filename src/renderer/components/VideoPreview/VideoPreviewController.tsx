@@ -29,7 +29,11 @@ interface Props {
 
 type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;
 const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cuts) => {
-  const foundCut = cuts.find((cut) => cut.outputStartTime <= systemTime);
+  const foundCut = cuts.find(
+    (cut) =>
+      cut.outputStartTime <= systemTime &&
+      cut.outputStartTime + cut.duration >= systemTime
+  );
   return foundCut ?? cuts[cuts.length - 1];
 };
 

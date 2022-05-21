@@ -1,10 +1,13 @@
 import { Box, Stack } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import VideoController from 'renderer/components/VideoController';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeDeleteWord } from 'renderer/store/undoStack/ops';
+import VideoPreviewController, {
+  VideoPreviewControllerRef,
+} from 'renderer/components/VideoPreview/VideoPreviewController';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
@@ -22,6 +25,19 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+
+  // UI states
+  const [time, setTime] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+
+  const play = () => videoPreviewControllerRef?.current?.play();
+  const pause = () => videoPreviewControllerRef?.current?.pause();
+  const setPlaybackTime = (newPlaybackTime: number) =>
+    videoPreviewControllerRef?.current?.setPlaybackTime(newPlaybackTime);
+  const seekForward = () => videoPreviewControllerRef?.current?.seekForward();
+  const seekBack = () => videoPreviewControllerRef?.current?.seekBack();
 
   const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
     if (currentProject && currentProject.transcription) {
@@ -62,19 +78,26 @@ const ProjectPage = () => {
     };
   });
 
-  // TODO: Error handling
-  if (!currentProject?.transcription) {
-    return null;
-  }
-
-  const onWordClick = (wordIndex: number) => {
-    // TODO: Implement onWordClick
-    return currentProject.transcription?.words[wordIndex];
+  // TODO: figure out return type
+  const onWordClick: (wordIndex: number) => void = (wordIndex) => {
+    if (currentProject !== null && currentProject?.transcription !== null) {
+      // return currentProject.transcription?.words[wordIndex];
+      const newTime =
+        currentProject.transcription.words[wordIndex].outputStartTime;
+      setPlaybackTime(newTime);
+    }
   };
 
   return (
     <>
-      <VideoController />
+      <VideoController
+        time={time}
+        isPlaying={isPlaying}
+        play={play}
+        pause={pause}
+        seekForward={seekForward}
+        seekBack={seekBack}
+      />
 
       <Stack
         direction="row"
@@ -86,17 +109,23 @@ const ProjectPage = () => {
         }}
       >
         <Stack spacing={4} sx={{ flex: '5 1 0' }}>
-          <TranscriptionBlock
-            transcription={currentProject.transcription}
-            onWordClick={onWordClick}
-          />
+          {currentProject?.transcription && (
+            <TranscriptionBlock
+              transcription={currentProject.transcription}
+              onWordClick={onWordClick}
+            />
+          )}
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box
             sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
           >
-            video
+            <VideoPreviewController
+              setTime={setTime}
+              setIsPlaying={setIsPlaying}
+              ref={videoPreviewControllerRef}
+            />
           </Box>
         </Stack>
         {isExporting && (

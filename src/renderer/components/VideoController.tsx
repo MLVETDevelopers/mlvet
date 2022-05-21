@@ -1,9 +1,6 @@
-import { styled, Box, IconButton } from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Forward10Icon from '@mui/icons-material/Forward10';
-import Replay10Icon from '@mui/icons-material/Replay10';
-import PauseIcon from '@mui/icons-material/Pause';
-import { useState } from 'react';
+import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
+import { Box, IconButton, styled } from '@mui/material';
+import { secondToTimestampUI } from 'main/timeUtils';
 import colors from '../colors';
 
 const VideoControllerBox = styled(Box)`
@@ -16,19 +13,42 @@ const VideoControllerBox = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
-  // column-gap: 24px;
 `;
 
-const VideoController = () => {
-  const [playVideo, setPlayState] = useState(false);
+interface TogglePlayButtonProps {
+  isPlaying: boolean;
+}
 
-  const togglePlayButton = () => {
-    if (playVideo) {
-      return (
-        <PlayArrowIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />
-      );
+const TogglePlayButton = ({ isPlaying }: TogglePlayButtonProps) => {
+  if (!isPlaying) {
+    return <PlayArrow sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+  }
+  return <Pause sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+};
+
+interface Props {
+  time: number;
+  isPlaying: boolean;
+  play: () => void;
+  pause: () => void;
+  seekForward: () => void;
+  seekBack: () => void;
+}
+
+const VideoController = ({
+  time,
+  isPlaying,
+  play,
+  pause,
+  seekForward,
+  seekBack,
+}: Props) => {
+  const onClickPlayPause = () => {
+    if (isPlaying) {
+      pause();
+    } else {
+      play();
     }
-    return <PauseIcon sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
   };
 
   return (
@@ -41,18 +61,20 @@ const VideoController = () => {
           borderRadius: '5px',
           padding: '0 19px',
           marginRight: '47px',
+          width: '152px',
+          textAlign: 'left',
         }}
       >
-        00:00:00
+        {secondToTimestampUI(time)}
       </div>
-      <IconButton>
-        <Replay10Icon sx={{ fontSize: '36px', color: colors.grey[400] }} />
+      <IconButton onClick={seekBack}>
+        <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
-      <IconButton onClick={() => setPlayState(!playVideo)}>
-        {togglePlayButton()}
+      <IconButton onClick={onClickPlayPause}>
+        <TogglePlayButton isPlaying={isPlaying} />
       </IconButton>
-      <IconButton>
-        <Forward10Icon sx={{ fontSize: '36px', color: colors.grey[400] }} />
+      <IconButton onClick={seekForward}>
+        <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
     </VideoControllerBox>
   );

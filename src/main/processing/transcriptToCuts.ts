@@ -6,7 +6,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
   const words = transcript.words.filter((word) => !word.deleted);
   let cut: Cut;
   let currentStartWord = words[0];
-  let currentDuration = 0;
+  let currentDuration = words[0].duration;
 
   for (let i = 0; i < words.length - 1; i += 1) {
     const word = words[i];
@@ -24,6 +24,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
       };
       cuts.push(cut);
       currentStartWord = words[i + 1];
+      currentDuration = words[i + 1].duration;
     } else if (nextWord.duration > 0) {
       currentDuration += nextWord.duration;
     }

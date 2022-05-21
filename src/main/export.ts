@@ -3,12 +3,8 @@ import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
-import { padZeros, integerDivide, mkdir } from './util';
-
-// 00:00:00:00
-const secondToTimestamp: (num: number) => string = (num) => {
-  return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
-};
+import { mkdir } from './util';
+import { secondToTimestamp, padZeros } from './timeUtils';
 
 const constructEDL: (
   title: string,

@@ -8,6 +8,10 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 
 // 00:00:00:00
 export const secondToTimestamp: (num: number) => string = (num) => {
+  if (num < 0) {
+    throw new Error('Negative Input');
+  }
+
   return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
 };
 

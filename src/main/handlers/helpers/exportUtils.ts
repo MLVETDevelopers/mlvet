@@ -1,6 +1,6 @@
 import { BrowserWindow, dialog } from 'electron';
 import { Project } from '../../../sharedTypes';
-import { exportEDL } from '../../export';
+import { exportEDL } from '../../export/export';
 
 export const getExportFilePath: (
   mainWindow: BrowserWindow | null,

@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
 
+  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
@@ -24,6 +26,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
+  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
+
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
@@ -34,6 +38,9 @@ contextBridge.exposeInMainWorld('electron', {
       representedFilePath,
       isEdited
     ),
+
+  setHomeEnabled: (homeEnabled) =>
+    ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
@@ -52,7 +59,6 @@ contextBridge.exposeInMainWorld('electron', {
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

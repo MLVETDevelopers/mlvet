@@ -8,22 +8,24 @@ import { IpcContext } from './types';
 import extractAudio from './handlers/audioExtract';
 import closeWindow from './handlers/closeWindow';
 import deleteProject from './handlers/deleteProject';
+import exportProject from './handlers/exportProjectHandler';
 import getFileNameWithExtension from './handlers/getFileNameWithExtension';
 import openProject from './handlers/openProjectHandler';
 import handleOsQuery from './handlers/osQuery';
 import retrieveProjectMetadata from './handlers/projectMetadataHandler';
 import readRecentProjects from './handlers/readRecentProjects';
 import requestMediaDialog from './handlers/requestMediaDialog';
+import returnToHome from './handlers/returnToHomeHandler';
 import saveAsProject from './handlers/saveAsProjectHandler';
 import saveProject from './handlers/saveProjectHandler';
 import setFileRepresentation from './handlers/setFileRepresentation';
+import setHomeEnabled from './handlers/setHomeEnabled';
 import setSaveEnabled from './handlers/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
 import showConfirmation from './handlers/showConfirmation';
 import extractThumbnail from './handlers/thumbnailExtract';
 import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
-import exportProject from './handlers/exportProjectHandler';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -38,6 +40,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('delete-project', async (_event, project) =>
     deleteProject(project)
+  );
+
+  ipcMain.handle('export-project', async (_event, project) =>
+    exportProject(ipcContext, project)
   );
 
   ipcMain.handle('get-file-name-with-extension', async (_event, filePath) =>
@@ -60,6 +66,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     requestMediaDialog(ipcContext)
   );
 
+  ipcMain.handle('return-to-home', async (_event, project) =>
+    returnToHome(ipcContext, project)
+  );
+
   ipcMain.handle('save-as-project', async (_event, project) =>
     saveAsProject(ipcContext, project)
   );
@@ -72,6 +82,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-file-representation',
     async (_event, representedFilePath, isEdited) =>
       setFileRepresentation(ipcContext, representedFilePath, isEdited)
+  );
+
+  ipcMain.handle('set-home-enabled', async (_event, homeEnabled) =>
+    setHomeEnabled(ipcContext, homeEnabled)
   );
 
   ipcMain.handle(
@@ -100,10 +114,6 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
     writeRecentProjects(recentProjects)
-  );
-
-  ipcMain.handle('export-project', async (_event, project) =>
-    exportProject(ipcContext, project)
   );
   // END GENERATED CODE PART 2
 };

@@ -17,10 +17,12 @@ import { get } from 'http';
 import path from 'path';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
+import startExpressServer from './expressServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
 import promptToSaveWork from './promptToSaveWork';
+import AppState from './AppState';
 
 export default class AppUpdater {
   constructor() {
@@ -32,6 +34,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+
 dotenv.config();
 
 // If app data storage path doesn't exist, create it
@@ -118,19 +121,8 @@ const createWindow = async () => {
         });
       });
     }
-  });
 
-  mainWindow.on('close', (event) => {
-    if (mainWindow === null) {
-      return; // let the close action go ahead as normal
-    }
-
-    // If the user has unsaved work, prompt them to save it
-    if (promptToSaveWork(mainWindow)) {
-      return; // app can continue closing
-    }
-
-    event.preventDefault(); // app cannot close
+    startExpressServer();
   });
 
   mainWindow.on('closed', () => {
@@ -143,12 +135,28 @@ const createWindow = async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();
 
+  const appState = new AppState(mainWindow);
+
   const ipcContext: IpcContext = {
     mainWindow,
     menu,
+    appState,
   };
 
   initialiseIpcHandlers(ipcContext);
+
+  mainWindow.on('close', (event) => {
+    if (mainWindow === null) {
+      return; // let the close action go ahead as normal
+    }
+
+    // If the user has unsaved work, prompt them to save it
+    if (promptToSaveWork(mainWindow, appState)) {
+      return; // app can continue closing
+    }
+
+    event.preventDefault(); // app cannot close
+  });
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
@@ -166,13 +174,11 @@ const createWindow = async () => {
  */
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-    if (pyServer !== null) {
-      pyServer.kill(0);
-    }
+  // For simplicity, quit even on mac
+  app.quit();
+
+  if (pyServer !== null) {
+    pyServer.kill(0);
   }
 });
 

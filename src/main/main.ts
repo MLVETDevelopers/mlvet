@@ -17,6 +17,7 @@ import { get } from 'http';
 import path from 'path';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
+import startExpressServer from './expressServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
 import { IpcContext } from './types';
@@ -33,6 +34,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+
 dotenv.config();
 
 // If app data storage path doesn't exist, create it
@@ -119,6 +121,8 @@ const createWindow = async () => {
         });
       });
     }
+
+    startExpressServer();
   });
 
   mainWindow.on('closed', () => {

@@ -3,14 +3,8 @@ import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
 import { Project, Transcription } from '../sharedTypes';
-import { padZeros, integerDivide, mkdir } from './util';
-
-// 00:00:00:00
-const secondToTimestamp: (num: number) => string = (num) => {
-  return [3600, 60, 1, 0.01]
-    .map((mult) => padZeros(integerDivide(num, mult), 2))
-    .join(':');
-};
+import { mkdir } from './util';
+import { secondToTimestamp, padZeros } from './timeUtils';
 
 const constructEDL: (
   title: string,

@@ -5,45 +5,37 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
 
   const words = transcript.words.filter((word) => !word.deleted);
   let cut: Cut;
-  let currentStartTime = -1;
-  let currentDuration = 0;
+  let currentStartWord = words[0];
+  let currentDuration = words[0].duration;
 
   for (let i = 0; i < words.length - 1; i += 1) {
     const word = words[i];
     const nextWord = words[i + 1];
 
-    if (currentStartTime === -1) {
-      currentStartTime = word.startTime;
-      currentDuration = word.duration;
-    }
-
-    if (word.startTime + word.duration !== nextWord.startTime) {
+    if (
+      (word.startTime + word.duration).toFixed(4) !==
+      nextWord.startTime.toFixed(4)
+    ) {
       cut = {
-        startTime: currentStartTime,
+        startTime: currentStartWord.startTime,
         duration: currentDuration,
+        outputStartTime: currentStartWord.outputStartTime,
+        index: cuts.length,
       };
       cuts.push(cut);
-
-      currentStartTime = -1;
-      currentDuration = 0;
-    } else {
+      currentStartWord = words[i + 1];
+      currentDuration = words[i + 1].duration;
+    } else if (nextWord.duration > 0) {
       currentDuration += nextWord.duration;
     }
   }
 
-  const lastWord = words[words.length - 1];
-  if (currentStartTime === -1) {
-    cut = {
-      startTime: lastWord.startTime,
-      duration: lastWord.duration,
-    };
-  } else {
-    cut = {
-      startTime: currentStartTime,
-      duration: currentDuration,
-    };
-  }
-  cuts.push(cut);
+  cuts.push({
+    startTime: currentStartWord.startTime,
+    duration: currentDuration,
+    outputStartTime: currentStartWord.outputStartTime,
+    index: cuts.length,
+  });
 
   return cuts;
 };

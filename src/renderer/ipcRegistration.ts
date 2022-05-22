@@ -1,7 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Project } from '../sharedTypes';
 import ipc from './ipc';
-import { projectOpened, projectSaved } from './store/currentProject/actions';
+import {
+  currentProjectClosed,
+  projectOpened,
+  projectSaved,
+} from './store/currentProject/actions';
 import { pageChanged } from './store/currentPage/actions';
 import {
   updateExportProgress,
@@ -130,4 +134,30 @@ ipc.on('initiate-export-project', async () => {
   const filePath = await ipc.exportProject(currentProject);
 
   store.dispatch(startExport(currentProject.id, filePath));
+});
+
+/**
+ * Used by backend to initiate return to home from front end
+ */
+window.electron.on('initiate-return-to-home', async () => {
+  const { currentProject } = store.getState();
+  const saveChanges = 0;
+
+  if (currentProject === null) return;
+
+  const userSelection = await window.electron.returnToHome(currentProject);
+
+  // if user wants to save unsaved changes
+  if (userSelection === saveChanges) {
+    const filePath = await window.electron.saveProject(currentProject);
+
+    const projectMetadata = await window.electron.retrieveProjectMetadata({
+      ...currentProject,
+      projectFilePath: filePath,
+    });
+
+    store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
+  }
+  store.dispatch(pageChanged(ApplicationPage.HOME));
+  store.dispatch(currentProjectClosed());
 });

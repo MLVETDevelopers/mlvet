@@ -1,3 +1,4 @@
+import { Project } from 'sharedTypes';
 import { Action } from '../action';
 
 export const START_EXPORT = 'START_EXPORT';
@@ -22,7 +23,13 @@ export const updateExportProgress: (progress: number) => Action<number> = (
   payload: progress,
 });
 
-export const finishExport: () => Action<null> = () => ({
+export const finishExport: (
+  project: Project,
+  filePath: string | null
+) => Action<{ project: Project; filePath: string | null }> = (
+  project,
+  filePath
+) => ({
   type: FINISH_EXPORT,
-  payload: null,
+  payload: { project, filePath },
 });

@@ -74,7 +74,11 @@ export const exportEDL: (
         mainWindow
       )
     );
-    mainWindow?.webContents.send('finish-export', 1);
+    mainWindow?.webContents.send(
+      'finish-export',
+      project,
+      project.projectFilePath
+    );
   }
 };
 

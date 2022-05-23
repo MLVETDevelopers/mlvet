@@ -29,6 +29,9 @@ const ProjectPage = () => {
   // UI states
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number | null>(
+    null
+  );
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
@@ -78,6 +81,20 @@ const ProjectPage = () => {
     };
   });
 
+  useEffect(() => {
+    if (currentProject?.transcription != null) {
+      const { words } = currentProject.transcription;
+      const currentPlayingWordIndex = words.findIndex(
+        (word) =>
+          time >= word.outputStartTime &&
+          time <= word.outputStartTime + word.duration
+      );
+      if (currentPlayingWordIndex !== nowPlayingWordIndex)
+        setNowPlayingWordIndex(currentPlayingWordIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time, currentProject?.transcription]);
+
   // TODO: figure out return type
   const onWordClick: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
@@ -126,6 +143,7 @@ const ProjectPage = () => {
               setIsPlaying={setIsPlaying}
               ref={videoPreviewControllerRef}
             />
+            <p>{nowPlayingWordIndex}</p>
           </Box>
         </Stack>
         {isExporting && (

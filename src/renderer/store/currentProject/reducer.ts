@@ -66,7 +66,10 @@ const currentProjectReducer: Reducer<
   }
 
   if (action.type === FINISH_EXPORT) {
-    return null;
+    return {
+      ...(action.payload.project as Project),
+      projectFilePath: action.payload.filePath,
+    };
   }
 
   // Delegate transcription-related actions to transcription reducer

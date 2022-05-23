@@ -83,8 +83,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      const { words } = currentProject.transcription;
-      const newPlayingWordIndex = words.findIndex(
+      const newPlayingWordIndex = currentProject.transcription.words.findIndex(
         (word) =>
           time >= word.outputStartTime &&
           time <= word.outputStartTime + word.duration &&

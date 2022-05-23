@@ -29,9 +29,7 @@ const ProjectPage = () => {
   // UI states
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number | null>(
-    null
-  );
+  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 

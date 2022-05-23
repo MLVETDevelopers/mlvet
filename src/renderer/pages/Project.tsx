@@ -82,16 +82,16 @@ const ProjectPage = () => {
   });
 
   useEffect(() => {
-    if (currentProject?.transcription != null) {
+    if (currentProject !== null && currentProject?.transcription !== null) {
       const { words } = currentProject.transcription;
-      const currentPlayingWordIndex = words.findIndex(
+      const newPlayingWordIndex = words.findIndex(
         (word) =>
           time >= word.outputStartTime &&
           time <= word.outputStartTime + word.duration &&
           !word.deleted
       );
-      if (currentPlayingWordIndex !== nowPlayingWordIndex)
-        setNowPlayingWordIndex(currentPlayingWordIndex);
+      if (newPlayingWordIndex !== nowPlayingWordIndex)
+        setNowPlayingWordIndex(newPlayingWordIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);

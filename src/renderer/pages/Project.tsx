@@ -87,7 +87,8 @@ const ProjectPage = () => {
       const currentPlayingWordIndex = words.findIndex(
         (word) =>
           time >= word.outputStartTime &&
-          time <= word.outputStartTime + word.duration
+          time <= word.outputStartTime + word.duration &&
+          !word.deleted
       );
       if (currentPlayingWordIndex !== nowPlayingWordIndex)
         setNowPlayingWordIndex(currentPlayingWordIndex);
@@ -95,10 +96,8 @@ const ProjectPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);
 
-  // TODO: figure out return type
   const onWordClick: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      // return currentProject.transcription?.words[wordIndex];
       const newTime =
         currentProject.transcription.words[wordIndex].outputStartTime;
       setPlaybackTime(newTime);
@@ -129,6 +128,7 @@ const ProjectPage = () => {
           {currentProject?.transcription && (
             <TranscriptionBlock
               transcription={currentProject.transcription}
+              nowPlayingWordIndex={nowPlayingWordIndex}
               onWordClick={onWordClick}
             />
           )}

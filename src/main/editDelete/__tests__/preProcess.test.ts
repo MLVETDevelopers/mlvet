@@ -38,7 +38,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'abc',
+          word: 'Abc.',
           duration: 1,
           startTime: 0,
           outputStartTime: 0,
@@ -56,7 +56,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'def',
+          word: 'Def.',
           duration: 1,
           startTime: 1,
           outputStartTime: 1,
@@ -119,7 +119,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'heat',
+          word: 'Heat.',
           duration: 2,
           startTime: 5,
           outputStartTime: 5,
@@ -137,7 +137,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'from',
+          word: 'From',
           duration: 3,
           startTime: 8,
           outputStartTime: 8,
@@ -155,7 +155,106 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
+          word: 'fire.',
+          duration: 0.9,
+          startTime: 11.2,
+          outputStartTime: 11.2,
+          key: '5',
+          deleted: false,
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: ' ',
+          startTime: 12.1,
+          duration: 3.67,
+          outputStartTime: 12.1,
+          deleted: false,
+          key: '6',
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+      ],
+    });
+  });
+
+  it('should punctuate the transcript with a comma after "from"', () => {
+    const jsonTranscript = {
+      confidence: -7,
+      words: [
+        {
+          word: 'heat',
+          start_time: 5,
+          duration: 2.5,
+        },
+        {
+          word: 'from',
+          start_time: 8,
+          duration: 3,
+        },
+        {
           word: 'fire',
+          start_time: 11.2,
+          duration: 0.9,
+        },
+      ],
+    };
+    const duration = 15.77;
+
+    const outputTranscript = preProcessTranscript(
+      jsonTranscript,
+      duration,
+      'PLACEHOLDER FILENAME'
+    );
+
+    expect(outputTranscript).toEqual({
+      confidence: -7,
+      words: [
+        {
+          word: ' ',
+          startTime: 0,
+          duration: 5,
+          outputStartTime: 0,
+          deleted: false,
+          key: '0',
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: 'Heat.',
+          duration: 2.5,
+          startTime: 5,
+          outputStartTime: 5,
+          key: '1',
+          deleted: false,
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: ' ',
+          startTime: 7.5,
+          duration: 0.5,
+          outputStartTime: 7.5,
+          deleted: false,
+          key: '2',
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: 'From,',
+          duration: 3,
+          startTime: 8,
+          outputStartTime: 8,
+          key: '3',
+          deleted: false,
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: ' ',
+          startTime: 11,
+          duration: 0.2,
+          outputStartTime: 11,
+          deleted: false,
+          key: '4',
+          fileName: 'PLACEHOLDER FILENAME',
+        },
+        {
+          word: 'fire.',
           duration: 0.9,
           startTime: 11.2,
           outputStartTime: 11.2,

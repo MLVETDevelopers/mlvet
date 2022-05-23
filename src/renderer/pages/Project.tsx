@@ -29,9 +29,6 @@ const ProjectPage = () => {
   // UI states
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number | null>(
-    null
-  );
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
@@ -81,21 +78,6 @@ const ProjectPage = () => {
     };
   });
 
-  useEffect(() => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      const { words } = currentProject.transcription;
-      const newPlayingWordIndex = words.findIndex(
-        (word) =>
-          time >= word.outputStartTime &&
-          time <= word.outputStartTime + word.duration &&
-          !word.deleted
-      );
-      if (newPlayingWordIndex !== nowPlayingWordIndex)
-        setNowPlayingWordIndex(newPlayingWordIndex);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, currentProject?.transcription]);
-
   const onWordClick: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
       const newTime =
@@ -128,7 +110,7 @@ const ProjectPage = () => {
           {currentProject?.transcription && (
             <TranscriptionBlock
               transcription={currentProject.transcription}
-              nowPlayingWordIndex={nowPlayingWordIndex}
+              time={time}
               onWordClick={onWordClick}
             />
           )}

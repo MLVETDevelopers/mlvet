@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Transcription } from 'sharedTypes';
 import colors from '../colors';
 
@@ -30,15 +31,27 @@ const Word = styled('span')`
 
 interface Props {
   transcription: Transcription;
-  nowPlayingWordIndex: number | null;
+  time: number;
   onWordClick: (wordIndex: number) => void;
 }
 
-const TranscriptionBlock = ({
-  onWordClick,
-  transcription,
-  nowPlayingWordIndex,
-}: Props) => {
+const TranscriptionBlock = ({ onWordClick, transcription, time }: Props) => {
+  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    const newPlayingWordIndex = transcription.words.findIndex(
+      (word) =>
+        time >= word.outputStartTime &&
+        time <= word.outputStartTime + word.duration &&
+        !word.deleted
+    );
+    if (newPlayingWordIndex !== nowPlayingWordIndex)
+      setNowPlayingWordIndex(newPlayingWordIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time, transcription]);
+
   return (
     <TranscriptionBox>
       <p

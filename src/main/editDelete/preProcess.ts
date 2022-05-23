@@ -1,6 +1,7 @@
 import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
+import punctuate from './punctuate';
 
 type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
@@ -102,6 +103,24 @@ const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
     return wordAndSilence;
   };
 
+const calculateAverageSilenceDuration = (
+  jsonTranscription: JSONTranscription,
+  totalDuration: number
+): number => {
+  let silenceSum = 0;
+  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
+    const endTime = jsonTranscription.words[i + 1].start_time;
+    const silenceDuration =
+      endTime -
+      jsonTranscription.words[i].start_time -
+      jsonTranscription.words[i].duration;
+    silenceSum += silenceDuration;
+  }
+  return jsonTranscription.words.length !== 0
+    ? silenceSum / jsonTranscription.words.length
+    : totalDuration;
+};
+
 /**
  * Pre processes a JSON transcript from python for use in the front end
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
@@ -113,10 +132,15 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
+  const averageSilenceDuration: number = calculateAverageSilenceDuration(
+    jsonTranscript,
+    duration
+  );
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
+      .map(punctuate(duration, averageSilenceDuration))
       .map(injectAttributes(fileName))
       .map(addSpaces(duration))
       .flat(),

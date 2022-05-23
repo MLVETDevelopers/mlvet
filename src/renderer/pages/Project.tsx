@@ -143,7 +143,6 @@ const ProjectPage = () => {
               setIsPlaying={setIsPlaying}
               ref={videoPreviewControllerRef}
             />
-            <p>{nowPlayingWordIndex}</p>
           </Box>
         </Stack>
         {isExporting && (

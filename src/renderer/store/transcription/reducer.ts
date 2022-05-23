@@ -61,10 +61,11 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     // Have to check this if to get rid of linter error
     if (pasteyWords !== undefined && suffix !== undefined) {
-      return {
+      const updatedTranscription = {
         ...transcription,
         words: prefix?.concat(pasteyWords, suffix), // Concatonating the sub arrays
       };
+      return processTranscript(updatedTranscription);
     }
   }
 
@@ -79,10 +80,11 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     // Have to check this if to get rid of linter error
     if (suffix !== undefined) {
-      return {
+      const updatedTranscription = {
         ...transcription,
         words: prefix?.concat(suffix), // Concatonating the sub arrays
       };
+      return processTranscript(updatedTranscription);
     }
   }
 

@@ -59,7 +59,6 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     pasteyWords = pasteyWords?.map((word) => ({ ...word, deleted: false })); // Undeleting the cut words
     const suffix = transcription?.words.slice(toIndex);
 
-    // Have to check this if to get rid of linter error
     if (pasteyWords !== undefined && suffix !== undefined) {
       const updatedTranscription = {
         ...transcription,

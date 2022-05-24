@@ -55,16 +55,16 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     // Getting the subarrays for the new transcription
     const prefix = transcription?.words.slice(0, toIndex);
-    let pasteyWords = transcription?.words.slice(startIndex, endIndex + 1); // Words to be pasted
-    pasteyWords = pasteyWords?.map((word) => ({ ...word, deleted: false })); // Undeleting the cut words
+    let pastedWords = transcription?.words.slice(startIndex, endIndex + 1); // Words to be pasted
+    pastedWords = pastedWords?.map((word) => ({ ...word, deleted: false })); // Undeleting the cut words
     const suffix = transcription?.words.slice(toIndex);
 
-    // Have to check this if to get rid of linter error
-    if (pasteyWords !== undefined && suffix !== undefined) {
-      return {
+    if (pastedWords !== undefined && suffix !== undefined) {
+      const updatedTranscription = {
         ...transcription,
-        words: prefix?.concat(pasteyWords, suffix), // Concatonating the sub arrays
+        words: prefix?.concat(pastedWords, suffix), // Concatonating the sub arrays
       };
+      return processTranscript(updatedTranscription);
     }
   }
 
@@ -79,10 +79,11 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     // Have to check this if to get rid of linter error
     if (suffix !== undefined) {
-      return {
+      const updatedTranscription = {
         ...transcription,
         words: prefix?.concat(suffix), // Concatonating the sub arrays
       };
+      return processTranscript(updatedTranscription);
     }
   }
 

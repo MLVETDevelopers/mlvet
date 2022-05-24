@@ -29,6 +29,7 @@ const ProjectPage = () => {
   // UI states
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
@@ -155,10 +156,23 @@ const ProjectPage = () => {
     };
   });
 
-  // TODO: figure out return type
+  // TODO: Look into optimisations
+  useEffect(() => {
+    if (currentProject !== null && currentProject?.transcription !== null) {
+      const newPlayingWordIndex = currentProject.transcription.words.findIndex(
+        (word) =>
+          time >= word.outputStartTime &&
+          time <= word.outputStartTime + word.duration &&
+          !word.deleted
+      );
+      if (newPlayingWordIndex !== nowPlayingWordIndex)
+        setNowPlayingWordIndex(newPlayingWordIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [time, currentProject?.transcription]);
+
   const onWordClick: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      // return currentProject.transcription?.words[wordIndex];
       const newTime =
         currentProject.transcription.words[wordIndex].outputStartTime;
       setPlaybackTime(newTime);
@@ -189,6 +203,7 @@ const ProjectPage = () => {
           {currentProject?.transcription && (
             <TranscriptionBlock
               transcription={currentProject.transcription}
+              nowPlayingWordIndex={nowPlayingWordIndex}
               onWordClick={onWordClick}
             />
           )}

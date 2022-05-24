@@ -33,6 +33,7 @@ const currentProjectReducer: Reducer<
   if (action.type === PROJECT_OPENED) {
     return {
       ...(action.payload.project as Project),
+      isEdited: false,
       projectFilePath: action.payload.filePath,
     };
   }
@@ -47,6 +48,7 @@ const currentProjectReducer: Reducer<
     return project.id === currentProject.id
       ? {
           ...currentProject,
+          isEdited: false,
           projectFilePath: filePath,
         }
       : currentProject;
@@ -90,6 +92,7 @@ const currentProjectReducer: Reducer<
   ) {
     return {
       ...currentProject,
+      isEdited: true,
       transcription: transcriptionReducer(currentProject.transcription, action),
     };
   }

@@ -6,6 +6,10 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
+  closeWindow: () => ipcRenderer.invoke('close-window'),
+
+  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+
   getFileNameWithExtension: (filePath) =>
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
@@ -20,20 +24,27 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
+  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
+
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
-  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
+  setFileRepresentation: (representedFilePath, isEdited) =>
+    ipcRenderer.invoke(
+      'set-file-representation',
+      representedFilePath,
+      isEdited
+    ),
+
+  setHomeEnabled: (homeEnabled) =>
+    ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
-
-  setHomeEnabled: (homeEnabled) =>
-    ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
   extractThumbnail: (absolutePathToMediaFile) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
@@ -43,7 +54,6 @@ contextBridge.exposeInMainWorld('electron', {
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

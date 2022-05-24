@@ -19,6 +19,8 @@ declare global {
       // START GENERATED CODE
       extractAudio: (project: Project) => Promise<string>;
 
+      closeWindow: () => void;
+
       exportProject: (project: Project) => Promise<string>;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
@@ -43,11 +45,16 @@ declare global {
 
       saveProject: (project: Project) => Promise<string>;
 
+      setFileRepresentation: (
+        representedFilePath: string | null,
+        isEdited: boolean
+      ) => void;
+
+      setHomeEnabled: (homeEnabled: boolean) => void;
+
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
-
-      setHomeEnabled: (homeEnabled: boolean) => void;
 
       extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
 

@@ -103,7 +103,7 @@ export default class MenuBuilder {
         accelerator: 'CommandOrControl+S',
         click: () => {
           // Tell the renderer to initiate a save
-          this.mainWindow.webContents.send('initiate-save-project');
+          this.mainWindow.webContents.send('initiate-save-project', false);
         },
         enabled: false,
       },

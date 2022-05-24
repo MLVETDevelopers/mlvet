@@ -20,27 +20,33 @@ import { removeExtension } from './util';
 /**
  * Used by backend to initiate saves from front end
  */
-ipc.on('initiate-save-project', async () => {
+ipc.on('initiate-save-project', async (_event, shouldCloseAfter: boolean) => {
   // Retrieve current project state from redux
   const { currentProject } = store.getState();
 
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  const filePath = await window.electron.saveProject(currentProject);
+  const filePath = await ipc.saveProject(currentProject);
 
   const projectMetadata = await window.electron.retrieveProjectMetadata({
     ...currentProject,
     projectFilePath: filePath,
   });
 
+  ipc.setFileRepresentation(filePath, false);
+
   store.dispatch(projectSaved(currentProject, projectMetadata, filePath));
+
+  if (shouldCloseAfter) {
+    ipc.closeWindow();
+  }
 });
 
 /**
  * Used by backend to initiate save-as from front end
  */
-window.electron.on('initiate-save-as-project', async () => {
+ipc.on('initiate-save-as-project', async () => {
   // Retrieve current project state from redux
   const { currentProject } = store.getState();
 
@@ -55,7 +61,7 @@ window.electron.on('initiate-save-as-project', async () => {
 
   // TODO(patrick): regenerate thumbnail and audio extract
 
-  const filePath = await window.electron.saveAsProject(newProject);
+  const filePath = await ipc.saveAsProject(newProject);
 
   const savedFileNameWithExtension = await ipc.getFileNameWithExtension(
     filePath
@@ -67,13 +73,15 @@ window.electron.on('initiate-save-as-project', async () => {
   newProject.name = savedFileName;
 
   // Add to recent projects
-  const projectMetadata = await window.electron.retrieveProjectMetadata({
+  const projectMetadata = await ipc.retrieveProjectMetadata({
     ...currentProject,
     projectFilePath: filePath,
   });
 
   store.dispatch(projectSaved(newProject, projectMetadata, filePath));
   store.dispatch(projectOpened(newProject, filePath));
+
+  ipc.setFileRepresentation(filePath, false);
 });
 
 /**

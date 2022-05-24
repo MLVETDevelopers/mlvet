@@ -156,6 +156,7 @@ const ProjectPage = () => {
     };
   });
 
+  // TODO: Look into optimisations
   useEffect(() => {
     if (currentProject !== null && currentProject?.transcription !== null) {
       const newPlayingWordIndex = currentProject.transcription.words.findIndex(

@@ -206,6 +206,7 @@
     "@fontsource/rubik": "^4.5.6",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.1",
+    "buffer": "^6.0.3",
     "child_process": "^1.0.2",
     "dotenv": "^16.0.0",
     "electron-debug": "^3.2.0",
@@ -219,9 +220,9 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
+    "socket.io-client": "^4.5.0",
     "uuid": "^8.3.2",
-    "vimond-replay": "^3.3.0",
-    "socket.io-client": "^4.5.0"
+    "vimond-replay": "^3.3.0"
   },
   "devEngines": {
     "node": "16.x",

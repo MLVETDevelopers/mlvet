@@ -1,9 +1,17 @@
-import { useRef, useImperativeHandle, Ref, forwardRef, useEffect } from 'react';
+import {
+  useRef,
+  useImperativeHandle,
+  Ref,
+  forwardRef,
+  useEffect,
+  useState,
+} from 'react';
 import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'main/processing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
+import { Buffer } from 'buffer';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -47,12 +55,13 @@ const VideoPreviewControllerBase = (
   const framesPerSecond = 30;
   const videoPreviewRef = useRef<VideoPreviewRef>(null);
 
-  const transcription = useSelector(
-    (store: ApplicationStore) => store?.currentProject?.transcription
+  const currentProject = useSelector(
+    (store: ApplicationStore) => store?.currentProject
   );
 
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
+  const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
 
   const clampSystemTime = (time: number) =>
     clamp(time, 0, outputVideoLength.current);
@@ -186,17 +195,30 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    if (transcription != null) {
-      cuts.current = convertTranscriptToCuts(transcription);
+    if (currentProject?.transcription != null) {
+      cuts.current = convertTranscriptToCuts(currentProject.transcription);
       const lastCut = cuts.current[cuts.current.length - 1];
       outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
       setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transcription]);
+  }, [currentProject?.transcription]);
+
+  useEffect(() => {
+    setEncodedVideoSrc(
+      Buffer.from(currentProject?.mediaFilePath ?? '', 'utf-8').toString(
+        'base64'
+      )
+    );
+  }, [currentProject?.mediaFilePath]);
 
   return (
-    <VideoPreview src="http://localhost:5003/video" ref={videoPreviewRef} />
+    <VideoPreview
+      src={
+        encodedVideoSrc ? `http://localhost:5556/video/${encodedVideoSrc}` : ''
+      }
+      ref={videoPreviewRef}
+    />
   );
 };
 

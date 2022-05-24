@@ -30,10 +30,15 @@ const Word = styled('span')`
 
 interface Props {
   transcription: Transcription;
+  nowPlayingWordIndex: number | null;
   onWordClick: (wordIndex: number) => void;
 }
 
-const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
+const TranscriptionBlock = ({
+  onWordClick,
+  transcription,
+  nowPlayingWordIndex,
+}: Props) => {
   return (
     <TranscriptionBox>
       <p
@@ -50,6 +55,11 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
               onClick={() => {
                 onWordClick(index);
               }}
+              style={
+                index === nowPlayingWordIndex
+                  ? { background: `${colors.yellow[500]}80` }
+                  : {}
+              }
             >
               {word.word}
             </Word>

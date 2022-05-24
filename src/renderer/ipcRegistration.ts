@@ -103,8 +103,9 @@ ipc.on('export-progress-update', async (_event, progress: number) => {
 /**
  * Used by backend to notify frontend that export is complete
  */
-ipc.on('finish-export', async () => {
-  store.dispatch(finishExport());
+ipc.on('finish-export', async (_event, project: Project, filePath: string) => {
+  store.dispatch(finishExport(project, filePath));
+  store.dispatch(pageChanged(ApplicationPage.PROJECT));
 });
 
 /*

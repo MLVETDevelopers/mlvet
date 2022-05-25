@@ -1,8 +1,9 @@
 import path from 'path';
 import fs from 'fs';
+import { io } from 'socket.io-client';
 import { app } from 'electron';
 import getAudioDurationInSeconds from 'get-audio-duration';
-import { Transcription } from '../../sharedTypes';
+import { Project, Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 
@@ -10,13 +11,20 @@ interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
 }
 
-/**
- * util to simulate running of transcription
- * @param n seconds to sleep
- * @returns promise resolving after n seconds
- */
-const sleep: (n: number) => Promise<void> = (n) =>
-  new Promise((resolve) => setTimeout(resolve, n * 1000));
+const transcribeRequest: (project: Project) => Promise<string> = async (
+  project
+) => {
+  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
+  return new Promise((resolve) => {
+    socket.emit(
+      'transcribe',
+      project.audioExtractFilePath,
+      (transcription: string) => {
+        resolve(transcription);
+      }
+    );
+  });
+};
 
 /**
  * This is an easy (but kind of annoying) approach to validating incoming JSON.
@@ -48,34 +56,23 @@ const validateJsonTranscriptionContainer = <
   transcription.transcripts.length === 1 &&
   validateJsonTranscription(transcription.transcripts[0]));
 
-const handleTranscription: (
-  filePath: string
-) => Promise<Transcription> = async (filePath: string) => {
-  // TODO: replace hard coded media path with parameter passed in
+type RequestTranscription = (project: Project) => Promise<Transcription | null>;
 
-  await sleep(3); // Sleep to simulate transcription time. Remove this when real transcription is added
+const requestTranscription: RequestTranscription = async (project) => {
+  if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
+    return null;
+  }
 
-  // Read from sample transcript. Replace this section with real transcript input
-  const transcriptionPath = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets/SampleTranscript.json')
-    : path.join(__dirname, '../../../assets/SampleTranscript.json');
-
-  const rawTranscription = fs.readFileSync(transcriptionPath).toString();
-  const jsonTranscript = JSON.parse(rawTranscription);
+  const transcript = await transcribeRequest(project);
+  const jsonTranscript = JSON.parse(transcript);
 
   if (!validateJsonTranscriptionContainer(jsonTranscript)) {
     throw new Error('JSON transcript is invalid');
   }
 
-  const pathToSaveMedia = path.join(
-    process.cwd(),
-    'assets',
-    'audio',
-    'audio.wav'
-  );
   const duration: number =
-    (await getAudioDurationInSeconds(pathToSaveMedia)) || 0;
-  const fileName = path.basename(filePath);
+    (await getAudioDurationInSeconds(project.audioExtractFilePath)) || 0;
+  const fileName = path.basename(project.mediaFilePath);
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
     duration,
@@ -85,4 +82,4 @@ const handleTranscription: (
   return processedTranscript;
 };
 
-export default handleTranscription;
+export default requestTranscription;

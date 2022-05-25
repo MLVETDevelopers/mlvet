@@ -7,9 +7,9 @@ import ffmpeg from 'fluent-ffmpeg';
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-export default function extractThumbnail(
-  absolutePathToVideoFile: string
-): Promise<string> {
+type ExtractThumbnail = (absolutePathToVideoFile: string) => Promise<string>;
+
+const extractThumbnail: ExtractThumbnail = (absolutePathToMediaFile) => {
   const pathToSaveMedia = path.join(process.cwd(), 'assets', 'thumbnails');
 
   console.log('Started thumbnail extraction');
@@ -17,7 +17,7 @@ export default function extractThumbnail(
   const filename = 'thumbnail.png';
 
   // By Default the image is picked from the middle of the video.
-  const command = ffmpeg(absolutePathToVideoFile).thumbnails({
+  const command = ffmpeg(absolutePathToMediaFile).thumbnails({
     count: 1,
     filename,
     folder: pathToSaveMedia,
@@ -37,4 +37,6 @@ export default function extractThumbnail(
       reject(stderr);
     });
   });
-}
+};
+
+export default extractThumbnail;

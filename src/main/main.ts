@@ -10,16 +10,19 @@
  */
 import { ChildProcess } from 'child_process';
 import dotenv from 'dotenv';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { get } from 'http';
 import path from 'path';
 import MenuBuilder from './menu';
 import startServer from './pyServer';
+import startExpressServer from './expressServer';
 import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
 import initialiseIpcHandlers from './ipc';
-import { extractAudio } from './handlers';
+import { IpcContext } from './types';
+import promptToSaveWork from './promptToSaveWork';
+import AppState from './AppState';
 
 export default class AppUpdater {
   constructor() {
@@ -31,6 +34,7 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 let pyServer: ChildProcess | null = null;
+
 dotenv.config();
 
 // If app data storage path doesn't exist, create it
@@ -85,8 +89,6 @@ const createWindow = async () => {
     },
   });
 
-  initialiseIpcHandlers(mainWindow);
-
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', async () => {
@@ -98,11 +100,6 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
-
-    const extractedPath = await extractAudio(
-      path.join(process.cwd(), 'assets/videos/demo-video.mp4')
-    );
-    console.log(`Extracted audio to: ${extractedPath}`);
 
     pyServer = startServer();
 
@@ -124,6 +121,8 @@ const createWindow = async () => {
         });
       });
     }
+
+    startExpressServer();
   });
 
   mainWindow.on('closed', () => {
@@ -135,7 +134,29 @@ const createWindow = async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   const menu = menuBuilder.buildMenu();
-  menuBuilder.setListeners(menu, ipcMain);
+
+  const appState = new AppState(mainWindow);
+
+  const ipcContext: IpcContext = {
+    mainWindow,
+    menu,
+    appState,
+  };
+
+  initialiseIpcHandlers(ipcContext);
+
+  mainWindow.on('close', (event) => {
+    if (mainWindow === null) {
+      return; // let the close action go ahead as normal
+    }
+
+    // If the user has unsaved work, prompt them to save it
+    if (promptToSaveWork(mainWindow, appState)) {
+      return; // app can continue closing
+    }
+
+    event.preventDefault(); // app cannot close
+  });
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
@@ -153,13 +174,11 @@ const createWindow = async () => {
  */
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-    if (pyServer !== null) {
-      pyServer.kill(0);
-    }
+  // For simplicity, quit even on mac
+  app.quit();
+
+  if (pyServer !== null) {
+    pyServer.kill(0);
   }
 });
 

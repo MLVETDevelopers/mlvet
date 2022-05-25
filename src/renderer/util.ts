@@ -4,10 +4,10 @@ import {
   AudioFileExtension,
   Project,
   VideoFileExtension,
-  OperatingSystems,
 } from '../sharedTypes';
+import ipc from './ipc';
 
-const { extractThumbnail, userOS } = window.electron;
+const { extractThumbnail } = ipc;
 
 export const extractFileExtension: (filePath: string) => string | null = (
   filePath
@@ -18,35 +18,6 @@ export const extractFileExtension: (filePath: string) => string | null = (
     return null;
   }
   return extension;
-};
-
-export const extractFileNameWithExtension: (
-  filePath: string | null
-) => Promise<string | null> = async (filePath) => {
-  if (filePath === null) {
-    return null;
-  }
-  const userOperatingSystem = await userOS();
-
-  let delimiter: string | null = null;
-
-  if (
-    userOperatingSystem === OperatingSystems.MACOS ||
-    userOperatingSystem === OperatingSystems.LINUX
-  ) {
-    delimiter = '/';
-  } else if (userOperatingSystem === OperatingSystems.WINDOWS) {
-    delimiter = '\\';
-  }
-
-  if (delimiter === null) {
-    return null;
-  }
-
-  const filePathSplit = filePath.split(delimiter);
-  const fileNameWithExtension = filePathSplit[filePathSplit.length - 1];
-
-  return fileNameWithExtension;
 };
 
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
@@ -101,6 +72,8 @@ export const makeProject: (
     thumbnailFilePath: thumbnailPath,
     projectFilePath: null,
     exportFilePath: null,
+    audioExtractFilePath: null,
+    isEdited: false,
   };
 
   return project;
@@ -120,6 +93,8 @@ export const makeProjectWithoutMedia: (
     mediaType: 'audio',
     mediaFileExtension: 'mp3',
     thumbnailFilePath: null,
+    audioExtractFilePath: null,
+    isEdited: false,
   };
 
   return project;
@@ -156,6 +131,23 @@ export const updateProjectWithMedia: (
   currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
   currentProject.transcription = null;
   currentProject.thumbnailFilePath = thumbnailPath;
+  currentProject.audioExtractFilePath = null;
+
+  return currentProject;
+};
+
+export const updateProjectWithExtractedAudio: (
+  currentProject: Project,
+  extractedAudioFilePath: string | null
+) => Promise<Project | null> = async (
+  currentProject,
+  extractedAudioFilePath
+) => {
+  if (extractedAudioFilePath === null) {
+    return null;
+  }
+
+  currentProject.audioExtractFilePath = extractedAudioFilePath;
 
   return currentProject;
 };
@@ -170,4 +162,9 @@ export const formatDate: (date: Date) => string = (date) => {
     val.length === 1 ? `0${val}` : val;
 
   return [dd, mm, yy].map(pad).join('/');
+};
+
+export const removeExtension: (fileName: string) => string = (fileName) => {
+  const split = fileName.split('.');
+  return split.slice(0, split.length - 1).join('.');
 };

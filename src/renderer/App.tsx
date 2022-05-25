@@ -5,7 +5,8 @@ import './App.css';
 import colors from './colors';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
-import { ApplicationPage, ApplicationStore } from './store/helpers';
+import { ApplicationPage } from './store/currentPage/helpers';
+import { ApplicationStore } from './store/sharedHelpers';
 import applicationStore from './store/store';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
@@ -29,10 +30,14 @@ function Router() {
   return pageComponents[currentPage];
 }
 
-export default function App() {
+interface Props {
+  hasStoreChangeObserver: boolean; // used for testing
+}
+
+export default function App({ hasStoreChangeObserver }: Props) {
   return (
     <Provider store={applicationStore}>
-      <StoreChangeObserver />
+      {hasStoreChangeObserver && <StoreChangeObserver />}
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <RootContainer>

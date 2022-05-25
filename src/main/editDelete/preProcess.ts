@@ -1,6 +1,7 @@
 import { MapCallback, roundToMs } from '../util';
 import { Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
+import punctuate from './punctuate';
 
 type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
@@ -16,25 +17,6 @@ const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
   duration: word.duration,
   startTime: word.start_time,
 });
-
-/**
- * Adjusts durations so that words last until the next word, or until the end of the transcript
- * if the last word
- * @param totalDuration total duration of transcript
- * @returns word with durations updated
- */
-const fillDurationGaps: (
-  totalDuration: number
-) => MapCallback<PartialWord, PartialWord> =
-  (totalDuration) => (word, i, words) => {
-    const isLastWord = i === words.length - 1;
-    const durationUntil = isLastWord ? totalDuration : words[i + 1].startTime;
-
-    return {
-      ...word,
-      duration: roundToMs(durationUntil - word.startTime),
-    };
-  };
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word -
@@ -53,6 +35,92 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     };
   };
 
+const constructWord: (
+  word: string,
+  startTime: number,
+  duration: number,
+  outputStartTime: number,
+  key: string,
+  fileName: string
+) => Word = (word, startTime, duration, outputStartTime, key, fileName) => ({
+  word,
+  startTime: roundToMs(startTime),
+  duration: roundToMs(duration),
+  outputStartTime: roundToMs(outputStartTime),
+  deleted: false,
+  key,
+  fileName,
+});
+
+/**
+ * Adds spaces between words which represent the silence between each word
+ * @param result The output being constructed
+ * @param word The current element of words
+ * @param index The index of word in words
+ * @param words The list of words being reduced
+ * @returns The updated transcript with a silence after word
+ */
+const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
+  (totalDuration: number) => (word, index, words) => {
+    const spaceChar = ' ';
+    const wordAndSilence: Word[] = [];
+    const { fileName } = word;
+
+    // is the first word
+    if (index === 0) {
+      wordAndSilence.push(
+        constructWord(
+          spaceChar,
+          0,
+          words[index].startTime,
+          0,
+          index.toString(),
+          fileName
+        )
+      );
+    }
+
+    const isLastWord = index === words.length - 1;
+    const endTime = isLastWord ? totalDuration : words[index + 1].startTime;
+    const silenceDuration = endTime - word.startTime - word.duration;
+
+    // index*2 is used because we are mapping 1 Word to 2 Words and want the key to represent the index of the each Word in the processed Transcript.
+    // +1 is to account for the first element in the words array being a silence to pad the beginning of the transcript.
+    word.key = (index * 2 + 1).toString();
+    wordAndSilence.push(word);
+    wordAndSilence.push(
+      constructWord(
+        spaceChar,
+        word.startTime + word.duration,
+        silenceDuration,
+        word.startTime + word.duration,
+        // +2 is to account for the first element in the words array being a silence to pad the beginning of the transcript AND the Word preceeding this silence
+        (index * 2 + 2).toString(),
+        fileName
+      )
+    );
+
+    return wordAndSilence;
+  };
+
+const calculateAverageSilenceDuration = (
+  jsonTranscription: JSONTranscription,
+  totalDuration: number
+): number => {
+  let silenceSum = 0;
+  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
+    const endTime = jsonTranscription.words[i + 1].start_time;
+    const silenceDuration =
+      endTime -
+      jsonTranscription.words[i].start_time -
+      jsonTranscription.words[i].duration;
+    silenceSum += silenceDuration;
+  }
+  return jsonTranscription.words.length !== 0
+    ? silenceSum / jsonTranscription.words.length
+    : totalDuration;
+};
+
 /**
  * Pre processes a JSON transcript from python for use in the front end
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
@@ -64,12 +132,18 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
+  const averageSilenceDuration: number = calculateAverageSilenceDuration(
+    jsonTranscript,
+    duration
+  );
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
       .map(camelCase)
-      .map(fillDurationGaps(duration))
-      .map(injectAttributes(fileName)),
+      .map(punctuate(duration, averageSilenceDuration))
+      .map(injectAttributes(fileName))
+      .map(addSpaces(duration))
+      .flat(),
   };
 };
 

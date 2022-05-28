@@ -15,6 +15,7 @@ import { Buffer } from 'buffer';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
+  hasRunBefore: boolean;
   time: number;
   isRunning: boolean;
   intervalRef: null | any;
@@ -67,6 +68,7 @@ const VideoPreviewControllerBase = (
     clamp(time, 0, outputVideoLength.current);
 
   const clockRef = useRef<Clock>({
+    hasRunBefore: false,
     isRunning: false,
     intervalRef: null,
     prevIntervalEndTime: getPerformanceTime(),
@@ -126,6 +128,11 @@ const VideoPreviewControllerBase = (
 
   // Start timer (setInterval)
   const startTimer = () => {
+    if (!clockRef.current.hasRunBefore) {
+      clockRef.current.hasRunBefore = true;
+      clockRef.current.prevIntervalEndTime = getPerformanceTime();
+      clockRef.current.intervalStartTime = getPerformanceTime();
+    }
     clockRef.current.intervalRef = setInterval(
       onFrame,
       Math.floor(1000 / framesPerSecond)

@@ -7,6 +7,7 @@ import { IpcContext } from './types';
 // START GENERATED CODE PART 1
 import extractAudio from './handlers/audioExtract';
 import closeWindow from './handlers/closeWindow';
+import deleteProject from './handlers/deleteProject';
 import exportProject from './handlers/exportProjectHandler';
 import getFileNameWithExtension from './handlers/getFileNameWithExtension';
 import openProject from './handlers/openProjectHandler';
@@ -21,6 +22,7 @@ import setFileRepresentation from './handlers/setFileRepresentation';
 import setHomeEnabled from './handlers/setHomeEnabled';
 import setSaveEnabled from './handlers/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
+import showConfirmation from './handlers/showConfirmation';
 import extractThumbnail from './handlers/thumbnailExtract';
 import requestTranscription from './handlers/transcriptionHandler';
 import writeRecentProjects from './handlers/writeRecentProjects';
@@ -35,6 +37,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));
+
+  ipcMain.handle('delete-project', async (_event, project) =>
+    deleteProject(project)
+  );
 
   ipcMain.handle('export-project', async (_event, project) =>
     exportProject(ipcContext, project)
@@ -92,6 +98,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-undo-redo-enabled',
     async (_event, undoEnabled, redoEnabled) =>
       setUndoRedoEnabled(ipcContext, undoEnabled, redoEnabled)
+  );
+
+  ipcMain.handle('show-confirmation', async (_event, message, detail) =>
+    showConfirmation(ipcContext, message, detail)
   );
 
   ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>

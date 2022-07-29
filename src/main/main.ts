@@ -10,30 +10,16 @@
  */
 import { ChildProcess } from 'child_process';
 import dotenv from 'dotenv';
-import { app, BrowserWindow, shell } from 'electron';
-import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
-import { get } from 'http';
-import path from 'path';
-import MenuBuilder from './menu';
-import startServer from './pyServer';
-import startExpressServer from './expressServer';
-import { appDataStoragePath, mkdir, resolveHtmlPath } from './util';
-import initialiseIpcHandlers from './ipc';
-import { IpcContext } from './types';
-import promptToSaveWork from './promptToSaveWork';
+import { app, BrowserWindow } from 'electron';
 import AppState from './AppState';
+import initialiseIpcHandlers from './ipc';
+import MenuBuilder from './menu';
+import promptToSaveWork from './promptToSaveWork';
+import { IpcContext } from './types';
+import { appDataStoragePath, isDevelopment, mkdir } from './util';
+import createWindow from './window';
 
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
-
-let mainWindow: BrowserWindow | null = null;
-let pyServer: ChildProcess | null = null;
+const pyServer: ChildProcess | null = null;
 
 dotenv.config();
 
@@ -45,129 +31,9 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-const isDevelopment =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
-
 if (isDevelopment) {
   require('electron-debug')();
 }
-
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload
-    )
-    .catch(console.log);
-};
-
-const createWindow = async () => {
-  if (isDevelopment) {
-    await installExtensions();
-  }
-
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
-
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    icon: getAssetPath('icon.png'),
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-    },
-  });
-
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
-
-  mainWindow.on('ready-to-show', async () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-    }
-
-    pyServer = startServer();
-
-    if (pyServer !== null && pyServer.stderr !== null) {
-      // Flask logs to stderr when server is ready. Hence, we listen to stderr rather than stdout
-      // More information why we listen to stderr here: https://github.com/patrickbrett/mlvet/pull/3#discussion_r830701799
-      pyServer.stderr.once('data', (data) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built
-        }
-        get(`http://localhost:${process.env.FLASK_PORT}`, (res) => {
-          if (res.statusCode === 200) {
-            console.log('Python server is running');
-          } else {
-            throw new Error(
-              `Python server has an error, response to a get '/' expected code 200 got ${res.statusCode}`
-            );
-          }
-        });
-      });
-    }
-
-    startExpressServer();
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-    if (pyServer !== null) {
-      pyServer.kill();
-    }
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  const menu = menuBuilder.buildMenu();
-
-  const appState = new AppState(mainWindow);
-
-  const ipcContext: IpcContext = {
-    mainWindow,
-    menu,
-    appState,
-  };
-
-  initialiseIpcHandlers(ipcContext);
-
-  mainWindow.on('close', (event) => {
-    if (mainWindow === null) {
-      return; // let the close action go ahead as normal
-    }
-
-    // If the user has unsaved work, prompt them to save it
-    if (promptToSaveWork(mainWindow, appState)) {
-      return; // app can continue closing
-    }
-
-    event.preventDefault(); // app cannot close
-  });
-
-  // Open urls in the user's browser
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
-    return { action: 'deny' };
-  });
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
-};
 
 /**
  * Add event listeners...
@@ -185,7 +51,40 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(async () => {
-    createWindow();
+    let mainWindow: BrowserWindow | null = await createWindow();
+
+    const menuBuilder = new MenuBuilder(mainWindow);
+    const menu = menuBuilder.buildMenu();
+
+    const appState = new AppState(mainWindow);
+
+    const ipcContext: IpcContext = {
+      mainWindow,
+      menu,
+      appState,
+    };
+
+    initialiseIpcHandlers(ipcContext);
+
+    mainWindow.on('closed', () => {
+      mainWindow = null;
+      if (pyServer !== null) {
+        pyServer.kill();
+      }
+    });
+
+    mainWindow.on('close', (event) => {
+      if (mainWindow === null) {
+        return; // let the close action go ahead as normal
+      }
+
+      // If the user has unsaved work, prompt them to save it
+      if (promptToSaveWork(mainWindow, appState)) {
+        return; // app can continue closing
+      }
+
+      event.preventDefault(); // app cannot close
+    });
 
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

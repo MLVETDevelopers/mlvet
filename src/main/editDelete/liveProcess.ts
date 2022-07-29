@@ -20,6 +20,7 @@ const calculateTime = (word: Word, i: number, words: Word[]): number => {
   if (i === 0) {
     return 0;
   }
+
   // if the word is later in the array, calculate outputStartTime using the closest non-deleted word before the current word
   let nextNotDeleted = i - 1;
 
@@ -34,6 +35,7 @@ const calculateTime = (word: Word, i: number, words: Word[]): number => {
 
     // otherwise, use the closest un-deleted word
   }
+
   return words[nextNotDeleted].outputStartTime + words[nextNotDeleted].duration;
 };
 
@@ -49,9 +51,12 @@ const processWord: (usedKeys: Set<string>) => MapCallback<Word, Word> =
     const newKey = usedKeys.has(word.key) ? uuidv4() : word.key;
     usedKeys.add(newKey);
 
+    // We have to mutate because calculateTime needs the latest version of the 'words' array
+    // with updated outputStartTimes for each word as they are calculated
+    word.outputStartTime = calculateTime(word, i, words);
+
     return {
       ...word,
-      outputStartTime: calculateTime(word, i, words),
       key: newKey,
     };
   };

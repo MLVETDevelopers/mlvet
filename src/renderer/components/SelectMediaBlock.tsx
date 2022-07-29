@@ -2,6 +2,7 @@ import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 import colors from '../colors';
 import ipc from '../ipc';
+import { PrimaryButton } from './Blocks/Buttons';
 
 const { getFileNameWithExtension } = ipc;
 
@@ -129,9 +130,7 @@ const SelectMediaBlock = ({
           >
             <Typography variant="p-300">Drag and drop file here</Typography>
             <Typography variant="p-300">or</Typography>
-            <Button color="primary" onClick={selectMedia}>
-              Browse
-            </Button>
+            <PrimaryButton onClick={selectMedia}>Browse</PrimaryButton>
           </Stack>
         </InnerBox>
       )}

@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Project } from '../../sharedTypes';
+import { Project } from '../../../sharedTypes';
 
 const deleteFileIfExists: (filePath: string) => Promise<void> = async (
   filePath

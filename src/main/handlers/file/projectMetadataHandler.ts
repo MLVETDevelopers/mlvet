@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Project, ProjectMetadata } from '../../sharedTypes';
+import { Project, ProjectMetadata } from '../../../sharedTypes';
 
 const retrieveDateModified: (filePath: string) => Promise<Date | null> = async (
   filePath

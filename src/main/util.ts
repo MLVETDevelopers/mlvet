@@ -41,9 +41,3 @@ export const roundToMs: (input: number) => number = (input) =>
 
 export const getRecentProjectsPath: () => string = () =>
   path.join(appDataStoragePath(), 'recentProjects.json');
-
-/** Utility types */
-
-// Callback to be passed into a map function.
-// First type argument is the input type, second is the output type
-export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;

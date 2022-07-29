@@ -63,3 +63,9 @@ export enum AsyncState {
   DONE = 'DONE',
   ERROR = 'ERROR',
 }
+
+/** Utility types */
+
+// Callback to be passed into a map function.
+// First type argument is the input type, second is the output type
+export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;

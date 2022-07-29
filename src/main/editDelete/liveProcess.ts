@@ -1,4 +1,5 @@
-import { Transcription, Word } from 'sharedTypes';
+import { MapCallback, Transcription, Word } from 'sharedTypes';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * calculateTime calculates the outputStartTimes of a word based on the
@@ -43,10 +44,17 @@ const calculateTime = (word: Word, i: number, words: Word[]): number => {
  * @param words an array of words from Transcript
  * @returns the updated word
  */
-const processWord = (word: Word, i: number, words: Word[]): Word => {
-  word.outputStartTime = calculateTime(word, i, words);
-  return word;
-};
+const processWord: (usedKeys: Set<string>) => MapCallback<Word, Word> =
+  (usedKeys) => (word, i, words) => {
+    const newKey = usedKeys.has(word.key) ? uuidv4() : word.key;
+    usedKeys.add(newKey);
+
+    return {
+      ...word,
+      outputStartTime: calculateTime(word, i, words),
+      key: newKey,
+    };
+  };
 
 /**
  * Processes a Transcript so that all words have the correct outputStartTime
@@ -54,9 +62,11 @@ const processWord = (word: Word, i: number, words: Word[]): Word => {
  * @returns The Transcript object with updated outputStartTime for all words
  */
 const liveProcessTranscript = (transcript: Transcription): Transcription => {
+  const usedKeys: Set<string> = new Set();
+
   return {
     confidence: transcript.confidence,
-    words: transcript.words.map(processWord),
+    words: transcript.words.map(processWord(usedKeys)),
   };
 };
 

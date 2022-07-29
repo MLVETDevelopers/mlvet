@@ -1,8 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import { io } from 'socket.io-client';
-import { app } from 'electron';
 import getAudioDurationInSeconds from 'get-audio-duration';
+import { io } from 'socket.io-client';
 import { Project, Transcription } from '../../sharedTypes';
 import preProcessTranscript from '../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../types';
@@ -10,6 +9,12 @@ import { JSONTranscription, SnakeCaseWord } from '../types';
 interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
 }
+
+const dummyTranscribeRequest: () => string = () => {
+  return fs
+    .readFileSync(path.join(__dirname, '../../../assets/SampleTranscript.json'))
+    .toString();
+};
 
 const transcribeRequest: (project: Project) => Promise<string> = async (
   project
@@ -58,12 +63,17 @@ const validateJsonTranscriptionContainer = <
 
 type RequestTranscription = (project: Project) => Promise<Transcription | null>;
 
+const USE_DUMMY = true;
+
 const requestTranscription: RequestTranscription = async (project) => {
   if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
     return null;
   }
 
-  const transcript = await transcribeRequest(project);
+  const transcript = USE_DUMMY
+    ? dummyTranscribeRequest()
+    : await transcribeRequest(project);
+
   const jsonTranscript = JSON.parse(transcript);
 
   if (!validateJsonTranscriptionContainer(jsonTranscript)) {

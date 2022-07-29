@@ -160,8 +160,7 @@ describe('Test live-processing Transcription outputStartTime after edit/delete',
       ],
     };
 
-    const [, movedWord1] = inputTranscript.words;
-    const [movedWord0] = inputTranscript.words;
+    const [movedWord0, movedWord1] = inputTranscript.words;
     inputTranscript.words[1] = movedWord0;
     inputTranscript.words[0] = movedWord1;
     const outputTranscript = liveProcessTranscript(inputTranscript);

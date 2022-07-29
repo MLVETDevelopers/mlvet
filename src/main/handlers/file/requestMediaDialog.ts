@@ -1,5 +1,5 @@
 import { dialog } from 'electron';
-import { IpcContext } from '../types';
+import { IpcContext } from '../../types';
 
 type RequestMediaDialog = (ipcContext: IpcContext) => Promise<string | null>;
 

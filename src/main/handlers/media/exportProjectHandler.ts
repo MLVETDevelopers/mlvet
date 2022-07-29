@@ -1,6 +1,6 @@
-import { IpcContext } from '../types';
-import { Project } from '../../sharedTypes';
-import { getExportFilePath, exportProjectToFile } from './helpers/exportUtils';
+import { IpcContext } from '../../types';
+import { Project } from '../../../sharedTypes';
+import { getExportFilePath, exportProjectToFile } from '../helpers/exportUtils';
 
 type ExportProject = (
   ipcContext: IpcContext,

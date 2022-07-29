@@ -43,7 +43,7 @@ If you encounter an import error `ImportError: DLL load failed: The specified mo
 
 ## Additional steps you need to follow
 
-After the [audio extract PR](https://github.com/patrickbrett/mlvet/pull/12) got merged you will now need to have a `demo-vdieo.mp4` video file under `assets/videos`
+After the [audio extract PR](https://github.com/chloebrett/mlvet/pull/12) got merged you will now need to have a `demo-vdieo.mp4` video file under `assets/videos`
 
 Note:
 

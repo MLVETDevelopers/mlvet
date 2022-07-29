@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Project } from '../../sharedTypes';
+import { Project } from '../../../sharedTypes';
 
 const deleteFileIfExists: (filePath: string) => Promise<void> = async (
   filePath
@@ -19,7 +19,7 @@ type DeleteProject = (project: Project) => Promise<void>;
  * @param project project to delete
  */
 const deleteProject: DeleteProject = async (project) => {
-  // TODO(patrick): Delete project associated thumbnail file
+  // TODO(chloe): Delete project associated thumbnail file
   // Skipped for now, because the thumbnail is in a fixed location
 
   // Delete audio extract from disk if it exists

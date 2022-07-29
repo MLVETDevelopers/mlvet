@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import { Project, RecentProject } from '../../sharedTypes';
+import { Project, RecentProject } from '../../../sharedTypes';
 import retrieveMetadata from './projectMetadataHandler';
-import makeRecentProject from '../../sharedUtils';
-import { getRecentProjectsPath } from '../util';
+import makeRecentProject from '../../../sharedUtils';
+import { getRecentProjectsPath } from '../../util';
 
 /**
  * Type for project persisted to disk in the recent projects list -

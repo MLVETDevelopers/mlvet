@@ -4,7 +4,7 @@ import {
   UNDO_DELETE_WORD,
   UNDO_PASTE_WORD,
 } from 'renderer/store/undoStack/ops';
-import { Word } from 'sharedTypes';
+import { Transcription, Word } from 'sharedTypes';
 import { TRANSCRIPTION_CREATED } from '../actions';
 import transcriptionReducer from '../reducer';
 
@@ -20,6 +20,21 @@ const makeBasicWord: (text: string, isDeleted?: boolean) => Word = (
   key: text,
   fileName: 'PLACEHOLDER FILENAME',
 });
+
+const expectAllEvenIndexWordsToBeSpaces: (
+  output: Transcription | null
+) => void = (output) => {
+  expect(
+    output?.words
+      .filter((_, i) => i % 2 === 0)
+      .every((word) => word.word === ' ')
+  ).toBe(true);
+};
+
+const wordsWithoutSpaces: (
+  output: Transcription | null
+) => Word[] | undefined = (output) =>
+  output?.words.filter((word) => word.word !== ' ');
 
 describe('Transcription reducer', () => {
   it('should handle transcription created', () => {
@@ -38,291 +53,322 @@ describe('Transcription reducer', () => {
   });
 
   it('should handle words being deleted', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e'),
-          ],
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c'),
+          makeBasicWord('d'),
+          makeBasicWord('e'),
+        ],
+      },
+      {
+        type: DELETE_WORD,
+        payload: {
+          startIndex: 1,
+          endIndex: 3,
         },
-        {
-          type: DELETE_WORD,
-          payload: {
-            startIndex: 1,
-            endIndex: 3,
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      duration: 100,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('b', true),
-        makeBasicWord('c', true),
-        makeBasicWord('d'),
-        makeBasicWord('e'),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b', true),
+      makeBasicWord('c', true),
+      makeBasicWord('d'),
+      makeBasicWord('e'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle deletions being undone', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c', true),
-            makeBasicWord('d', true),
-            makeBasicWord('e', true),
-          ],
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c', true),
+          makeBasicWord('d', true),
+          makeBasicWord('e', true),
+        ],
+      },
+      {
+        type: UNDO_DELETE_WORD,
+        payload: {
+          startIndex: 2,
+          endIndex: 5,
         },
-        {
-          type: UNDO_DELETE_WORD,
-          payload: {
-            startIndex: 2,
-            endIndex: 5,
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('b'),
-        makeBasicWord('c'),
-        makeBasicWord('d'),
-        makeBasicWord('e'),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b'),
+      makeBasicWord('c'),
+      makeBasicWord('d'),
+      makeBasicWord('e'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e'),
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c', true),
+          makeBasicWord('d', true),
+          makeBasicWord('e', true),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 2,
+          clipboard: [
+            makeBasicWord('f'),
+            makeBasicWord('g'),
+            makeBasicWord('h'),
           ],
         },
-        {
-          type: PASTE_WORD,
-          payload: {
-            startIndex: 2,
-            clipboard: [
-              makeBasicWord('f'),
-              makeBasicWord('g'),
-              makeBasicWord('h'),
-            ],
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('b'),
-        makeBasicWord('c'),
-        makeBasicWord('f'),
-        makeBasicWord('g'),
-        makeBasicWord('h'),
-        makeBasicWord('d'),
-        makeBasicWord('e'),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b'),
+      makeBasicWord('c', true),
+      makeBasicWord('f'),
+      makeBasicWord('g'),
+      makeBasicWord('h'),
+      makeBasicWord('d', true),
+      makeBasicWord('e', true),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted even when some of the words on the clipboard were deleted', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b', true),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e', true),
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b', true),
+          makeBasicWord('c'),
+          makeBasicWord('d'),
+          makeBasicWord('e', true),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 2,
+          clipboard: [
+            makeBasicWord('f'),
+            makeBasicWord('g', true),
+            makeBasicWord('h'),
           ],
         },
-        {
-          type: PASTE_WORD,
-          payload: {
-            startIndex: 2,
-            clipboard: [
-              makeBasicWord('f'),
-              makeBasicWord('g', true),
-              makeBasicWord('h'),
-            ],
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('b', true),
-        makeBasicWord('c'),
-        makeBasicWord('f'),
-        makeBasicWord('g', true),
-        makeBasicWord('h'),
-        makeBasicWord('d'),
-        makeBasicWord('e', true),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b', true),
+      makeBasicWord('c'),
+      makeBasicWord('f'),
+      makeBasicWord('g', true),
+      makeBasicWord('h'),
+      makeBasicWord('d'),
+      makeBasicWord('e', true),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted just after the start of the transcription', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e'),
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c'),
+          makeBasicWord('d'),
+          makeBasicWord('e'),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 0,
+          clipboard: [
+            makeBasicWord('f'),
+            makeBasicWord('g'),
+            makeBasicWord('h'),
           ],
         },
-        {
-          type: PASTE_WORD,
-          payload: {
-            startIndex: 0,
-            clipboard: [
-              makeBasicWord('f'),
-              makeBasicWord('g'),
-              makeBasicWord('h'),
-            ],
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('f'),
-        makeBasicWord('g'),
-        makeBasicWord('h'),
-        makeBasicWord('b'),
-        makeBasicWord('c'),
-        makeBasicWord('d'),
-        makeBasicWord('e'),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('f'),
+      makeBasicWord('g'),
+      makeBasicWord('h'),
+      makeBasicWord('b'),
+      makeBasicWord('c'),
+      makeBasicWord('d'),
+      makeBasicWord('e'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted to the end of the transcription', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e'),
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c'),
+          makeBasicWord('d'),
+          makeBasicWord('e'),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 4,
+          clipboard: [
+            makeBasicWord('f'),
+            makeBasicWord('g'),
+            makeBasicWord('h'),
           ],
         },
-        {
-          type: PASTE_WORD,
-          payload: {
-            startIndex: 4,
-            clipboard: [
-              makeBasicWord('f'),
-              makeBasicWord('g'),
-              makeBasicWord('h'),
-            ],
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [
-        makeBasicWord('a'),
-        makeBasicWord('b'),
-        makeBasicWord('c'),
-        makeBasicWord('d'),
-        makeBasicWord('e'),
-        makeBasicWord('f'),
-        makeBasicWord('g'),
-        makeBasicWord('h'),
-      ],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b'),
+      makeBasicWord('c'),
+      makeBasicWord('d'),
+      makeBasicWord('e'),
+      makeBasicWord('f'),
+      makeBasicWord('g'),
+      makeBasicWord('h'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle a paste being undone', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a'),
-            makeBasicWord('b'),
-            makeBasicWord('c'),
-            makeBasicWord('d'),
-            makeBasicWord('e'),
-          ],
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c'),
+          makeBasicWord('d'),
+          makeBasicWord('e'),
+        ],
+      },
+      {
+        type: UNDO_PASTE_WORD,
+        payload: {
+          startIndex: 1,
+          clipboardLength: 2,
         },
-        {
-          type: UNDO_PASTE_WORD,
-          payload: {
-            startIndex: 1,
-            clipboardLength: 2,
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [makeBasicWord('a'), makeBasicWord('b'), makeBasicWord('e')],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b'),
+      makeBasicWord('e'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle a paste being undone with various words deleted', () => {
-    expect(
-      transcriptionReducer(
-        {
-          confidence: 1,
-          duration: 100,
-          words: [
-            makeBasicWord('a', true),
-            makeBasicWord('b'),
-            makeBasicWord('c', true),
-            makeBasicWord('d', true),
-            makeBasicWord('e'),
-          ],
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a', true),
+          makeBasicWord('b'),
+          makeBasicWord('c', true),
+          makeBasicWord('d', true),
+          makeBasicWord('e'),
+        ],
+      },
+      {
+        type: UNDO_PASTE_WORD,
+        payload: {
+          startIndex: 1,
+          clipboardLength: 2,
         },
-        {
-          type: UNDO_PASTE_WORD,
-          payload: {
-            startIndex: 1,
-            clipboardLength: 2,
-          },
-        }
-      )
-    ).toEqual({
-      confidence: 1,
-      words: [makeBasicWord('a', true), makeBasicWord('b'), makeBasicWord('e')],
-    });
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(wordsWithoutSpaces(output)).toEqual([
+      makeBasicWord('a', true),
+      makeBasicWord('b'),
+      makeBasicWord('e'),
+    ]);
+
+    expectAllEvenIndexWordsToBeSpaces(output);
   });
 });

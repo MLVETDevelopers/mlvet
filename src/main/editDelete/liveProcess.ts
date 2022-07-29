@@ -51,6 +51,7 @@ const processWord: (usedKeys: Set<string>) => MapCallback<Word, Word> =
   (usedKeys) => (word, i, words) => {
     const newKey = usedKeys.has(word.key) ? uuidv4() : word.key;
     usedKeys.add(newKey);
+    console.log(usedKeys, newKey);
 
     // We have to mutate because calculateTime needs the latest version of the 'words' array
     // with updated outputStartTimes for each word as they are calculated
@@ -78,6 +79,11 @@ const liveProcessTranscript = (transcript: Transcription): Transcription => {
     ...transcript,
     words: transcript.words
       .map(processWord(usedKeys))
+      // TODO(chloe) removing then adding spaces may cause weird key issues
+      // so preferably do something less global. Also we are completely regenerating
+      // all the spaces every time any kind of edit is made which is just inefficient.
+      // Better idea: potentially just removing duplicate spaces in a row,
+      // then adding spaces where there are duplicate words in a row without them?
       .filter(removeSpaces)
       .map(addSpaces(transcript.duration))
       .flat(),

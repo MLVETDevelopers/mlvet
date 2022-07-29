@@ -3,6 +3,8 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap');
+
 * {
   box-sizing: border-box;
 }

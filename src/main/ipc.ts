@@ -5,50 +5,40 @@ import { IpcContext } from './types';
 // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
 // START GENERATED CODE PART 1
-import extractAudio from './handlers/audioExtract';
-import closeWindow from './handlers/closeWindow';
-import exportProject from './handlers/exportProjectHandler';
-import getFileNameWithExtension from './handlers/getFileNameWithExtension';
-import openProject from './handlers/openProjectHandler';
-import handleOsQuery from './handlers/osQuery';
-import retrieveProjectMetadata from './handlers/projectMetadataHandler';
-import readRecentProjects from './handlers/readRecentProjects';
-import requestMediaDialog from './handlers/requestMediaDialog';
-import returnToHome from './handlers/returnToHomeHandler';
-import saveAsProject from './handlers/saveAsProjectHandler';
-import saveProject from './handlers/saveProjectHandler';
-import setFileRepresentation from './handlers/setFileRepresentation';
-import setHomeEnabled from './handlers/setHomeEnabled';
-import setSaveEnabled from './handlers/setSaveEnabled';
-import setUndoRedoEnabled from './handlers/setUndoRedoEnabled';
-import extractThumbnail from './handlers/thumbnailExtract';
-import requestTranscription from './handlers/transcriptionHandler';
-import writeRecentProjects from './handlers/writeRecentProjects';
+import deleteProject from './handlers/file/deleteProject';
+import openProject from './handlers/file/openProjectHandler';
+import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
+import readRecentProjects from './handlers/file/readRecentProjects';
+import requestMediaDialog from './handlers/file/requestMediaDialog';
+import saveAsProject from './handlers/file/saveAsProjectHandler';
+import saveProject from './handlers/file/saveProjectHandler';
+import writeRecentProjects from './handlers/file/writeRecentProjects';
+import extractAudio from './handlers/media/audioExtract';
+import exportProject from './handlers/media/exportProjectHandler';
+import extractThumbnail from './handlers/media/thumbnailExtract';
+import requestTranscription from './handlers/media/transcriptionHandler';
+import setFileRepresentation from './handlers/menu/setFileRepresentation';
+import setHomeEnabled from './handlers/menu/setHomeEnabled';
+import setSaveEnabled from './handlers/menu/setSaveEnabled';
+import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
+import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
+import handleOsQuery from './handlers/misc/osQuery';
+import closeWindow from './handlers/window/closeWindow';
+import returnToHome from './handlers/window/returnToHomeHandler';
+import showConfirmation from './handlers/window/showConfirmation';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   ipcContext
 ) => {
   // START GENERATED CODE PART 2
-  ipcMain.handle('extract-audio', async (_event, project) =>
-    extractAudio(project)
-  );
-
-  ipcMain.handle('close-window', async () => closeWindow(ipcContext));
-
-  ipcMain.handle('export-project', async (_event, project) =>
-    exportProject(ipcContext, project)
-  );
-
-  ipcMain.handle('get-file-name-with-extension', async (_event, filePath) =>
-    getFileNameWithExtension(filePath)
+  ipcMain.handle('delete-project', async (_event, project) =>
+    deleteProject(project)
   );
 
   ipcMain.handle('open-project', async (_event, filePath) =>
     openProject(ipcContext, filePath)
   );
-
-  ipcMain.handle('handle-os-query', async () => handleOsQuery());
 
   ipcMain.handle('retrieve-project-metadata', async (_event, project) =>
     retrieveProjectMetadata(project)
@@ -60,16 +50,32 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     requestMediaDialog(ipcContext)
   );
 
-  ipcMain.handle('return-to-home', async (_event, project) =>
-    returnToHome(ipcContext, project)
-  );
-
   ipcMain.handle('save-as-project', async (_event, project) =>
     saveAsProject(ipcContext, project)
   );
 
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
+  );
+
+  ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
+    writeRecentProjects(recentProjects)
+  );
+
+  ipcMain.handle('extract-audio', async (_event, project) =>
+    extractAudio(project)
+  );
+
+  ipcMain.handle('export-project', async (_event, project) =>
+    exportProject(ipcContext, project)
+  );
+
+  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
+    extractThumbnail(absolutePathToMediaFile)
+  );
+
+  ipcMain.handle('request-transcription', async (_event, project) =>
+    requestTranscription(project)
   );
 
   ipcMain.handle(
@@ -94,16 +100,20 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
       setUndoRedoEnabled(ipcContext, undoEnabled, redoEnabled)
   );
 
-  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
-    extractThumbnail(absolutePathToMediaFile)
+  ipcMain.handle('get-file-name-with-extension', async (_event, filePath) =>
+    getFileNameWithExtension(filePath)
   );
 
-  ipcMain.handle('request-transcription', async (_event, project) =>
-    requestTranscription(project)
+  ipcMain.handle('handle-os-query', async () => handleOsQuery());
+
+  ipcMain.handle('close-window', async () => closeWindow(ipcContext));
+
+  ipcMain.handle('return-to-home', async (_event, project) =>
+    returnToHome(ipcContext, project)
   );
 
-  ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
-    writeRecentProjects(recentProjects)
+  ipcMain.handle('show-confirmation', async (_event, message, detail) =>
+    showConfirmation(ipcContext, message, detail)
   );
   // END GENERATED CODE PART 2
 };

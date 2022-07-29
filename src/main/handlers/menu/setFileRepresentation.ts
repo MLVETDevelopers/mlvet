@@ -1,4 +1,4 @@
-import { IpcContext } from '../types';
+import { IpcContext } from '../../types';
 
 type SetFileRepresentation = (
   ipcContext: IpcContext,

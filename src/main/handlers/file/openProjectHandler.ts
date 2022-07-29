@@ -1,8 +1,8 @@
 import { readFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../../sharedTypes';
-import { CURRENT_SCHEMA_VERSION } from '../../constants';
-import { IpcContext } from '../types';
+import { Project } from '../../../sharedTypes';
+import { CURRENT_SCHEMA_VERSION } from '../../../constants';
+import { IpcContext } from '../../types';
 
 const getOpenFilePath: (
   mainWindow: BrowserWindow | null
@@ -49,16 +49,20 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
 type OpenProject = (
   ipcContext: IpcContext,
   filePath: string | null
-) => Promise<{ project: Project; filePath: string }>;
+) => Promise<{ project: Project | null; filePath: string }>;
 
 const openProject: OpenProject = async (ipcContext, filePath) => {
   const { mainWindow } = ipcContext;
 
   const openFilePath = filePath ?? (await getOpenFilePath(mainWindow));
 
-  const project = await openProjectFromFile(openFilePath);
+  try {
+    const project = await openProjectFromFile(openFilePath);
 
-  return { project, filePath: openFilePath };
+    return { project, filePath: openFilePath };
+  } catch (err) {
+    return { project: null, filePath: openFilePath }; // Failed to open project - e.g. doesn't exist
+  }
 };
 
 export default openProject;

@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import { RecentProject } from '../../sharedTypes';
-import { getRecentProjectsPath } from '../util';
+import { RecentProject } from '../../../sharedTypes';
+import { getRecentProjectsPath } from '../../util';
 
 type WriteRecentProjects = (recentProjects: RecentProject[]) => Promise<void>;
 

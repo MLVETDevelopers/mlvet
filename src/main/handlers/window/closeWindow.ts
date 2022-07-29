@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { IpcContext } from '../types';
+import { IpcContext } from '../../types';
 
 type CloseWindow = (ipcContext: IpcContext) => void;
 

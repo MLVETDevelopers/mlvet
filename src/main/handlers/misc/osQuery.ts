@@ -1,5 +1,5 @@
 import os from 'os';
-import { OperatingSystems } from '../../sharedTypes';
+import { OperatingSystems } from '../../../sharedTypes';
 
 type HandleOsQuery = () => OperatingSystems | null;
 

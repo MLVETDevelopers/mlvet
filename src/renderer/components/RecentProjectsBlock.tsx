@@ -1,9 +1,18 @@
-import { Box, Typography, styled, Stack, Grid, Paper } from '@mui/material';
+import {
+  Box,
+  Typography,
+  styled,
+  Stack,
+  Grid,
+  Paper,
+  IconButton,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';
 import { projectOpened } from 'renderer/store/currentProject/actions';
+import { projectDeleted } from 'renderer/store/recentProjects/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
@@ -11,7 +20,7 @@ import exampleThumbnail from '../../../assets/example-thumbnail.png';
 import { RecentProject } from '../../sharedTypes';
 import ipc from '../ipc';
 
-const { openProject } = ipc;
+const { openProject, deleteProject, showConfirmation } = ipc;
 
 const RecentProjectsBox = styled(Box)`
   width: calc(100vw - 40px);
@@ -75,19 +84,52 @@ const RecentProjectsBlock = () => {
     }
 
     if (!recentProject.projectFilePath) {
-      // TODO(patrick): bring up project file locator, and/or offer to delete project
+      // TODO(chloe): bring up project file locator, and/or offer to delete project
       // since not found
       return;
     }
 
     // Open the full project from storage, as the current one only has metadata
-    // TODO(patrick): error handling if the project file doesn't exist / was moved
+    // TODO(chloe): error handling if the project file doesn't exist / was moved
     const { project, filePath } = await openProject(
       recentProject.projectFilePath
     );
 
+    if (project === null) {
+      return;
+    }
+
     dispatch(projectOpened(project, filePath));
     dispatch(pageChanged(ApplicationPage.PROJECT));
+  };
+
+  const onProjectDelete: (id: string) => Promise<void> = async (id) => {
+    if (
+      !(await showConfirmation(
+        'Are you sure you want to delete this project?',
+        "This will remove the project file from disk, as well as any associated metadata. Linked media file(s) won't be deleted."
+      ))
+    ) {
+      return;
+    }
+
+    const projectToDelete = recentProjects.find(
+      (recentProject) => recentProject.id === id
+    );
+
+    if (!projectToDelete) {
+      return;
+    }
+
+    dispatch(projectDeleted(id));
+
+    const { project } = await openProject(projectToDelete.projectFilePath);
+
+    if (project === null) {
+      return;
+    }
+
+    await deleteProject(project);
   };
 
   return (
@@ -131,7 +173,15 @@ const RecentProjectsBlock = () => {
               </RecentProjectsSubItem>
               <RecentProjectsSubItem item xs={1}>
                 <Stack>
-                  <DeleteIcon />
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onProjectDelete(id);
+                    }}
+                    sx={{ color: colors.grey[300] }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </Stack>
               </RecentProjectsSubItem>
             </Grid>

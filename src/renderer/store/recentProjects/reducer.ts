@@ -1,7 +1,11 @@
 import { Reducer } from 'redux';
 import makeRecentProject from '../../../sharedUtils';
 import { Project, ProjectMetadata, RecentProject } from '../../../sharedTypes';
-import { RECENT_PROJECTS_LOADED, RECENT_PROJECT_ADDED } from './actions';
+import {
+  PROJECT_DELETED,
+  RECENT_PROJECTS_LOADED,
+  RECENT_PROJECT_ADDED,
+} from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
 import { PROJECT_OPENED, PROJECT_SAVED } from '../currentProject/actions';
@@ -46,6 +50,12 @@ const recentProjectsReducer: Reducer<
 
     // Append project to recent projects immutably
     return recentProjects.concat([recentProject]);
+  }
+
+  if (action.type === PROJECT_DELETED) {
+    const { id } = action.payload as { id: string };
+
+    return recentProjects.filter((project) => project.id !== id);
   }
 
   return recentProjects;

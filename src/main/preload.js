@@ -32,6 +32,15 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(
       'set-file-representation',

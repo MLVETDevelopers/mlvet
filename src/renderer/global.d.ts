@@ -47,6 +47,13 @@ declare global {
 
       saveProject: (project: Project) => Promise<string>;
 
+      setClipboardEnabled: (
+        cutEnabled: boolean,
+        copyEnabled: boolean,
+        pasteEnabled: boolean,
+        deleteEnabled: boolean
+      ) => Promise<void>;
+
       setFileRepresentation: (
         representedFilePath: string | null,
         isEdited: boolean

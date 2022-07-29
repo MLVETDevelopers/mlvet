@@ -18,6 +18,7 @@ import requestMediaDialog from './handlers/requestMediaDialog';
 import returnToHome from './handlers/returnToHomeHandler';
 import saveAsProject from './handlers/saveAsProjectHandler';
 import saveProject from './handlers/saveProjectHandler';
+import setClipboardEnabled from './handlers/setClipboardEnabled';
 import setFileRepresentation from './handlers/setFileRepresentation';
 import setHomeEnabled from './handlers/setHomeEnabled';
 import setSaveEnabled from './handlers/setSaveEnabled';
@@ -76,6 +77,18 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
+  );
+
+  ipcMain.handle(
+    'set-clipboard-enabled',
+    async (_event, cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+      setClipboardEnabled(
+        ipcContext,
+        cutEnabled,
+        copyEnabled,
+        pasteEnabled,
+        deleteEnabled
+      )
   );
 
   ipcMain.handle(

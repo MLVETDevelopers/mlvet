@@ -1,4 +1,4 @@
-import { Box, styled, Stack, Typography, Button } from '@mui/material';
+import { Box, styled, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';

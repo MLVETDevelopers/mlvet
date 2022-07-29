@@ -1,4 +1,4 @@
-import { Box, styled, Typography, Stack, Button } from '@mui/material';
+import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 import colors from '../colors';
 import ipc from '../ipc';

@@ -12,14 +12,16 @@ import { ChildProcess } from 'child_process';
 import dotenv from 'dotenv';
 import { app, BrowserWindow } from 'electron';
 import AppState from './AppState';
+import startExpressServer from './expressServer';
 import initialiseIpcHandlers from './ipc';
 import MenuBuilder from './menu';
 import promptToSaveWork from './promptToSaveWork';
+import { pingServer, startServer } from './pyServer';
 import { IpcContext } from './types';
 import { appDataStoragePath, isDevelopment, mkdir } from './util';
 import createWindow from './window';
 
-const pyServer: ChildProcess | null = null;
+let pyServer: ChildProcess | null = null;
 
 dotenv.config();
 
@@ -66,8 +68,26 @@ app
 
     initialiseIpcHandlers(ipcContext);
 
+    mainWindow.on('ready-to-show', async () => {
+      if (!mainWindow) {
+        throw new Error('"mainWindow" is not defined');
+      }
+      if (process.env.START_MINIMIZED) {
+        mainWindow.minimize();
+      } else {
+        mainWindow.show();
+      }
+
+      pyServer = startServer();
+
+      pingServer(pyServer);
+
+      startExpressServer();
+    });
+
     mainWindow.on('closed', () => {
       mainWindow = null;
+
       if (pyServer !== null) {
         pyServer.kill();
       }

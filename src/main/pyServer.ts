@@ -23,7 +23,7 @@ export const startServer: () => ChildProcess = () => {
 export const pingServer: (pyServer: ChildProcess) => void = (pyServer) => {
   if (pyServer !== null && pyServer.stderr !== null) {
     // Flask logs to stderr when server is ready. Hence, we listen to stderr rather than stdout
-    // More information why we listen to stderr here: https://github.com/patrickbrett/mlvet/pull/3#discussion_r830701799
+    // More information why we listen to stderr here: https://github.com/chloebrett/mlvet/pull/3#discussion_r830701799
     pyServer.stderr.once('data', (data) => {
       if (process.env.NODE_ENV === 'development') {
         console.log(data.toString()); // prints address that the server is running on. TODO: remove before it is electron app is built

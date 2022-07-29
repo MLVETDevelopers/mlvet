@@ -1,10 +1,7 @@
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
-import { ChildProcess } from 'child_process';
 import { app, BrowserWindow, shell } from 'electron';
 import path from 'path';
-import { startServer, pingServer } from './pyServer';
-import startExpressServer from './expressServer';
 import { isDevelopment, resolveHtmlPath } from './util';
 import installExtensions from './extensions';
 
@@ -33,23 +30,6 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-
-  mainWindow.on('ready-to-show', async () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-    }
-
-    const pyServer: ChildProcess = startServer();
-
-    pingServer(pyServer);
-
-    startExpressServer();
-  });
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

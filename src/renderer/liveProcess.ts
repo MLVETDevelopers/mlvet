@@ -1,6 +1,6 @@
 import { MapCallback, Transcription, Word } from 'sharedTypes';
 import { v4 as uuidv4 } from 'uuid';
-import { addSpaces, SPACE_CHAR } from './preProcess';
+import { addSpaces, SPACE_CHAR } from '../processingShared';
 
 /**
  * calculateTime calculates the outputStartTimes of a word based on the
@@ -51,7 +51,6 @@ const processWord: (usedKeys: Set<string>) => MapCallback<Word, Word> =
   (usedKeys) => (word, i, words) => {
     const newKey = usedKeys.has(word.key) ? uuidv4() : word.key;
     usedKeys.add(newKey);
-    console.log(usedKeys, newKey);
 
     // We have to mutate because calculateTime needs the latest version of the 'words' array
     // with updated outputStartTimes for each word as they are calculated

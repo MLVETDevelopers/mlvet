@@ -59,17 +59,21 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c'),
+          makeBasicWord(' '),
           makeBasicWord('d'),
+          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: DELETE_WORD,
         payload: {
-          startIndex: 1,
-          endIndex: 3,
+          startIndex: 2,
+          endIndex: 6,
         },
       }
     );
@@ -96,17 +100,21 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c', true),
+          makeBasicWord(' '),
           makeBasicWord('d', true),
+          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: UNDO_DELETE_WORD,
         payload: {
-          startIndex: 2,
-          endIndex: 5,
+          startIndex: 4,
+          endIndex: 9,
         },
       }
     );
@@ -133,19 +141,25 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c', true),
+          makeBasicWord(' '),
           makeBasicWord('d', true),
+          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          startIndex: 4,
           clipboard: [
             makeBasicWord('f'),
+            makeBasicWord(' '),
             makeBasicWord('g'),
+            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -177,19 +191,25 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b', true),
+          makeBasicWord(' '),
           makeBasicWord('c'),
+          makeBasicWord(' '),
           makeBasicWord('d'),
+          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          startIndex: 4,
           clipboard: [
             makeBasicWord('f'),
+            makeBasicWord(' '),
             makeBasicWord('g', true),
+            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -221,9 +241,13 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c'),
+          makeBasicWord(' '),
           makeBasicWord('d'),
+          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
@@ -233,7 +257,9 @@ describe('Transcription reducer', () => {
           startIndex: 0,
           clipboard: [
             makeBasicWord('f'),
+            makeBasicWord(' '),
             makeBasicWord('g'),
+            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -265,19 +291,25 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c'),
+          makeBasicWord(' '),
           makeBasicWord('d'),
+          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 4,
+          startIndex: 8,
           clipboard: [
             makeBasicWord('f'),
+            makeBasicWord(' '),
             makeBasicWord('g'),
+            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -309,17 +341,21 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c'),
+          makeBasicWord(' '),
           makeBasicWord('d'),
+          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 1,
-          clipboardLength: 2,
+          startIndex: 2,
+          clipboardLength: 3,
         },
       }
     );
@@ -344,17 +380,21 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a', true),
+          makeBasicWord(' '),
           makeBasicWord('b'),
+          makeBasicWord(' '),
           makeBasicWord('c', true),
+          makeBasicWord(' '),
           makeBasicWord('d', true),
+          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 1,
-          clipboardLength: 2,
+          startIndex: 2,
+          clipboardLength: 3,
         },
       }
     );

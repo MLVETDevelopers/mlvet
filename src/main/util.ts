@@ -35,9 +35,5 @@ export const appDataStoragePath: () => string = () =>
 export const audioExtractStoragePath: () => string = () =>
   path.join(appDataStoragePath(), 'audioExtracts');
 
-// Round a number in seconds to milliseconds - solves a lot of floating point errors
-export const roundToMs: (input: number) => number = (input) =>
-  Math.round(input * 1000) / 1000;
-
 export const getRecentProjectsPath: () => string = () =>
   path.join(appDataStoragePath(), 'recentProjects.json');

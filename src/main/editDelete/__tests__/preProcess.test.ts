@@ -27,6 +27,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: 1,
+      duration,
       words: [
         {
           word: ' ',
@@ -108,6 +109,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: -7,
+      duration,
       words: [
         {
           word: ' ',
@@ -207,6 +209,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: -7,
+      duration,
       words: [
         {
           word: ' ',

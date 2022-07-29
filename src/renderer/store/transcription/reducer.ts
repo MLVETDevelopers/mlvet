@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import liveProcessTranscript from 'main/editDelete/liveProcess';
+import liveProcessTranscript from 'renderer/liveProcess';
 import { mapInRange } from 'renderer/util';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
@@ -16,12 +16,6 @@ import {
   PASTE_WORD,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
-
-const processTranscript = (transcription: Transcription) => {
-  // TODO(chloe): we really shouldn't call liveProcessTranscript from here, it's in the back end process lol.
-  // I'm surprised it even works, probably won't work when we try to build the app for production
-  return liveProcessTranscript(transcription);
-};
 
 /**
  *  Nested reducer for handling transcriptions
@@ -51,7 +45,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       words: mapInRange(transcription.words, markDeleted, startIndex, endIndex),
     };
 
-    return processTranscript(updatedTranscription);
+    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === UNDO_DELETE_WORD) {
@@ -69,7 +63,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       ),
     };
 
-    return processTranscript(updatedTranscription);
+    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === PASTE_WORD) {
@@ -83,7 +77,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       words: [...prefix, ...clipboard, ...suffix],
     };
 
-    return processTranscript(updatedTranscription);
+    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === UNDO_PASTE_WORD) {
@@ -91,13 +85,19 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       action.payload as UndoPasteWordsPayload;
 
     const prefix = transcription.words.slice(0, startIndex + 1);
-    const suffix = transcription.words.slice(startIndex + clipboardLength + 1);
+    // The offset of 2 assumes a space, so if we change the way spaces are handled
+    // this will probably break. Altogether I think spaces should be done at the rendering
+    // level not at the transcription-processing level since they can be generated on
+    // the fly and when they are part of the transcription they make it kind of harder to work with
+    const suffix = transcription.words.slice(startIndex + clipboardLength + 2);
+
+    console.log(prefix, suffix);
 
     const updatedTranscription = {
       ...transcription,
       words: [...prefix, ...suffix],
     };
-    return processTranscript(updatedTranscription);
+    return liveProcessTranscript(updatedTranscription);
   }
 
   return transcription;

@@ -1,5 +1,9 @@
 import { Project, ProjectMetadata, RecentProject } from './sharedTypes';
 
+// Round a number in seconds to milliseconds - solves a lot of floating point errors
+export const roundToMs: (input: number) => number = (input) =>
+  Math.round(input * 1000) / 1000;
+
 const makeRecentProject: (
   project: Pick<Project, keyof (Project | RecentProject)>,
   metadata: ProjectMetadata,

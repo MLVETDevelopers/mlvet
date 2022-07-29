@@ -52,6 +52,13 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  // Reset the import - for when delete button is pressed on media
+  const removeMediaFromImport: () => void = () => {
+    setIsAwaitingMedia(true);
+    setMediaFilePath(null);
+    setMediaFileName(null);
+  };
+
   const dispatch = useDispatch();
 
   if (currentProject === null) {
@@ -141,7 +148,10 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
         justifyContent="flex-start"
         sx={{ height: '42.5%', overflowY: 'auto' }}
       >
-        <MediaDisplayOnImport fileName={mediaFileName} />
+        <MediaDisplayOnImport
+          fileName={mediaFileName}
+          removeMediaFromImport={removeMediaFromImport}
+        />
       </CustomColumnStack>
       <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
         {cancelButton}

@@ -4,6 +4,9 @@ import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { app } from 'electron';
 
+export const isDevelopment =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
 if (process.env.NODE_ENV === 'development') {
@@ -19,14 +22,6 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
-export const padZeros: (num: number, len: number) => string = (num, len) => {
-  return String(num).padStart(len, '0');
-};
-
-export const integerDivide: (a: number, b: number) => number = (a, b) => {
-  return Math.floor(a / b);
-};
-
 export const mkdir = (dirPath: string) => {
   if (!existsSync(dirPath)) {
     try {
@@ -40,9 +35,15 @@ export const mkdir = (dirPath: string) => {
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
 
+export const audioExtractStoragePath: () => string = () =>
+  path.join(appDataStoragePath(), 'audioExtracts');
+
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
+
+export const getRecentProjectsPath: () => string = () =>
+  path.join(appDataStoragePath(), 'recentProjects.json');
 
 /** Utility types */
 

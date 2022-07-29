@@ -14,7 +14,8 @@
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -91,13 +92,13 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "patrickbrett",
+      "owner": "chloebrett",
       "repo": "mlvet"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/patrickbrett/mlvet.git"
+    "url": "git+https://github.com/chloebrett/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",
@@ -107,7 +108,8 @@
     },
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+      "@fontsource/*": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "js",
@@ -123,9 +125,6 @@
     ],
     "testPathIgnorePatterns": [
       "release/app/dist"
-    ],
-    "setupFiles": [
-      "./.erb/scripts/check-build-exists.ts"
     ]
   },
   "devDependencies": {
@@ -146,6 +145,7 @@
     "@typescript-eslint/parser": "^5.8.1",
     "browserslist-config-erb": "^0.0.3",
     "chalk": "^4.1.2",
+    "change-case": "^4.1.2",
     "concurrently": "^6.5.1",
     "core-js": "^3.20.1",
     "cross-env": "^7.0.3",
@@ -176,6 +176,7 @@
     "jest": "^27.4.5",
     "lint-staged": "^12.1.4",
     "mini-css-extract-plugin": "^2.4.5",
+    "nodemon": "^2.0.16",
     "prettier": "^2.5.1",
     "react-refresh": "^0.11.0",
     "react-refresh-typescript": "^2.0.3",
@@ -205,11 +206,13 @@
     "@fontsource/rubik": "^4.5.6",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.1",
+    "buffer": "^6.0.3",
     "child_process": "^1.0.2",
     "dotenv": "^16.0.0",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.6",
     "electron-updater": "^4.6.5",
+    "express": "^4.18.1",
     "fluent-ffmpeg": "^2.1.2",
     "get-audio-duration": "^3.1.0",
     "history": "^5.3.0",
@@ -217,7 +220,9 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
-    "uuid": "^8.3.2"
+    "socket.io-client": "^4.5.0",
+    "uuid": "^8.3.2",
+    "vimond-replay": "^3.3.0"
   },
   "devEngines": {
     "node": "16.x",

@@ -4,14 +4,18 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ApplicationStore } from 'renderer/store/helpers';
-import { projectCreated, recentProjectAdded } from 'renderer/store/actions';
-import { Project } from 'sharedTypes';
-import { updateProjectWithMedia } from 'renderer/util';
+import { ApplicationStore } from '../../store/sharedHelpers';
+import { projectCreated } from '../../store/currentProject/actions';
+import { Project } from '../../../sharedTypes';
+import {
+  updateProjectWithMedia,
+  updateProjectWithExtractedAudio,
+} from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
+import ipc from '../../ipc';
 
-const { retrieveProjectMetadata } = window.electron;
+const { extractAudio } = ipc;
 
 interface Props {
   prevView: () => void;
@@ -58,20 +62,33 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const setCurrentProject = (project: Project) =>
     dispatch(projectCreated(project));
-  const addToRecentProjects = async (project: Project) => {
-    const projectMetadata = await retrieveProjectMetadata(project);
-    dispatch(recentProjectAdded({ ...project, ...projectMetadata }));
-  };
 
   const handleTranscribe = async () => {
-    const project = await updateProjectWithMedia(currentProject, mediaFilePath);
-
-    if (project === null || mediaFilePath === null) {
+    if (mediaFilePath === null) {
       return;
     }
 
-    setCurrentProject(project);
-    await addToRecentProjects(project);
+    const projectWithMedia = await updateProjectWithMedia(
+      currentProject,
+      mediaFilePath
+    );
+
+    if (projectWithMedia === null) {
+      return;
+    }
+
+    const audioFilePath = await extractAudio(projectWithMedia);
+
+    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
+      projectWithMedia,
+      audioFilePath
+    );
+
+    if (projectWithAudioExtract === null) {
+      return;
+    }
+
+    setCurrentProject(projectWithAudioExtract);
 
     nextView();
   };

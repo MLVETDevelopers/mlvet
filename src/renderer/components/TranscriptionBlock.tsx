@@ -30,10 +30,15 @@ const Word = styled('span')`
 
 interface Props {
   transcription: Transcription;
+  nowPlayingWordIndex: number | null;
   onWordClick: (wordIndex: number) => void;
 }
 
-const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
+const TranscriptionBlock = ({
+  onWordClick,
+  transcription,
+  nowPlayingWordIndex,
+}: Props) => {
   return (
     <TranscriptionBox>
       <p
@@ -41,26 +46,25 @@ const TranscriptionBlock = ({ onWordClick, transcription }: Props) => {
           margin: 0,
         }}
       >
-        {transcription.words
-          .map((word, index) =>
-            word.deleted ? null : (
-              <Word
-                key={word.key.toString()}
-                data-index={index}
-                data-type="word"
-                onClick={() => {
-                  onWordClick(index);
-                }}
-              >
-                {word.word}
-              </Word>
-            )
+        {transcription.words.map((word, index) =>
+          word.deleted ? null : (
+            <Word
+              key={word.key.toString()}
+              data-index={index}
+              data-type="word"
+              onClick={() => {
+                onWordClick(index);
+              }}
+              style={
+                index === nowPlayingWordIndex
+                  ? { background: `${colors.yellow[500]}80` }
+                  : {}
+              }
+            >
+              {word.word}
+            </Word>
           )
-          .reduce((acc, curr) => (
-            <>
-              {acc} {curr}
-            </>
-          ))}
+        )}
       </p>
     </TranscriptionBox>
   );

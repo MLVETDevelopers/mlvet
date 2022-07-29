@@ -4,9 +4,9 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  IpcMain,
 } from 'electron';
-import { handleOpenProject } from './handlers';
+import openProject from './handlers/file/openProjectHandler';
+import { IpcContext } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -41,47 +41,6 @@ export default class MenuBuilder {
 
     return menu;
   }
-
-  setButtonEnabled: (
-    menu: Menu,
-    submenuId: string,
-    itemId: string,
-    enabled: boolean
-  ) => void = (menu, submenuId, itemId, isEnabled) => {
-    const foundSubmenu = menu.items.find((submenu) => submenu.id === submenuId);
-
-    if (!foundSubmenu) {
-      return;
-    }
-
-    const button = foundSubmenu.submenu?.items.find(
-      (item) => item.id === itemId
-    );
-
-    if (!button) {
-      return;
-    }
-
-    button.enabled = isEnabled;
-  };
-
-  setListeners: (menu: Menu, ipcMain: IpcMain) => void = (menu, ipcMain) => {
-    ipcMain.handle(
-      'set-save-enabled',
-      (_event, saveEnabled: boolean, saveAsEnabled: boolean) => {
-        this.setButtonEnabled(menu, 'file', 'save', saveEnabled);
-        this.setButtonEnabled(menu, 'file', 'saveAs', saveAsEnabled);
-      }
-    );
-
-    ipcMain.handle(
-      'set-undo-redo-enabled',
-      (_event, undoEnabled: boolean, redoEnabled: boolean) => {
-        this.setButtonEnabled(menu, 'edit', 'undo', undoEnabled);
-        this.setButtonEnabled(menu, 'edit', 'redo', redoEnabled);
-      }
-    );
-  };
 
   setupDevelopmentEnvironment(): void {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
@@ -130,8 +89,9 @@ export default class MenuBuilder {
         label: 'Open...',
         accelerator: 'CommandOrControl+O',
         click: async () => {
-          const { project, filePath } = await handleOpenProject(
-            this.mainWindow
+          const { project, filePath } = await openProject(
+            { mainWindow: this.mainWindow } as IpcContext,
+            null
           );
 
           this.mainWindow.webContents.send('project-opened', project, filePath);
@@ -143,7 +103,7 @@ export default class MenuBuilder {
         accelerator: 'CommandOrControl+S',
         click: () => {
           // Tell the renderer to initiate a save
-          this.mainWindow.webContents.send('initiate-save-project');
+          this.mainWindow.webContents.send('initiate-save-project', false);
         },
         enabled: false,
       },
@@ -154,6 +114,28 @@ export default class MenuBuilder {
         click: () => {
           // Tell the renderer to initiate a save-as
           this.mainWindow.webContents.send('initiate-save-as-project');
+        },
+        enabled: false,
+      },
+      {
+        id: 'export',
+        label: 'Export Project',
+        accelerator: 'CommandOrControl+E',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-export-project');
+        },
+      },
+    ];
+  }
+
+  buildHistoryOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'home',
+        label: 'Home',
+        accelerator: 'Shift+CommandOrControl+H',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-return-to-home');
         },
         enabled: false,
       },
@@ -176,7 +158,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Hide Others',
-          accelerator: 'CommandOrControl+Shift+H',
+          accelerator: 'CommandOrControl+Alt+H',
           selector: 'hideOtherApplications:',
         },
         { label: 'Show All', selector: 'unhideAllApplications:' },
@@ -256,6 +238,11 @@ export default class MenuBuilder {
         },
       ],
     };
+    const subMenuHistory: MenuItemConstructorOptions = {
+      id: 'history',
+      label: 'History',
+      submenu: this.buildHistoryOptions(),
+    };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -280,12 +267,20 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuFile, subMenuEdit, subMenuView, subMenuWindow];
+    return [
+      subMenuAbout,
+      subMenuFile,
+      subMenuEdit,
+      subMenuView,
+      subMenuHistory,
+      subMenuWindow,
+    ];
   }
 
   buildDefaultTemplate() {
     const templateDefault = [
       {
+        id: 'file',
         label: '&File',
         submenu: this.buildFileOptions(),
       },
@@ -295,6 +290,7 @@ export default class MenuBuilder {
         submenu: this.buildUndoRedoOptions(),
       },
       {
+        id: 'view',
         label: '&View',
         submenu:
           process.env.NODE_ENV === 'development' ||
@@ -337,6 +333,12 @@ export default class MenuBuilder {
               ],
       },
       {
+        id: 'history',
+        label: '&History',
+        submenu: this.buildHistoryOptions(),
+      },
+      {
+        id: 'help',
         label: 'Help',
         submenu: [
           {

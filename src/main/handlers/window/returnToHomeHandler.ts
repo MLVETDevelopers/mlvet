@@ -1,6 +1,6 @@
-import { IpcContext } from '../types';
-import { Project } from '../../sharedTypes';
-import { confirmSave } from './helpers/saveUtils';
+import { IpcContext } from '../../types';
+import { Project } from '../../../sharedTypes';
+import { confirmSave } from '../helpers/saveUtils';
 
 type ReturnToHome = (
   ipcContext: IpcContext,

@@ -2,7 +2,7 @@ import path from 'path';
 import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
 import { Project } from 'sharedTypes';
-import { audioExtractStoragePath, mkdir } from '../util';
+import { audioExtractStoragePath, mkdir } from '../../util';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 

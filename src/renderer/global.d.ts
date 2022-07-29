@@ -17,54 +17,6 @@ declare global {
       // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
       // START GENERATED CODE
-      extractAudio: (project: Project) => Promise<string>;
-
-      closeWindow: () => void;
-
-      deleteProject: (project: Project) => Promise<void>;
-
-      exportProject: (project: Project) => Promise<string>;
-
-      getFileNameWithExtension: (filePath: string | null) => Promise<string>;
-
-      openProject: (
-        filePath: string | null
-      ) => Promise<{ project: Project | null; filePath: string }>;
-
-      handleOsQuery: () => OperatingSystems | null;
-
-      retrieveProjectMetadata: (
-        project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
-      ) => Promise<ProjectMetadata>;
-
-      readRecentProjects: () => Promise<RecentProject[]>;
-
-      requestMediaDialog: () => Promise<string | null>;
-
-      returnToHome: (project: Project) => Promise<number>;
-
-      saveAsProject: (project: Project) => Promise<string>;
-
-      saveProject: (project: Project) => Promise<string>;
-
-      setFileRepresentation: (
-        representedFilePath: string | null,
-        isEdited: boolean
-      ) => void;
-
-      setHomeEnabled: (homeEnabled: boolean) => void;
-
-      setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
-
-      setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
-
-      showConfirmation: (message: string, detail: string) => Promise<boolean>;
-
-      extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
-
-      requestTranscription: (project: Project) => Promise<Transcription | null>;
-
-      writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
       // END GENERATED CODE
 
       on: (

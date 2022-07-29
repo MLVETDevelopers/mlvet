@@ -14,6 +14,7 @@ import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
 import { Project } from '../../../sharedTypes';
+import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 
 interface Props {
   closeModal: () => void;
@@ -40,10 +41,6 @@ const CustomRowStack = styled(CustomStack)({
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],
   height: '200px',
-});
-
-const CustomButton = styled(Button)({
-  filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8))',
 });
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
@@ -78,20 +75,19 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const continueButton = (
-    <CustomButton
-      color="primary"
+    <PrimaryButton
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
-      sx={{ width: '100%' }}
+      fullWidth
     >
       Continue
-    </CustomButton>
+    </PrimaryButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '100%' }}>
+    <SecondaryButton onClick={closeModal} fullWidth>
       Cancel
-    </CustomButton>
+    </SecondaryButton>
   );
 
   return (

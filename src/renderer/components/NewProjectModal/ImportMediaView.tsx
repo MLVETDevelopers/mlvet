@@ -14,6 +14,7 @@ import {
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 import ipc from '../../ipc';
+import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 
 const { extractAudio } = ipc;
 
@@ -34,10 +35,6 @@ const CustomRowStack = styled(CustomStack)({
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],
-});
-
-const CustomButton = styled(Button)({
-  filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8))',
 });
 
 const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
@@ -90,20 +87,19 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   };
 
   const transcribeButton = (
-    <CustomButton
-      color="primary"
+    <PrimaryButton
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
-      sx={{ width: '100%' }}
+      fullWidth
     >
       Transcribe
-    </CustomButton>
+    </PrimaryButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={prevView} sx={{ width: '100%' }}>
+    <SecondaryButton onClick={prevView} fullWidth>
       Back
-    </CustomButton>
+    </SecondaryButton>
   );
 
   return (

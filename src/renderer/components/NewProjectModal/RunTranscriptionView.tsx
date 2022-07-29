@@ -9,6 +9,7 @@ import { ApplicationStore } from '../../store/sharedHelpers';
 import { Transcription, AsyncState } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
+import { PrimaryButton } from '../Blocks/Buttons';
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
@@ -27,10 +28,6 @@ const CustomRowStack = styled(CustomStack)({
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],
-});
-
-const CustomButton = styled(Button)({
-  filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8))',
 });
 
 interface Props {
@@ -90,9 +87,9 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   getFileName();
 
   const completedButton = (
-    <CustomButton color="primary" onClick={nextView} sx={{ width: '100%' }}>
+    <PrimaryButton onClick={nextView} fullWidth>
       Get Started
-    </CustomButton>
+    </PrimaryButton>
   );
 
   return (

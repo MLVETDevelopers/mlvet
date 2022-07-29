@@ -75,8 +75,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if (action.type === PASTE_WORD) {
     const { startIndex, clipboard } = action.payload as PasteWordsPayload;
 
-    const prefix = transcription.words.slice(0, startIndex);
-    const suffix = transcription.words.slice(startIndex + clipboard.length);
+    const prefix = transcription.words.slice(0, startIndex + 1);
+    const suffix = transcription.words.slice(startIndex + 1);
 
     const updatedTranscription = {
       ...transcription,
@@ -90,8 +90,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     const { startIndex, clipboardLength } =
       action.payload as UndoPasteWordsPayload;
 
-    const prefix = transcription.words.slice(0, startIndex);
-    const suffix = transcription.words.slice(startIndex + clipboardLength);
+    const prefix = transcription.words.slice(0, startIndex + 1);
+    const suffix = transcription.words.slice(startIndex + clipboardLength + 1);
 
     const updatedTranscription = {
       ...transcription,

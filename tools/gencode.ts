@@ -96,17 +96,21 @@ const recursivelyReadDirectory: (dir: string) => Promise<string[]> = async (
 
   let fileNames: string[] = [];
 
-  contents.forEach(async (fileOrDir: string) => {
-    const fullPath = path.join(dir, fileOrDir);
+  await Promise.all(
+    contents.map(async (fileOrDir: string) => {
+      const fullPath = path.join(dir, fileOrDir);
 
-    if ((await fs.stat(fullPath)).isDirectory()) {
-      if (!FOLDER_SKIPLIST.includes(fileOrDir)) {
-        fileNames = fileNames.concat(await recursivelyReadDirectory(fullPath));
+      if ((await fs.stat(fullPath)).isDirectory()) {
+        if (!FOLDER_SKIPLIST.includes(fileOrDir)) {
+          fileNames = fileNames.concat(
+            await recursivelyReadDirectory(fullPath)
+          );
+        }
+      } else {
+        fileNames.push(fullPath);
       }
-    } else {
-      fileNames.push(fullPath);
-    }
-  });
+    })
+  );
 
   return fileNames.filter((file: string) => file.includes('.ts'));
 };

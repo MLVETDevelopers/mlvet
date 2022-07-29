@@ -4,6 +4,7 @@ import convertTranscriptToCuts from '../transcriptToCuts';
 
 const mockTranscriptionUnedited = {
   confidence: -977.0841064453125,
+  duration: 100,
   words: [
     {
       word: ' ',
@@ -46,6 +47,7 @@ const mockTranscriptionUnedited = {
 
 const mockTranscriptionEdited = {
   confidence: -977.0841064453125,
+  duration: 100,
   words: [
     {
       word: ' ',

@@ -12,6 +12,7 @@ export const mockProject: Project = {
   isEdited: false,
   transcription: {
     confidence: 123456789,
+    duration: 100,
     words: [
       {
         word: 'test-word-1',

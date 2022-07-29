@@ -42,6 +42,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -60,6 +61,7 @@ describe('Transcription reducer', () => {
       )
     ).toEqual({
       confidence: 1,
+      duration: 100,
       words: [
         makeBasicWord('a'),
         makeBasicWord('b', true),
@@ -75,6 +77,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -108,6 +111,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -148,6 +152,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b', true),
@@ -188,6 +193,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -228,6 +234,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -268,6 +275,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a'),
             makeBasicWord('b'),
@@ -295,6 +303,7 @@ describe('Transcription reducer', () => {
       transcriptionReducer(
         {
           confidence: 1,
+          duration: 100,
           words: [
             makeBasicWord('a', true),
             makeBasicWord('b'),

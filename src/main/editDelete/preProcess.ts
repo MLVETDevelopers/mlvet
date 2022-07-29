@@ -47,6 +47,8 @@ const constructWord: (
   fileName,
 });
 
+export const SPACE_CHAR = ' ';
+
 /**
  * Adds spaces between words which represent the silence between each word
  * @param result The output being constructed
@@ -55,9 +57,8 @@ const constructWord: (
  * @param words The list of words being reduced
  * @returns The updated transcript with a silence after word
  */
-const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
+export const addSpaces: (totalDuration: number) => MapCallback<Word, Word[]> =
   (totalDuration: number) => (word, index, words) => {
-    const SPACE_CHAR = ' ';
     const wordAndSilence: Word[] = [];
     const { fileName } = word;
 
@@ -119,6 +120,7 @@ const preProcessTranscript = (
     jsonTranscript,
     duration
   );
+
   return {
     confidence: jsonTranscript.confidence,
     words: jsonTranscript.words
@@ -127,6 +129,7 @@ const preProcessTranscript = (
       .map(injectAttributes(fileName))
       .map(addSpaces(duration))
       .flat(),
+    duration,
   };
 };
 

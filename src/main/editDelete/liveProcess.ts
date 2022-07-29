@@ -1,5 +1,6 @@
 import { MapCallback, Transcription, Word } from 'sharedTypes';
 import { v4 as uuidv4 } from 'uuid';
+import { addSpaces, SPACE_CHAR } from './preProcess';
 
 /**
  * calculateTime calculates the outputStartTimes of a word based on the
@@ -61,6 +62,10 @@ const processWord: (usedKeys: Set<string>) => MapCallback<Word, Word> =
     };
   };
 
+const removeSpaces: (word: Word) => boolean = (word) => {
+  return word.word !== SPACE_CHAR;
+};
+
 /**
  * Processes a Transcript so that all words have the correct outputStartTime
  * @param transcript The original Transcript object
@@ -70,8 +75,12 @@ const liveProcessTranscript = (transcript: Transcription): Transcription => {
   const usedKeys: Set<string> = new Set();
 
   return {
-    confidence: transcript.confidence,
-    words: transcript.words.map(processWord(usedKeys)),
+    ...transcript,
+    words: transcript.words
+      .map(processWord(usedKeys))
+      .filter(removeSpaces)
+      .map(addSpaces(transcript.duration))
+      .flat(),
   };
 };
 

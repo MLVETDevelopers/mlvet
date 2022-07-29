@@ -82,7 +82,9 @@ const requestTranscription: RequestTranscription = async (project) => {
 
   const duration: number =
     (await getAudioDurationInSeconds(project.audioExtractFilePath)) || 0;
+
   const fileName = path.basename(project.mediaFilePath);
+
   const processedTranscript = preProcessTranscript(
     jsonTranscript.transcripts[0],
     duration,

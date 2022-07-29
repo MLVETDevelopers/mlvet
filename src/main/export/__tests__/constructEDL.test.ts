@@ -11,6 +11,7 @@ describe('Test exporting', () => {
       name: 'test',
       transcription: {
         confidence: 1,
+        duration: 100,
         words: [
           {
             word: ' ',
@@ -58,6 +59,7 @@ describe('Test exporting', () => {
       name: 'test',
       transcription: {
         confidence: 1,
+        duration: 100,
         words: [
           {
             word: 'abc',

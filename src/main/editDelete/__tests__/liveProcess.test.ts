@@ -4,6 +4,7 @@ describe('Test live-processing Transcription outputStartTime after edit/delete',
   it('should produce expected Transcription after delete operation', () => {
     const inputTranscript = {
       confidence: 1,
+      duration: 100,
       words: [
         {
           word: ' ',
@@ -111,6 +112,7 @@ describe('Test live-processing Transcription outputStartTime after edit/delete',
   it('should produce expected Transcription after edit operation', () => {
     const inputTranscript = {
       confidence: 1,
+      duration: 100,
       words: [
         {
           word: ' ',
@@ -221,6 +223,7 @@ describe('Test live-processing Transcription outputStartTime after edit/delete',
   it('should produce expected Transcription after both an edit and delete operation', () => {
     const inputTranscript = {
       confidence: 1,
+      duration: 100,
       words: [
         {
           word: ' ',

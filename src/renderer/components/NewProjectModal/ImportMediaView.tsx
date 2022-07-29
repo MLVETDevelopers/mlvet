@@ -23,26 +23,22 @@ interface Props {
   nextView: () => void;
 }
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-`;
+const CustomStack = styled(Stack)({ width: '100%' });
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-`;
+const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+});
 
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const CustomButton = styled(Button)({
+  filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8))',
+});
 
 const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);

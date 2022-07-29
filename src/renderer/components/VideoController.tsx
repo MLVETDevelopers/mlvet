@@ -3,17 +3,17 @@ import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from '../colors';
 
-const VideoControllerBox = styled(Box)`
-  background: ${colors.grey[700]};
-  color: ${colors.grey[300]};
-  height: 62px;
-  width: 100vw;
-  margin: 0;
-  padding: 11px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const VideoControllerBox = styled(Box)({
+  background: colors.grey[700],
+  color: colors.grey[300],
+  height: '62px',
+  width: '100vw',
+  margin: 0,
+  padding: '11px 0',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
 interface TogglePlayButtonProps {
   isPlaying: boolean;

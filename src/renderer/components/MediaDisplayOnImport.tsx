@@ -8,9 +8,9 @@ interface Props {
   fileName: string | null;
 }
 
-const CustomBox = styled(Box)`
-  width: 100%;
-`;
+const CustomBox = styled(Box)({
+  width: '100%',
+});
 
 const MediaDisplayOnImport = ({ fileName }: Props) => {
   if (fileName === null) {

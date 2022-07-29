@@ -5,33 +5,33 @@ import ipc from '../ipc';
 
 const { getFileNameWithExtension } = ipc;
 
-const SelectMediaBox = styled(Box)`
-  width: 100%;
+const SelectMediaBox = styled(Box)({
+  width: '100%',
 
-  &:hover {
-    background: ${colors.grey[600]};
-  }
-`;
+  '&:hover': {
+    background: colors.grey[600],
+  },
+});
 
-const SelectMediaBoxOverlay = styled(Box)`
-  width: 100%;
+const SelectMediaBoxOverlay = styled(Box)({
+  width: '100%',
 
-  background: ${colors.grey[600]};
-`;
+  background: colors.grey[600],
+});
 
-const InnerBox = styled(Box)`
-  border-style: dashed;
-  border-width: 1px;
-  border-radius: 5px;
-  border-color: ${colors.grey[500]};
-  color: ${colors.grey[300]};
-  padding: 20px;
+const InnerBox = styled(Box)({
+  borderStyle: 'dashed',
+  borderWidth: '1px',
+  borderRadius: '5px',
+  borderColor: colors.grey[500],
+  color: colors.grey[300],
+  padding: '20px',
 
-  &:hover {
-    cursor: pointer;
-    background: ${colors.grey[600]};
-  }
-`;
+  '&:hover': {
+    cursor: 'pointer',
+    background: colors.grey[600],
+  },
+});
 
 interface Props {
   setMediaFileName: Dispatch<SetStateAction<string | null>>;

@@ -22,31 +22,30 @@ import ipc from '../ipc';
 
 const { openProject, deleteProject, showConfirmation } = ipc;
 
-const RecentProjectsBox = styled(Box)`
-  width: calc(100vw - 40px);
-  margin: 20px;
-  padding: 40px;
-`;
+const RecentProjectsBox = styled(Box)({
+  width: 'calc(100vw - 40px)',
+  margin: '20px',
+  padding: '40px',
+});
 
-const RecentProjectsItem = styled(Paper)`
-  background: ${colors.grey[700]};
-  color: ${colors.grey[300]};
-  padding: 10px 20px;
-  padding-right: 0;
+const RecentProjectsItem = styled(Paper)({
+  backgroundColor: colors.grey[700],
+  color: colors.grey[300],
+  padding: '10px 20px',
+  paddingRight: 0,
 
-  transition: 0.5s background;
+  transition: '0.5s background',
 
-  &:hover {
-    background: ${colors.grey[600]};
-    cursor: pointer;
-  }
-`;
-
-const RecentProjectsSubItem = styled(Grid)`
-  display: flex;
-  align-items: center;
-  justify-items: right;
-`;
+  '&:hover': {
+    background: colors.grey[600],
+    cursor: 'pointer',
+  },
+});
+const RecentProjectsSubItem = styled(Grid)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyItems: 'right',
+});
 
 // No idea why, but styling typography in paper in the usual way just literally does nothing. Seems like an MUI bug,
 // can't find any documentation on it. So doing this instead

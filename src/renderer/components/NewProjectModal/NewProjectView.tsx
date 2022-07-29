@@ -20,31 +20,31 @@ interface Props {
   nextView: () => void;
 }
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-  height: 100%;
-`;
+const CustomStack = styled(Stack)({
+  width: '100%',
+  height: '100%',
+});
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-`;
+const CustomColumnStack = styled(CustomStack)({
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+});
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
 
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-  height: 200px;
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+  height: '200px',
+});
 
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const CustomButton = styled(Button)({
+  filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8))',
+});
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('');

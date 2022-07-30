@@ -64,7 +64,9 @@ export interface Cut {
   startTime: number;
   duration: number;
   outputStartTime: number;
-  index: number; // TODO(chloe): do we need this? it's implied by the array form
+  // Somewhat redundant as cuts are stored in array, but it's used by the
+  // video preview controller for O(1) lookups of the current cut index
+  index: number;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

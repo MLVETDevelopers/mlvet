@@ -13,13 +13,12 @@ const updateClipboardEnabledInMenu: (clipboard: Word[]) => void = (
   ipc.setClipboardEnabled(true, true, pasteEnabled, true);
 };
 
-// Currently how we check which words have been been copied
-// KNOWN ISSUE: if you paste text in, these indexes wont update
-//     which means that continued pasting may result in incorrect paste targets.
+// Action to update the clipboard contents when words are copied
 export const clipboardUpdated: (clipboard: Word[]) => Action<Word[]> = (
   clipboard
 ) => {
   updateClipboardEnabledInMenu(clipboard);
+
   return {
     type: CLIPBOARD_UPDATED,
     payload: clipboard,

@@ -71,20 +71,31 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     // This is currently O(n^2); consider caching as described in
     // https://docs.google.com/document/d/1lQPJ4-kCI72GhNjpNbguT2iT5ihD_6oBikop-gXziYQ/edit
-    // if this gets slow
-    const wordsToPaste = clipboard.map((word) => ({
-      ...word,
-      // Paste count must be unique each time the same word is pasted, so we just
-      // look at the existing paste counts and use the highest existing one, + 1.
-      pasteCount:
-        Math.max(
-          ...transcription.words
-            .filter(
-              (innerWord) => innerWord.originalIndex === word.originalIndex
+    // if this gets slow.
+    // Also, done iteratively rather than a map to support multiple words with
+    // the same original index being pasted.
+    const wordsToPaste: Word[] = [];
+
+    clipboard.forEach((word) => {
+      wordsToPaste.push({
+        ...word,
+        // Paste count must be unique each time the same word is pasted, so we just
+        // look at the existing paste counts and use the highest existing one, + 1.
+        // This includes looking at the wordsToPaste that is being built, since
+        // it can include words with the same original index!
+        pasteCount:
+          Math.max(
+            0,
+            Math.max(
+              ...[...transcription.words, ...wordsToPaste]
+                .filter(
+                  (innerWord) => innerWord.originalIndex === word.originalIndex
+                )
+                .map((innerWord) => innerWord.pasteCount)
             )
-            .map((innerWord) => innerWord.pasteCount)
-        ) + 1,
-    }));
+          ) + 1,
+      });
+    });
 
     const suffix = transcription.words.slice(startIndex + 1);
 

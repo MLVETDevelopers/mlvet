@@ -9,10 +9,11 @@ import { TRANSCRIPTION_CREATED } from '../actions';
 import transcriptionReducer from '../reducer';
 
 const makeBasicWord: (
+  originalIndex: number,
   text: string,
   isDeleted?: boolean,
   pasteCount?: number
-) => Word = (text, isDeleted = false, pasteCount = 0) => ({
+) => Word = (originalIndex, text, isDeleted = false, pasteCount = 0) => ({
   word: text,
   startTime: 0,
   duration: 0,
@@ -20,7 +21,7 @@ const makeBasicWord: (
   bufferDurationAfter: 0,
   outputStartTime: 0,
   deleted: isDeleted,
-  originalIndex: 0,
+  originalIndex,
   pasteCount,
   fileName: 'PLACEHOLDER FILENAME',
 });
@@ -32,12 +33,12 @@ describe('Transcription reducer', () => {
         type: TRANSCRIPTION_CREATED,
         payload: {
           confidence: 1,
-          words: [makeBasicWord('a')],
+          words: [makeBasicWord(0, 'a')],
         },
       })
     ).toEqual({
       confidence: 1,
-      words: [makeBasicWord('a')],
+      words: [makeBasicWord(0, 'a')],
     });
   });
 
@@ -47,11 +48,11 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c'),
-          makeBasicWord('d'),
-          makeBasicWord('e'),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e'),
         ],
       },
       {
@@ -68,11 +69,11 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b', true),
-      makeBasicWord('c', true),
-      makeBasicWord('d'),
-      makeBasicWord('e'),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b', true),
+      makeBasicWord(2, 'c', true),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
     ]);
   });
 
@@ -82,11 +83,11 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c', true),
-          makeBasicWord('d', true),
-          makeBasicWord('e', true),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c', true),
+          makeBasicWord(3, 'd', true),
+          makeBasicWord(4, 'e', true),
         ],
       },
       {
@@ -103,11 +104,11 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b'),
-      makeBasicWord('c'),
-      makeBasicWord('d'),
-      makeBasicWord('e'),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
     ]);
   });
 
@@ -117,11 +118,14 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c', true),
-          makeBasicWord('d', true),
-          makeBasicWord('e', true),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c', true),
+          makeBasicWord(3, 'd', true),
+          makeBasicWord(4, 'e', true),
+          makeBasicWord(5, 'f', true),
+          makeBasicWord(6, 'g', true),
+          makeBasicWord(7, 'h', true),
         ],
       },
       {
@@ -129,9 +133,9 @@ describe('Transcription reducer', () => {
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord('f'),
-            makeBasicWord('g'),
-            makeBasicWord('h'),
+            makeBasicWord(5, 'f'),
+            makeBasicWord(6, 'g'),
+            makeBasicWord(7, 'h'),
           ],
         },
       }
@@ -142,14 +146,17 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b'),
-      makeBasicWord('c', true),
-      makeBasicWord('f', false, 1),
-      makeBasicWord('g', false, 1),
-      makeBasicWord('h', false, 1),
-      makeBasicWord('d', true),
-      makeBasicWord('e', true),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c', true),
+      makeBasicWord(5, 'f', false, 1),
+      makeBasicWord(6, 'g', false, 1),
+      makeBasicWord(7, 'h', false, 1),
+      makeBasicWord(3, 'd', true),
+      makeBasicWord(4, 'e', true),
+      makeBasicWord(5, 'f', true),
+      makeBasicWord(6, 'g', true),
+      makeBasicWord(7, 'h', true),
     ]);
   });
 
@@ -159,14 +166,17 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c', true),
-          makeBasicWord('d', true),
-          makeBasicWord('e', true),
-          makeBasicWord('f'),
-          makeBasicWord('g'),
-          makeBasicWord('h'),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c', true),
+          makeBasicWord(3, 'd', true),
+          makeBasicWord(4, 'e', true),
+          makeBasicWord(5, 'f'),
+          makeBasicWord(6, 'g'),
+          makeBasicWord(7, 'h'),
+          makeBasicWord(5, 'f', false, 1),
+          makeBasicWord(6, 'g', false, 1),
+          makeBasicWord(7, 'h', false, 1),
         ],
       },
       {
@@ -174,9 +184,9 @@ describe('Transcription reducer', () => {
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord('f'),
-            makeBasicWord('g'),
-            makeBasicWord('h'),
+            makeBasicWord(5, 'f'),
+            makeBasicWord(6, 'g'),
+            makeBasicWord(7, 'h'),
           ],
         },
       }
@@ -187,17 +197,20 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b'),
-      makeBasicWord('c', true),
-      makeBasicWord('f', false, 1),
-      makeBasicWord('g', false, 1),
-      makeBasicWord('h', false, 1),
-      makeBasicWord('d', true),
-      makeBasicWord('e', true),
-      makeBasicWord('f'),
-      makeBasicWord('g'),
-      makeBasicWord('h'),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c', true),
+      makeBasicWord(5, 'f', false, 2),
+      makeBasicWord(6, 'g', false, 2),
+      makeBasicWord(7, 'h', false, 2),
+      makeBasicWord(3, 'd', true),
+      makeBasicWord(4, 'e', true),
+      makeBasicWord(5, 'f'),
+      makeBasicWord(6, 'g'),
+      makeBasicWord(7, 'h'),
+      makeBasicWord(5, 'f', false, 1),
+      makeBasicWord(6, 'g', false, 1),
+      makeBasicWord(7, 'h', false, 1),
     ]);
   });
 
@@ -207,11 +220,14 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b', true),
-          makeBasicWord('c'),
-          makeBasicWord('d'),
-          makeBasicWord('e', true),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b', true),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e', true),
+          makeBasicWord(5, 'f', true),
+          makeBasicWord(6, 'g', true),
+          makeBasicWord(7, 'h', true),
         ],
       },
       {
@@ -219,9 +235,9 @@ describe('Transcription reducer', () => {
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord('f'),
-            makeBasicWord('g', true),
-            makeBasicWord('h'),
+            makeBasicWord(5, 'f'),
+            makeBasicWord(6, 'g', true),
+            makeBasicWord(7, 'h'),
           ],
         },
       }
@@ -232,14 +248,17 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b', true),
-      makeBasicWord('c'),
-      makeBasicWord('f', false, 1),
-      makeBasicWord('g', true, 1),
-      makeBasicWord('h', false, 1),
-      makeBasicWord('d'),
-      makeBasicWord('e', true),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b', true),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(5, 'f', false, 1),
+      makeBasicWord(6, 'g', true, 1),
+      makeBasicWord(7, 'h', false, 1),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e', true),
+      makeBasicWord(5, 'f', true),
+      makeBasicWord(6, 'g', true),
+      makeBasicWord(7, 'h', true),
     ]);
   });
 
@@ -249,11 +268,14 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c'),
-          makeBasicWord('d'),
-          makeBasicWord('e'),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e'),
+          makeBasicWord(5, 'f', true),
+          makeBasicWord(6, 'g', true),
+          makeBasicWord(7, 'h', true),
         ],
       },
       {
@@ -261,9 +283,9 @@ describe('Transcription reducer', () => {
         payload: {
           startIndex: 0,
           clipboard: [
-            makeBasicWord('f'),
-            makeBasicWord('g'),
-            makeBasicWord('h'),
+            makeBasicWord(5, 'f'),
+            makeBasicWord(6, 'g'),
+            makeBasicWord(7, 'h'),
           ],
         },
       }
@@ -274,14 +296,17 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('f', false, 1),
-      makeBasicWord('g', false, 1),
-      makeBasicWord('h', false, 1),
-      makeBasicWord('b'),
-      makeBasicWord('c'),
-      makeBasicWord('d'),
-      makeBasicWord('e'),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(5, 'f', false, 1),
+      makeBasicWord(6, 'g', false, 1),
+      makeBasicWord(7, 'h', false, 1),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
+      makeBasicWord(5, 'f', true),
+      makeBasicWord(6, 'g', true),
+      makeBasicWord(7, 'h', true),
     ]);
   });
 
@@ -291,21 +316,24 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c'),
-          makeBasicWord('d'),
-          makeBasicWord('e'),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd', true),
+          makeBasicWord(4, 'e', true),
+          makeBasicWord(5, 'f', true),
+          makeBasicWord(6, 'g'),
+          makeBasicWord(7, 'h'),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 4,
+          startIndex: 7,
           clipboard: [
-            makeBasicWord('f'),
-            makeBasicWord('g'),
-            makeBasicWord('h'),
+            makeBasicWord(3, 'd'),
+            makeBasicWord(4, 'e'),
+            makeBasicWord(5, 'f'),
           ],
         },
       }
@@ -316,14 +344,17 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b'),
-      makeBasicWord('c'),
-      makeBasicWord('d'),
-      makeBasicWord('e'),
-      makeBasicWord('f', false, 1),
-      makeBasicWord('g', false, 1),
-      makeBasicWord('h', false, 1),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd', true),
+      makeBasicWord(4, 'e', true),
+      makeBasicWord(5, 'f', true),
+      makeBasicWord(6, 'g'),
+      makeBasicWord(7, 'h'),
+      makeBasicWord(3, 'd', false, 1),
+      makeBasicWord(4, 'e', false, 1),
+      makeBasicWord(5, 'f', false, 1),
     ]);
   });
 
@@ -333,11 +364,13 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a'),
-          makeBasicWord('b'),
-          makeBasicWord('c', false, 1),
-          makeBasicWord('d', false, 1),
-          makeBasicWord('e'),
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c', false, 1),
+          makeBasicWord(3, 'd', false, 1),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e'),
         ],
       },
       {
@@ -354,9 +387,11 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a'),
-      makeBasicWord('b'),
-      makeBasicWord('e'),
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
     ]);
   });
 
@@ -366,17 +401,19 @@ describe('Transcription reducer', () => {
         confidence: 1,
         duration: 100,
         words: [
-          makeBasicWord('a', true),
-          makeBasicWord('b', false, 1),
-          makeBasicWord('c', true, 1),
-          makeBasicWord('d', true),
-          makeBasicWord('e'),
+          makeBasicWord(0, 'a', true),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c', true, 1),
+          makeBasicWord(3, 'd', false, 1),
+          makeBasicWord(2, 'c', true),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e'),
         ],
       },
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 0,
+          startIndex: 1,
           clipboardLength: 2,
         },
       }
@@ -387,9 +424,44 @@ describe('Transcription reducer', () => {
     expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
-      makeBasicWord('a', true),
-      makeBasicWord('d', true),
-      makeBasicWord('e'),
+      makeBasicWord(0, 'a', true),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c', true),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
+    ]);
+  });
+
+  it('should handle a paste of multiple words with the same original index', () => {
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord(0, 'a'),
+          makeBasicWord(0, 'a', false, 1),
+          makeBasicWord(1, 'b'),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 2,
+          clipboard: [makeBasicWord(0, 'a'), makeBasicWord(0, 'a', false, 1)],
+        },
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(output?.words).toEqual([
+      makeBasicWord(0, 'a'),
+      makeBasicWord(0, 'a', false, 1),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(0, 'a', false, 2),
+      makeBasicWord(0, 'a', false, 3),
     ]);
   });
 });

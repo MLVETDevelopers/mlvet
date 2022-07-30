@@ -5,6 +5,7 @@ import getAudioDurationInSeconds from 'get-audio-duration';
 import { Project, Transcription } from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../../types';
+import { USE_DUMMY } from '../../config';
 
 interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
@@ -12,7 +13,9 @@ interface JSONTranscriptionContainer {
 
 const dummyTranscribeRequest: () => string = () => {
   return fs
-    .readFileSync(path.join(__dirname, '../../../assets/SampleTranscript.json'))
+    .readFileSync(
+      path.join(__dirname, '../../../../assets/SampleTranscript.json')
+    )
     .toString();
 };
 
@@ -62,8 +65,6 @@ const validateJsonTranscriptionContainer = <
   validateJsonTranscription(transcription.transcripts[0]));
 
 type RequestTranscription = (project: Project) => Promise<Transcription | null>;
-
-const USE_DUMMY = true;
 
 const requestTranscription: RequestTranscription = async (project) => {
   if (project.audioExtractFilePath == null || project.mediaFilePath == null) {

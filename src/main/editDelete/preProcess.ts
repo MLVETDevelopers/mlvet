@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { addSpaces } from '../../processingShared';
 import { MapCallback, Transcription, Word } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 import punctuate from './punctuate';
@@ -71,7 +70,7 @@ const preProcessTranscript = (
       .map(camelCase)
       .map(punctuate(duration, averageSilenceDuration))
       .map(injectAttributes(fileName))
-      .map(addSpaces(duration))
+      // .map(addSpaces(duration))
       .flat(),
     duration,
   };

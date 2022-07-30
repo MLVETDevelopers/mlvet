@@ -76,16 +76,15 @@ const liveProcessTranscript = (transcript: Transcription): Transcription => {
 
   return {
     ...transcript,
-    words: transcript.words
-      .map(processWord(usedKeys))
-      // TODO(chloe) removing then adding spaces may cause weird key issues
-      // so preferably do something less global. Also we are completely regenerating
-      // all the spaces every time any kind of edit is made which is just inefficient.
-      // Better idea: potentially just removing duplicate spaces in a row,
-      // then adding spaces where there are duplicate words in a row without them?
-      .filter(removeSpaces)
-      .map(addSpaces(transcript.duration))
-      .flat(),
+    words: transcript.words.map(processWord(usedKeys)),
+    // TODO(chloe) removing then adding spaces may cause weird key issues
+    // so preferably do something less global. Also we are completely regenerating
+    // all the spaces every time any kind of edit is made which is just inefficient.
+    // Better idea: potentially just removing duplicate spaces in a row,
+    // then adding spaces where there are duplicate words in a row without them?
+    // .filter(removeSpaces)
+    // .map(addSpaces(transcript.duration))
+    // .flat(),
   };
 };
 

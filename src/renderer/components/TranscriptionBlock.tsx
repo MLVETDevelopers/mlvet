@@ -39,6 +39,35 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const space = <span> </span>;
+
+  const wordsWithAppendedSpaces = transcription.words.map((word, index) =>
+    word.deleted ? null : (
+      <>
+        <Word
+          key={word.key}
+          data-index={index}
+          data-type="word"
+          onClick={() => {
+            onWordClick(index);
+          }}
+          style={
+            index === nowPlayingWordIndex
+              ? { background: `${colors.yellow[500]}` }
+              : {}
+          }
+        >
+          {word.word}
+        </Word>
+        {space}
+      </>
+    )
+  );
+
+  const renderedTranscription = [space].concat(
+    wordsWithAppendedSpaces.filter(Boolean) as ConcatArray<JSX.Element>
+  );
+
   return (
     <TranscriptionBox>
       <p
@@ -46,25 +75,7 @@ const TranscriptionBlock = ({
           margin: 0,
         }}
       >
-        {transcription.words.map((word, index) =>
-          word.deleted ? null : (
-            <Word
-              key={word.key.toString()}
-              data-index={index}
-              data-type="word"
-              onClick={() => {
-                onWordClick(index);
-              }}
-              style={
-                index === nowPlayingWordIndex
-                  ? { background: `${colors.yellow[500]}80` }
-                  : {}
-              }
-            >
-              {word.word}
-            </Word>
-          )
-        )}
+        {renderedTranscription}
       </p>
     </TranscriptionBox>
   );

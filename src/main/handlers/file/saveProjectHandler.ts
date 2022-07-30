@@ -1,6 +1,6 @@
-import { IpcContext } from '../types';
-import { Project } from '../../sharedTypes';
-import { getSaveFilePath, saveProjectToFile } from './helpers/saveUtils';
+import { IpcContext } from '../../types';
+import { Project } from '../../../sharedTypes';
+import { getSaveFilePath, saveProjectToFile } from '../helpers/saveUtils';
 
 type SaveProject = (
   ipcContext: IpcContext,

@@ -5,7 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
-import openProject from './handlers/openProjectHandler';
+import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {

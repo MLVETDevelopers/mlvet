@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import getAudioDurationInSeconds from 'get-audio-duration';
 import { io } from 'socket.io-client';
-import { Project, Transcription } from '../../sharedTypes';
-import preProcessTranscript from '../editDelete/preProcess';
-import { JSONTranscription, SnakeCaseWord } from '../types';
+import getAudioDurationInSeconds from 'get-audio-duration';
+import { Project, Transcription } from '../../../sharedTypes';
+import preProcessTranscript from '../../editDelete/preProcess';
+import { JSONTranscription, SnakeCaseWord } from '../../types';
 
 interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];

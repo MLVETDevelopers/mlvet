@@ -1,5 +1,5 @@
-import { IpcContext } from '../types';
-import setMenuButtonEnabled from './helpers/menuUtils';
+import { IpcContext } from '../../types';
+import setMenuButtonEnabled from '../helpers/menuUtils';
 
 type SetUndoRedoEnabled = (
   ipcContext: IpcContext,

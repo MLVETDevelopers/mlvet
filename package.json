@@ -92,13 +92,13 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "patrickbrett",
+      "owner": "chloebrett",
       "repo": "mlvet"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/patrickbrett/mlvet.git"
+    "url": "git+https://github.com/chloebrett/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",

@@ -4,6 +4,9 @@ import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { app } from 'electron';
 
+export const isDevelopment =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
 export let resolveHtmlPath: (htmlFileName: string) => string;
 
 if (process.env.NODE_ENV === 'development') {

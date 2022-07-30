@@ -142,17 +142,6 @@ const VideoPreviewControllerBase = (
     clockRef.current.isRunning = true;
   };
 
-  // Starts video, timer & UI
-  const play = () => {
-    if (!clockRef.current.isRunning) {
-      if (clockRef.current.time < outputVideoLength.current) {
-        videoPreviewRef?.current?.play();
-        startTimer();
-        setIsPlaying(true);
-      }
-    }
-  };
-
   // Sets the video, timer & UI playback time
   const setPlaybackTime = (time: number) => {
     const { isRunning } = clockRef.current;
@@ -180,6 +169,20 @@ const VideoPreviewControllerBase = (
       }
     } else {
       pause();
+    }
+  };
+
+  // Starts video, timer & UI
+  const play = () => {
+    if (!clockRef.current.isRunning) {
+      // If we're at the end of the video, restart it
+      if (clockRef.current.time >= outputVideoLength.current) {
+        setPlaybackTime(0);
+      }
+
+      startTimer();
+      videoPreviewRef?.current?.play();
+      setIsPlaying(true);
     }
   };
 

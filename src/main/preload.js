@@ -4,20 +4,9 @@ contextBridge.exposeInMainWorld('electron', {
   // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
   // START GENERATED CODE
-  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
-
-  closeWindow: () => ipcRenderer.invoke('close-window'),
-
   deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
 
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
-
-  getFileNameWithExtension: (filePath) =>
-    ipcRenderer.invoke('get-file-name-with-extension', filePath),
-
   openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
-
-  handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
@@ -26,20 +15,22 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
-  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
-
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
-  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
-    ipcRenderer.invoke(
-      'set-clipboard-enabled',
-      cutEnabled,
-      copyEnabled,
-      pasteEnabled,
-      deleteEnabled
-    ),
+  writeRecentProjects: (recentProjects) =>
+    ipcRenderer.invoke('write-recent-projects', recentProjects),
+
+  extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
+
+  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+
+  extractThumbnail: (absolutePathToMediaFile) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+
+  requestTranscription: (project) =>
+    ipcRenderer.invoke('request-transcription', project),
 
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(
@@ -57,17 +48,26 @@ contextBridge.exposeInMainWorld('electron', {
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
+  getFileNameWithExtension: (filePath) =>
+    ipcRenderer.invoke('get-file-name-with-extension', filePath),
+
+  handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
+
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
+  closeWindow: () => ipcRenderer.invoke('close-window'),
+
+  returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
+
   showConfirmation: (message, detail) =>
     ipcRenderer.invoke('show-confirmation', message, detail),
-
-  extractThumbnail: (absolutePathToMediaFile) =>
-    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
-
-  requestTranscription: (project) =>
-    ipcRenderer.invoke('request-transcription', project),
-
-  writeRecentProjects: (recentProjects) =>
-    ipcRenderer.invoke('write-recent-projects', recentProjects),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

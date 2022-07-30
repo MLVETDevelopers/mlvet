@@ -92,10 +92,12 @@ ipc.on('initiate-save-as-project', async () => {
 ipc.on(
   'project-opened',
   async (_event, project: RuntimeProject, filePath: string) => {
-    const projectMetadata = await ipc.retrieveProjectMetadata(project);
+    if (await ipc.promptSave()) {
+      const projectMetadata = await ipc.retrieveProjectMetadata(project);
 
-    store.dispatch(projectOpened(project, filePath, projectMetadata));
-    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+      store.dispatch(projectOpened(project, filePath, projectMetadata));
+      store.dispatch(pageChanged(ApplicationPage.PROJECT));
+    }
   }
 );
 

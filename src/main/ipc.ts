@@ -24,6 +24,7 @@ import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
 import closeWindow from './handlers/window/closeWindow';
+import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
 // END GENERATED CODE PART 1
@@ -109,6 +110,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
 
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));
+
+  ipcMain.handle('prompt-save', async () => promptSave(ipcContext));
 
   ipcMain.handle('return-to-home', async (_event, project) =>
     returnToHome(ipcContext, project)

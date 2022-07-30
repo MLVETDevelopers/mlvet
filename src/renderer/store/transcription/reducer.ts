@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import liveProcessTranscript from 'renderer/liveProcess';
 import { mapInRange } from 'renderer/util';
+import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
@@ -33,19 +33,22 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return null;
   }
 
-  // If you add a method that handles edits to the transcription -> processTranscript()
+  /**
+   * Important: if you make an update to the transcription here, usually you
+   * will need to call 'updateOutputStartTimes' so that output start times are kept accurate!
+   */
 
   if (action.type === DELETE_WORD) {
     const { startIndex, endIndex } = action.payload as DeleteWordsPayload;
 
     const markDeleted = (word: Word) => ({ ...word, deleted: true });
 
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: mapInRange(transcription.words, markDeleted, startIndex, endIndex),
+      words: updateOutputStartTimes(
+        mapInRange(transcription.words, markDeleted, startIndex, endIndex)
+      ),
     };
-
-    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === UNDO_DELETE_WORD) {
@@ -53,31 +56,42 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     const markUndeleted = (word: Word) => ({ ...word, deleted: false });
 
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: mapInRange(
-        transcription.words,
-        markUndeleted,
-        startIndex,
-        endIndex
+      words: updateOutputStartTimes(
+        mapInRange(transcription.words, markUndeleted, startIndex, endIndex)
       ),
     };
-
-    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === PASTE_WORD) {
     const { startIndex, clipboard } = action.payload as PasteWordsPayload;
 
     const prefix = transcription.words.slice(0, startIndex + 1);
+
+    // This is currently O(n^2); consider caching as described in
+    // https://docs.google.com/document/d/1lQPJ4-kCI72GhNjpNbguT2iT5ihD_6oBikop-gXziYQ/edit
+    // if this gets slow
+    const wordsToPaste = clipboard.map((word) => ({
+      ...word,
+      // Paste count must be unique each time the same word is pasted, so we just
+      // look at the existing paste counts and use the highest existing one, + 1.
+      pasteCount:
+        Math.max(
+          ...transcription.words
+            .filter(
+              (innerWord) => innerWord.originalIndex === word.originalIndex
+            )
+            .map((innerWord) => innerWord.pasteCount)
+        ) + 1,
+    }));
+
     const suffix = transcription.words.slice(startIndex + 1);
 
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: [...prefix, ...clipboard, ...suffix],
+      words: updateOutputStartTimes([...prefix, ...wordsToPaste, ...suffix]),
     };
-
-    return liveProcessTranscript(updatedTranscription);
   }
 
   if (action.type === UNDO_PASTE_WORD) {
@@ -85,19 +99,12 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       action.payload as UndoPasteWordsPayload;
 
     const prefix = transcription.words.slice(0, startIndex + 1);
-    // The offset of 2 assumes a space, so if we change the way spaces are handled
-    // this will probably break. Altogether I think spaces should be done at the rendering
-    // level not at the transcription-processing level since they can be generated on
-    // the fly and when they are part of the transcription they make it kind of harder to work with
-    const suffix = transcription.words.slice(startIndex + clipboardLength + 2);
+    const suffix = transcription.words.slice(startIndex + clipboardLength + 1);
 
-    console.log(prefix, suffix);
-
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: [...prefix, ...suffix],
+      words: updateOutputStartTimes([...prefix, ...suffix]),
     };
-    return liveProcessTranscript(updatedTranscription);
   }
 
   return transcription;

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
+import { Fragment } from 'react';
 import { Transcription } from 'sharedTypes';
 import colors from '../colors';
 
@@ -39,18 +40,16 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
-  const space = <span> </span>;
+  const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
 
   const wordsWithAppendedSpaces = transcription.words.map((word, index) =>
     word.deleted ? null : (
-      <>
+      <Fragment key={`${word.originalIndex}-${word.pasteCount}`}>
         <Word
-          key={word.key}
+          key={`word-${word.originalIndex}-${word.pasteCount}`}
           data-index={index}
           data-type="word"
-          onClick={() => {
-            onWordClick(index);
-          }}
+          onClick={() => onWordClick(index)}
           style={
             index === nowPlayingWordIndex
               ? { background: `${colors.yellow[500]}` }
@@ -59,12 +58,12 @@ const TranscriptionBlock = ({
         >
           {word.word}
         </Word>
-        {space}
-      </>
+        {space(`space-${word.originalIndex}-${word.pasteCount}`)}
+      </Fragment>
     )
   );
 
-  const renderedTranscription = [space].concat(
+  const renderedTranscription = [space('space-start')].concat(
     wordsWithAppendedSpaces.filter(Boolean) as ConcatArray<JSX.Element>
   );
 

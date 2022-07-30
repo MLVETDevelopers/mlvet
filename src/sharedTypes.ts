@@ -34,12 +34,29 @@ export interface Transcription {
 }
 
 export interface Word {
+  // Text content of the word
   word: string;
+  // Start time in the original transcript
   startTime: number;
+  // Duration in the original transcript
   duration: number;
+  // Start time for the actual playback, updated each time an edit is made
   outputStartTime: number;
+  // Duration in seconds of any space before the word that we are counting as part of the word
+  bufferDurationBefore: number;
+  // Duration in seconds of any space after the word that we are counting as part of the word
+  bufferDurationAfter: number;
+  // Whether the word is marked as deleted
   deleted: boolean;
-  key: string;
+  // The position of the word in the original transcript
+  originalIndex: number;
+  // Zero if the word is in its original position;
+  // higher if it has been pasted one or more times.
+  // Used in combination with the originalIndex to produce a unique key
+  pasteCount: number;
+  // Used to differentiate between different projects/media;
+  // TODO(chloe) this should be replaced with project ID or transcript ID
+  // in order to support multiple projects without relying on a filename (which can change)
   fileName: string;
 }
 
@@ -47,7 +64,7 @@ export interface Cut {
   startTime: number;
   duration: number;
   outputStartTime: number;
-  index: number;
+  index: number; // TODO(chloe): do we need this? it's implied by the array form
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

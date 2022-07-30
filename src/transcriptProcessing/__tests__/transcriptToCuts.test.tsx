@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
-import { Cut } from 'sharedTypes';
+import { Cut, Transcription } from '../../sharedTypes';
 import convertTranscriptToCuts from '../transcriptToCuts';
 
-const mockTranscriptionUnedited = {
+const mockTranscriptionUnedited: Transcription = {
   confidence: -977.0841064453125,
   duration: 100,
   words: [
@@ -11,8 +11,11 @@ const mockTranscriptionUnedited = {
       startTime: 0,
       duration: 0.48,
       outputStartTime: 0,
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
       deleted: false,
-      key: '0',
+      originalIndex: 0,
+      pasteCount: 0,
       fileName: 'sample.mp4',
     },
     {
@@ -20,7 +23,10 @@ const mockTranscriptionUnedited = {
       duration: 0.08,
       startTime: 0.48,
       outputStartTime: 0.48,
-      key: '1',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 1,
+      pasteCount: 0,
       deleted: false,
       fileName: 'sample.mp4',
     },
@@ -30,7 +36,10 @@ const mockTranscriptionUnedited = {
       duration: 0.04,
       outputStartTime: 0.56,
       deleted: false,
-      key: '2',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 2,
+      pasteCount: 0,
       fileName: 'sample.mp4',
     },
     {
@@ -38,14 +47,17 @@ const mockTranscriptionUnedited = {
       duration: 0.1,
       startTime: 0.6,
       outputStartTime: 0.6,
-      key: '3',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 3,
+      pasteCount: 0,
       deleted: false,
       fileName: 'sample.mp4',
     },
   ],
 };
 
-const mockTranscriptionEdited = {
+const mockTranscriptionEdited: Transcription = {
   confidence: -977.0841064453125,
   duration: 100,
   words: [
@@ -54,8 +66,11 @@ const mockTranscriptionEdited = {
       startTime: 0,
       duration: 0.48,
       outputStartTime: 0,
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 0,
+      pasteCount: 0,
       deleted: false,
-      key: '0',
       fileName: 'sample.mp4',
     },
     {
@@ -63,7 +78,10 @@ const mockTranscriptionEdited = {
       duration: 0.08,
       startTime: 0.48,
       outputStartTime: 0.48,
-      key: '1',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 1,
+      pasteCount: 0,
       deleted: false,
       fileName: 'sample.mp4',
     },
@@ -73,7 +91,10 @@ const mockTranscriptionEdited = {
       duration: 0.04,
       outputStartTime: 0.56,
       deleted: false,
-      key: '2',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 2,
+      pasteCount: 0,
       fileName: 'sample.mp4',
     },
     {
@@ -81,7 +102,10 @@ const mockTranscriptionEdited = {
       duration: 0.1,
       startTime: 0.6,
       outputStartTime: 0.6,
-      key: '3',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 3,
+      pasteCount: 0,
       deleted: false,
       fileName: 'sample.mp4',
     },
@@ -91,7 +115,10 @@ const mockTranscriptionEdited = {
       duration: 0.08,
       outputStartTime: 0.7,
       deleted: false,
-      key: '4',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 4,
+      pasteCount: 0,
       fileName: 'sample.mp4',
     },
     {
@@ -99,7 +126,10 @@ const mockTranscriptionEdited = {
       duration: 0.28,
       startTime: 0.78,
       outputStartTime: 0.78,
-      key: '5',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 5,
+      pasteCount: 0,
       deleted: true,
       fileName: 'sample.mp4',
     },
@@ -109,7 +139,10 @@ const mockTranscriptionEdited = {
       duration: 0.06,
       outputStartTime: 0.78,
       deleted: false,
-      key: '6',
+      bufferDurationBefore: 0,
+      bufferDurationAfter: 0,
+      originalIndex: 6,
+      pasteCount: 0,
       fileName: 'sample.mp4',
     },
   ],

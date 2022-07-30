@@ -4,37 +4,26 @@ import {
   UNDO_DELETE_WORD,
   UNDO_PASTE_WORD,
 } from 'renderer/store/undoStack/ops';
-import { Transcription, Word } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import { TRANSCRIPTION_CREATED } from '../actions';
 import transcriptionReducer from '../reducer';
 
-const makeBasicWord: (text: string, isDeleted?: boolean) => Word = (
-  text,
-  isDeleted = false
-) => ({
+const makeBasicWord: (
+  text: string,
+  isDeleted?: boolean,
+  pasteCount?: number
+) => Word = (text, isDeleted = false, pasteCount = 0) => ({
   word: text,
   startTime: 0,
   duration: 0,
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
   outputStartTime: 0,
   deleted: isDeleted,
-  key: text,
+  originalIndex: 0,
+  pasteCount,
   fileName: 'PLACEHOLDER FILENAME',
 });
-
-const expectAllEvenIndexWordsToBeSpaces: (
-  output: Transcription | null
-) => void = (output) => {
-  expect(
-    output?.words
-      .filter((_, i) => i % 2 === 0)
-      .every((word) => word.word === ' ')
-  ).toBe(true);
-};
-
-const wordsWithoutSpaces: (
-  output: Transcription | null
-) => Word[] | undefined = (output) =>
-  output?.words.filter((word) => word.word !== ' ');
 
 describe('Transcription reducer', () => {
   it('should handle transcription created', () => {
@@ -59,21 +48,17 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
           makeBasicWord('c'),
-          makeBasicWord(' '),
           makeBasicWord('d'),
-          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: DELETE_WORD,
         payload: {
-          startIndex: 2,
-          endIndex: 6,
+          startIndex: 1,
+          endIndex: 3,
         },
       }
     );
@@ -82,15 +67,13 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b', true),
       makeBasicWord('c', true),
       makeBasicWord('d'),
       makeBasicWord('e'),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle deletions being undone', () => {
@@ -100,21 +83,17 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
           makeBasicWord('c', true),
-          makeBasicWord(' '),
           makeBasicWord('d', true),
-          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: UNDO_DELETE_WORD,
         payload: {
-          startIndex: 4,
-          endIndex: 9,
+          startIndex: 2,
+          endIndex: 5,
         },
       }
     );
@@ -123,15 +102,13 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b'),
       makeBasicWord('c'),
       makeBasicWord('d'),
       makeBasicWord('e'),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted', () => {
@@ -141,25 +118,19 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
           makeBasicWord('c', true),
-          makeBasicWord(' '),
           makeBasicWord('d', true),
-          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 4,
+          startIndex: 2,
           clipboard: [
             makeBasicWord('f'),
-            makeBasicWord(' '),
             makeBasicWord('g'),
-            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -170,18 +141,64 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b'),
       makeBasicWord('c', true),
-      makeBasicWord('f'),
-      makeBasicWord('g'),
-      makeBasicWord('h'),
+      makeBasicWord('f', false, 1),
+      makeBasicWord('g', false, 1),
+      makeBasicWord('h', false, 1),
       makeBasicWord('d', true),
       makeBasicWord('e', true),
     ]);
+  });
 
-    expectAllEvenIndexWordsToBeSpaces(output);
+  it('should handle words that were already pasted, being pasted again', () => {
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord('a'),
+          makeBasicWord('b'),
+          makeBasicWord('c', true),
+          makeBasicWord('d', true),
+          makeBasicWord('e', true),
+          makeBasicWord('f'),
+          makeBasicWord('g'),
+          makeBasicWord('h'),
+        ],
+      },
+      {
+        type: PASTE_WORD,
+        payload: {
+          startIndex: 2,
+          clipboard: [
+            makeBasicWord('f'),
+            makeBasicWord('g'),
+            makeBasicWord('h'),
+          ],
+        },
+      }
+    );
+
+    // expect confidence and duration to be reflected
+    expect(output?.confidence).toBe(1);
+    expect(output?.duration).toBe(100);
+
+    expect(output?.words).toEqual([
+      makeBasicWord('a'),
+      makeBasicWord('b'),
+      makeBasicWord('c', true),
+      makeBasicWord('f', false, 1),
+      makeBasicWord('g', false, 1),
+      makeBasicWord('h', false, 1),
+      makeBasicWord('d', true),
+      makeBasicWord('e', true),
+      makeBasicWord('f'),
+      makeBasicWord('g'),
+      makeBasicWord('h'),
+    ]);
   });
 
   it('should handle words being pasted even when some of the words on the clipboard were deleted', () => {
@@ -191,25 +208,19 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b', true),
-          makeBasicWord(' '),
           makeBasicWord('c'),
-          makeBasicWord(' '),
           makeBasicWord('d'),
-          makeBasicWord(' '),
           makeBasicWord('e', true),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 4,
+          startIndex: 2,
           clipboard: [
             makeBasicWord('f'),
-            makeBasicWord(' '),
             makeBasicWord('g', true),
-            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -220,18 +231,16 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b', true),
       makeBasicWord('c'),
-      makeBasicWord('f'),
-      makeBasicWord('g', true),
-      makeBasicWord('h'),
+      makeBasicWord('f', false, 1),
+      makeBasicWord('g', true, 1),
+      makeBasicWord('h', false, 1),
       makeBasicWord('d'),
       makeBasicWord('e', true),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted just after the start of the transcription', () => {
@@ -241,13 +250,9 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
           makeBasicWord('c'),
-          makeBasicWord(' '),
           makeBasicWord('d'),
-          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
@@ -257,9 +262,7 @@ describe('Transcription reducer', () => {
           startIndex: 0,
           clipboard: [
             makeBasicWord('f'),
-            makeBasicWord(' '),
             makeBasicWord('g'),
-            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -270,18 +273,16 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
-      makeBasicWord('f'),
-      makeBasicWord('g'),
-      makeBasicWord('h'),
+      makeBasicWord('f', false, 1),
+      makeBasicWord('g', false, 1),
+      makeBasicWord('h', false, 1),
       makeBasicWord('b'),
       makeBasicWord('c'),
       makeBasicWord('d'),
       makeBasicWord('e'),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle words being pasted to the end of the transcription', () => {
@@ -291,25 +292,19 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
           makeBasicWord('c'),
-          makeBasicWord(' '),
           makeBasicWord('d'),
-          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 8,
+          startIndex: 4,
           clipboard: [
             makeBasicWord('f'),
-            makeBasicWord(' '),
             makeBasicWord('g'),
-            makeBasicWord(' '),
             makeBasicWord('h'),
           ],
         },
@@ -320,18 +315,16 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b'),
       makeBasicWord('c'),
       makeBasicWord('d'),
       makeBasicWord('e'),
-      makeBasicWord('f'),
-      makeBasicWord('g'),
-      makeBasicWord('h'),
+      makeBasicWord('f', false, 1),
+      makeBasicWord('g', false, 1),
+      makeBasicWord('h', false, 1),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle a paste being undone', () => {
@@ -341,21 +334,17 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a'),
-          makeBasicWord(' '),
           makeBasicWord('b'),
-          makeBasicWord(' '),
-          makeBasicWord('c'),
-          makeBasicWord(' '),
-          makeBasicWord('d'),
-          makeBasicWord(' '),
+          makeBasicWord('c', false, 1),
+          makeBasicWord('d', false, 1),
           makeBasicWord('e'),
         ],
       },
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 2,
-          clipboardLength: 3,
+          startIndex: 1,
+          clipboardLength: 2,
         },
       }
     );
@@ -364,13 +353,11 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a'),
       makeBasicWord('b'),
       makeBasicWord('e'),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 
   it('should handle a paste being undone with various words deleted', () => {
@@ -380,21 +367,17 @@ describe('Transcription reducer', () => {
         duration: 100,
         words: [
           makeBasicWord('a', true),
-          makeBasicWord(' '),
-          makeBasicWord('b'),
-          makeBasicWord(' '),
-          makeBasicWord('c', true),
-          makeBasicWord(' '),
+          makeBasicWord('b', false, 1),
+          makeBasicWord('c', true, 1),
           makeBasicWord('d', true),
-          makeBasicWord(' '),
           makeBasicWord('e'),
         ],
       },
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 2,
-          clipboardLength: 3,
+          startIndex: 0,
+          clipboardLength: 2,
         },
       }
     );
@@ -403,12 +386,10 @@ describe('Transcription reducer', () => {
     expect(output?.confidence).toBe(1);
     expect(output?.duration).toBe(100);
 
-    expect(wordsWithoutSpaces(output)).toEqual([
+    expect(output?.words).toEqual([
       makeBasicWord('a', true),
-      makeBasicWord('b'),
+      makeBasicWord('d', true),
       makeBasicWord('e'),
     ]);
-
-    expectAllEvenIndexWordsToBeSpaces(output);
   });
 });

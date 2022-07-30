@@ -1,7 +1,7 @@
 import { BrowserWindow, Menu } from 'electron';
 import AppState from './AppState';
 
-declare module '@ffprobe-installer/ffprobe';
+// declare module '@ffprobe-installer/ffprobe';
 
 export interface SnakeCaseWord {
   word: string;

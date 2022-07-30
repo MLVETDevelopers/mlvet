@@ -12,6 +12,8 @@ type ExtractThumbnail = (absolutePathToVideoFile: string) => Promise<string>;
 const extractThumbnail: ExtractThumbnail = (absolutePathToMediaFile) => {
   const pathToSaveMedia = path.join(process.cwd(), 'assets', 'thumbnails');
 
+  // return Promise.resolve('assets/thumbnails/placeholder.png');
+
   console.log('Started thumbnail extraction');
 
   const filename = 'thumbnail.png';

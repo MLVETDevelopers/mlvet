@@ -47,6 +47,8 @@ declare global {
         project: RuntimeProject
       ) => Promise<string>;
 
+      loadThumbnail: (projectId: string) => Promise<string>;
+
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<Transcription | null>;

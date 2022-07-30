@@ -1,3 +1,5 @@
+/* eslint-disable promise/always-return */
+
 import {
   Box,
   Typography,
@@ -13,10 +15,10 @@ import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';
 import { projectOpened } from 'renderer/store/currentProject/actions';
 import { projectDeleted } from 'renderer/store/recentProjects/actions';
+import { useEffect, useState } from 'react';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
-import exampleThumbnail from '../../../assets/example-thumbnail.png';
 import { ProjectMetadata, RecentProject } from '../../sharedTypes';
 import ipc from '../ipc';
 
@@ -62,6 +64,8 @@ const sortByDateModified = (first: RecentProject, second: RecentProject) =>
 const RECENT_PROJECTS_COUNT = 5;
 
 const RecentProjectsBlock = () => {
+  const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
+
   const dispatch = useDispatch();
 
   const recentProjects = useSelector(
@@ -69,6 +73,25 @@ const RecentProjectsBlock = () => {
   )
     .sort(sortByDateModified)
     .slice(0, RECENT_PROJECTS_COUNT);
+
+  // TODO(chloe) I think this can cause a memory leak if the request is in flight
+  // when the page changes; not sure how to fix
+  useEffect(() => {
+    Promise.all(
+      recentProjects.map(async ({ id }) => ({
+        id,
+        thumbnail: await ipc.loadThumbnail(id),
+      }))
+    )
+      .then((list) => {
+        const map: Record<string, string> = {};
+        list.forEach(({ id, thumbnail }) => {
+          map[id] = thumbnail;
+        });
+        setThumbnails(map);
+      })
+      .catch();
+  }, [recentProjects]);
 
   const displayDate: (date: Date | null) => string = (date) =>
     date === null ? '?' : formatDate(date);
@@ -160,7 +183,7 @@ const RecentProjectsBlock = () => {
             <Grid container spacing={2}>
               <RecentProjectsSubItem item xs={8}>
                 <img
-                  src={exampleThumbnail}
+                  src={`data:image/png;base64,${thumbnails[id] ?? ''}`}
                   alt={`Thumbnail for project ${name}`}
                   style={{
                     maxWidth: 180,

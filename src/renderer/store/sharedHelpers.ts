@@ -1,4 +1,4 @@
-import { Project, RecentProject } from '../../sharedTypes';
+import { RuntimeProject, RecentProject } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -7,7 +7,7 @@ import { UndoStack } from './undoStack/helpers';
  * The schema for the root-level application / redux store, containing the global app state.
  */
 export interface ApplicationStore {
-  currentProject: Project | null;
+  currentProject: RuntimeProject | null;
   recentProjects: RecentProject[];
   currentPage: ApplicationPage;
   undoStack: UndoStack;

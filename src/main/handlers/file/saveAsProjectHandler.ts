@@ -1,11 +1,11 @@
 import path from 'path';
 import { getSaveFilePath, saveProjectToFile } from '../helpers/saveUtils';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import { IpcContext } from '../../types';
 
 type SaveAsProject = (
   ipcContext: IpcContext,
-  project: Project
+  project: RuntimeProject
 ) => Promise<string>;
 
 const saveAsProject: SaveAsProject = async (ipcContext, project) => {

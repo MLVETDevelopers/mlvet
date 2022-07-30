@@ -1,12 +1,11 @@
-import path from 'path';
 import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
-import { Project } from 'sharedTypes';
-import { audioExtractStoragePath, mkdir } from '../../util';
+import { RuntimeProject } from 'sharedTypes';
+import { getAudioExtractPath, getProjectDataDir, mkdir } from '../../util';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-type ExtractAudio = (project: Project) => Promise<string>;
+type ExtractAudio = (project: RuntimeProject) => Promise<string>;
 
 const extractAudio: ExtractAudio = (project) => {
   if (project.mediaFilePath === null || project.id === null) {
@@ -16,12 +15,9 @@ const extractAudio: ExtractAudio = (project) => {
     });
   }
 
-  mkdir(audioExtractStoragePath());
+  mkdir(getProjectDataDir(project.id));
 
-  const pathToSaveMedia = path.join(
-    audioExtractStoragePath(),
-    `${project.id}.wav`
-  );
+  const pathToSaveMedia = getAudioExtractPath(project.id);
 
   console.log('Started audio extraction');
 

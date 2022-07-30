@@ -5,10 +5,11 @@
 import { IpcRendererEvent } from 'electron';
 import {
   OperatingSystems,
-  Project,
+  RuntimeProject,
   ProjectMetadata,
   RecentProject,
   Transcription,
+  ProjectIdAndFilePath,
 } from '../sharedTypes';
 
 declare global {
@@ -17,33 +18,38 @@ declare global {
       // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
       // START GENERATED CODE
-      deleteProject: (project: Project) => Promise<void>;
+      deleteProject: (project: ProjectIdAndFilePath) => Promise<void>;
 
       openProject: (
         filePath: string | null
-      ) => Promise<{ project: Project | null; filePath: string }>;
+      ) => Promise<{ project: RuntimeProject | null; filePath: string }>;
 
       retrieveProjectMetadata: (
-        project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
+        project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
 
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;
 
-      saveAsProject: (project: Project) => Promise<string>;
+      saveAsProject: (project: RuntimeProject) => Promise<string>;
 
-      saveProject: (project: Project) => Promise<string>;
+      saveProject: (project: RuntimeProject) => Promise<string>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
-      extractAudio: (project: Project) => Promise<string>;
+      extractAudio: (project: RuntimeProject) => Promise<string>;
 
-      exportProject: (project: Project) => Promise<string>;
+      exportProject: (project: RuntimeProject) => Promise<string>;
 
-      extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
+      extractThumbnail: (
+        absolutePathToVideoFile: string,
+        project: RuntimeProject
+      ) => Promise<string>;
 
-      requestTranscription: (project: Project) => Promise<Transcription | null>;
+      requestTranscription: (
+        project: RuntimeProject
+      ) => Promise<Transcription | null>;
 
       setFileRepresentation: (
         representedFilePath: string | null,
@@ -62,7 +68,7 @@ declare global {
 
       closeWindow: () => void;
 
-      returnToHome: (project: Project) => Promise<number>;
+      returnToHome: (project: RuntimeProject) => Promise<number>;
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;
       // END GENERATED CODE

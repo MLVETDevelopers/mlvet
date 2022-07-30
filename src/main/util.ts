@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export: off, import/no-mutable-exports: off */
 import { URL } from 'url';
 import path from 'path';
-import { existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, statSync } from 'fs';
 import { app } from 'electron';
 
 export const isDevelopment =
@@ -35,15 +35,26 @@ export const mkdir = (dirPath: string) => {
 export const appDataStoragePath: () => string = () =>
   path.join(app.getPath('userData'), 'mlvet');
 
-export const audioExtractStoragePath: () => string = () =>
-  path.join(appDataStoragePath(), 'audioExtracts');
-
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
 
 export const getRecentProjectsPath: () => string = () =>
   path.join(appDataStoragePath(), 'recentProjects.json');
+
+export const getProjectDataDir: (projectId: string) => string = (projectId) =>
+  path.join(appDataStoragePath(), projectId);
+
+// TODO(chloe): when we support multiple media files, name each according to their ID
+export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
+  path.join(getProjectDataDir(projectId), 'extractedAudio.wav');
+
+// TODO(chloe): when we support multiple media files, name each according to their ID
+export const getThumbnailPath: (projectId: string) => string = (projectId) =>
+  path.join(getProjectDataDir(projectId), 'thumbnail.png');
+
+export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
+  statSync(filePath, { throwIfNoEntry: false }) !== undefined;
 
 /** Utility types */
 

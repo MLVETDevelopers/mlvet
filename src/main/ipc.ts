@@ -70,8 +70,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     exportProject(ipcContext, project)
   );
 
-  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
-    extractThumbnail(absolutePathToMediaFile)
+  ipcMain.handle(
+    'extract-thumbnail',
+    async (_event, absolutePathToMediaFile, project) =>
+      extractThumbnail(absolutePathToMediaFile, project)
   );
 
   ipcMain.handle('request-transcription', async (_event, project) =>

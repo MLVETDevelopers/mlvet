@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Project, ProjectMetadata } from '../../../sharedTypes';
+import { RuntimeProject, ProjectMetadata } from '../../../sharedTypes';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
 import {
@@ -27,12 +27,12 @@ const currentProjectReducer: Reducer<
   Action<any>
 > = (currentProject = initialStore.currentProject, action) => {
   if (action.type === PROJECT_CREATED) {
-    return action.payload as Project;
+    return action.payload as RuntimeProject;
   }
 
   if (action.type === PROJECT_OPENED) {
     return {
-      ...(action.payload.project as Project),
+      ...(action.payload.project as RuntimeProject),
       isEdited: false,
       projectFilePath: action.payload.filePath,
     };
@@ -40,7 +40,7 @@ const currentProjectReducer: Reducer<
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
     const { project, filePath } = action.payload as {
-      project: Project;
+      project: RuntimeProject;
       metadata: ProjectMetadata;
       filePath: string;
     };
@@ -74,7 +74,7 @@ const currentProjectReducer: Reducer<
 
   if (action.type === FINISH_EXPORT) {
     return {
-      ...(action.payload.project as Project),
+      ...(action.payload.project as RuntimeProject),
       projectFilePath: action.payload.filePath,
     };
   }

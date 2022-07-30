@@ -1,17 +1,22 @@
-export interface Project {
+export interface PersistedProject {
   id: string; // UUID
   schemaVersion: number;
   name: string;
-  projectFilePath: string | null;
-  exportFilePath: string | null;
-  audioExtractFilePath: string | null;
-  mediaFilePath: string | null;
   transcription: Transcription | null;
   mediaType: 'audio' | 'video';
   mediaFileExtension: AudioFileExtension | VideoFileExtension;
-  thumbnailFilePath: string | null;
+  mediaFilePath: string | null;
+}
+
+export interface RuntimeProject extends PersistedProject {
+  projectFilePath: string | null;
   isEdited: boolean;
 }
+
+export type ProjectIdAndFilePath = Pick<
+  RuntimeProject,
+  'id' | 'projectFilePath'
+>;
 
 export interface ProjectMetadata {
   dateModified: Date | null;
@@ -19,8 +24,8 @@ export interface ProjectMetadata {
 }
 
 export type RecentProject = Pick<
-  Project,
-  'id' | 'name' | 'projectFilePath' | 'mediaFilePath' | 'thumbnailFilePath'
+  RuntimeProject,
+  'id' | 'name' | 'projectFilePath' | 'mediaFilePath'
 > &
   ProjectMetadata;
 

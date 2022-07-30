@@ -1,15 +1,14 @@
-import { Project, ProjectMetadata, RecentProject } from './sharedTypes';
+import { RuntimeProject, ProjectMetadata, RecentProject } from './sharedTypes';
 
 const makeRecentProject: (
-  project: Pick<Project, keyof (Project | RecentProject)>,
+  project: Pick<RuntimeProject, keyof (RuntimeProject | RecentProject)>,
   metadata: ProjectMetadata,
   filePath: string
 ) => RecentProject = (project, metadata, filePath) => {
-  const projectFields: (keyof (RecentProject | Project))[] = [
+  const projectFields: (keyof (RecentProject | RuntimeProject))[] = [
     'id',
     'name',
     'mediaFilePath',
-    'thumbnailFilePath',
   ];
 
   const recentProject: Partial<RecentProject> = {

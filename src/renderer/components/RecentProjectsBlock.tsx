@@ -84,13 +84,13 @@ const RecentProjectsBlock = () => {
     }
 
     if (!recentProject.projectFilePath) {
-      // TODO(patrick): bring up project file locator, and/or offer to delete project
+      // TODO(chloe): bring up project file locator, and/or offer to delete project
       // since not found
       return;
     }
 
     // Open the full project from storage, as the current one only has metadata
-    // TODO(patrick): error handling if the project file doesn't exist / was moved
+    // TODO(chloe): error handling if the project file doesn't exist / was moved
     const { project, filePath } = await openProject(
       recentProject.projectFilePath
     );

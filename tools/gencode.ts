@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 import fs from 'fs/promises';
+import { readdirSync, statSync } from 'fs';
 import path from 'path';
 import { pascalCase, paramCase } from 'change-case';
 
@@ -11,6 +12,7 @@ import { pascalCase, paramCase } from 'change-case';
 // Representation of an IPC handler for gencode purposes
 interface GencodeIpcHandler {
   fileName: string;
+  filePath: string;
   handlerName: string;
   handlerType: string; // nothing fancy, just a stringified function type as expressed in the code, but with any 'ipcContext' requirements removed
   handlerArgs: string[]; // also nothing fancy, just an array of strings containing the (untyped) args to the handler
@@ -18,6 +20,7 @@ interface GencodeIpcHandler {
 
 const BASE_DIRECTORY = path.join(__dirname, '../src');
 const HANDLERS_DIRECTORY = path.join(BASE_DIRECTORY, './main/handlers');
+const FOLDER_SKIPLIST = ['helpers'];
 
 // Files that are written by gencode
 const FILE_PATHS = {
@@ -87,15 +90,35 @@ const extractType: (typeString: string) => string = (typeString) => {
     .replace(/ipcContext: IpcContext(?:, )?/, '');
 };
 
+const recursivelyReadDirectory: (dir: string) => string[] = (dir) => {
+  const contents = readdirSync(dir);
+
+  let fileNames: string[] = [];
+
+  contents.forEach((fileOrDir: string) => {
+    const fullPath = path.join(dir, fileOrDir);
+
+    if (statSync(fullPath).isDirectory()) {
+      if (!FOLDER_SKIPLIST.includes(fileOrDir)) {
+        fileNames = fileNames.concat(recursivelyReadDirectory(fullPath));
+      }
+    } else {
+      fileNames.push(fullPath);
+    }
+  });
+
+  return fileNames.filter((file: string) => file.includes('.ts'));
+};
+
 /**
  * Load everything we need to know about all the IPC handlers we've written, so we can put info in the other files as necessary
  */
 const extractHandlersMetadata: () => Promise<
   GencodeIpcHandler[]
 > = async () => {
-  // Load list of file paths in handlers directory, skipping subfolders
-  const fileNames = (await fs.readdir(HANDLERS_DIRECTORY)).filter((name) =>
-    name.includes('.ts')
+  // Load list of file paths in handlers directory, recursively visiting subfolders
+  const fileNames = (await recursivelyReadDirectory(HANDLERS_DIRECTORY)).map(
+    (filePath: string) => filePath.split(`${HANDLERS_DIRECTORY}/`)[1]
   );
 
   const handlers = await Promise.all(
@@ -165,6 +188,7 @@ const extractHandlersMetadata: () => Promise<
 
       return {
         fileName,
+        filePath,
         handlerName,
         handlerType,
         handlerArgs,
@@ -216,9 +240,11 @@ const replaceBetweenTags: (
 const generateIpcBackEnd: (
   handlers: GencodeIpcHandler[]
 ) => Promise<void> = async (handlers) => {
-  const ipcImportCommands = handlers.map(({ fileName, handlerName }) => {
-    const fileNameNoExtension = fileName.split('.')[0];
-    return `import ${handlerName} from './handlers/${fileNameNoExtension}';`;
+  const ipcImportCommands = handlers.map(({ filePath, handlerName }) => {
+    const relativeFilePathNoExtension = filePath
+      .split('.')[0]
+      .split(`${HANDLERS_DIRECTORY}/`)[1];
+    return `import ${handlerName} from './handlers/${relativeFilePathNoExtension}';`;
   });
 
   const ipcRegisterCommands = handlers.map(({ handlerName, handlerArgs }) => {

@@ -1,168 +1,58 @@
 import '@testing-library/jest-dom';
-import { Cut, Transcription } from '../../sharedTypes';
+import { Word } from '../../sharedTypes';
 import convertTranscriptToCuts from '../transcriptToCuts';
 
-const mockTranscriptionUnedited: Transcription = {
-  confidence: -977.0841064453125,
-  duration: 100,
-  words: [
-    {
-      word: ' ',
-      startTime: 0,
-      duration: 0.48,
-      outputStartTime: 0,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      deleted: false,
-      originalIndex: 0,
-      pasteCount: 0,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: 'that',
-      duration: 0.08,
-      startTime: 0.48,
-      outputStartTime: 0.48,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 1,
-      pasteCount: 0,
-      deleted: false,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: ' ',
-      startTime: 0.56,
-      duration: 0.04,
-      outputStartTime: 0.56,
-      deleted: false,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 2,
-      pasteCount: 0,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: 'was',
-      duration: 0.1,
-      startTime: 0.6,
-      outputStartTime: 0.6,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 3,
-      pasteCount: 0,
-      deleted: false,
-      fileName: 'sample.mp4',
-    },
-  ],
-};
-
-const mockTranscriptionEdited: Transcription = {
-  confidence: -977.0841064453125,
-  duration: 100,
-  words: [
-    {
-      word: ' ',
-      startTime: 0,
-      duration: 0.48,
-      outputStartTime: 0,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 0,
-      pasteCount: 0,
-      deleted: false,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: 'that',
-      duration: 0.08,
-      startTime: 0.48,
-      outputStartTime: 0.48,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 1,
-      pasteCount: 0,
-      deleted: false,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: ' ',
-      startTime: 0.56,
-      duration: 0.04,
-      outputStartTime: 0.56,
-      deleted: false,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 2,
-      pasteCount: 0,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: 'was',
-      duration: 0.1,
-      startTime: 0.6,
-      outputStartTime: 0.6,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 3,
-      pasteCount: 0,
-      deleted: false,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: ' ',
-      startTime: 0.7,
-      duration: 0.08,
-      outputStartTime: 0.7,
-      deleted: false,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 4,
-      pasteCount: 0,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: 'actually',
-      duration: 0.28,
-      startTime: 0.78,
-      outputStartTime: 0.78,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 5,
-      pasteCount: 0,
-      deleted: true,
-      fileName: 'sample.mp4',
-    },
-    {
-      word: ' ',
-      startTime: 1.06,
-      duration: 0.06,
-      outputStartTime: 0.78,
-      deleted: false,
-      bufferDurationBefore: 0,
-      bufferDurationAfter: 0,
-      originalIndex: 6,
-      pasteCount: 0,
-      fileName: 'sample.mp4',
-    },
-  ],
-};
-
-const compareCuts = (cut1: Cut, cut2: Cut) => {
-  expect(cut1.startTime).toBeCloseTo(cut2.startTime);
-  expect(cut1.duration).toBeCloseTo(cut2.duration);
-  expect(cut1.outputStartTime).toBeCloseTo(cut2.outputStartTime);
-  expect(cut1.index).toEqual(cut2.index);
-};
+const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
+  word: 'test',
+  duration: 0,
+  startTime: 0,
+  outputStartTime: 0,
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+  originalIndex: 0,
+  pasteCount: 0,
+  deleted: false,
+  fileName: 'sample.mp4',
+  ...override,
+});
 
 describe('transcript To Cuts', () => {
-  it('Unedited transcript', async () => {
-    const cuts = convertTranscriptToCuts(mockTranscriptionUnedited);
+  it('Should produce a single cut from an unedited transcript', async () => {
+    const cuts = convertTranscriptToCuts({
+      confidence: 0,
+      duration: 6,
+      words: [
+        makeBasicWord({
+          originalIndex: 0,
+          word: 'Heat',
+          startTime: 0.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+        makeBasicWord({
+          originalIndex: 1,
+          word: 'from',
+          startTime: 2.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+        makeBasicWord({
+          originalIndex: 2,
+          word: 'fire',
+          startTime: 4.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+      ],
+    });
 
     const expectedCuts = [
       {
         startTime: 0,
-        duration: 0.7,
+        duration: 6,
         outputStartTime: 0,
         index: 0,
       },
@@ -171,28 +61,101 @@ describe('transcript To Cuts', () => {
     expect(cuts).toEqual(expectedCuts);
   });
 
-  it('Edited transcript - deleted word - 2 cuts', async () => {
-    const cuts = convertTranscriptToCuts(mockTranscriptionEdited);
+  it('Should produce two cuts when a word in the middle is deleted', async () => {
+    const cuts = convertTranscriptToCuts({
+      confidence: 0,
+      duration: 6,
+      words: [
+        makeBasicWord({
+          originalIndex: 0,
+          word: 'Heat',
+          startTime: 0.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+        makeBasicWord({
+          originalIndex: 2,
+          word: 'fire',
+          startTime: 4.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+      ],
+    });
 
-    const expectedCuts: Cut[] = [
+    const expectedCuts = [
       {
         startTime: 0,
-        duration: 0.78,
+        duration: 2,
         outputStartTime: 0,
         index: 0,
       },
       {
-        startTime: 1.06,
-        duration: 0.06,
-        outputStartTime: 0.78,
+        startTime: 4,
+        duration: 2,
+        outputStartTime: 2,
         index: 1,
       },
     ];
 
-    expectedCuts.forEach((expectedCut: Cut) => {
-      const { index } = expectedCut;
-      expect(cuts[index]).toBeTruthy();
-      compareCuts(expectedCut, cuts[index]);
+    expect(cuts).toEqual(expectedCuts);
+  });
+
+  it('Should handle first word of transcript moved to middle', async () => {
+    const cuts = convertTranscriptToCuts({
+      confidence: 0,
+      duration: 6,
+      words: [
+        makeBasicWord({
+          originalIndex: 1,
+          word: 'from',
+          startTime: 2.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+        makeBasicWord({
+          originalIndex: 0,
+          word: 'Heat',
+          startTime: 0.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+        makeBasicWord({
+          originalIndex: 2,
+          word: 'fire',
+          startTime: 4.5,
+          duration: 1,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.5,
+        }),
+      ],
     });
+
+    const expectedCuts = [
+      {
+        startTime: 2,
+        duration: 2,
+        outputStartTime: 0,
+        index: 0,
+      },
+      {
+        startTime: 0,
+        duration: 2,
+        outputStartTime: 2,
+        index: 1,
+      },
+      {
+        startTime: 4,
+        duration: 2,
+        outputStartTime: 4,
+        index: 2,
+      },
+    ];
+
+    expect(cuts).toEqual(expectedCuts);
   });
 });

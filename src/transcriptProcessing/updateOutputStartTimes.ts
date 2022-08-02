@@ -22,7 +22,7 @@ export const calculateTime: (
   // If the word is the first word, the output start time should include the buffer.
   // Currently, this just equates to zero
   if (i === 0) {
-    return word.startTime - word.bufferDurationBefore;
+    return 0;
   }
 
   // if the word is later in the array, calculate outputStartTime using the closest non-deleted word before the current word

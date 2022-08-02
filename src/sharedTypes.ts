@@ -53,7 +53,7 @@ export interface Word {
   // Zero if the word is in its original position;
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
-  pasteCount: number;
+  pasteKey: number;
   // Used to differentiate between different projects/media;
   // TODO(chloe) this should be replaced with project ID or transcript ID
   // in order to support multiple projects without relying on a filename (which can change)

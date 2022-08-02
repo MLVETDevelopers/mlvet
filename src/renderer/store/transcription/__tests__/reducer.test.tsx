@@ -12,8 +12,8 @@ const makeBasicWord: (
   originalIndex: number,
   text: string,
   isDeleted?: boolean,
-  pasteCount?: number
-) => Word = (originalIndex, text, isDeleted = false, pasteCount = 0) => ({
+  pasteKey?: number
+) => Word = (originalIndex, text, isDeleted = false, pasteKey = 0) => ({
   word: text,
   startTime: 0,
   duration: 0,
@@ -22,7 +22,7 @@ const makeBasicWord: (
   outputStartTime: 0,
   deleted: isDeleted,
   originalIndex,
-  pasteCount,
+  pasteKey,
   fileName: 'PLACEHOLDER FILENAME',
 });
 

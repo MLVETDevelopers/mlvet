@@ -10,7 +10,7 @@ const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   bufferDurationBefore: 0,
   bufferDurationAfter: 0,
   originalIndex: 0,
-  pasteCount: 0,
+  pasteKey: 0,
   deleted: false,
   fileName: 'sample.mp4',
   ...override,

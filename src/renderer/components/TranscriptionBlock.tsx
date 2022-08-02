@@ -44,10 +44,10 @@ const TranscriptionBlock = ({
 
   const renderedTranscription = transcription.words.map((word, index) =>
     word.deleted ? null : (
-      <Fragment key={`${word.originalIndex}-${word.pasteCount}`}>
-        {index > 0 && space(`space-${word.originalIndex}-${word.pasteCount}`)}
+      <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+        {index > 0 && space(`space-${word.originalIndex}-${word.pasteKey}`)}
         <Word
-          key={`word-${word.originalIndex}-${word.pasteCount}`}
+          key={`word-${word.originalIndex}-${word.pasteKey}`}
           data-index={index}
           data-type="word"
           onClick={() => onWordClick(index)}

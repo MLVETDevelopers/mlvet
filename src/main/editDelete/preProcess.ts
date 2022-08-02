@@ -27,7 +27,7 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     ...word,
     outputStartTime: word.startTime,
     originalIndex: index,
-    pasteCount: 0,
+    pasteKey: 0,
     deleted: false,
     fileName,
     // Buffers are calculated later

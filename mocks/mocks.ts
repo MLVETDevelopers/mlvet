@@ -21,7 +21,7 @@ export const mockProject: Project = {
         outputStartTime: 1,
         deleted: true,
         originalIndex: 0,
-        pasteCount: 0,
+        pasteKey: 0,
         bufferDurationBefore: 0,
         bufferDurationAfter: 0,
         fileName: 'test-file-name',

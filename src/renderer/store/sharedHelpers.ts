@@ -1,4 +1,5 @@
 import { Project, RecentProject } from '../../sharedTypes';
+import { ClipboardContent } from './clipboard/helpers';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -12,6 +13,7 @@ export interface ApplicationStore {
   currentPage: ApplicationPage;
   undoStack: UndoStack;
   exportIo: ExportIo;
+  clipboard: ClipboardContent;
 }
 
 /**
@@ -24,4 +26,5 @@ export const initialStore: ApplicationStore = {
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
   exportIo: { isExporting: false, exportProgress: 0 },
+  clipboard: { startIndex: 0, endIndex: 0 }, // TODO(chloe): is this a sane default?
 };

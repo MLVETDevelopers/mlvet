@@ -42,9 +42,10 @@ const TranscriptionBlock = ({
 }: Props) => {
   const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
 
-  const wordsWithAppendedSpaces = transcription.words.map((word, index) =>
+  const renderedTranscription = transcription.words.map((word, index) =>
     word.deleted ? null : (
       <Fragment key={`${word.originalIndex}-${word.pasteCount}`}>
+        {index > 0 && space(`space-${word.originalIndex}-${word.pasteCount}`)}
         <Word
           key={`word-${word.originalIndex}-${word.pasteCount}`}
           data-index={index}
@@ -58,13 +59,8 @@ const TranscriptionBlock = ({
         >
           {word.word}
         </Word>
-        {space(`space-${word.originalIndex}-${word.pasteCount}`)}
       </Fragment>
     )
-  );
-
-  const renderedTranscription = [space('space-start')].concat(
-    wordsWithAppendedSpaces.filter(Boolean) as ConcatArray<JSX.Element>
   );
 
   return (

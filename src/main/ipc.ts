@@ -62,17 +62,17 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     writeRecentProjects(recentProjects)
   );
 
-  // ipcMain.handle('extract-audio', async (_event, project) =>
-  //   extractAudio(project)
-  // );
+  ipcMain.handle('extract-audio', async (_event, project) =>
+    extractAudio(project)
+  );
 
   ipcMain.handle('export-project', async (_event, project) =>
     exportProject(ipcContext, project)
   );
 
-  // ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
-  //   extractThumbnail(absolutePathToMediaFile)
-  // );
+  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
+    extractThumbnail(absolutePathToMediaFile)
+  );
 
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)

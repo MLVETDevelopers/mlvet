@@ -36,7 +36,12 @@
     "productName": "MachineLearningVideoEditingToolkit",
     "appId": "edu.monash.mlvet",
     "asar": true,
-    "asarUnpack": "**\\*.{node,dll}",
+    "asarUnpack": [
+      "**\\*.{node,dll}",
+      "node_modules/ffmpeg-static/bin/${os}/${arch}/ffmpeg",
+      "node_modules/ffmpeg-static/index.js",
+      "node_modules/ffmpeg-static/package.json"
+    ],
     "files": [
       "dist",
       "node_modules",
@@ -213,6 +218,8 @@
     "electron-log": "^4.4.6",
     "electron-updater": "^4.6.5",
     "express": "^4.18.1",
+    "ffmpeg-static": "^5.0.2",
+    "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "get-audio-duration": "^3.1.0",
     "history": "^5.3.0",

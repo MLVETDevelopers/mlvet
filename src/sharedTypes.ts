@@ -89,6 +89,19 @@ export enum AsyncState {
   ERROR = 'ERROR',
 }
 
+/**
+ * More explicit type than just declaring indices as numbers in certain circumstances.
+ * No need to go overboard, just use this when the fact something is an index might not
+ * otherwise be clear.
+ * */
+export type Index = number;
+
+// Interface for index ranges, usually start-inclusive and end-exclusive.
+export interface IndexRange {
+  startIndex: number;
+  endIndex: number;
+}
+
 /** Utility types */
 
 // Callback to be passed into a map function.

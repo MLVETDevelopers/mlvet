@@ -6,10 +6,10 @@ import VideoController from 'renderer/components/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
 } from 'renderer/components/VideoPreview/VideoPreviewController';
-import ResizableBox from 'renderer/components/ResizableBox';
+import ResizeSlider from 'renderer/components/ResizeSlider';
+import { useDebounce } from '@react-hook/debounce';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
-import colors from '../colors';
 import { bufferedWordDuration } from '../../sharedUtils';
 
 /*
@@ -30,6 +30,8 @@ const ProjectPage = () => {
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
+  const [videoPreviewContainerWidth, setVideoPreviewContainerWidth] =
+    useDebounce(400, 0.1);
 
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
@@ -100,15 +102,25 @@ const ProjectPage = () => {
             />
           )}
         </Stack>
-        <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
+        <ResizeSlider
+          onDrag={(dragDistance) =>
+            setVideoPreviewContainerWidth(
+              videoPreviewContainerWidth - dragDistance
+            )
+          }
+        />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
-          <ResizableBox width={400}>
+          <Box
+            sx={{
+              width: `${videoPreviewContainerWidth}px`,
+            }}
+          >
             <VideoPreviewController
               setTime={setTime}
               setIsPlaying={setIsPlaying}
               ref={videoPreviewControllerRef}
             />
-          </ResizableBox>
+          </Box>
         </Stack>
         {isExporting && (
           <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>

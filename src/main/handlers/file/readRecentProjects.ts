@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { statSync } from 'fs';
 import { RuntimeProject, RecentProject } from '../../../sharedTypes';
 import retrieveMetadata from './projectMetadataHandler';
-import makeRecentProject from '../../../sharedUtils';
+import { makeRecentProject } from '../../../sharedUtils';
 import { getRecentProjectsPath } from '../../util';
 
 /**

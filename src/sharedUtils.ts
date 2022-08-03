@@ -1,6 +1,15 @@
-import { RuntimeProject, ProjectMetadata, RecentProject } from './sharedTypes';
+import {
+  RuntimeProject,
+  ProjectMetadata,
+  RecentProject,
+  Word,
+} from './sharedTypes';
 
-const makeRecentProject: (
+// Round a number in seconds to milliseconds - solves a lot of floating point errors
+export const roundToMs: (input: number) => number = (input) =>
+  Math.round(input * 1000) / 1000;
+
+export const makeRecentProject: (
   project: Pick<RuntimeProject, keyof (RuntimeProject | RecentProject)>,
   metadata: ProjectMetadata,
   filePath: string
@@ -24,4 +33,5 @@ const makeRecentProject: (
   return recentProject as RecentProject;
 };
 
-export default makeRecentProject;
+export const bufferedWordDuration: (word: Word) => number = (word) =>
+  word.bufferDurationBefore + word.duration + word.bufferDurationAfter;

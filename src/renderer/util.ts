@@ -3,6 +3,7 @@ import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
   AudioFileExtension,
   RuntimeProject,
+  MapCallback,
   VideoFileExtension,
 } from '../sharedTypes';
 import ipc from './ipc';
@@ -158,3 +159,20 @@ export const removeExtension: (fileName: string) => string = (fileName) => {
   const split = fileName.split('.');
   return split.slice(0, split.length - 1).join('.');
 };
+
+/**
+ * Maps the values of a list using a given map function,
+ * but only for those values within a range of indices.
+ * Values outside of the given indices will be unaltered.
+ * @returns the mapped list
+ */
+export const mapInRange: <T>(
+  list: T[],
+  predicate: MapCallback<T, T>,
+  startIndex: number,
+  endIndex: number
+) => T[] = (list, mapCallback, startIndex, endIndex) => [
+  ...list.slice(0, startIndex),
+  ...list.slice(startIndex, endIndex).map(mapCallback),
+  ...list.slice(endIndex),
+];

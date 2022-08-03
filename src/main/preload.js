@@ -55,6 +55,15 @@ contextBridge.exposeInMainWorld('electron', {
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
   closeWindow: () => ipcRenderer.invoke('close-window'),
 
   returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),

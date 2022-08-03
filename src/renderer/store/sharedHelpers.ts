@@ -1,4 +1,4 @@
-import { RuntimeProject, RecentProject } from '../../sharedTypes';
+import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -12,6 +12,7 @@ export interface ApplicationStore {
   currentPage: ApplicationPage;
   undoStack: UndoStack;
   exportIo: ExportIo;
+  clipboard: Word[];
 }
 
 /**
@@ -24,4 +25,5 @@ export const initialStore: ApplicationStore = {
   currentPage: ApplicationPage.HOME,
   undoStack: { stack: [], index: 0 },
   exportIo: { isExporting: false, exportProgress: 0 },
+  clipboard: [],
 };

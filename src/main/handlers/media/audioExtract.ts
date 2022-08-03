@@ -1,7 +1,7 @@
-import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
 import { RuntimeProject } from 'sharedTypes';
 import { getAudioExtractPath, getProjectDataDir, mkdir } from '../../util';
+import { ffmpegPath } from '../../ffUtils';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 

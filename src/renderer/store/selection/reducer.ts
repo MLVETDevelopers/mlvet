@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Index, IndexRange } from '../../../sharedTypes';
+import { IndexRange } from '../../../sharedTypes';
 import {
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
@@ -62,7 +62,7 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
   }
 
   if (action.type === SELECTION_CLEARED) {
-    return [] as Index[];
+    return [] as number[];
   }
 
   return selection;

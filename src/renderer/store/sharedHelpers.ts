@@ -1,4 +1,4 @@
-import { RuntimeProject, RecentProject, Word, Index } from '../../sharedTypes';
+import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -13,7 +13,8 @@ export interface ApplicationStore {
   undoStack: UndoStack;
   exportIo: ExportIo;
   clipboard: Word[];
-  selection: Index[];
+  // Array of numbers corresponding to indexes of words within the transcription
+  selection: number[];
 }
 
 /**

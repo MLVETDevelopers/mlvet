@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { IndexRange } from '../sharedTypes';
 import {
   selectionCleared,

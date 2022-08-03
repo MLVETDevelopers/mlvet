@@ -12,6 +12,7 @@ export const mockProject: Project = {
   isEdited: false,
   transcription: {
     confidence: 123456789,
+    duration: 100,
     words: [
       {
         word: 'test-word-1',
@@ -19,7 +20,10 @@ export const mockProject: Project = {
         duration: 5,
         outputStartTime: 1,
         deleted: true,
-        key: 'test-word-key-1',
+        originalIndex: 0,
+        pasteKey: 0,
+        bufferDurationBefore: 0,
+        bufferDurationAfter: 0,
         fileName: 'test-file-name',
       },
     ],

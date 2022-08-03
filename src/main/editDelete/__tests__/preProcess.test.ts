@@ -1,8 +1,9 @@
+import { JSONTranscription } from '../../types';
 import preProcessTranscript from '../preProcess';
 
 describe('Test pre-processing JSON transcript into regular transcript', () => {
   it('should produce expected transcript when given a JSON transcript', () => {
-    const jsonTranscript = {
+    const jsonTranscript: JSONTranscription = {
       confidence: 1,
       words: [
         {
@@ -27,32 +28,18 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: 1,
+      duration,
       words: [
-        {
-          word: ' ',
-          startTime: 0,
-          duration: 0,
-          outputStartTime: 0,
-          deleted: false,
-          key: '0',
-          fileName: 'PLACEHOLDER FILENAME',
-        },
         {
           word: 'Abc.',
           duration: 1,
           startTime: 0,
           outputStartTime: 0,
-          key: '1',
+          originalIndex: 0,
+          pasteKey: 0,
+          bufferDurationBefore: 0,
+          bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 1,
-          duration: 0,
-          outputStartTime: 1,
-          deleted: false,
-          key: '2',
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -60,25 +47,19 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           duration: 1,
           startTime: 1,
           outputStartTime: 1,
-          key: '3',
+          originalIndex: 1,
+          pasteKey: 0,
+          bufferDurationBefore: 0,
+          bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 2,
-          duration: 0,
-          outputStartTime: 2,
-          deleted: false,
-          key: '4',
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],
     });
   });
 
-  it('should fill blank spaces between words, and between last word and end', () => {
-    const jsonTranscript = {
+  it('should fill blank spaces between words, and between first/last words and start/end', () => {
+    const jsonTranscript: JSONTranscription = {
       confidence: -7,
       words: [
         {
@@ -108,68 +89,42 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: -7,
+      duration,
       words: [
-        {
-          word: ' ',
-          startTime: 0,
-          duration: 5,
-          outputStartTime: 0,
-          deleted: false,
-          key: '0',
-          fileName: 'PLACEHOLDER FILENAME',
-        },
         {
           word: 'Heat.',
           duration: 2,
           startTime: 5,
-          outputStartTime: 5,
-          key: '1',
+          outputStartTime: 0,
+          originalIndex: 0,
+          pasteKey: 0,
+          bufferDurationBefore: 5,
+          bufferDurationAfter: 0.5,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 7,
-          duration: 1,
-          outputStartTime: 7,
-          deleted: false,
-          key: '2',
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'From',
           duration: 3,
           startTime: 8,
-          outputStartTime: 8,
-          key: '3',
+          outputStartTime: 7.5,
+          originalIndex: 1,
+          pasteKey: 0,
+          bufferDurationBefore: 0.5,
+          bufferDurationAfter: 0.1,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 11,
-          duration: 0.2,
-          outputStartTime: 11,
-          deleted: false,
-          key: '4',
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'fire.',
           duration: 0.9,
           startTime: 11.2,
-          outputStartTime: 11.2,
-          key: '5',
+          outputStartTime: 11.1,
+          originalIndex: 2,
+          pasteKey: 0,
+          bufferDurationBefore: 0.1,
+          bufferDurationAfter: 3.67,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 12.1,
-          duration: 3.67,
-          outputStartTime: 12.1,
-          deleted: false,
-          key: '6',
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],
@@ -177,7 +132,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
   });
 
   it('should punctuate the transcript with a comma after "from"', () => {
-    const jsonTranscript = {
+    const jsonTranscript: JSONTranscription = {
       confidence: -7,
       words: [
         {
@@ -207,68 +162,42 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
     expect(outputTranscript).toEqual({
       confidence: -7,
+      duration,
       words: [
-        {
-          word: ' ',
-          startTime: 0,
-          duration: 5,
-          outputStartTime: 0,
-          deleted: false,
-          key: '0',
-          fileName: 'PLACEHOLDER FILENAME',
-        },
         {
           word: 'Heat.',
           duration: 2.5,
           startTime: 5,
-          outputStartTime: 5,
-          key: '1',
+          outputStartTime: 0,
+          originalIndex: 0,
+          pasteKey: 0,
+          bufferDurationBefore: 5,
+          bufferDurationAfter: 0.25,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 7.5,
-          duration: 0.5,
-          outputStartTime: 7.5,
-          deleted: false,
-          key: '2',
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'From,',
           duration: 3,
           startTime: 8,
-          outputStartTime: 8,
-          key: '3',
+          outputStartTime: 7.75,
+          originalIndex: 1,
+          pasteKey: 0,
+          bufferDurationBefore: 0.25,
+          bufferDurationAfter: 0.1,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 11,
-          duration: 0.2,
-          outputStartTime: 11,
-          deleted: false,
-          key: '4',
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'fire.',
           duration: 0.9,
           startTime: 11.2,
-          outputStartTime: 11.2,
-          key: '5',
+          outputStartTime: 11.1,
+          originalIndex: 2,
+          pasteKey: 0,
+          bufferDurationBefore: 0.1,
+          bufferDurationAfter: 3.67,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
-        },
-        {
-          word: ' ',
-          startTime: 12.1,
-          duration: 3.67,
-          outputStartTime: 12.1,
-          deleted: false,
-          key: '6',
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],

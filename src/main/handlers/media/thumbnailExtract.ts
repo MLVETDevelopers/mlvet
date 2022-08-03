@@ -1,10 +1,8 @@
 import path from 'path';
-
-import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
-import { path as ffprobePath } from '@ffprobe-installer/ffprobe';
 import ffmpeg from 'fluent-ffmpeg';
 import { getProjectDataDir } from '../../util';
 import { RuntimeProject } from '../../../sharedTypes';
+import { ffmpegPath, ffprobePath } from '../../ffUtils';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);

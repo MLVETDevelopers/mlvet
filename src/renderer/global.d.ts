@@ -66,6 +66,13 @@ declare global {
 
       handleOsQuery: () => OperatingSystems | null;
 
+      setClipboardEnabled: (
+        cutEnabled: boolean,
+        copyEnabled: boolean,
+        pasteEnabled: boolean,
+        deleteEnabled: boolean
+      ) => Promise<void>;
+
       closeWindow: () => void;
 
       returnToHome: (project: RuntimeProject) => Promise<number>;

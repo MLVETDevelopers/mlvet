@@ -4,6 +4,7 @@ import currentProjectReducer from './currentProject/reducer';
 import exportIoReducer from './exportIo/reducer';
 import recentProjectsReducer from './recentProjects/reducer';
 import undoStackReducer from './undoStack/reducer';
+import clipboardReducer from './clipboard/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   currentPage: currentPageReducer,
   undoStack: undoStackReducer,
   exportIo: exportIoReducer,
+  clipboard: clipboardReducer,
 });
 
 export default rootReducer;

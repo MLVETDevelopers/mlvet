@@ -33,7 +33,7 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
   if (action.type === SELECTION_RANGE_REMOVED) {
     const { startIndex, endIndex } = action.payload as IndexRange;
 
-    // Same caveats as above
+    // Same caveats as for SELECTION_RANGE_ADDED
     const selectionSet = new Set(selection);
 
     for (let index = startIndex; index < endIndex; index += 1) {

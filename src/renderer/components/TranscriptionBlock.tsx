@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { Fragment } from 'react';
 import { Transcription } from 'sharedTypes';
 import colors from '../colors';
+import Word from './Word';
 
 const TranscriptionBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -22,21 +23,14 @@ const TranscriptionBox = styled(Box)`
   }
 `;
 
-const Word = styled('span')`
-  &:hover {
-    color: ${colors.grey['000']};
-    background: ${colors.yellow[500]}80;
-  }
-`;
-
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
-  onWordClick: (wordIndex: number) => void;
+  seekToWord: (wordIndex: number) => void;
 }
 
 const TranscriptionBlock = ({
-  onWordClick,
+  seekToWord,
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
@@ -48,17 +42,11 @@ const TranscriptionBlock = ({
         {index > 0 && space(`space-${word.originalIndex}-${word.pasteKey}`)}
         <Word
           key={`word-${word.originalIndex}-${word.pasteKey}`}
-          data-index={index}
-          data-type="word"
-          onClick={() => onWordClick(index)}
-          style={
-            index === nowPlayingWordIndex
-              ? { background: `${colors.yellow[500]}` }
-              : {}
-          }
-        >
-          {word.word}
-        </Word>
+          seekToWord={() => seekToWord(index)}
+          isPlaying={index === nowPlayingWordIndex}
+          text={word.word}
+          index={index}
+        />
       </Fragment>
     )
   );

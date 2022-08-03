@@ -58,7 +58,7 @@ const ProjectPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);
 
-  const onWordClick: (wordIndex: number) => void = (wordIndex) => {
+  const seekToWord: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
       // Fixes some minor floating point errors that cause the previous word to be selected
       // instead of the current one
@@ -95,7 +95,7 @@ const ProjectPage = () => {
             <TranscriptionBlock
               transcription={currentProject.transcription}
               nowPlayingWordIndex={nowPlayingWordIndex}
-              onWordClick={onWordClick}
+              seekToWord={seekToWord}
             />
           )}
         </Stack>

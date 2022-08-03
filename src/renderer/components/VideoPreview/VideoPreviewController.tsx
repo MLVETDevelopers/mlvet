@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { Cut } from 'sharedTypes';
-import convertTranscriptToCuts from 'main/processing/transcriptToCuts';
+import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';

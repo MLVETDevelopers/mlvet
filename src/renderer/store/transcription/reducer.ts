@@ -1,19 +1,21 @@
 import { Reducer } from 'redux';
-import liveProcessTranscript from 'main/editDelete/liveProcess';
+import { mapInRange } from 'renderer/util';
+import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
-import { Transcription } from '../../../sharedTypes';
+import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
-import { DeleteWordsPayload, PasteWordsPayload } from '../undoStack/opPayloads';
+import {
+  DeleteWordsPayload,
+  PasteWordsPayload,
+  UndoDeleteWordsPayload,
+  UndoPasteWordsPayload,
+} from '../undoStack/opPayloads';
 import {
   DELETE_WORD,
   UNDO_DELETE_WORD,
   PASTE_WORD,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
-
-const processTranscript = (transcription: Transcription) => {
-  return liveProcessTranscript(transcription);
-};
 
 /**
  *  Nested reducer for handling transcriptions
@@ -26,65 +28,78 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return action.payload as Transcription;
   }
 
-  // If you add a method that handles edits to the transcription -> processTranscript()
+  // Everything below here assumes we have a transcription, so early exit if we don't
+  if (transcription === null) {
+    return null;
+  }
 
-  if (
-    (action.type === DELETE_WORD || action.type === UNDO_DELETE_WORD) &&
-    transcription != null
-  ) {
+  /**
+   * Important: if you make an update to the transcription here, usually you
+   * will need to call 'updateOutputStartTimes' so that output start times are kept accurate!
+   */
+
+  if (action.type === DELETE_WORD) {
     const { startIndex, endIndex } = action.payload as DeleteWordsPayload;
 
-    // sets newDeleted bool to true for delete and false for undo
-    const newDeletedBool = action.type === DELETE_WORD;
+    const markDeleted = (word: Word) => ({ ...word, deleted: true });
 
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: transcription.words.map((word, i) => ({
-        ...word,
-        deleted:
-          i >= startIndex && i <= endIndex ? newDeletedBool : word.deleted,
-      })),
+      words: updateOutputStartTimes(
+        mapInRange(transcription.words, markDeleted, startIndex, endIndex)
+      ),
     };
-
-    return processTranscript(updatedTranscription);
   }
 
-  if (action.type === PASTE_WORD && transcription != null) {
-    const { toIndex, startIndex, endIndex } =
-      action.payload as PasteWordsPayload;
+  if (action.type === UNDO_DELETE_WORD) {
+    const { startIndex, endIndex } = action.payload as UndoDeleteWordsPayload;
 
-    // Getting the subarrays for the new transcription
-    const prefix = transcription?.words.slice(0, toIndex);
-    let pastedWords = transcription?.words.slice(startIndex, endIndex + 1); // Words to be pasted
-    pastedWords = pastedWords?.map((word) => ({ ...word, deleted: false })); // Undeleting the cut words
-    const suffix = transcription?.words.slice(toIndex);
+    const markUndeleted = (word: Word) => ({ ...word, deleted: false });
 
-    if (pastedWords !== undefined && suffix !== undefined) {
-      const updatedTranscription = {
-        ...transcription,
-        words: prefix?.concat(pastedWords, suffix), // Concatonating the sub arrays
-      };
-      return processTranscript(updatedTranscription);
-    }
+    return {
+      ...transcription,
+      words: updateOutputStartTimes(
+        mapInRange(transcription.words, markUndeleted, startIndex, endIndex)
+      ),
+    };
   }
 
-  if (action.type === UNDO_PASTE_WORD && transcription != null) {
-    const { toIndex, startIndex, endIndex } =
-      action.payload as PasteWordsPayload;
+  if (action.type === PASTE_WORD) {
+    const { startIndex, clipboard } = action.payload as PasteWordsPayload;
 
-    // Getting the subarrays for the new transcription
-    const pasteLength = endIndex - startIndex + 1;
-    const prefix = transcription?.words.slice(0, toIndex);
-    const suffix = transcription?.words.slice(toIndex + pasteLength);
+    const prefix = transcription.words.slice(0, startIndex + 1);
 
-    // Have to check this if to get rid of linter error
-    if (suffix !== undefined) {
-      const updatedTranscription = {
-        ...transcription,
-        words: prefix?.concat(suffix), // Concatonating the sub arrays
-      };
-      return processTranscript(updatedTranscription);
-    }
+    // Paste key must be unique for all pasted words - that is, no two pasted words should ever have the same paste key.
+    // We force this invariant by finding the highest paste key in the entire transcription to this point, and then
+    // adding n to it for the nth pasted word, for all words on the clipboard.
+    const highestExistingPasteKey = Math.max(
+      0,
+      ...transcription.words.map((word) => word.pasteKey)
+    );
+    const wordsToPaste = clipboard.map((word, index) => ({
+      ...word,
+      pasteKey: highestExistingPasteKey + index + 1,
+    }));
+
+    const suffix = transcription.words.slice(startIndex + 1);
+
+    return {
+      ...transcription,
+      words: updateOutputStartTimes([...prefix, ...wordsToPaste, ...suffix]),
+    };
+  }
+
+  if (action.type === UNDO_PASTE_WORD) {
+    const { startIndex, clipboardLength } =
+      action.payload as UndoPasteWordsPayload;
+
+    const prefix = transcription.words.slice(0, startIndex + 1);
+    const suffix = transcription.words.slice(startIndex + clipboardLength + 1);
+
+    return {
+      ...transcription,
+      words: updateOutputStartTimes([...prefix, ...suffix]),
+    };
   }
 
   return transcription;

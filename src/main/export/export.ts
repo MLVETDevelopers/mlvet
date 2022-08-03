@@ -3,9 +3,9 @@ import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
 import { secondToTimestamp, padZeros } from '../timeUtils';
-import { Project, Transcription, Cut } from '../../sharedTypes';
+import { Project, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
-import convertTranscriptToCuts from '../processing/transcriptToCuts';
+import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
 
 export const constructEDL: (
   title: string,
@@ -15,8 +15,9 @@ export const constructEDL: (
 ) => string = (title, transcription, source, mainWindow) => {
   let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
 
-  const cuts: Array<Cut> = convertTranscriptToCuts(transcription);
+  const cuts = convertTranscriptToCuts(transcription);
   const entries = cuts.length;
+
   const timeline = {
     start: 0,
     end: 0,

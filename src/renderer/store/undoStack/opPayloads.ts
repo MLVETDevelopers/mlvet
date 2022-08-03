@@ -1,18 +1,22 @@
+import { Word } from 'sharedTypes';
+
 export interface DeleteWordsPayload {
   startIndex: number;
   endIndex: number;
 }
 
 export interface PasteWordsPayload {
-  toIndex: number;
   startIndex: number;
-  endIndex: number;
+  clipboard: Word[];
 }
 
 export type UndoDeleteWordsPayload = DeleteWordsPayload;
 
-export type UndoPasteWordsPayload = PasteWordsPayload;
+export interface UndoPasteWordsPayload {
+  startIndex: number;
+  clipboardLength: number;
+}
 
-export type DoPayload = DeleteWordsPayload;
+export type DoPayload = DeleteWordsPayload | PasteWordsPayload;
 
-export type UndoPayload = UndoDeleteWordsPayload;
+export type UndoPayload = UndoDeleteWordsPayload | UndoPasteWordsPayload;

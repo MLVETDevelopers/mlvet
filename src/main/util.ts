@@ -38,15 +38,5 @@ export const appDataStoragePath: () => string = () =>
 export const audioExtractStoragePath: () => string = () =>
   path.join(appDataStoragePath(), 'audioExtracts');
 
-// Round a number in seconds to milliseconds - solves a lot of floating point errors
-export const roundToMs: (input: number) => number = (input) =>
-  Math.round(input * 1000) / 1000;
-
 export const getRecentProjectsPath: () => string = () =>
   path.join(appDataStoragePath(), 'recentProjects.json');
-
-/** Utility types */
-
-// Callback to be passed into a map function.
-// First type argument is the input type, second is the output type
-export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;

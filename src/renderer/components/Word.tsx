@@ -7,6 +7,9 @@ import {
 import colors from '../colors';
 
 const WordInner = styled('div')`
+  display: inline-block;
+  cursor: pointer;
+
   &:hover {
     color: ${colors.grey['000']};
     background: ${colors.yellow[500]}80;

@@ -1,4 +1,4 @@
-import { Word } from 'sharedTypes';
+import { IndexRange, Word } from '../sharedTypes';
 import { clipboardUpdated } from './store/clipboard/actions';
 import store from './store/store';
 import { dispatchOp } from './store/undoStack/opHelpers';
@@ -6,7 +6,7 @@ import { makeDeleteWord, makePasteWord } from './store/undoStack/ops';
 
 const { dispatch } = store;
 
-const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
+const deleteWordRange = (firstWordIndex: number, lastWordIndex: number) => {
   const { currentProject } = store.getState();
 
   if (currentProject && currentProject.transcription) {
@@ -14,41 +14,67 @@ const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
   }
 };
 
-const pasteWord = (toWordIndex: number, clipboard: Word[]) => {
+const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
   const { currentProject } = store.getState();
 
   if (currentProject && currentProject.transcription) {
-    dispatchOp(makePasteWord(toWordIndex, clipboard));
+    dispatchOp(makePasteWord(afterWordIndex, clipboard));
   }
 };
 
-// This function will return the index of the first word and the index of the last word
-// selected on the transcription block. It will return values of null for each if no
-// word is selected. It will return the same start and end value if only one value is
-// selected.
-//
-// Currently a little janky and should be revised in a future iteration.
-const getIndexSelectedWords = () => {
-  const highlightedWords = window.getSelection();
-  if (
-    highlightedWords?.anchorNode?.parentElement?.dataset.type === 'word' &&
-    highlightedWords?.focusNode?.parentElement?.dataset.type === 'word'
-  ) {
-    // TODO(chloe): the idea of counting the number of DOM elements to
-    // find the index is really hacky,
-    // we need to do better than this. No obvious ideas for now
-    const anchor = Number(
-      highlightedWords?.anchorNode?.parentElement?.dataset.index
-    );
-    const focus = Number(
-      highlightedWords?.focusNode?.parentElement?.dataset.index
-    );
+/**
+ * Returns a list of ranges consisting of the selected words' indexes
+ */
+const getSelectionRanges: () => IndexRange[] = () => {
+  const { selection: selectionFromState } = store.getState();
 
-    const start = Math.min(anchor, focus);
-    const end = Math.max(anchor, focus) + 1; // exclusive end
-    return [start, end];
-  }
-  return [null, null]; // Linter says I have to return a value here. Could return just null and check outside the function
+  // store.getState() does not return copies, so make a copy to avoid mutating the state
+  const selection = [...selectionFromState];
+
+  // Sort the indices
+  selection.sort();
+
+  let currentStartIndex = selection[0];
+
+  /**
+   * This reduce is similar to the 'convertTranscriptToCuts' function, so refer to that
+   * for comments about the general approach.
+   * What is being achieved is turning a sorted array of indexes into a series of
+   * index ranges. For a contiguous selection, there will only be one index range.
+   */
+  const indexRanges: IndexRange[] = selection.reduce(
+    (rangesSoFar, currentIndex, j) => {
+      // Note: j refers to the index within this loop, not the index within the transcription itself.
+
+      const isFinalWord = j === selection.length - 1;
+
+      // Final element, so build a range no matter what
+      if (isFinalWord) {
+        return rangesSoFar.concat({
+          startIndex: currentStartIndex,
+          endIndex: currentIndex,
+        });
+      }
+
+      const nextIndex = selection[j + 1];
+
+      if (currentIndex + 1 === nextIndex) {
+        return rangesSoFar;
+      }
+
+      const newRange: IndexRange = {
+        startIndex: currentStartIndex,
+        endIndex: currentIndex,
+      };
+
+      currentStartIndex = currentIndex;
+
+      return rangesSoFar.concat(newRange);
+    },
+    [] as IndexRange[]
+  );
+
+  return indexRanges;
 };
 
 export const copyText = () => {
@@ -62,30 +88,35 @@ export const copyText = () => {
     return;
   }
 
-  const [startIndex, endIndex] = getIndexSelectedWords();
-  if (startIndex !== null && endIndex !== null) {
-    dispatch(clipboardUpdated(transcription.words.slice(startIndex, endIndex)));
-  }
+  const ranges = getSelectionRanges();
+  const clipboard = ranges.flatMap((range) =>
+    transcription.words.slice(range.startIndex, range.endIndex)
+  );
+  dispatch(clipboardUpdated(clipboard));
 };
 
-export const deleteText = () => {
-  const [startIndex, endIndex] = getIndexSelectedWords();
-  if (startIndex !== null && endIndex !== null) {
-    deleteWord(startIndex, endIndex);
-  }
+export const deleteText: () => void = () => {
+  const ranges = getSelectionRanges();
+  ranges.forEach((range) => deleteWordRange(range.startIndex, range.endIndex));
 };
 
-export const cutText = () => {
+export const cutText: () => void = () => {
   copyText();
   deleteText();
 };
 
-export const pasteText = () => {
+export const pasteText: () => void = () => {
   const { clipboard } = store.getState();
 
-  const [start, end] = getIndexSelectedWords();
+  const ranges = getSelectionRanges();
 
-  if (start !== null && end !== null) {
-    pasteWord(start, clipboard);
+  if (ranges.length === 0) {
+    return;
   }
+
+  // Paste after the last word in the selection
+  const { endIndex } = ranges[ranges.length - 1];
+
+  // End index is exclusive, so subtract one to get the actual word to paste after
+  pasteWord(endIndex - 1, clipboard);
 };

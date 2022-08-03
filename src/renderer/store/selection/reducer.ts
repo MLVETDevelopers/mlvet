@@ -4,6 +4,7 @@ import {
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
   SELECTION_CLEARED,
+  SELECTION_RANGE_TOGGLED,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
@@ -38,6 +39,23 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
 
     for (let index = startIndex; index < endIndex; index += 1) {
       selectionSet.delete(index);
+    }
+
+    return Array.from(selectionSet);
+  }
+
+  if (action.type === SELECTION_RANGE_TOGGLED) {
+    const { startIndex, endIndex } = action.payload as IndexRange;
+
+    // Same caveats as for SELECTION_RANGE_ADDED
+    const selectionSet = new Set(selection);
+
+    for (let index = startIndex; index < endIndex; index += 1) {
+      if (selectionSet.has(index)) {
+        selectionSet.delete(index);
+      } else {
+        selectionSet.add(index);
+      }
     }
 
     return Array.from(selectionSet);

@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
+import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
 
@@ -12,6 +14,7 @@ const TranscriptionBox = styled(Box)`
   overflow-y: scroll;
   height: 100%;
   padding: 20px;
+  user-select: none;
 
   ::-webkit-scrollbar {
     width: 3px;
@@ -34,6 +37,12 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const selectionArray = useSelector(
+    (store: ApplicationStore) => store.selection
+  );
+
+  const selectionSet = useMemo(() => new Set(selectionArray), [selectionArray]);
+
   const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
 
   const renderedTranscription = transcription.words.map((word, index) =>
@@ -44,6 +53,7 @@ const TranscriptionBlock = ({
           key={`word-${word.originalIndex}-${word.pasteKey}`}
           seekToWord={() => seekToWord(index)}
           isPlaying={index === nowPlayingWordIndex}
+          isSelected={selectionSet.has(index)}
           text={word.word}
           index={index}
         />
@@ -51,17 +61,7 @@ const TranscriptionBlock = ({
     )
   );
 
-  return (
-    <TranscriptionBox>
-      <p
-        style={{
-          margin: 0,
-        }}
-      >
-        {renderedTranscription}
-      </p>
-    </TranscriptionBox>
-  );
+  return <TranscriptionBox>{renderedTranscription}</TranscriptionBox>;
 };
 
 export default TranscriptionBlock;

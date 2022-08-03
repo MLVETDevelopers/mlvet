@@ -1,5 +1,9 @@
 import { IndexRange, Word } from '../sharedTypes';
 import { clipboardUpdated } from './store/clipboard/actions';
+import {
+  selectionCleared,
+  selectionRangeAdded,
+} from './store/selection/actions';
 import store from './store/store';
 import { dispatchOp } from './store/undoStack/opHelpers';
 import { makeDeleteWord, makePasteWord } from './store/undoStack/ops';
@@ -52,7 +56,7 @@ const getSelectionRanges: () => IndexRange[] = () => {
       if (isFinalWord) {
         return rangesSoFar.concat({
           startIndex: currentStartIndex,
-          endIndex: currentIndex,
+          endIndex: currentIndex + 1,
         });
       }
 
@@ -64,7 +68,7 @@ const getSelectionRanges: () => IndexRange[] = () => {
 
       const newRange: IndexRange = {
         startIndex: currentStartIndex,
-        endIndex: currentIndex,
+        endIndex: currentIndex + 1,
       };
 
       currentStartIndex = currentIndex;
@@ -73,6 +77,8 @@ const getSelectionRanges: () => IndexRange[] = () => {
     },
     [] as IndexRange[]
   );
+
+  console.log(selection, indexRanges);
 
   return indexRanges;
 };
@@ -98,6 +104,8 @@ export const copyText = () => {
 export const deleteText: () => void = () => {
   const ranges = getSelectionRanges();
   ranges.forEach((range) => deleteWordRange(range.startIndex, range.endIndex));
+
+  dispatch(selectionCleared());
 };
 
 export const cutText: () => void = () => {
@@ -119,4 +127,13 @@ export const pasteText: () => void = () => {
 
   // End index is exclusive, so subtract one to get the actual word to paste after
   pasteWord(endIndex - 1, clipboard);
+
+  // Select the pasted text
+  dispatch(selectionCleared());
+  dispatch(
+    selectionRangeAdded({
+      startIndex: endIndex,
+      endIndex: endIndex + clipboard.length,
+    })
+  );
 };

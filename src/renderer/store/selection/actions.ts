@@ -3,6 +3,7 @@ import { Action } from '../action';
 
 export const SELECTION_RANGE_ADDED = 'SELECTION_RANGE_ADDED';
 export const SELECTION_RANGE_REMOVED = 'SELECTION_RANGE_REMOVED';
+export const SELECTION_RANGE_TOGGLED = 'SELECTION_RANGE_TOGGLED';
 export const SELECTION_CLEARED = 'SELECTION_CLEARED';
 
 /**
@@ -27,6 +28,18 @@ export const selectionRangeRemoved: (
 ) => Action<IndexRange> = (indexRange) => {
   return {
     type: SELECTION_RANGE_REMOVED,
+    payload: indexRange,
+  };
+};
+
+/**
+ * Same as selectionRangeAdded, but for each item in the range, toggle whether it is selected or not.
+ */
+export const selectionRangeToggled: (
+  indexRange: IndexRange
+) => Action<IndexRange> = (indexRange) => {
+  return {
+    type: SELECTION_RANGE_TOGGLED,
     payload: indexRange,
   };
 };

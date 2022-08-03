@@ -16,6 +16,7 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
+import { copyText, cutText, deleteText, pasteText } from './clipboard';
 
 /**
  * Used by backend to initiate saves from front end
@@ -59,7 +60,7 @@ ipc.on('initiate-save-as-project', async () => {
   newProject.name = `Copy of ${currentProject.name}`;
   newProject.id = uuidv4();
 
-  // TODO(patrick): regenerate thumbnail and audio extract
+  // TODO(chloe): regenerate thumbnail and audio extract
 
   const filePath = await ipc.saveAsProject(newProject);
 
@@ -135,6 +136,22 @@ ipc.on('initiate-export-project', async () => {
   const filePath = await ipc.exportProject(currentProject);
 
   store.dispatch(startExport(currentProject.id, filePath));
+});
+
+ipc.on('initiate-cut-text', async () => {
+  cutText();
+});
+
+ipc.on('initiate-copy-text', async () => {
+  copyText();
+});
+
+ipc.on('initiate-paste-text', async () => {
+  pasteText();
+});
+
+ipc.on('initiate-delete-text', async () => {
+  deleteText();
 });
 
 /**

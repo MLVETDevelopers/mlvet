@@ -6,6 +6,7 @@ import VideoController from 'renderer/components/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
 } from 'renderer/components/VideoPreview/VideoPreviewController';
+import ResizableBox from 'renderer/components/ResizableBox';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
@@ -92,15 +93,13 @@ const ProjectPage = () => {
         </Stack>
         <Box sx={{ width: '2px', backgroundColor: colors.grey[600] }} />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
-          <Box
-            sx={{ width: '400px', height: '280px', backgroundColor: 'black' }}
-          >
+          <ResizableBox width={400}>
             <VideoPreviewController
               setTime={setTime}
               setIsPlaying={setIsPlaying}
               ref={videoPreviewControllerRef}
             />
-          </Box>
+          </ResizableBox>
         </Stack>
         {isExporting && (
           <div style={{ position: 'absolute', right: '32px', bottom: '32px' }}>

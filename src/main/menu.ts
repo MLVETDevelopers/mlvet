@@ -82,6 +82,59 @@ export default class MenuBuilder {
     ];
   }
 
+  buildClipboardOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'cut',
+        label: 'Cut',
+        accelerator: 'CommandOrControl+X',
+        click: () => {
+          // Tell the renderer to initiate a cut
+          this.mainWindow.webContents.send('initiate-cut-text');
+        },
+      },
+      {
+        id: 'copy',
+        label: 'Copy',
+        accelerator: 'CommandOrControl+C',
+        click: () => {
+          // Tell the renderer to initiate a copy
+          this.mainWindow.webContents.send('initiate-copy-text');
+        },
+      },
+      {
+        id: 'paste',
+        label: 'Paste',
+        accelerator: 'CommandOrControl+V',
+        click: () => {
+          // Tell the renderer to initiate a paste
+          this.mainWindow.webContents.send('initiate-paste-text');
+        },
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+        accelerator: 'Backspace',
+        click: () => {
+          // Tell the renderer to initiate a delete
+          this.mainWindow.webContents.send('initiate-delete-text');
+        },
+      },
+      {
+        // Hidden menu item to allow both backspace and delete to be used for the same purpose
+        id: 'delete2',
+        label: 'delete (invisible)',
+        accelerator: 'Delete',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        click: () => {
+          // Tell the renderer to initiate a delete
+          this.mainWindow.webContents.send('initiate-delete-text');
+        },
+      },
+    ];
+  }
+
   buildFileOptions(): MenuItemConstructorOptions[] {
     return [
       {
@@ -126,6 +179,18 @@ export default class MenuBuilder {
         },
       },
     ];
+  }
+
+  buildEditOptions(): MenuItemConstructorOptions {
+    return {
+      id: 'edit', // do not change, used by IPC to find this menu
+      label: 'Edit',
+      submenu: [
+        ...this.buildUndoRedoOptions(),
+        { type: 'separator' },
+        ...this.buildClipboardOptions(),
+      ],
+    };
   }
 
   buildHistoryOptions(): MenuItemConstructorOptions[] {
@@ -179,27 +244,6 @@ export default class MenuBuilder {
       submenu: this.buildFileOptions(),
     };
 
-    const subMenuEdit: DarwinMenuItemConstructorOptions = {
-      id: 'edit', // do not change, used by IPC to find this menu
-      label: 'Edit',
-      submenu: [
-        ...this.buildUndoRedoOptions(),
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'CommandOrControl+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'CommandOrControl+C', selector: 'copy:' },
-        {
-          label: 'Paste',
-          accelerator: 'CommandOrControl+V',
-          selector: 'paste:',
-        },
-        {
-          label: 'Select All',
-          accelerator: 'CommandOrControl+A',
-          selector: 'selectAll:',
-        },
-      ],
-    };
-
     const subMenuViewDev: MenuItemConstructorOptions = {
       label: 'View',
       submenu: [
@@ -226,6 +270,7 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuViewProd: MenuItemConstructorOptions = {
       label: 'View',
       submenu: [
@@ -238,11 +283,13 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuHistory: MenuItemConstructorOptions = {
       id: 'history',
       label: 'History',
       submenu: this.buildHistoryOptions(),
     };
+
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -270,14 +317,14 @@ export default class MenuBuilder {
     return [
       subMenuAbout,
       subMenuFile,
-      subMenuEdit,
+      this.buildEditOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,
     ];
   }
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate(): MenuItemConstructorOptions[] {
     const templateDefault = [
       {
         id: 'file',
@@ -287,7 +334,10 @@ export default class MenuBuilder {
       {
         id: 'edit',
         label: '&Edit',
-        submenu: this.buildUndoRedoOptions(),
+        submenu: [
+          ...this.buildUndoRedoOptions(),
+          ...this.buildClipboardOptions(),
+        ],
       },
       {
         id: 'view',

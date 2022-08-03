@@ -2,11 +2,12 @@ import path from 'path';
 import fs from 'fs';
 import { io } from 'socket.io-client';
 import ffmpeg from 'fluent-ffmpeg';
+import { RuntimeProject, Transcription } from '../../../sharedTypes';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
-import { Project, Transcription } from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../../types';
 import { USE_DUMMY } from '../../config';
+import { getAudioExtractPath } from '../../util';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
@@ -23,14 +24,14 @@ const dummyTranscribeRequest: () => string = () => {
     .toString();
 };
 
-const transcribeRequest: (project: Project) => Promise<string> = async (
+const transcribeRequest: (project: RuntimeProject) => Promise<string> = async (
   project
 ) => {
   const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
   return new Promise((resolve) => {
     socket.emit(
       'transcribe',
-      project.audioExtractFilePath,
+      getAudioExtractPath(project.id),
       (transcription: string) => {
         resolve(transcription);
       }
@@ -76,16 +77,18 @@ const getAudioDurationInSeconds: GetAudioDurationInSeconds = async (
   audioFilePath
 ) => {
   return new Promise((resolve) => {
-    ffmpeg.ffprobe(audioFilePath, (err, metadata) => {
+    ffmpeg.ffprobe(audioFilePath, (_, metadata) => {
       resolve(metadata.format.duration);
     });
   });
 };
 
-type RequestTranscription = (project: Project) => Promise<Transcription | null>;
+type RequestTranscription = (
+  project: RuntimeProject
+) => Promise<Transcription | null>;
 
 const requestTranscription: RequestTranscription = async (project) => {
-  if (project.audioExtractFilePath == null || project.mediaFilePath == null) {
+  if (project.mediaFilePath == null) {
     return null;
   }
 
@@ -100,7 +103,7 @@ const requestTranscription: RequestTranscription = async (project) => {
   }
 
   const duration: number =
-    (await getAudioDurationInSeconds(project.audioExtractFilePath)) || 0;
+    (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;
 
   const fileName = path.basename(project.mediaFilePath);
 

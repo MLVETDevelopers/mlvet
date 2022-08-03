@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
 import { secondToTimestamp, padZeros } from '../timeUtils';
-import { Project, Transcription } from '../../sharedTypes';
+import { RuntimeProject, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
 
@@ -51,23 +51,22 @@ export const constructEDL: (
 };
 
 export const exportEDL: (
+  exportFilePath: string,
   mainWindow: BrowserWindow | null,
-  project: Project
-) => void = (mainWindow, project) => {
-  if (project.exportFilePath === null) {
-    return;
-  }
+  project: RuntimeProject
+) => void = (exportFilePath, mainWindow, project) => {
+  const exportDir = path.dirname(exportFilePath);
 
-  const exportFilepath = path.dirname(project.exportFilePath);
-  mkdir(exportFilepath);
+  mkdir(exportDir);
+
   const exportFilename = path.basename(
-    project.exportFilePath,
-    path.extname(project.exportFilePath)
+    exportFilePath,
+    path.extname(exportFilePath)
   );
 
   if (project.transcription) {
     writeFileSync(
-      join(exportFilepath, `${exportFilename}.edl`),
+      join(exportDir, `${exportFilename}.edl`),
       constructEDL(
         project.name,
         project.transcription,

@@ -1,14 +1,22 @@
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
+import { getProjectDataDir } from '../../util';
+import { RuntimeProject } from '../../../sharedTypes';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
 
-type ExtractThumbnail = (absolutePathToVideoFile: string) => Promise<string>;
+type ExtractThumbnail = (
+  absolutePathToVideoFile: string,
+  project: RuntimeProject
+) => Promise<string>;
 
-const extractThumbnail: ExtractThumbnail = (absolutePathToMediaFile) => {
-  const pathToSaveMedia = path.join(process.cwd(), 'assets', 'thumbnails');
+const extractThumbnail: ExtractThumbnail = (
+  absolutePathToMediaFile,
+  project
+) => {
+  const pathToSaveMedia = getProjectDataDir(project.id);
 
   console.log('Started thumbnail extraction');
 

@@ -1,4 +1,4 @@
-import { Project } from 'sharedTypes';
+import { RuntimeProject } from 'sharedTypes';
 import { Action } from '../action';
 
 export const START_EXPORT = 'START_EXPORT';
@@ -24,9 +24,9 @@ export const updateExportProgress: (progress: number) => Action<number> = (
 });
 
 export const finishExport: (
-  project: Project,
+  project: RuntimeProject,
   filePath: string | null
-) => Action<{ project: Project; filePath: string | null }> = (
+) => Action<{ project: RuntimeProject; filePath: string | null }> = (
   project,
   filePath
 ) => ({

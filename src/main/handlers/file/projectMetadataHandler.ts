@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Project, ProjectMetadata } from '../../../sharedTypes';
+import { RuntimeProject, ProjectMetadata } from '../../../sharedTypes';
 
 const retrieveDateModified: (filePath: string) => Promise<Date | null> = async (
   filePath
@@ -26,7 +26,7 @@ const retrieveSize: (filePath: string) => Promise<number | null> = async (
 };
 
 type RetrieveProjectMetadata = (
-  project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
+  project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
 ) => Promise<ProjectMetadata>;
 
 const retrieveProjectMetadata: RetrieveProjectMetadata = async (project) => {

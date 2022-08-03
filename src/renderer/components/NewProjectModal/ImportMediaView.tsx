@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import {
   updateProjectWithMedia,
   updateProjectWithExtractedAudio,
@@ -67,7 +67,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const projectName = currentProject.name;
 
-  const setCurrentProject = (project: Project) =>
+  const setCurrentProject = (project: RuntimeProject) =>
     dispatch(projectCreated(project));
 
   const handleTranscribe = async () => {

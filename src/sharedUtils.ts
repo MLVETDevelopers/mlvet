@@ -1,19 +1,23 @@
-import { Project, ProjectMetadata, RecentProject, Word } from './sharedTypes';
+import {
+  RuntimeProject,
+  ProjectMetadata,
+  RecentProject,
+  Word,
+} from './sharedTypes';
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
 
 export const makeRecentProject: (
-  project: Pick<Project, keyof (Project | RecentProject)>,
+  project: Pick<RuntimeProject, keyof (RuntimeProject | RecentProject)>,
   metadata: ProjectMetadata,
   filePath: string
 ) => RecentProject = (project, metadata, filePath) => {
-  const projectFields: (keyof (RecentProject | Project))[] = [
+  const projectFields: (keyof (RecentProject | RuntimeProject))[] = [
     'id',
     'name',
     'mediaFilePath',
-    'thumbnailFilePath',
   ];
 
   const recentProject: Partial<RecentProject> = {

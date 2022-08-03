@@ -1,4 +1,5 @@
 import { createStore } from 'redux';
+import { ProjectMetadata } from 'sharedTypes';
 import { mockProject } from '../../../../../mocks/mocks';
 import currentProjectReducer from '../reducer';
 import {
@@ -42,7 +43,13 @@ describe('Current Project actions', () => {
 
   it('opening project', () => {
     const openedProjectFilePath = 'test-opened-file-path';
-    store.dispatch(projectOpened(mockProject, openedProjectFilePath));
+    const projectMetadata: ProjectMetadata = {
+      dateModified: null,
+      mediaSize: null,
+    };
+    store.dispatch(
+      projectOpened(mockProject, openedProjectFilePath, projectMetadata)
+    );
     expect(store.getState()).toEqual({
       ...mockProject,
       projectFilePath: openedProjectFilePath,

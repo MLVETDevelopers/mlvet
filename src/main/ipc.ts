@@ -23,6 +23,7 @@ import setSaveEnabled from './handlers/menu/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
+import setClipboardEnabled from './handlers/setClipboardEnabled';
 import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
@@ -108,6 +109,18 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
+
+  ipcMain.handle(
+    'set-clipboard-enabled',
+    async (_event, cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+      setClipboardEnabled(
+        ipcContext,
+        cutEnabled,
+        copyEnabled,
+        pasteEnabled,
+        deleteEnabled
+      )
+  );
 
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));
 

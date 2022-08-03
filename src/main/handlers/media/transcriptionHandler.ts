@@ -1,12 +1,16 @@
 import path from 'path';
 import fs from 'fs';
 import { io } from 'socket.io-client';
-import getAudioDurationInSeconds from 'get-audio-duration';
+import ffmpeg from 'fluent-ffmpeg';
 import { RuntimeProject, Transcription } from '../../../sharedTypes';
+import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { JSONTranscription, SnakeCaseWord } from '../../types';
 import { USE_DUMMY } from '../../config';
 import { getAudioExtractPath } from '../../util';
+
+ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
 interface JSONTranscriptionContainer {
   transcripts: JSONTranscription[];
@@ -64,6 +68,20 @@ const validateJsonTranscriptionContainer = <
   Array.isArray(transcription.transcripts) &&
   transcription.transcripts.length === 1 &&
   validateJsonTranscription(transcription.transcripts[0]));
+
+type GetAudioDurationInSeconds = (
+  audioFilePath: string
+) => Promise<number | undefined>;
+
+const getAudioDurationInSeconds: GetAudioDurationInSeconds = async (
+  audioFilePath
+) => {
+  return new Promise((resolve) => {
+    ffmpeg.ffprobe(audioFilePath, (_, metadata) => {
+      resolve(metadata.format.duration);
+    });
+  });
+};
 
 type RequestTranscription = (
   project: RuntimeProject

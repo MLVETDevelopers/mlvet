@@ -36,7 +36,7 @@ const getSelectionRanges: () => IndexRange[] = () => {
   const selection = [...selectionFromState];
 
   // Sort the indices
-  selection.sort();
+  selection.sort((first, second) => first - second);
 
   let currentStartIndex = selection[0];
 
@@ -49,7 +49,6 @@ const getSelectionRanges: () => IndexRange[] = () => {
   const indexRanges: IndexRange[] = selection.reduce(
     (rangesSoFar, currentIndex, j) => {
       // Note: j refers to the index within this loop, not the index within the transcription itself.
-
       const isFinalWord = j === selection.length - 1;
 
       // Final element, so build a range no matter what
@@ -71,14 +70,12 @@ const getSelectionRanges: () => IndexRange[] = () => {
         endIndex: currentIndex + 1,
       };
 
-      currentStartIndex = currentIndex;
+      currentStartIndex = nextIndex;
 
       return rangesSoFar.concat(newRange);
     },
     [] as IndexRange[]
   );
-
-  console.log(selection, indexRanges);
 
   return indexRanges;
 };
@@ -136,4 +133,6 @@ export const pasteText: () => void = () => {
       endIndex: endIndex + clipboard.length,
     })
   );
+
+  // TODO(chloe): should also seek to the start of the pasted text
 };

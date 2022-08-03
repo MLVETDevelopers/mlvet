@@ -7,6 +7,7 @@ import {
   selectionRangeToggled,
 } from '../store/selection/actions';
 import colors from '../colors';
+import { expandSelectionToWord } from '../selection';
 
 const WordInner = styled('div')`
   display: inline-block;
@@ -37,11 +38,20 @@ const Word = ({ index, seekToWord, isPlaying, isSelected, text }: Props) => {
     };
 
     // TODO(chloe): check ctrl key only on windows, meta key only on mac
-    const hasModifier = event.metaKey || event.ctrlKey;
-    if (!hasModifier) {
+    const hasCmdCtrlModifier = event.metaKey || event.ctrlKey;
+    const hasShiftModifier = event.shiftKey;
+
+    if (hasCmdCtrlModifier) {
+      // Cmd/Ctrl is held, so toggle the current word
+      dispatch(selectionRangeToggled(singleWordRange));
+    } else if (hasShiftModifier) {
+      // Shift is held, so expand the selection out to the clicked word
+      expandSelectionToWord(index);
+    } else {
+      // No modifier, so reset the selection to only be this word
       dispatch(selectionCleared());
+      dispatch(selectionRangeToggled(singleWordRange));
     }
-    dispatch(selectionRangeToggled(singleWordRange));
   };
 
   const style: { background: string; color: string; fontWeight?: string } =

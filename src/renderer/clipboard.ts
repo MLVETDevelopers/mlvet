@@ -1,4 +1,5 @@
-import { IndexRange, Word } from '../sharedTypes';
+import { Word } from '../sharedTypes';
+import { getSelectionRanges } from './selection';
 import { clipboardUpdated } from './store/clipboard/actions';
 import {
   selectionCleared,
@@ -24,60 +25,6 @@ const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
   if (currentProject && currentProject.transcription) {
     dispatchOp(makePasteWord(afterWordIndex, clipboard));
   }
-};
-
-/**
- * Returns a list of ranges consisting of the selected words' indexes
- */
-const getSelectionRanges: () => IndexRange[] = () => {
-  const { selection: selectionFromState } = store.getState();
-
-  // store.getState() does not return copies, so make a copy to avoid mutating the state
-  const selection = [...selectionFromState];
-
-  // Sort the indices
-  selection.sort((first, second) => first - second);
-
-  let currentStartIndex = selection[0];
-
-  /**
-   * This reduce is similar to the 'convertTranscriptToCuts' function, so refer to that
-   * for comments about the general approach.
-   * What is being achieved is turning a sorted array of indexes into a series of
-   * index ranges. For a contiguous selection, there will only be one index range.
-   */
-  const indexRanges: IndexRange[] = selection.reduce(
-    (rangesSoFar, currentIndex, j) => {
-      // Note: j refers to the index within this loop, not the index within the transcription itself.
-      const isFinalWord = j === selection.length - 1;
-
-      // Final element, so build a range no matter what
-      if (isFinalWord) {
-        return rangesSoFar.concat({
-          startIndex: currentStartIndex,
-          endIndex: currentIndex + 1,
-        });
-      }
-
-      const nextIndex = selection[j + 1];
-
-      if (currentIndex + 1 === nextIndex) {
-        return rangesSoFar;
-      }
-
-      const newRange: IndexRange = {
-        startIndex: currentStartIndex,
-        endIndex: currentIndex + 1,
-      };
-
-      currentStartIndex = nextIndex;
-
-      return rangesSoFar.concat(newRange);
-    },
-    [] as IndexRange[]
-  );
-
-  return indexRanges;
 };
 
 export const copyText = () => {

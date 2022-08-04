@@ -15,7 +15,7 @@ import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';
 import { projectOpened } from 'renderer/store/currentProject/actions';
 import { projectDeleted } from 'renderer/store/recentProjects/actions';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
@@ -68,11 +68,17 @@ const RecentProjectsBlock = () => {
 
   const dispatch = useDispatch();
 
-  const recentProjects = useSelector(
+  const recentProjectsFull = useSelector(
     (store: ApplicationStore) => store.recentProjects
-  )
-    .sort(sortByDateModified)
-    .slice(0, RECENT_PROJECTS_COUNT);
+  );
+
+  const recentProjects = useMemo(
+    () =>
+      recentProjectsFull
+        .sort(sortByDateModified)
+        .slice(0, RECENT_PROJECTS_COUNT),
+    [recentProjectsFull]
+  );
 
   // TODO(chloe) I think this can cause a memory leak if the request is in flight
   // when the page changes; not sure how to fix

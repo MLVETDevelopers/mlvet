@@ -5,6 +5,7 @@ import {
   selectionRangeToggled,
 } from './store/selection/actions';
 import store from './store/store';
+import { sortNumerical } from './util';
 
 const { dispatch } = store;
 
@@ -18,7 +19,7 @@ export const getSelectionRanges: () => IndexRange[] = () => {
   const selection = [...selectionFromState];
 
   // Sort the indices
-  selection.sort((first, second) => first - second);
+  sortNumerical(selection);
 
   let currentStartIndex = selection[0];
 
@@ -67,7 +68,7 @@ export const expandSelectionToWord: (wordIndex: number) => void = (
 ) => {
   const { selection } = store.getState();
 
-  selection.sort((first, second) => first - second);
+  sortNumerical(selection);
 
   // If the word is already selected, do nothing
   if (selection.some((index) => index === wordIndex)) {

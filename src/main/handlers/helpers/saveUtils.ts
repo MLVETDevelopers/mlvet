@@ -43,7 +43,7 @@ export const confirmSave: (
     throw new Error('Main window not defined');
   }
 
-  const confirmSaveDialogResponse = await saveChangesDialog(
+  const confirmSaveDialogResponse = saveChangesDialog(
     mainWindow,
     proposedFileName
   );

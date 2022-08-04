@@ -3,17 +3,17 @@ import { BrowserWindow, dialog } from 'electron';
 type SaveChangesDialog = (
   mainWindow: BrowserWindow,
   projectFileName?: string
-) => Promise<number>;
+) => number;
 
 export const SAVE_SELECTED = 0;
 export const DONT_SAVE_SELECTED = 1;
 export const SAVE_CANCELLED = 2;
 
-export const saveChangesDialog: SaveChangesDialog = async (
+export const saveChangesDialog: SaveChangesDialog = (
   mainWindow,
   projectFileName
 ) => {
-  const result = await dialog.showMessageBox(mainWindow, {
+  const result = dialog.showMessageBoxSync(mainWindow, {
     message: projectFileName
       ? `Do you want to save the changes you have made to ${projectFileName}?`
       : `Do you want to save your changes?`,
@@ -23,5 +23,5 @@ export const saveChangesDialog: SaveChangesDialog = async (
     defaultId: 0,
   });
 
-  return result.response as number;
+  return result;
 };

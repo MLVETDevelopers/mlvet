@@ -1,6 +1,7 @@
-import { BrowserWindow, dialog } from 'electron';
+import { BrowserWindow } from 'electron';
 import path from 'path';
 import AppState from './AppState';
+import { saveChangesDialog } from './handlers/misc/saveChangesDialog';
 
 /**
  * Prompts the user to save their work when they close the app
@@ -16,15 +17,7 @@ const promptToSaveWork: (
 
   const fileName = path.basename(appState.getRepresentedFilePath() ?? '');
 
-  const buttonIndex = dialog.showMessageBoxSync(mainWindow, {
-    message:
-      fileName === ''
-        ? `Do you want to save your changes?`
-        : `Do you want to save the changes you made to ${fileName}?`,
-    detail: `Your changes will be lost if you don't save them.`,
-    buttons: ['Save', `Don't Save`, 'Cancel'],
-    type: 'warning',
-  });
+  const buttonIndex = saveChangesDialog(mainWindow, fileName);
 
   if (buttonIndex === 0) {
     // Save, and tell the app to close after it's saved

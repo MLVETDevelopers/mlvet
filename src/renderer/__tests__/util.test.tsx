@@ -1,25 +1,28 @@
-import { mapInRange } from 'renderer/util';
+import { mapInRanges } from 'renderer/util';
 
-describe('mapInRange', () => {
-  it('should map values in a range successfully while ignoring others', () => {
+describe('mapInRanges', () => {
+  it('should map values in specified ranges successfully while ignoring others', () => {
     expect(
-      mapInRange(
-        [true, false, true, false, true, false, true, true, false, false],
+      mapInRanges(
+        [true, false, true, false, true, false, true, true, false, false, true],
         () => false,
-        3,
-        6
+        [
+          { startIndex: 0, endIndex: 3 },
+          { startIndex: 7, endIndex: 8 },
+        ]
       )
     ).toEqual([
-      true,
+      false,
+      false,
+      false,
       false,
       true,
       false,
-      false,
-      false,
-      true,
       true,
       false,
       false,
+      false,
+      true,
     ]);
   });
 });

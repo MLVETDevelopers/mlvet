@@ -74,6 +74,17 @@ export const expandSelectionToWord: (wordIndex: number) => void = (
     return;
   }
 
+  // If the selection is empty, select the word normally
+  if (selection.length === 0) {
+    dispatch(
+      selectionRangeAdded({
+        startIndex: wordIndex,
+        endIndex: wordIndex + 1,
+      })
+    );
+    return;
+  }
+
   const minIndexInSelection = Math.min(...selection);
   const maxIndexInSelection = Math.max(...selection);
 

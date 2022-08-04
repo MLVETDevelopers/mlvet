@@ -5,6 +5,7 @@ import {
   RuntimeProject,
   MapCallback,
   VideoFileExtension,
+  IndexRange,
 } from '../sharedTypes';
 import ipc from './ipc';
 
@@ -162,17 +163,23 @@ export const removeExtension: (fileName: string) => string = (fileName) => {
 
 /**
  * Maps the values of a list using a given map function,
- * but only for those values within a range of indices.
+ * but only for those values within specified ranges.
  * Values outside of the given indices will be unaltered.
  * @returns the mapped list
  */
-export const mapInRange: <T>(
+export const mapInRanges: <T>(
   list: T[],
-  predicate: MapCallback<T, T>,
-  startIndex: number,
-  endIndex: number
-) => T[] = (list, mapCallback, startIndex, endIndex) => [
-  ...list.slice(0, startIndex),
-  ...list.slice(startIndex, endIndex).map(mapCallback),
-  ...list.slice(endIndex),
-];
+  mapCallback: MapCallback<T, T>,
+  ranges: IndexRange[]
+) => T[] = (list, mapCallback, ranges) => {
+  const listNew = [...list];
+
+  ranges.forEach((range) => {
+    const { startIndex, endIndex } = range;
+    for (let i = startIndex; i < endIndex; i += 1) {
+      listNew[i] = mapCallback(list[i], i, list);
+    }
+  });
+
+  return listNew;
+};

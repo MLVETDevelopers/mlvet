@@ -7,17 +7,9 @@ import {
 } from './store/selection/actions';
 import store from './store/store';
 import { dispatchOp } from './store/undoStack/opHelpers';
-import { makeDeleteWord, makePasteWord } from './store/undoStack/ops';
+import { makeDeleteSelection, makePasteWord } from './store/undoStack/ops';
 
 const { dispatch } = store;
-
-const deleteWordRange = (firstWordIndex: number, lastWordIndex: number) => {
-  const { currentProject } = store.getState();
-
-  if (currentProject && currentProject.transcription) {
-    dispatchOp(makeDeleteWord(firstWordIndex, lastWordIndex));
-  }
-};
 
 const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
   const { currentProject } = store.getState();
@@ -47,7 +39,12 @@ export const copyText = () => {
 
 export const deleteText: () => void = () => {
   const ranges = getSelectionRanges();
-  ranges.forEach((range) => deleteWordRange(range.startIndex, range.endIndex));
+
+  const { currentProject } = store.getState();
+
+  if (currentProject && currentProject.transcription) {
+    dispatchOp(makeDeleteSelection(ranges));
+  }
 
   dispatch(selectionCleared());
 };

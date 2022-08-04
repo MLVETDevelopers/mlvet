@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { Fragment, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
+import { selectionCleared } from '../store/selection/actions';
 
 const TranscriptionBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -43,6 +44,12 @@ const TranscriptionBlock = ({
 
   const selectionSet = useMemo(() => new Set(selectionArray), [selectionArray]);
 
+  const dispatch = useDispatch();
+
+  const clearSelection: () => void = () => {
+    dispatch(selectionCleared());
+  };
+
   const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
 
   const renderedTranscription = transcription.words.map((word, index) =>
@@ -61,7 +68,11 @@ const TranscriptionBlock = ({
     )
   );
 
-  return <TranscriptionBox>{renderedTranscription}</TranscriptionBox>;
+  return (
+    <TranscriptionBox onClick={clearSelection}>
+      {renderedTranscription}
+    </TranscriptionBox>
+  );
 };
 
 export default TranscriptionBlock;

@@ -7,6 +7,10 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
     transcript.words.filter((word) => !word.deleted)
   );
 
+  if (words.length === 0) {
+    return [];
+  }
+
   let currentStartWord = words[0];
   let currentDuration = bufferedWordDuration(currentStartWord);
 

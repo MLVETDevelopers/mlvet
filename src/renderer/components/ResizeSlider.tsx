@@ -50,7 +50,7 @@ const ResizeSlider = ({ onDragHandler, ...props }: ResizeSliderProps) => {
   };
 
   const onDragEnd = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('onDragEnd');
+    console.log('onDragEnd', e.clientX);
   };
 
   return (

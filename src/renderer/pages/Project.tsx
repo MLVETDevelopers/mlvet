@@ -8,6 +8,7 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import ResizeSlider from 'renderer/components/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
+import { clamp } from 'main/timeUtils';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { bufferedWordDuration } from '../../sharedUtils';
@@ -33,7 +34,24 @@ const ProjectPage = () => {
   const [videoPreviewContainerWidth, setVideoPreviewContainerWidth] =
     useDebounce(400, 0.1);
 
+  const pageLayoutContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+
+  const onResizeSliderDrag = (dragDistance: number) => {
+    const pageLayoutContainerWidth =
+      pageLayoutContainerRef.current?.clientWidth ?? 2000;
+
+    const minWidthProportion = 0.1;
+    const maxWidthProportion = 0.75;
+
+    let newVidWidth = videoPreviewContainerWidth - dragDistance;
+    newVidWidth = clamp(
+      newVidWidth,
+      minWidthProportion * pageLayoutContainerWidth,
+      maxWidthProportion * pageLayoutContainerWidth
+    );
+    setVideoPreviewContainerWidth(newVidWidth);
+  };
 
   const play = () => videoPreviewControllerRef?.current?.play();
   const pause = () => videoPreviewControllerRef?.current?.pause();
@@ -85,6 +103,7 @@ const ProjectPage = () => {
       />
 
       <Stack
+        id="project-page-layout-container"
         direction="row"
         sx={{
           height: 'calc(100% - 76px)',
@@ -92,8 +111,9 @@ const ProjectPage = () => {
           px: '48px',
           py: '32px',
         }}
+        ref={pageLayoutContainerRef}
       >
-        <Stack spacing={4} sx={{ flex: '5 1 0' }}>
+        <Stack id="transcription-container" spacing={4} sx={{ flex: '5 1 0' }}>
           {currentProject?.transcription && (
             <TranscriptionBlock
               transcription={currentProject.transcription}
@@ -103,11 +123,8 @@ const ProjectPage = () => {
           )}
         </Stack>
         <ResizeSlider
-          onDrag={(dragDistance) =>
-            setVideoPreviewContainerWidth(
-              videoPreviewContainerWidth - dragDistance
-            )
-          }
+          onDragHandler={onResizeSliderDrag}
+          sx={{ flex: '0 0 auto' }}
         />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
           <Box

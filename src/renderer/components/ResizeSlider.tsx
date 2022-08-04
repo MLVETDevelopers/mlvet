@@ -1,14 +1,15 @@
-import { Box, styled, colors } from '@mui/material';
+import { Box, styled, colors, BoxProps } from '@mui/material';
 import { useRef } from 'react';
 
-interface ResizeSliderProps {
-  onDrag: (dragDistance: number) => void;
+interface ResizeSliderProps extends BoxProps {
+  onDragHandler: (dragDistance: number) => void;
 }
 
 const Divider = styled(Box)({
   position: 'relative',
   width: '2px',
   backgroundColor: colors.grey[600],
+  borderRadius: '1px',
 });
 
 const Slider = styled(Box)({
@@ -16,33 +17,50 @@ const Slider = styled(Box)({
   position: 'absolute',
   left: '-5px',
   right: '-5px',
-  height: '100%',
-  cursor: 'w-resize',
+  top: '-5px',
+  bottom: '-5px',
+  cursor: 'ew-resize',
   '&:active': {
     cursor: 'pointer',
   },
+  transition: '0.3s opacity ease',
+
+  '&:hover': {
+    opacity: 0.5,
+    backgroundColor: colors.grey[600],
+    borderRadius: '7px',
+    transition: '0.3s opacity ease',
+  },
 });
 
-const ResizeSlider = ({ onDrag }: ResizeSliderProps) => {
+const ResizeSlider = ({ onDragHandler, ...props }: ResizeSliderProps) => {
   const dragStartPositionRef = useRef(0);
 
-  const onDragStartHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     dragStartPositionRef.current = e.clientX;
+    console.log('onDragStart');
   };
 
-  const onDragHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onDrag = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.clientX !== 0) {
-      onDrag(e.clientX - dragStartPositionRef.current);
+      onDragHandler(e.clientX - dragStartPositionRef.current);
       dragStartPositionRef.current = e.clientX;
     }
+    console.log('onDrag');
+  };
+
+  const onDragEnd = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log('onDragEnd');
   };
 
   return (
-    <Divider id="divider">
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <Divider id="divider" {...props}>
       <Slider
         id="slider"
-        onDragStart={onDragStartHandler}
-        onDrag={onDragHandler}
+        onDragStart={onDragStart}
+        onDrag={onDrag}
+        onDragEnd={onDragEnd}
       />
     </Divider>
   );

@@ -7,7 +7,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
-import { updateProjectWithExtractedAudio } from '../../util';
+import {
+  updateProjectWithExtractedAudio,
+  updateProjectWithMedia,
+} from '../../util';
 import {
   Transcription,
   AsyncState,
@@ -49,7 +52,7 @@ interface Props {
 const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   const [asyncState, setAsyncState] = useState<AsyncState>(AsyncState.READY);
   const [mediaFileName, setMediaFileName] = useState<string | null>(null);
-
+  const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -67,6 +70,11 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       currentProject.mediaFilePath === null ||
       asyncState !== AsyncState.READY
     ) {
+      return;
+    }
+    setMediaFilePath(currentProject.mediaFilePath);
+
+    if (mediaFilePath === null) {
       return;
     }
     const setCurrentProject = (project: RuntimeProject) => {
@@ -88,6 +96,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     setAsyncState(AsyncState.LOADING);
 
     const startProcessing = async () => {
+      await updateProjectWithMedia(currentProject, mediaFilePath);
       await extractProjectAudio();
       requestTranscription(currentProject)
         .then((transcription) => {
@@ -110,6 +119,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     setTranscription,
     asyncState,
     dispatch,
+    mediaFilePath,
   ]);
 
   if (currentProject === null) {

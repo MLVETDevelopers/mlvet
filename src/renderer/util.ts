@@ -95,6 +95,19 @@ export const makeProjectWithoutMedia: (
   return project;
 };
 
+export const updateProjectMediaFilePath: (
+  currentProject: RuntimeProject,
+  mediaFilePath: string | null
+) => Promise<RuntimeProject | null> = async (currentProject, mediaFilePath) => {
+  if (mediaFilePath === null) {
+    return null;
+  }
+
+  currentProject.mediaFilePath = mediaFilePath;
+
+  return currentProject;
+};
+
 export const updateProjectWithMedia: (
   currentProject: RuntimeProject,
   mediaFilePath: string | null

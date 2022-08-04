@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import { updateProjectWithMedia } from '../../util';
+import { updateProjectMediaFilePath, updateProjectWithMedia } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 import ipc from '../../ipc';
@@ -47,6 +47,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  const dispatch = useDispatch();
+
+  const setCurrentProject = (project: RuntimeProject) => {
+    return dispatch(projectCreated(project));
+  };
+
   // Reset the import - for when delete button is pressed on media
   const removeMediaFromImport: () => void = () => {
     setIsAwaitingMedia(true);
@@ -54,36 +60,22 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     setMediaFileName(null);
   };
 
-  const dispatch = useDispatch();
-
   if (currentProject === null) {
     return null;
   }
 
   const projectName = currentProject.name;
 
-  const setCurrentProject = (project: RuntimeProject) =>
-    dispatch(projectCreated(project));
-
   const handleTranscribe = async () => {
-    if (mediaFilePath === null) {
-      return;
-    }
-
-    const projectWithMedia = await updateProjectWithMedia(
+    const projectWithMedia = await updateProjectMediaFilePath(
       currentProject,
       mediaFilePath
     );
 
-    if (projectWithMedia === null) {
+    if (projectWithMedia == null) {
       return;
     }
-
-    // Next view
-
-    // setCurrentProject(projectWithAudioExtract);
     setCurrentProject(projectWithMedia);
-
     nextView();
   };
 

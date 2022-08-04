@@ -3,7 +3,10 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap');
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../assets/fonts/RobotoMono-VariableFont_wght.ttf');
+}
 
 * {
   box-sizing: border-box;

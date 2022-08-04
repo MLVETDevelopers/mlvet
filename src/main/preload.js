@@ -64,6 +64,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   closeWindow: () => ipcRenderer.invoke('close-window'),
 
+  promptSave: () => ipcRenderer.invoke('prompt-save'),
+
   returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
 
   showConfirmation: (message, detail) =>

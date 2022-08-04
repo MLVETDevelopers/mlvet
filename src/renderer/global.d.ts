@@ -75,6 +75,8 @@ declare global {
 
       closeWindow: () => void;
 
+      promptSave: (_?: void) => Promise<boolean>;
+
       returnToHome: (project: RuntimeProject) => Promise<number>;
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;

@@ -7,10 +7,9 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import { updateProjectMediaFilePath, updateProjectWithMedia } from '../../util';
+import { updateProjectMediaFilePath } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
-import ipc from '../../ipc';
 
 interface Props {
   prevView: () => void;

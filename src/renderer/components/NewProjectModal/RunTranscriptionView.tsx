@@ -4,11 +4,19 @@ import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
+import { projectCreated } from 'renderer/store/currentProject/actions';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
-import { Transcription, AsyncState } from '../../../sharedTypes';
+import { updateProjectWithExtractedAudio } from '../../util';
+import {
+  Transcription,
+  AsyncState,
+  RuntimeProject,
+} from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
+
+const { extractAudio } = ipc;
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
@@ -61,21 +69,48 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     ) {
       return;
     }
+    const setCurrentProject = (project: RuntimeProject) => {
+      return dispatch(projectCreated(project));
+    };
+
+    const extractProjectAudio = async () => {
+      const audioFilePath = await extractAudio(currentProject);
+      const projectWithAudioExtract = await updateProjectWithExtractedAudio(
+        currentProject,
+        audioFilePath
+      );
+      if (projectWithAudioExtract === null) {
+        return;
+      }
+      setCurrentProject(projectWithAudioExtract);
+    };
 
     setAsyncState(AsyncState.LOADING);
 
-    requestTranscription(currentProject)
-      .then((transcription) => {
-        if (transcription === null) {
-          return null;
-        }
+    const startProcessing = async () => {
+      await extractProjectAudio();
+      requestTranscription(currentProject)
+        .then((transcription) => {
+          if (transcription === null) {
+            return null;
+          }
 
-        setAsyncState(AsyncState.DONE);
-        setTranscription(transcription);
-        return null;
-      })
-      .catch(() => setAsyncState(AsyncState.ERROR));
-  }, [currentProject, setAsyncState, nextView, setTranscription, asyncState]);
+          setAsyncState(AsyncState.DONE);
+          setTranscription(transcription);
+          return null;
+        })
+        .catch(() => setAsyncState(AsyncState.ERROR));
+    };
+
+    startProcessing();
+  }, [
+    currentProject,
+    setAsyncState,
+    nextView,
+    setTranscription,
+    asyncState,
+    dispatch,
+  ]);
 
   if (currentProject === null) {
     return null;

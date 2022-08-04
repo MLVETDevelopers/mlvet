@@ -7,15 +7,10 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import {
-  updateProjectWithMedia,
-  updateProjectWithExtractedAudio,
-} from '../../util';
+import { updateProjectWithMedia } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 import ipc from '../../ipc';
-
-const { extractAudio } = ipc;
 
 interface Props {
   prevView: () => void;
@@ -84,18 +79,10 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
       return;
     }
 
-    const audioFilePath = await extractAudio(projectWithMedia);
+    // Next view
 
-    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
-      projectWithMedia,
-      audioFilePath
-    );
-
-    if (projectWithAudioExtract === null) {
-      return;
-    }
-
-    setCurrentProject(projectWithAudioExtract);
+    // setCurrentProject(projectWithAudioExtract);
+    setCurrentProject(projectWithMedia);
 
     nextView();
   };

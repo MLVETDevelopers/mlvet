@@ -26,8 +26,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   exportProject: (project) => ipcRenderer.invoke('export-project', project),
 
-  extractThumbnail: (absolutePathToMediaFile) =>
-    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+  extractThumbnail: (absolutePathToMediaFile, project) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),

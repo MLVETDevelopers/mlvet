@@ -17,7 +17,7 @@ import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import { formatDate } from '../util';
 import exampleThumbnail from '../../../assets/example-thumbnail.png';
-import { RecentProject } from '../../sharedTypes';
+import { ProjectMetadata, RecentProject } from '../../sharedTypes';
 import ipc from '../ipc';
 
 const { openProject, deleteProject, showConfirmation } = ipc;
@@ -84,8 +84,6 @@ const RecentProjectsBlock = () => {
     }
 
     if (!recentProject.projectFilePath) {
-      // TODO(chloe): bring up project file locator, and/or offer to delete project
-      // since not found
       return;
     }
 
@@ -96,10 +94,26 @@ const RecentProjectsBlock = () => {
     );
 
     if (project === null) {
+      if (
+        await showConfirmation(
+          'Delete project?',
+          'The project could not be opened because the project file was not found. Do you want to delete the project metadata?'
+        )
+      ) {
+        dispatch(projectDeleted(recentProject.id));
+
+        await deleteProject(recentProject);
+      }
+
       return;
     }
 
-    dispatch(projectOpened(project, filePath));
+    const projectMetadata: ProjectMetadata = {
+      dateModified: recentProject.dateModified,
+      mediaSize: recentProject.mediaSize,
+    };
+
+    dispatch(projectOpened(project, filePath, projectMetadata));
     dispatch(pageChanged(ApplicationPage.PROJECT));
   };
 

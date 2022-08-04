@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 
 interface Props {
   closeModal: () => void;
@@ -53,7 +53,7 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setProjectInStore = async (project: Project) => {
+  const setProjectInStore = async (project: RuntimeProject) => {
     dispatch(projectCreated(project));
   };
 

@@ -96,7 +96,7 @@ const RecentProjectsBlock = () => {
         });
         setThumbnails(map);
       })
-      .catch();
+      .catch(() => {});
   }, [recentProjects]);
 
   const displayDate: (date: Date | null) => string = (date) =>

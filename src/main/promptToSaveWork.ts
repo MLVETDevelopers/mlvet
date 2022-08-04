@@ -8,8 +8,9 @@ import AppState from './AppState';
  */
 const promptToSaveWork: (
   mainWindow: BrowserWindow,
-  appState: AppState
-) => boolean = (mainWindow, appState) => {
+  appState: AppState,
+  closeAfter?: boolean
+) => boolean = (mainWindow, appState, closeAfter = true) => {
   if (!appState.getDocumentEdited()) {
     return true;
   }
@@ -28,7 +29,7 @@ const promptToSaveWork: (
 
   if (buttonIndex === 0) {
     // Save, and tell the app to close after it's saved
-    mainWindow.webContents.send('initiate-save-project', true);
+    mainWindow.webContents.send('initiate-save-project', closeAfter);
 
     // Don't continue the close operation right now, it will be re-initiated after the save is complete
     return false;

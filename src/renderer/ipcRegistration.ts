@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Project } from '../sharedTypes';
+import { RuntimeProject } from '../sharedTypes';
 import ipc from './ipc';
 import {
   currentProjectClosed,
@@ -16,6 +16,7 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
+import { copyText, cutText, deleteText, pasteText } from './clipboard';
 
 /**
  * Used by backend to initiate saves from front end
@@ -55,11 +56,13 @@ ipc.on('initiate-save-as-project', async () => {
     return;
 
   // Generate a deep-copy of the project, with new ID and name
-  const newProject = JSON.parse(JSON.stringify(currentProject)) as Project;
+  const newProject = JSON.parse(
+    JSON.stringify(currentProject)
+  ) as RuntimeProject;
   newProject.name = `Copy of ${currentProject.name}`;
   newProject.id = uuidv4();
 
-  // TODO(patrick): regenerate thumbnail and audio extract
+  // TODO(chloe): regenerate thumbnail and audio extract
 
   const filePath = await ipc.saveAsProject(newProject);
 
@@ -79,7 +82,7 @@ ipc.on('initiate-save-as-project', async () => {
   });
 
   store.dispatch(projectSaved(newProject, projectMetadata, filePath));
-  store.dispatch(projectOpened(newProject, filePath));
+  store.dispatch(projectOpened(newProject, filePath, projectMetadata));
 
   ipc.setFileRepresentation(filePath, false);
 });
@@ -87,10 +90,17 @@ ipc.on('initiate-save-as-project', async () => {
 /**
  * Used by backend to notify front end that a project was opened
  */
-ipc.on('project-opened', async (_event, project: Project, filePath: string) => {
-  store.dispatch(projectOpened(project, filePath));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+ipc.on(
+  'project-opened',
+  async (_event, project: RuntimeProject, filePath: string) => {
+    if (await ipc.promptSave()) {
+      const projectMetadata = await ipc.retrieveProjectMetadata(project);
+
+      store.dispatch(projectOpened(project, filePath, projectMetadata));
+      store.dispatch(pageChanged(ApplicationPage.PROJECT));
+    }
+  }
+);
 
 /**
 
@@ -103,10 +113,13 @@ ipc.on('export-progress-update', async (_event, progress: number) => {
 /**
  * Used by backend to notify frontend that export is complete
  */
-ipc.on('finish-export', async (_event, project: Project, filePath: string) => {
-  store.dispatch(finishExport(project, filePath));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+ipc.on(
+  'finish-export',
+  async (_event, project: RuntimeProject, filePath: string) => {
+    store.dispatch(finishExport(project, filePath));
+    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+  }
+);
 
 /*
  * Used by backend to initiate undo from edit menu
@@ -135,6 +148,22 @@ ipc.on('initiate-export-project', async () => {
   const filePath = await ipc.exportProject(currentProject);
 
   store.dispatch(startExport(currentProject.id, filePath));
+});
+
+ipc.on('initiate-cut-text', async () => {
+  cutText();
+});
+
+ipc.on('initiate-copy-text', async () => {
+  copyText();
+});
+
+ipc.on('initiate-paste-text', async () => {
+  pasteText();
+});
+
+ipc.on('initiate-delete-text', async () => {
+  deleteText();
 });
 
 /**

@@ -26,8 +26,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   exportProject: (project) => ipcRenderer.invoke('export-project', project),
 
-  extractThumbnail: (absolutePathToMediaFile) =>
-    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+  extractThumbnail: (absolutePathToMediaFile, project) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
@@ -53,7 +53,18 @@ contextBridge.exposeInMainWorld('electron', {
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
   closeWindow: () => ipcRenderer.invoke('close-window'),
+
+  promptSave: () => ipcRenderer.invoke('prompt-save'),
 
   returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
 

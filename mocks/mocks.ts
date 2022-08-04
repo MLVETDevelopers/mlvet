@@ -1,17 +1,16 @@
-import { Project } from '../src/sharedTypes';
+import { RuntimeProject } from '../src/sharedTypes';
 
 /* eslint-disable import/prefer-default-export */
-export const mockProject: Project = {
+export const mockProject: RuntimeProject = {
   id: 'test-id',
   schemaVersion: 123456789,
   name: 'test-name',
   projectFilePath: 'test-project-file-path',
-  exportFilePath: 'test-export-file-path',
-  audioExtractFilePath: 'test-audio-file-path',
   mediaFilePath: 'test-media-file-path',
   isEdited: false,
   transcription: {
     confidence: 123456789,
+    duration: 100,
     words: [
       {
         word: 'test-word-1',
@@ -19,12 +18,14 @@ export const mockProject: Project = {
         duration: 5,
         outputStartTime: 1,
         deleted: true,
-        key: 'test-word-key-1',
+        originalIndex: 0,
+        pasteKey: 0,
+        bufferDurationBefore: 0,
+        bufferDurationAfter: 0,
         fileName: 'test-file-name',
       },
     ],
   },
   mediaType: 'video',
   mediaFileExtension: 'mp4',
-  thumbnailFilePath: 'test-thumbnail-file-path',
 };

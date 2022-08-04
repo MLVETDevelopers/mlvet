@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Project } from '../sharedTypes';
+import { RuntimeProject } from '../sharedTypes';
 import ipc from './ipc';
 import {
   currentProjectClosed,
@@ -56,7 +56,9 @@ ipc.on('initiate-save-as-project', async () => {
     return;
 
   // Generate a deep-copy of the project, with new ID and name
-  const newProject = JSON.parse(JSON.stringify(currentProject)) as Project;
+  const newProject = JSON.parse(
+    JSON.stringify(currentProject)
+  ) as RuntimeProject;
   newProject.name = `Copy of ${currentProject.name}`;
   newProject.id = uuidv4();
 
@@ -80,7 +82,7 @@ ipc.on('initiate-save-as-project', async () => {
   });
 
   store.dispatch(projectSaved(newProject, projectMetadata, filePath));
-  store.dispatch(projectOpened(newProject, filePath));
+  store.dispatch(projectOpened(newProject, filePath, projectMetadata));
 
   ipc.setFileRepresentation(filePath, false);
 });
@@ -88,10 +90,15 @@ ipc.on('initiate-save-as-project', async () => {
 /**
  * Used by backend to notify front end that a project was opened
  */
-ipc.on('project-opened', async (_event, project: Project, filePath: string) => {
-  store.dispatch(projectOpened(project, filePath));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+ipc.on(
+  'project-opened',
+  async (_event, project: RuntimeProject, filePath: string) => {
+    const projectMetadata = await ipc.retrieveProjectMetadata(project);
+
+    store.dispatch(projectOpened(project, filePath, projectMetadata));
+    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+  }
+);
 
 /**
 
@@ -104,10 +111,13 @@ ipc.on('export-progress-update', async (_event, progress: number) => {
 /**
  * Used by backend to notify frontend that export is complete
  */
-ipc.on('finish-export', async (_event, project: Project, filePath: string) => {
-  store.dispatch(finishExport(project, filePath));
-  store.dispatch(pageChanged(ApplicationPage.PROJECT));
-});
+ipc.on(
+  'finish-export',
+  async (_event, project: RuntimeProject, filePath: string) => {
+    store.dispatch(finishExport(project, filePath));
+    store.dispatch(pageChanged(ApplicationPage.PROJECT));
+  }
+);
 
 /*
  * Used by backend to initiate undo from edit menu

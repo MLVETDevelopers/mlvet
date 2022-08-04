@@ -1,7 +1,7 @@
 import { BrowserWindow, dialog } from 'electron';
 import { writeFile } from 'fs/promises';
-import { Project } from '../../../sharedTypes';
 import { saveChangesDialog, SAVE_CANCELLED } from '../misc/saveChangesDialog';
+import { PersistedProject, RuntimeProject } from '../../../sharedTypes';
 
 export const getSaveFilePath: (
   mainWindow: BrowserWindow | null,
@@ -28,9 +28,21 @@ export const getSaveFilePath: (
 
 export const saveProjectToFile: (
   filePath: string,
-  project: Project
+  project: RuntimeProject
 ) => Promise<void> = async (filePath, project) => {
-  const projectAsString = JSON.stringify(project);
+  // Persisted versions of projects exclude things like the file name, as that
+  // is implied by the file it is being saved to!
+  const persistedProject: PersistedProject = {
+    id: project.id,
+    mediaFileExtension: project.mediaFileExtension,
+    mediaFilePath: project.mediaFilePath,
+    mediaType: project.mediaType,
+    name: project.name,
+    schemaVersion: project.schemaVersion,
+    transcription: project.transcription,
+  };
+
+  const projectAsString = JSON.stringify(persistedProject);
 
   await writeFile(filePath, projectAsString);
 };

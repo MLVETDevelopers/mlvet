@@ -1,11 +1,11 @@
 import path from 'path';
 import { IpcContext } from '../../types';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import { confirmSave } from '../helpers/saveUtils';
 
 type ReturnToHome = (
   ipcContext: IpcContext,
-  project: Project
+  project: RuntimeProject
 ) => Promise<number>;
 
 const PROJECT_ALREADY_SAVED = -1;

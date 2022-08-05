@@ -1,4 +1,3 @@
-import { useTabsList } from '@mui/base';
 import { Box, styled, Typography, Stack, Button } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { getMediaType } from '../util';

@@ -1,4 +1,5 @@
-import { IndexRange } from '../sharedTypes';
+import { IndexRange, OperatingSystems } from '../sharedTypes';
+import ipc from './ipc';
 import {
   selectionCleared,
   selectionRangeAdded,
@@ -124,14 +125,16 @@ export const expandSelectionToWord: (wordIndex: number) => void = (
 export const handleSelectWord: (
   event: React.MouseEvent<HTMLDivElement>,
   wordIndex: number
-) => void = (event, index) => {
+) => Promise<void> = async (event, index) => {
   const singleWordRange: IndexRange = {
     startIndex: index,
     endIndex: index + 1,
   };
 
-  // TODO(chloe): check ctrl key only on windows, meta key only on mac
-  const hasCmdCtrlModifier = event.metaKey || event.ctrlKey;
+  const os = await ipc.handleOsQuery();
+  const hasCmdCtrlModifier =
+    os === OperatingSystems.MACOS ? event.metaKey : event.ctrlKey;
+
   const hasShiftModifier = event.shiftKey;
 
   if (hasCmdCtrlModifier) {

@@ -24,7 +24,7 @@ export const extractFileExtension: (filePath: string) => string | null = (
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
   extension
 ) => {
-  const audioFileExtensions = ['mp3'];
+  const audioFileExtensions = ['mp3', 'mpeg'];
   const videoFileExtensions = ['mp4'];
 
   if (audioFileExtensions.includes(extension)) {

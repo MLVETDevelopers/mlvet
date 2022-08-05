@@ -57,12 +57,13 @@ const VideoController = ({
         style={{
           backgroundColor: colors.grey[600],
           fontWeight: 'regular',
-          fontSize: '28px',
+          fontSize: '24px',
           borderRadius: '5px',
           padding: '0 19px',
           marginRight: '47px',
           width: '152px',
           textAlign: 'left',
+          fontFamily: '"Roboto Mono", monospace',
         }}
       >
         {secondToTimestampUI(time)}

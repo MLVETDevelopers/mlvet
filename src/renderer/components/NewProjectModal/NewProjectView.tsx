@@ -12,6 +12,8 @@ import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 interface Props {
   closeModal: () => void;
   nextView: () => void;
+  projectName: string;
+  setProjectName: (projectName: string) => void;
 }
 
 const CustomStack = styled(Stack)({
@@ -36,8 +38,12 @@ const Container = styled(Box)({
   height: '200px',
 });
 
-const NewProjectView = ({ closeModal, nextView }: Props) => {
-  const [projectName, setProjectName] = useState<string>('');
+const NewProjectView = ({
+  closeModal,
+  nextView,
+  projectName,
+  setProjectName,
+}: Props) => {
   const [isAwaitingProjectName, setIsAwaitingProjectName] =
     useState<boolean>(true);
 

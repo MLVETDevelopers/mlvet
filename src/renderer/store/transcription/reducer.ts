@@ -1,17 +1,19 @@
 import { Reducer } from 'redux';
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges, rangesToIndices } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
+  MoveWordsPayload,
   PasteWordsPayload,
   UndoDeleteSelectionPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
 import {
   DELETE_SELECTION,
+  MOVE_WORDS,
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
@@ -99,6 +101,36 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       words: updateOutputStartTimes([...prefix, ...suffix]),
+    };
+  }
+
+  if (action.type === MOVE_WORDS) {
+    const { fromRanges, toAfterIndex } = action.payload as MoveWordsPayload;
+
+    const affectedIndices = rangesToIndices(fromRanges);
+
+    const movedWords = fromRanges.flatMap((range) =>
+      transcription.words.slice(range.startIndex, range.endIndex)
+    );
+
+    const remainingWords = transcription.words.map((word, i) => ({
+      ...word,
+      shouldRemove: affectedIndices.has(i),
+    }));
+
+    const prefix = remainingWords
+      .slice(0, toAfterIndex + 1)
+      .filter((word) => !word.shouldRemove);
+
+    const suffix = remainingWords
+      .slice(toAfterIndex + movedWords.length + 1)
+      .filter((word) => !word.shouldRemove);
+
+    // TODO(chloe): remove the 'shouldRemove' attribute after this point as it's not needed anymore
+
+    return {
+      ...transcription,
+      words: updateOutputStartTimes([...prefix, ...movedWords, ...suffix]),
     };
   }
 

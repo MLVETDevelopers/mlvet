@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Fragment, MouseEventHandler, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef } from 'react';
 import colors from '../colors';
 import { handleSelectWord } from '../selection';
 import { MousePosition } from '@react-hook/mouse-position';
@@ -27,17 +27,38 @@ interface Props {
   onMouseDown: MouseEventHandler<HTMLDivElement>;
   onMouseUp: MouseEventHandler<HTMLDivElement>;
   isBeingDragged: boolean;
-  mouseX: MousePosition['clientX'];
-  mouseY: MousePosition['clientY'];
+  mouse: MousePosition;
+  isDropBeforeActive: boolean;
+  isDropAfterActive: boolean;
+  setDropBeforeActive: () => void;
+  setDropAfterActive: () => void;
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 // TODO(chloe): move into util
-const squaredDistance: (
-  x1: number,
-  x2: number,
-  y1: number,
-  y2: number
-) => number = (x1, x2, y1, y2) => (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+/**
+ * Determines if a point is inside a rectangle,
+ * also returning true for boundary cases.
+ */
+const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x >= rect.x &&
+  point.x <= rect.x + rect.w &&
+  point.y >= rect.y &&
+  point.y <= rect.y + rect.h;
 
 const Word = ({
   index,
@@ -48,8 +69,11 @@ const Word = ({
   onMouseDown,
   onMouseUp,
   isBeingDragged,
-  mouseX,
-  mouseY,
+  mouse,
+  isDropBeforeActive,
+  isDropAfterActive,
+  setDropBeforeActive,
+  setDropAfterActive,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -59,6 +83,48 @@ const Word = ({
 
     // Prevent event from being received by the transcription block and therefore intercepted
     event.stopPropagation();
+  };
+
+  // TODO(chloe) optimise
+
+  const mouseInLeft = pointIsInsideRect(
+    { x: mouse.clientX ?? 0, y: mouse.clientY ?? 0 },
+    {
+      x: ref.current?.offsetLeft ?? 0,
+      y: ref.current?.offsetTop ?? 0,
+      w: (ref.current?.offsetWidth ?? 0) / 2,
+      h: ref.current?.offsetHeight ?? 0,
+    }
+  );
+
+  const mouseInRight = pointIsInsideRect(
+    { x: mouse.clientX ?? 0, y: mouse.clientY ?? 0 },
+    {
+      x: (ref.current?.offsetLeft ?? 0) + (ref.current?.offsetWidth ?? 0) / 2,
+      y: ref.current?.offsetTop ?? 0,
+      w: (ref.current?.offsetWidth ?? 0) / 2,
+      h: ref.current?.offsetHeight ?? 0,
+    }
+  );
+
+  useEffect(() => {
+    if (mouseInLeft && !isDropBeforeActive) {
+      setDropBeforeActive();
+    }
+    if (mouseInRight && !isDropAfterActive) {
+      setDropAfterActive();
+    }
+  }, [
+    mouseInLeft,
+    mouseInRight,
+    isDropBeforeActive,
+    isDropAfterActive,
+    setDropBeforeActive,
+    setDropAfterActive,
+  ]);
+
+  const defaultStyles: React.CSSProperties = {
+    zIndex: 0,
   };
 
   const highlightStyles: React.CSSProperties = (() => {
@@ -79,31 +145,22 @@ const Word = ({
     return {};
   })();
 
-  const dist = squaredDistance(
-    mouseX ?? 0,
-    ref.current?.offsetLeft ?? 0,
-    mouseY ?? 0,
-    ref.current?.offsetTop ?? 0
-  );
-
-  const mouseNear = dist < 1000;
-
   const dragStyles: React.CSSProperties = isBeingDragged
     ? {
         position: 'fixed',
-        left: mouseX ?? undefined,
-        top: mouseY ?? undefined,
+        left: mouse.clientX ?? undefined,
+        top: mouse.clientY ?? undefined,
+        zIndex: 100,
       }
-    : {
-      background: mouseNear ? 'green' : undefined,
-    };
+    : {};
 
   const style = {
+    ...defaultStyles,
     ...highlightStyles,
     ...dragStyles,
   };
 
-  const renderedWord = (
+  return (
     <WordInner
       ref={ref}
       onClick={onClick}
@@ -114,10 +171,6 @@ const Word = ({
       {text}
     </WordInner>
   );
-
-  // const dropMarker = <div>DROP HERE</div>;
-
-  return renderedWord;
 };
 
 export default Word;

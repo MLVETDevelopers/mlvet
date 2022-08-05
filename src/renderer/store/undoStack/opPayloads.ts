@@ -9,6 +9,11 @@ export interface PasteWordsPayload {
   clipboard: Word[];
 }
 
+export interface MoveWordsPayload {
+  fromRanges: IndexRange[];
+  toAfterIndex: number;
+}
+
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
 
 export interface UndoPasteWordsPayload {
@@ -16,6 +21,8 @@ export interface UndoPasteWordsPayload {
   clipboardLength: number;
 }
 
-export type DoPayload = DeleteSelectionPayload | PasteWordsPayload;
+export type UndoMoveWordsPayload = MoveWordsPayload;
 
-export type UndoPayload = UndoDeleteSelectionPayload | UndoPasteWordsPayload;
+export type DoPayload = DeleteSelectionPayload | PasteWordsPayload | MoveWordsPayload;
+
+export type UndoPayload = UndoDeleteSelectionPayload | UndoPasteWordsPayload | UndoMoveWordsPayload;

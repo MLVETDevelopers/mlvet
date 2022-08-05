@@ -5,6 +5,8 @@ import {
   UndoPasteWordsPayload,
   DeleteSelectionPayload,
   UndoDeleteSelectionPayload,
+  MoveWordsPayload,
+  UndoMoveWordsPayload,
 } from './opPayloads';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
@@ -14,6 +16,9 @@ export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
 
 export const PASTE_WORD = 'PASTE_WORD';
 export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
+
+export const MOVE_WORDS = 'MOVE_WORDS';
+export const UNDO_MOVE_WORDS = 'UNDO_MOVE_WORDS';
 
 export const makeDeleteSelection: (
   ranges: IndexRange[]
@@ -44,8 +49,27 @@ export const makePasteWord: (
   };
 };
 
+export const makeMoveWords: (
+  fromRanges: IndexRange[],
+  toAfterIndex: number,
+) => MoveWordsOp = (fromRanges, toAfterIndex) => {
+  return {
+    do: {
+      type: MOVE_WORDS,
+      payload: { fromRanges, toAfterIndex },
+    },
+    undo: {
+      type: UNDO_MOVE_WORDS,
+      payload: { fromRanges, toAfterIndex },
+    },
+  };
+};
+
 export type DeleteSelectionOp = Op<
   DeleteSelectionPayload,
   UndoDeleteSelectionPayload
 >;
+
 export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
+
+export type MoveWordsOp = Op<MoveWordsPayload, UndoMoveWordsPayload>;

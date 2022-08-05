@@ -192,3 +192,18 @@ export const mapInRanges: <T>(
 export const sortNumerical: (list: number[]) => void = (list) => {
   list.sort((first, second) => first - second);
 };
+
+/**
+ * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
+ */
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (ranges) => {
+  const indicesSet = new Set<number>();
+
+  ranges.forEach(({ startIndex, endIndex }) => {
+    for (let i=startIndex; i<endIndex; i += 1) {
+      indicesSet.add(i);
+    }
+  });
+
+  return indicesSet;
+}

@@ -23,6 +23,9 @@ const { extractAudio } = ipc;
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
+const processTranscription = async (project: RuntimeProject) =>
+  requestTranscription(project);
+
 const CustomStack = styled(Stack)`
   width: 100%;
 `;
@@ -52,7 +55,6 @@ interface Props {
 const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   const [asyncState, setAsyncState] = useState<AsyncState>(AsyncState.READY);
   const [mediaFileName, setMediaFileName] = useState<string | null>(null);
-  const [mediaFilePath, setMediaFilePath] = useState<string | null>(null);
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -72,7 +74,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     ) {
       return;
     }
-    setMediaFilePath(currentProject.mediaFilePath);
+    const { mediaFilePath } = currentProject;
 
     if (mediaFilePath === null) {
       return;
@@ -98,7 +100,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     const startProcessing = async () => {
       await updateProjectWithMedia(currentProject, mediaFilePath);
       await extractProjectAudio();
-      requestTranscription(currentProject)
+      await processTranscription(currentProject)
         .then((transcription) => {
           if (transcription === null) {
             return null;
@@ -119,7 +121,6 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     setTranscription,
     asyncState,
     dispatch,
-    mediaFilePath,
   ]);
 
   if (currentProject === null) {

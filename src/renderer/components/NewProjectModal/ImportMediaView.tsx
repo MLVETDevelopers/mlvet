@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import { updateProjectMediaFilePath } from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 
@@ -66,12 +65,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const projectName = currentProject.name;
 
   const handleTranscribe = async () => {
-    const projectWithMedia = await updateProjectMediaFilePath(
-      currentProject,
-      mediaFilePath
-    );
+    const projectWithMedia = {
+      ...currentProject,
+      mediaFilePath,
+    };
 
-    if (projectWithMedia == null) {
+    if (projectWithMedia.mediaFilePath == null) {
       return;
     }
     setCurrentProject(projectWithMedia);

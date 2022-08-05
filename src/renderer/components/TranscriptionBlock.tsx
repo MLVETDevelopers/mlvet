@@ -7,6 +7,7 @@ import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
+import DragCapture, { RenderTranscription } from './DragCapture';
 
 const TranscriptionBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -52,25 +53,37 @@ const TranscriptionBlock = ({
 
   const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
 
-  const renderedTranscription = transcription.words.map((word, index) =>
-    word.deleted ? null : (
-      <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
-        {index > 0 && space(`space-${word.originalIndex}-${word.pasteKey}`)}
-        <Word
-          key={`word-${word.originalIndex}-${word.pasteKey}`}
-          seekToWord={() => seekToWord(index)}
-          isPlaying={index === nowPlayingWordIndex}
-          isSelected={selectionSet.has(index)}
-          text={word.word}
-          index={index}
-        />
-      </Fragment>
-    )
-  );
+  const renderTranscription: RenderTranscription = (
+    onWordMouseDown,
+    onWordMouseUp,
+    isWordBeingDragged,
+    mouseX,
+    mouseY,
+  ) =>
+    transcription.words.map((word, index) =>
+      word.deleted ? null : (
+        <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+          {index > 0 && space(`space-${word.originalIndex}-${word.pasteKey}`)}
+          <Word
+            key={`word-${word.originalIndex}-${word.pasteKey}`}
+            seekToWord={() => seekToWord(index)}
+            isPlaying={index === nowPlayingWordIndex}
+            isSelected={selectionSet.has(index)}
+            text={word.word}
+            index={index}
+            onMouseDown={onWordMouseDown(index)}
+            onMouseUp={onWordMouseUp(index)}
+            isBeingDragged={isWordBeingDragged(index)}
+            mouseX={mouseX}
+            mouseY={mouseY}
+          />
+        </Fragment>
+      )
+    );
 
   return (
     <TranscriptionBox onClick={clearSelection}>
-      {renderedTranscription}
+      <DragCapture renderTranscription={renderTranscription} />
     </TranscriptionBox>
   );
 };

@@ -133,7 +133,7 @@ const SelectMediaBlock = ({
             sx={{ height: '150px' }}
           >
             <Typography variant="p-300">Drag and drop</Typography>
-            <Typography variant="p-300">Mp4 or Mp3 file here</Typography>
+            <Typography variant="p-300">MP4 or MP3 file here</Typography>
             <Typography variant="p-300">or</Typography>
             <Button color="primary" onClick={selectMedia}>
               Browse

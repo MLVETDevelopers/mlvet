@@ -3,13 +3,12 @@ import { Transcription, Cut } from '../sharedTypes';
 import { bufferedWordDuration, roundToMs } from '../sharedUtils';
 
 const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
-  const words = updateOutputStartTimes(
-    transcript.words.filter((word) => !word.deleted)
-  );
-
-  if (words.length === 0) {
+  const wordsNotYetUpdated = transcript.words.filter((word) => !word.deleted);
+  if (wordsNotYetUpdated.length === 0) {
     return [];
   }
+
+  const words = updateOutputStartTimes(wordsNotYetUpdated);
 
   let currentStartWord = words[0];
   let currentDuration = bufferedWordDuration(currentStartWord);

@@ -75,9 +75,9 @@ const TranscriptionBlock = ({
     mouse,
     dropBeforeIndex,
     setDropBeforeIndex
-  ) =>
-    transcription.words
-      .map((word, index) =>
+  ) => (
+    <TranscriptionBox onClick={clearSelection}>
+      {transcription.words.map((word, index) =>
         word.deleted ? null : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
             {space(
@@ -101,21 +101,18 @@ const TranscriptionBlock = ({
               setDropBeforeActive={() => setDropBeforeIndex(index)}
               setDropAfterActive={() => setDropBeforeIndex(index + 1)}
             />
+            {index === transcription.words.length - 1 &&
+              space(
+                `space-end`,
+                isDragActive && dropBeforeIndex === transcription.words.length
+              )}
           </Fragment>
         )
-      )
-      .concat(
-        space(
-          `space-end`,
-          isDragActive && dropBeforeIndex === transcription.words.length
-        )
-      );
-
-  return (
-    <TranscriptionBox onClick={clearSelection}>
-      <DragManager renderTranscription={renderTranscription} />
+      )}
     </TranscriptionBox>
   );
+
+  return <DragManager renderTranscription={renderTranscription} />;
 };
 
 export default TranscriptionBlock;

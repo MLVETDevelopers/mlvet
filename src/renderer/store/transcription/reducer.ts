@@ -9,6 +9,7 @@ import {
   MoveWordsPayload,
   PasteWordsPayload,
   UndoDeleteSelectionPayload,
+  UndoMoveWordsPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
 import {
@@ -16,6 +17,7 @@ import {
   MOVE_WORDS,
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
+  UNDO_MOVE_WORDS,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
 
@@ -107,45 +109,64 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if (action.type === MOVE_WORDS) {
     const { fromRanges, toAfterIndex } = action.payload as MoveWordsPayload;
 
-    // List of indices that were moved, which need to be removed
-    const affectedIndices = rangesToIndices(fromRanges);
-
     // List of words that are being moved
     const movedWords = fromRanges.flatMap((range) =>
       transcription.words.slice(range.startIndex, range.endIndex)
     );
 
-    // All words in the transcription excluding the ones that were moved.
-    // Rather than explicitly filtering which affects the indexes, just add a marker for now
+    // List of indices that were moved, which need to be removed
+    const affectedIndices = rangesToIndices(fromRanges);
+
+    // Mark words that were moved as deleted
     const remainingWords = transcription.words.map((word, i) => ({
       ...word,
-      shouldRemove: affectedIndices.has(i),
+      deleted: affectedIndices.has(i),
     }));
 
-    // List of words up to the point where the moved words are being placed,
-    // now explicitly filtering out the moved words
-    const prefix = remainingWords
-      .slice(0, toAfterIndex + 1)
-      .filter((word) => !word.shouldRemove);
+    // List of words up to the point where the moved words are being placed
+    const prefix = remainingWords.slice(0, toAfterIndex + 1);
 
-    // List of words after the point where the moved words are being placed,
-    // now explicitly filtering out the moved words
-    const suffix = remainingWords
-      .slice(toAfterIndex + movedWords.length + 1)
-      .filter((word) => !word.shouldRemove);
+    // List of words after the point where the moved words are being placed
+    const suffix = remainingWords.slice(toAfterIndex + movedWords.length + 1);
 
     return {
       ...transcription,
       words: updateOutputStartTimes(
         [...prefix, ...movedWords, ...suffix].map((word) => ({
           ...word,
-          shouldRemove: undefined, // remove this as it isn't a standard attribute on Word objects
         }))
       ),
     };
   }
 
-  // TODO: UNDO_MOVE_WORDS action
+  if (action.type === UNDO_MOVE_WORDS) {
+    const { fromRanges, toAfterIndex } = action.payload as UndoMoveWordsPayload;
+
+    // List of indices that were moved, which need to be restored
+    const affectedIndices = rangesToIndices(fromRanges);
+
+    // All words in the transcription excluding the ones that were moved.
+    // Rather than explicitly filtering which affects the indexes, just add a marker for now
+    const remainingWords = transcription.words.map((word, i) => ({
+      ...word,
+      deleted: affectedIndices.has(i) ? false : word.deleted,
+    }));
+
+    const prefix = remainingWords.slice(0, toAfterIndex + 1);
+
+    const suffix = remainingWords.slice(
+      toAfterIndex + affectedIndices.size + 1
+    );
+
+    return {
+      ...transcription,
+      words: updateOutputStartTimes(
+        [...prefix, ...suffix].map((word) => ({
+          ...word,
+        }))
+      ),
+    };
+  }
 
   return transcription;
 };

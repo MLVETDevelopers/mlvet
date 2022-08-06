@@ -27,7 +27,7 @@ export type RenderTranscription = (
   mouse: MousePosition,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>
-) => (JSX.Element | null)[];
+) => JSX.Element;
 
 interface Props {
   renderTranscription: RenderTranscription;

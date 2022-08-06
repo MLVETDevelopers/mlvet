@@ -72,6 +72,7 @@ const TranscriptionBlock = ({
     dragState,
     isWordBeingDragged,
     mouse,
+    mouseThrottled,
     dropBeforeIndex,
     setDropBeforeIndex
   ) => (
@@ -93,7 +94,7 @@ const TranscriptionBlock = ({
               onMouseDown={onWordMouseDown(index)}
               dragState={dragState}
               isBeingDragged={isWordBeingDragged(index)}
-              mouse={mouse}
+              mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
               isDropBeforeActive={dropBeforeIndex === index}
               isDropAfterActive={dropBeforeIndex === index + 1}
               setDropBeforeIndex={setDropBeforeIndex}

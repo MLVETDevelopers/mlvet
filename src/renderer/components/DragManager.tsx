@@ -5,6 +5,7 @@ import {
   MouseEventHandler,
   RefObject,
   SetStateAction,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -12,6 +13,7 @@ import {
 import useMouse, { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch, useSelector } from 'react-redux';
 import { Point } from 'electron';
+import { useThrottle } from '@react-hook/throttle';
 import { dispatchOp } from '../store/undoStack/opHelpers';
 import { makeMoveWords } from '../store/undoStack/ops';
 import {
@@ -32,6 +34,7 @@ export type RenderTranscription = (
   dragState: DragState,
   isWordBeingDragged: CurriedByWordIndex<boolean>,
   mouse: MousePosition,
+  mouseThrottled: MousePosition,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>
 ) => JSX.Element;
@@ -64,6 +67,12 @@ const DragManager = ({ seekToWord, renderTranscription }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const mouse = useMouse(ref);
 
+  const [mouseThrottled, setMouseThrottled] = useThrottle(mouse);
+
+  useEffect(() => {
+    setMouseThrottled(mouse);
+  }, [mouse, setMouseThrottled]);
+
   // Handles mouse-up events on a particular word
   const onWordMouseDown: WordMouseHandler = useMemo(
     () => (wordIndex) => (wordRef) => (event) => {
@@ -95,8 +104,6 @@ const DragManager = ({ seekToWord, renderTranscription }: Props) => {
     },
     [dragState]
   );
-
-  console.log('drag manager reload');
 
   // Handles mouse-up events anywhere in the transcription box
   const onMouseUp: MouseEventHandler<HTMLDivElement> = useMemo(
@@ -137,6 +144,7 @@ const DragManager = ({ seekToWord, renderTranscription }: Props) => {
         dragState,
         isWordBeingDragged,
         mouse,
+        mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex
       )}

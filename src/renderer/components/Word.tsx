@@ -168,8 +168,6 @@ const Word = ({
     [dragState]
   );
 
-  console.log('word state reload');
-
   return (
     <WordInner
       ref={ref}

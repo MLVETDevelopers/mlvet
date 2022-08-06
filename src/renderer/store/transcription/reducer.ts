@@ -1,7 +1,13 @@
 import { Reducer } from 'redux';
 import { mapInRanges } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
-import { TRANSCRIPTION_CREATED } from './actions';
+import {
+  TRANSCRIPTION_CREATED,
+  DELETE_SELECTION,
+  PASTE_WORD,
+  UNDO_DELETE_SELECTION,
+  UNDO_PASTE_WORD,
+} from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
@@ -10,12 +16,6 @@ import {
   UndoDeleteSelectionPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
-import {
-  DELETE_SELECTION,
-  PASTE_WORD,
-  UNDO_DELETE_SELECTION,
-  UNDO_PASTE_WORD,
-} from '../undoStack/ops';
 
 /**
  *  Nested reducer for handling transcriptions

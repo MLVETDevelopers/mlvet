@@ -234,3 +234,17 @@ export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
   point.x < rect.x + rect.w &&
   point.y > rect.y &&
   point.y < rect.y + rect.h;
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
+/**
+ * Helper for making IndexRanges with a size of one, e.g. a single word
+ */
+export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
+  startIndex: index,
+  endIndex: index + 1,
+});

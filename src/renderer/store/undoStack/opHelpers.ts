@@ -49,9 +49,7 @@ export const dispatchUndo: () => void = () => {
   const lastAction = stack[index - 1];
 
   // Dispatch the undo operations
-  const undoInOrder = [...lastAction.undo];
-  undoInOrder.reverse(); // undo operations are in reverse order, so reverse them back
-  undoInOrder.forEach(dispatch);
+  lastAction.undo.forEach(dispatch);
 
   // Let the undo stack know we just did an undo so it can decrement its index
   dispatch(undoStackPopped());

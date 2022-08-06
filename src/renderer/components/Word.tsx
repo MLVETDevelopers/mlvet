@@ -35,12 +35,8 @@ interface Props {
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
   ) => MouseEventHandler<HTMLDivElement>;
-  onMouseUp: (
-    wordRef: RefObject<HTMLDivElement>
-  ) => MouseEventHandler<HTMLDivElement>;
-  dragState: DragState;
+  dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isBeingDragged: boolean; // whether THIS word is currently being dragged
-  isDragActive: boolean; // whether ANY word is currently being dragged
   mouse: MousePosition;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
@@ -54,10 +50,8 @@ const Word = ({
   isSelected,
   text,
   onMouseDown,
-  onMouseUp,
   dragState,
   isBeingDragged,
-  isDragActive,
   mouse,
   isDropBeforeActive,
   isDropAfterActive,
@@ -169,14 +163,18 @@ const Word = ({
     ...dragStyles,
   };
 
-  const WordInner = useMemo(() => makeWordInner(isDragActive), [isDragActive]);
+  const WordInner = useMemo(
+    () => makeWordInner(dragState !== null),
+    [dragState]
+  );
+
+  console.log('word state reload');
 
   return (
     <WordInner
       ref={ref}
       onClick={onClick}
       onMouseDown={onMouseDown(ref)}
-      onMouseUp={onMouseUp(ref)}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >
       {text}

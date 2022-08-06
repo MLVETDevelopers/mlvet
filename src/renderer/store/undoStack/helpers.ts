@@ -5,8 +5,7 @@ import { Action } from '../action';
  * An Op is a representation of an action that can be both done and undone.
  * These are passed around the undo stack in the store to allow for undoing and redoing actions.
  * The list of 'do' actions is represented in the order the actions are done.
- * The list of 'undo' actions is represented as a matching list of operations
- * to undo each of the 'do' actions - that is, they are undone in reverse order.
+ * The list of 'undo' actions is represented in the order the actions are undone.
  */
 export interface Op<T extends DoPayload, U extends UndoPayload> {
   do: Action<T>[];

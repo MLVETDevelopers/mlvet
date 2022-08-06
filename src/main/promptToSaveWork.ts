@@ -1,7 +1,10 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 import AppState from './AppState';
-import { saveChangesDialog } from './handlers/misc/saveChangesDialog';
+import {
+  saveChangesDialog,
+  SaveDialogSelections,
+} from './handlers/file/saveChangesDialog';
 
 /**
  * Prompts the user to save their work when they close the app
@@ -19,7 +22,7 @@ const promptToSaveWork: (
 
   const buttonIndex = saveChangesDialog(mainWindow, fileName);
 
-  if (buttonIndex === 0) {
+  if (buttonIndex === SaveDialogSelections.SAVE_SELECTED) {
     // Save, and tell the app to close after it's saved
     mainWindow.webContents.send('initiate-save-project', true);
 

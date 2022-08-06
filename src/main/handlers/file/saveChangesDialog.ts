@@ -3,11 +3,13 @@ import { BrowserWindow, dialog } from 'electron';
 type SaveChangesDialog = (
   mainWindow: BrowserWindow,
   projectFileName?: string
-) => number;
+) => SaveDialogSelections;
 
-export const SAVE_SELECTED = 0;
-export const DONT_SAVE_SELECTED = 1;
-export const SAVE_CANCELLED = 2;
+export enum SaveDialogSelections {
+  SAVE_SELECTED = 0,
+  DONT_SAVE_SELECTED = 1,
+  SAVE_CANCELLED = 2,
+}
 
 export const saveChangesDialog: SaveChangesDialog = (
   mainWindow,

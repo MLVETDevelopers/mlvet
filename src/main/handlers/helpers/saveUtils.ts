@@ -1,6 +1,9 @@
 import { BrowserWindow, dialog } from 'electron';
 import { writeFile } from 'fs/promises';
-import { saveChangesDialog, SAVE_CANCELLED } from '../misc/saveChangesDialog';
+import {
+  saveChangesDialog,
+  SaveDialogSelections,
+} from '../file/saveChangesDialog';
 import { PersistedProject, RuntimeProject } from '../../../sharedTypes';
 
 export const getSaveFilePath: (
@@ -61,8 +64,8 @@ export const confirmSave: (
   );
 
   // if cancel button is selected
-  if (confirmSaveDialogResponse === SAVE_CANCELLED) {
-    throw new Error('Dialog cancelled');
+  if (confirmSaveDialogResponse === SaveDialogSelections.SAVE_CANCELLED) {
+    console.log('Dialog cancelled');
   }
 
   return confirmSaveDialogResponse;

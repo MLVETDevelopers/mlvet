@@ -47,6 +47,8 @@ declare global {
         project: RuntimeProject
       ) => Promise<string>;
 
+      loadThumbnail: (projectId: string) => Promise<string>;
+
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<Transcription | null>;
@@ -74,6 +76,8 @@ declare global {
       ) => Promise<void>;
 
       closeWindow: () => void;
+
+      promptSave: (_?: void) => Promise<boolean>;
 
       returnToHome: (project: RuntimeProject) => Promise<number>;
 

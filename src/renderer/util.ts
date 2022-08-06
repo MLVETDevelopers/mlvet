@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CURRENT_SCHEMA_VERSION } from '../constants';
 import {
   AudioFileExtension,
-  Project,
+  RuntimeProject,
+  MapCallback,
   VideoFileExtension,
 } from '../sharedTypes';
 import ipc from './ipc';
@@ -39,7 +40,7 @@ export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
 export const makeProject: (
   projectName: string,
   mediaFilePath: string | null
-) => Promise<Project | null> = async (projectName, mediaFilePath) => {
+) => Promise<RuntimeProject | null> = async (projectName, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
@@ -54,12 +55,7 @@ export const makeProject: (
     return null;
   }
 
-  const thumbnailPath = await extractThumbnail(mediaFilePath);
-  if (thumbnailPath === null) {
-    return null;
-  }
-
-  const project: Project = {
+  const project: RuntimeProject = {
     id: uuidv4(),
     name: projectName,
     mediaType,
@@ -69,31 +65,30 @@ export const makeProject: (
     mediaFilePath,
     schemaVersion: CURRENT_SCHEMA_VERSION,
     transcription: null,
-    thumbnailFilePath: thumbnailPath,
     projectFilePath: null,
-    exportFilePath: null,
-    audioExtractFilePath: null,
     isEdited: false,
   };
+
+  const thumbnailPath = await extractThumbnail(mediaFilePath, project);
+  if (thumbnailPath === null) {
+    return null;
+  }
 
   return project;
 };
 
 export const makeProjectWithoutMedia: (
   projectName: string
-) => Promise<Project | null> = async (projectName) => {
-  const project: Project = {
+) => Promise<RuntimeProject | null> = async (projectName) => {
+  const project: RuntimeProject = {
     id: uuidv4(),
     name: projectName,
     schemaVersion: 0,
     projectFilePath: null,
-    exportFilePath: null,
     mediaFilePath: null,
     transcription: null,
-    mediaType: 'audio',
-    mediaFileExtension: 'mp3',
-    thumbnailFilePath: null,
-    audioExtractFilePath: null,
+    mediaType: 'video',
+    mediaFileExtension: 'mp4',
     isEdited: false,
   };
 
@@ -101,9 +96,9 @@ export const makeProjectWithoutMedia: (
 };
 
 export const updateProjectWithMedia: (
-  currentProject: Project,
+  currentProject: RuntimeProject,
   mediaFilePath: string | null
-) => Promise<Project | null> = async (currentProject, mediaFilePath) => {
+) => Promise<RuntimeProject | null> = async (currentProject, mediaFilePath) => {
   if (mediaFilePath === null) {
     return null;
   }
@@ -118,7 +113,7 @@ export const updateProjectWithMedia: (
     return null;
   }
 
-  const thumbnailPath = await extractThumbnail(mediaFilePath);
+  const thumbnailPath = await extractThumbnail(mediaFilePath, currentProject);
   if (thumbnailPath === null) {
     return null;
   }
@@ -130,24 +125,20 @@ export const updateProjectWithMedia: (
   currentProject.mediaFilePath = mediaFilePath;
   currentProject.schemaVersion = CURRENT_SCHEMA_VERSION;
   currentProject.transcription = null;
-  currentProject.thumbnailFilePath = thumbnailPath;
-  currentProject.audioExtractFilePath = null;
 
   return currentProject;
 };
 
 export const updateProjectWithExtractedAudio: (
-  currentProject: Project,
+  currentProject: RuntimeProject,
   extractedAudioFilePath: string | null
-) => Promise<Project | null> = async (
+) => Promise<RuntimeProject | null> = async (
   currentProject,
   extractedAudioFilePath
 ) => {
   if (extractedAudioFilePath === null) {
     return null;
   }
-
-  currentProject.audioExtractFilePath = extractedAudioFilePath;
 
   return currentProject;
 };
@@ -168,3 +159,20 @@ export const removeExtension: (fileName: string) => string = (fileName) => {
   const split = fileName.split('.');
   return split.slice(0, split.length - 1).join('.');
 };
+
+/**
+ * Maps the values of a list using a given map function,
+ * but only for those values within a range of indices.
+ * Values outside of the given indices will be unaltered.
+ * @returns the mapped list
+ */
+export const mapInRange: <T>(
+  list: T[],
+  predicate: MapCallback<T, T>,
+  startIndex: number,
+  endIndex: number
+) => T[] = (list, mapCallback, startIndex, endIndex) => [
+  ...list.slice(0, startIndex),
+  ...list.slice(startIndex, endIndex).map(mapCallback),
+  ...list.slice(endIndex),
+];

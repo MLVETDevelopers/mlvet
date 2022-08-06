@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
+import { Fragment } from 'react';
 import { Transcription } from 'sharedTypes';
 import colors from '../colors';
 
@@ -39,6 +40,29 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const space: (key: string) => JSX.Element = (key) => <span key={key}> </span>;
+
+  const renderedTranscription = transcription.words.map((word, index) =>
+    word.deleted ? null : (
+      <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+        {index > 0 && space(`space-${word.originalIndex}-${word.pasteKey}`)}
+        <Word
+          key={`word-${word.originalIndex}-${word.pasteKey}`}
+          data-index={index}
+          data-type="word"
+          onClick={() => onWordClick(index)}
+          style={
+            index === nowPlayingWordIndex
+              ? { background: `${colors.yellow[500]}` }
+              : {}
+          }
+        >
+          {word.word}
+        </Word>
+      </Fragment>
+    )
+  );
+
   return (
     <TranscriptionBox>
       <p
@@ -46,25 +70,7 @@ const TranscriptionBlock = ({
           margin: 0,
         }}
       >
-        {transcription.words.map((word, index) =>
-          word.deleted ? null : (
-            <Word
-              key={word.key.toString()}
-              data-index={index}
-              data-type="word"
-              onClick={() => {
-                onWordClick(index);
-              }}
-              style={
-                index === nowPlayingWordIndex
-                  ? { background: `${colors.yellow[500]}80` }
-                  : {}
-              }
-            >
-              {word.word}
-            </Word>
-          )
-        )}
+        {renderedTranscription}
       </p>
     </TranscriptionBox>
   );

@@ -9,6 +9,7 @@ import VideoPreviewController, {
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
+import { bufferedWordDuration } from '../../sharedUtils';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -40,23 +41,31 @@ const ProjectPage = () => {
 
   // TODO: Look into optimisations
   useEffect(() => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      const newPlayingWordIndex = currentProject.transcription.words.findIndex(
-        (word) =>
-          time >= word.outputStartTime &&
-          time <= word.outputStartTime + word.duration &&
-          !word.deleted
-      );
-      if (newPlayingWordIndex !== nowPlayingWordIndex)
-        setNowPlayingWordIndex(newPlayingWordIndex);
+    if (currentProject === null || currentProject?.transcription === null) {
+      return;
+    }
+
+    const newPlayingWordIndex = currentProject.transcription.words.findIndex(
+      (word) =>
+        time >= word.outputStartTime &&
+        time < word.outputStartTime + bufferedWordDuration(word) &&
+        !word.deleted
+    );
+
+    if (newPlayingWordIndex !== nowPlayingWordIndex) {
+      setNowPlayingWordIndex(newPlayingWordIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);
 
   const onWordClick: (wordIndex: number) => void = (wordIndex) => {
     if (currentProject !== null && currentProject?.transcription !== null) {
+      // Fixes some minor floating point errors that cause the previous word to be selected
+      // instead of the current one
+      const epsilon = 0.01;
+
       const newTime =
-        currentProject.transcription.words[wordIndex].outputStartTime;
+        currentProject.transcription.words[wordIndex].outputStartTime + epsilon;
       setPlaybackTime(newTime);
     }
   };

@@ -1,10 +1,11 @@
 import { IpcContext } from '../../types';
-import { Project } from '../../../sharedTypes';
-import { getExportFilePath, exportProjectToFile } from '../helpers/exportUtils';
+import { RuntimeProject } from '../../../sharedTypes';
+import { getExportFilePath } from '../helpers/exportUtils';
+import { exportEDL } from '../../export/export';
 
 type ExportProject = (
   ipcContext: IpcContext,
-  project: Project
+  project: RuntimeProject
 ) => Promise<string>;
 
 const exportProject: ExportProject = async (ipcContext, project) => {
@@ -12,7 +13,7 @@ const exportProject: ExportProject = async (ipcContext, project) => {
 
   const filePath = await getExportFilePath(mainWindow, project);
 
-  await exportProjectToFile(filePath, mainWindow, project);
+  exportEDL(filePath, mainWindow, project);
 
   return filePath;
 };

@@ -6,13 +6,14 @@ import colors from '../colors';
 
 interface Props {
   fileName: string | null;
+  removeMediaFromImport: () => void;
 }
 
 const CustomBox = styled(Box)({
   width: '100%',
 });
 
-const MediaDisplayOnImport = ({ fileName }: Props) => {
+const MediaDisplayOnImport = ({ fileName, removeMediaFromImport }: Props) => {
   if (fileName === null) {
     return null;
   }
@@ -34,7 +35,7 @@ const MediaDisplayOnImport = ({ fileName }: Props) => {
         <IconButton
           sx={{ color: colors.yellow[500], fontSize: 24, margin: '5px' }}
         >
-          <DeleteIcon />
+          <DeleteIcon onClick={removeMediaFromImport} />
         </IconButton>
       </Stack>
     </CustomBox>

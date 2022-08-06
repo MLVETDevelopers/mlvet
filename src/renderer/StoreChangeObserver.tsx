@@ -48,7 +48,7 @@ export default function StoreChangeObserver() {
 
   // Update file menu item enablement (save, save as) when projects are opened and closed
   useEffect(() => {
-    if (currentProject === null) {
+    if (currentProject === null || currentProject.transcription === null) {
       // Can't save or save as when there is no project open
       ipc.setSaveEnabled(false, false);
 

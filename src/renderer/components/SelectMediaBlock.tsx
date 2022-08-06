@@ -47,9 +47,12 @@ const SelectMediaBlock = ({
 }: Props) => {
   const selectMedia: () => Promise<void> = async () => {
     const selectedMedia = await ipc.requestMediaDialog();
-    if (selectMedia !== null) {
-      setIsAwaitingMedia(false);
+
+    if (selectedMedia === null) {
+      return;
     }
+
+    setIsAwaitingMedia(false);
 
     setMediaFilePath(selectedMedia);
 

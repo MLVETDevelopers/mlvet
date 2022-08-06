@@ -6,7 +6,7 @@ const mockIpc = {
   setSaveEnabled: async () => null,
   setFileRepresentation: () => null,
   openProject: async () => null,
-  setClipboardEnabled: async () => null, // TODO: doesn't actually exist yet
+  setClipboardEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

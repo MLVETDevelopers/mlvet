@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import {
   updateProjectWithMedia,
   updateProjectWithExtractedAudio,
@@ -45,6 +45,13 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  // Reset the import - for when delete button is pressed on media
+  const removeMediaFromImport: () => void = () => {
+    setIsAwaitingMedia(true);
+    setMediaFilePath(null);
+    setMediaFileName(null);
+  };
+
   const dispatch = useDispatch();
 
   if (currentProject === null) {
@@ -53,7 +60,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const projectName = currentProject.name;
 
-  const setCurrentProject = (project: Project) =>
+  const setCurrentProject = (project: RuntimeProject) =>
     dispatch(projectCreated(project));
 
   const handleTranscribe = async () => {
@@ -138,7 +145,10 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
         justifyContent="flex-start"
         sx={{ height: '42.5%', overflowY: 'auto' }}
       >
-        <MediaDisplayOnImport fileName={mediaFileName} />
+        <MediaDisplayOnImport
+          fileName={mediaFileName}
+          removeMediaFromImport={removeMediaFromImport}
+        />
       </CustomColumnStack>
       <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
         {cancelButton}

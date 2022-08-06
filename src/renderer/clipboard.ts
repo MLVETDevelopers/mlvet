@@ -1,3 +1,4 @@
+import { Word } from 'sharedTypes';
 import { clipboardUpdated } from './store/clipboard/actions';
 import store from './store/store';
 import { dispatchOp } from './store/undoStack/opHelpers';
@@ -13,15 +14,11 @@ const deleteWord = (firstWordIndex: number, lastWordIndex: number) => {
   }
 };
 
-const pasteWord = (
-  toWordIndex: number,
-  firstWordIndex: number,
-  lastWordIndex: number
-) => {
+const pasteWord = (toWordIndex: number, clipboard: Word[]) => {
   const { currentProject } = store.getState();
 
   if (currentProject && currentProject.transcription) {
-    dispatchOp(makePasteWord(toWordIndex, firstWordIndex, lastWordIndex));
+    dispatchOp(makePasteWord(toWordIndex, clipboard));
   }
 };
 
@@ -37,6 +34,9 @@ const getIndexSelectedWords = () => {
     highlightedWords?.anchorNode?.parentElement?.dataset.type === 'word' &&
     highlightedWords?.focusNode?.parentElement?.dataset.type === 'word'
   ) {
+    // TODO(chloe): the idea of counting the number of DOM elements to
+    // find the index is really hacky,
+    // we need to do better than this. No obvious ideas for now
     const anchor = Number(
       highlightedWords?.anchorNode?.parentElement?.dataset.index
     );
@@ -45,17 +45,26 @@ const getIndexSelectedWords = () => {
     );
 
     const start = Math.min(anchor, focus);
-    const end = Math.max(anchor, focus);
+    const end = Math.max(anchor, focus) + 1; // exclusive end
     return [start, end];
   }
   return [null, null]; // Linter says I have to return a value here. Could return just null and check outside the function
 };
 
 export const copyText = () => {
+  const { currentProject } = store.getState();
+  if (currentProject === null) {
+    return;
+  }
+
+  const { transcription } = currentProject;
+  if (transcription === null) {
+    return;
+  }
+
   const [startIndex, endIndex] = getIndexSelectedWords();
   if (startIndex !== null && endIndex !== null) {
-    dispatch(clipboardUpdated({ startIndex, endIndex }));
-    console.log(`Updated clipboard. Start: ${startIndex} End: ${endIndex}`);
+    dispatch(clipboardUpdated(transcription.words.slice(startIndex, endIndex)));
   }
 };
 
@@ -67,7 +76,6 @@ export const deleteText = () => {
 };
 
 export const cutText = () => {
-  // TODO(chloe): this two-step process kind of breaks the undo stack
   copyText();
   deleteText();
 };
@@ -76,21 +84,8 @@ export const pasteText = () => {
   const { clipboard } = store.getState();
 
   const [start, end] = getIndexSelectedWords();
+
   if (start !== null && end !== null) {
-    pasteWord(start, clipboard.startIndex, clipboard.endIndex);
-    // Have to update the clipboard indices because they've moved if a word
-    // is placed before them
-    if (start < clipboard.startIndex) {
-      const pasteLength = clipboard.endIndex - clipboard.startIndex + 1;
-      dispatch(
-        clipboardUpdated({
-          startIndex: clipboard.startIndex + pasteLength,
-          endIndex: clipboard.endIndex + pasteLength,
-        })
-      );
-      console.log(
-        `Updated clipboard. Start: ${clipboard.startIndex} End: ${clipboard.endIndex}`
-      );
-    }
+    pasteWord(start, clipboard);
   }
 };

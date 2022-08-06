@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { BrowserWindow, dialog } from 'electron';
-import { Project } from '../../../sharedTypes';
+import { PersistedProject, RuntimeProject } from '../../../sharedTypes';
 import { CURRENT_SCHEMA_VERSION } from '../../../constants';
 import { IpcContext } from '../../types';
 
@@ -27,20 +27,24 @@ const getOpenFilePath: (
   return filePath;
 };
 
-const openProjectFromFile: (filePath: string) => Promise<Project> = async (
-  filePath
-) => {
+const openProjectFromFile: (
+  filePath: string
+) => Promise<RuntimeProject> = async (filePath) => {
   const projectAsBuffer = await readFile(filePath);
 
   try {
     const projectAsString = projectAsBuffer.toString();
-    const project = JSON.parse(projectAsString);
+    const project: PersistedProject = JSON.parse(projectAsString);
 
     if (project.schemaVersion !== CURRENT_SCHEMA_VERSION) {
       throw new Error('Schema version does not match current version');
     }
 
-    return project;
+    return {
+      ...project,
+      isEdited: false,
+      projectFilePath: filePath,
+    };
   } catch (err) {
     throw new Error(`Error reading project file: ${err}`);
   }
@@ -49,7 +53,7 @@ const openProjectFromFile: (filePath: string) => Promise<Project> = async (
 type OpenProject = (
   ipcContext: IpcContext,
   filePath: string | null
-) => Promise<{ project: Project | null; filePath: string }>;
+) => Promise<{ project: RuntimeProject | null; filePath: string }>;
 
 const openProject: OpenProject = async (ipcContext, filePath) => {
   const { mainWindow } = ipcContext;

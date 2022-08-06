@@ -16,6 +16,7 @@ import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
+import loadThumbnail from './handlers/media/thumbnailLoad';
 import requestTranscription from './handlers/media/transcriptionHandler';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
@@ -25,6 +26,7 @@ import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
 import setClipboardEnabled from './handlers/setClipboardEnabled';
 import closeWindow from './handlers/window/closeWindow';
+import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
 // END GENERATED CODE PART 1
@@ -71,8 +73,14 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     exportProject(ipcContext, project)
   );
 
-  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
-    extractThumbnail(absolutePathToMediaFile)
+  ipcMain.handle(
+    'extract-thumbnail',
+    async (_event, absolutePathToMediaFile, project) =>
+      extractThumbnail(absolutePathToMediaFile, project)
+  );
+
+  ipcMain.handle('load-thumbnail', async (_event, projectId) =>
+    loadThumbnail(projectId)
   );
 
   ipcMain.handle('request-transcription', async (_event, project) =>
@@ -120,6 +128,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));
+
+  ipcMain.handle('prompt-save', async () => promptSave(ipcContext));
 
   ipcMain.handle('return-to-home', async (_event, project) =>
     returnToHome(ipcContext, project)

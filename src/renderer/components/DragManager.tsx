@@ -63,6 +63,7 @@ const DragManager = ({ renderTranscription }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const mouse = useMouse(ref);
 
+  // Default throttle is 30 fps, seems reasonable for now
   const [mouseThrottled, setMouseThrottled] = useThrottle(mouse);
 
   useEffect(() => {

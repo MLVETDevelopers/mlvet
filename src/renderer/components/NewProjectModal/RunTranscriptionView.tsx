@@ -55,6 +55,7 @@ interface Props {
 const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   const [asyncState, setAsyncState] = useState<AsyncState>(AsyncState.READY);
   const [mediaFileName, setMediaFileName] = useState<string | null>(null);
+
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -100,17 +101,17 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     const startProcessing = async () => {
       await updateProjectWithMedia(currentProject, mediaFilePath);
       await extractProjectAudio();
-      await processTranscription(currentProject)
-        .then((transcription) => {
-          if (transcription === null) {
-            return null;
-          }
-
-          setAsyncState(AsyncState.DONE);
-          setTranscription(transcription);
-          return null;
-        })
-        .catch(() => setAsyncState(AsyncState.ERROR));
+      try {
+        const transcription = await processTranscription(currentProject);
+        if (transcription === null) {
+          throw new Error();
+        }
+        setAsyncState(AsyncState.DONE);
+        setTranscription(transcription);
+      } catch {
+        setAsyncState(AsyncState.ERROR);
+      }
+      return null;
     };
 
     startProcessing();

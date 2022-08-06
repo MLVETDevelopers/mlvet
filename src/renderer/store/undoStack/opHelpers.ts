@@ -26,8 +26,8 @@ const updateUndoRedoEnabledInMenu: () => void = () => {
 export const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
   op: Op<T, U>
 ) => void = (op) => {
-  // Dispatch the actual action
-  dispatch(op.do);
+  // Dispatch the actual actions
+  op.do.forEach(dispatch);
 
   // Push the entire op to the undo stack, so that we can support undo and redo of this action
   dispatch(undoStackPushed(op));
@@ -47,8 +47,10 @@ export const dispatchUndo: () => void = () => {
   // We want to undo the nth thing, so get stack[n-1]
   const lastAction = stack[index - 1];
 
-  // Dispatch the undo
-  dispatch(lastAction.undo);
+  // Dispatch the undo operations
+  const undoInOrder = [...lastAction.undo];
+  undoInOrder.reverse(); // undo operations are in reverse order, so reverse them back
+  undoInOrder.forEach(dispatch);
 
   // Let the undo stack know we just did an undo so it can decrement its index
   dispatch(undoStackPopped());
@@ -69,7 +71,7 @@ export const dispatchRedo: () => void = () => {
   const lastAction = stack[index];
 
   // Dispatch the redo
-  dispatch(lastAction.do);
+  lastAction.do.forEach(dispatch);
 
   // Let the undo stack know we just did a redo so it can increment its index
   dispatch(opRedone());

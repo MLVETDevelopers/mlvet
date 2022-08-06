@@ -19,14 +19,18 @@ export const makeDeleteWord: (
   deleteFrom: number,
   deleteTo: number
 ) => DeleteWordsOp = (deleteFrom, deleteTo) => ({
-  do: {
-    type: DELETE_WORD,
-    payload: { startIndex: deleteFrom, endIndex: deleteTo },
-  },
-  undo: {
-    type: UNDO_DELETE_WORD,
-    payload: { startIndex: deleteFrom, endIndex: deleteTo },
-  },
+  do: [
+    {
+      type: DELETE_WORD,
+      payload: { startIndex: deleteFrom, endIndex: deleteTo },
+    },
+  ],
+  undo: [
+    {
+      type: UNDO_DELETE_WORD,
+      payload: { startIndex: deleteFrom, endIndex: deleteTo },
+    },
+  ],
 });
 
 export const makePasteWord: (
@@ -34,14 +38,18 @@ export const makePasteWord: (
   clipboard: Word[]
 ) => PasteWordsOp = (pasteTo, clipboard) => {
   return {
-    do: {
-      type: PASTE_WORD,
-      payload: { startIndex: pasteTo, clipboard },
-    },
-    undo: {
-      type: UNDO_PASTE_WORD,
-      payload: { startIndex: pasteTo, clipboardLength: clipboard.length },
-    },
+    do: [
+      {
+        type: PASTE_WORD,
+        payload: { startIndex: pasteTo, clipboard },
+      },
+    ],
+    undo: [
+      {
+        type: UNDO_PASTE_WORD,
+        payload: { startIndex: pasteTo, clipboardLength: clipboard.length },
+      },
+    ],
   };
 };
 

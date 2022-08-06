@@ -111,12 +111,7 @@ const TranscriptionBlock = ({
     </TranscriptionBox>
   );
 
-  return (
-    <DragManager
-      seekToWord={seekToWord}
-      renderTranscription={renderTranscription}
-    />
-  );
+  return <DragManager renderTranscription={renderTranscription} />;
 };
 
 export default TranscriptionBlock;

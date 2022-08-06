@@ -1,5 +1,6 @@
 import {
   DELETE_SELECTION,
+  MOVE_WORDS,
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
@@ -33,11 +34,13 @@ describe('Transcription reducer', () => {
         type: TRANSCRIPTION_CREATED,
         payload: {
           confidence: 1,
+          duration: 100,
           words: [makeBasicWord(0, 'a')],
         },
       })
     ).toEqual({
       confidence: 1,
+      duration: 100,
       words: [makeBasicWord(0, 'a')],
     });
   });
@@ -67,10 +70,6 @@ describe('Transcription reducer', () => {
         },
       }
     );
-
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
@@ -106,10 +105,6 @@ describe('Transcription reducer', () => {
         },
       }
     );
-
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
@@ -227,10 +222,6 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(1, 'b'),
@@ -277,10 +268,6 @@ describe('Transcription reducer', () => {
         },
       }
     );
-
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
@@ -329,10 +316,6 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(1, 'b', true),
@@ -376,10 +359,6 @@ describe('Transcription reducer', () => {
         },
       }
     );
-
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
 
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
@@ -425,10 +404,6 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(1, 'b'),
@@ -468,10 +443,6 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(1, 'b'),
@@ -505,10 +476,6 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a', true),
       makeBasicWord(1, 'b'),
@@ -538,16 +505,71 @@ describe('Transcription reducer', () => {
       }
     );
 
-    // expect confidence and duration to be reflected
-    expect(output?.confidence).toBe(1);
-    expect(output?.duration).toBe(100);
-
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(0, 'a', false, 1),
       makeBasicWord(1, 'b'),
       makeBasicWord(0, 'a', false, 2),
       makeBasicWord(0, 'a', false, 3),
+    ]);
+  });
+
+  it('should handle the first word being moved to become the second word', () => {
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+        ],
+      },
+      {
+        type: MOVE_WORDS,
+        payload: {
+          fromRanges: [{ startIndex: 0, endIndex: 1 }],
+          toAfterIndex: 1,
+        },
+      }
+    );
+
+    expect(output?.words).toEqual([
+      makeBasicWord(0, 'a', true),
+      makeBasicWord(1, 'b'),
+      makeBasicWord(0, 'a', false, 1),
+      makeBasicWord(2, 'c'),
+    ]);
+  });
+
+  it('should handle a word being moved to its current location, i.e. not being moved at all', () => {
+    // Note: this is just a sanity check for now - later when we have edit markers, we will handle this edge case
+    // explicitly and cancel out the moved word
+
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+        ],
+      },
+      {
+        type: MOVE_WORDS,
+        payload: {
+          fromRanges: [{ startIndex: 1, endIndex: 2 }],
+          toAfterIndex: 1,
+        },
+      }
+    );
+
+    expect(output?.words).toEqual([
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b', true),
+      makeBasicWord(1, 'b', false, 1),
+      makeBasicWord(2, 'c'),
     ]);
   });
 });

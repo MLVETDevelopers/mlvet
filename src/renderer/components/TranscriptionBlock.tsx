@@ -115,7 +115,12 @@ const TranscriptionBlock = ({
     );
   };
 
-  return <DragManager renderTranscription={renderTranscription} />;
+  return (
+    <DragManager
+      seekToWord={seekToWord}
+      renderTranscription={renderTranscription}
+    />
+  );
 };
 
 export default TranscriptionBlock;

@@ -9,10 +9,14 @@ import {
   useState,
 } from 'react';
 import useMouse, { MousePosition } from '@react-hook/mouse-position';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeMoveWords } from 'renderer/store/undoStack/ops';
 import { Point } from 'electron';
+import {
+  selectionCleared,
+  selectionRangeAdded,
+} from 'renderer/store/selection/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
@@ -39,9 +43,12 @@ export type DragState = null | {
 
 interface Props {
   renderTranscription: RenderTranscription;
+  seekToWord: (wordIndex: number) => void;
 }
 
-const DragManager = ({ renderTranscription }: Props) => {
+const DragManager = ({ seekToWord, renderTranscription }: Props) => {
+  const dispatch = useDispatch();
+
   const words = useSelector(
     (store: ApplicationStore) => store.currentProject?.transcription?.words
   );
@@ -76,6 +83,14 @@ const DragManager = ({ renderTranscription }: Props) => {
           dropBeforeIndex - 1
         )
       );
+      dispatch(selectionCleared());
+      seekToWord(dropBeforeIndex);
+      dispatch(
+        selectionRangeAdded({
+          startIndex: dropBeforeIndex,
+          endIndex: dropBeforeIndex + 1,
+        })
+      );
     }
   };
 
@@ -83,13 +98,6 @@ const DragManager = ({ renderTranscription }: Props) => {
 
   const onWordMouseDown: WordMouseHandler =
     (wordIndex) => (wordRef) => (event) => {
-      console.log(
-        wordRef.current,
-        wordRef.current?.offsetLeft,
-        event.clientX,
-        event
-      );
-
       const offset: Point = {
         x: (wordRef.current?.offsetLeft ?? 0) - event.clientX,
         y: (wordRef.current?.offsetTop ?? 0) - event.clientY,

@@ -65,12 +65,12 @@ const Word = ({
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const xPosition = useMemo(() => ref.current?.offsetLeft ?? 0, [ref]);
-  const yPosition = useMemo(() => ref.current?.offsetTop ?? 0, [ref]);
-  const halfWidth = useMemo(() => (ref.current?.offsetWidth ?? 0) / 2, [ref]);
-  const height = useMemo(() => ref.current?.offsetHeight ?? 0, [ref]);
-  const mouseX = useMemo(() => mouse.clientX ?? 0, [mouse]);
-  const mouseY = useMemo(() => mouse.clientY ?? 0, [mouse]);
+  const xPosition = ref.current?.offsetLeft ?? 0;
+  const yPosition = ref.current?.offsetTop ?? 0;
+  const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
+  const height = ref.current?.offsetHeight ?? 0;
+  const mouseX = mouse.clientX ?? 0;
+  const mouseY = mouse.clientY ?? 0;
 
   const mouseInLeft = useMemo(
     () =>

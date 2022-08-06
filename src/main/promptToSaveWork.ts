@@ -31,7 +31,7 @@ const promptToSaveWork: (
     return false;
   }
 
-  if (buttonIndex === 1) {
+  if (buttonIndex === SaveDialogSelections.DONT_SAVE_SELECTED) {
     // Don't save
     return true;
   }

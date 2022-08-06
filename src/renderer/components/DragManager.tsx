@@ -16,10 +16,7 @@ import { Point } from 'electron';
 import { useThrottle } from '@react-hook/throttle';
 import { dispatchOp } from '../store/undoStack/opHelpers';
 import { makeMoveWords } from '../store/undoStack/ops';
-import {
-  selectionCleared,
-  selectionRangeAdded,
-} from '../store/selection/actions';
+import { selectionCleared } from '../store/selection/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { MouseButton, rangeLengthOne } from '../util';
 
@@ -46,10 +43,9 @@ export type DragState = null | {
 
 interface Props {
   renderTranscription: RenderTranscription;
-  seekToWord: (wordIndex: number) => void;
 }
 
-const DragManager = ({ seekToWord, renderTranscription }: Props) => {
+const DragManager = ({ renderTranscription }: Props) => {
   const dispatch = useDispatch();
 
   const words = useSelector(
@@ -124,17 +120,10 @@ const DragManager = ({ seekToWord, renderTranscription }: Props) => {
           )
         );
 
-        // Reset the selection so that we can select just the word that was moved
-        dispatch(selectionCleared());
-
-        // The word that was moved now has an index of dropBeforeIndex,
-        // as the word that had this index before has now moved one word to the right.
-        dispatch(selectionRangeAdded(rangeLengthOne(dropBeforeIndex)));
-
         // TODO(chloe): seek to the word that was moved
       }
     },
-    [dropBeforeIndex, dragState, words, setDragState, dispatch]
+    [dropBeforeIndex, dragState, words, setDragState]
   );
 
   return (

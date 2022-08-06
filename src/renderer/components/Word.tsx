@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { MouseEventHandler, useEffect, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef, useMemo } from 'react';
+import { MousePosition } from '@react-hook/mouse-position';
+import { Point, pointIsInsideRect } from 'renderer/util';
 import colors from '../colors';
 import { handleSelectWord } from '../selection';
-import { MousePosition } from '@react-hook/mouse-position';
 
-const WordInner = styled('div')`
+const makeWordInner = (isDragActive: boolean) => styled('div')`
   display: inline-block;
   cursor: pointer;
   color: ${colors.white};
@@ -14,7 +15,7 @@ const WordInner = styled('div')`
 
   &:hover {
     color: ${colors.grey['000']};
-    background: ${colors.yellow[500]}50;
+    background: ${isDragActive ? 'none' : `${colors.yellow[500]}50`};
   }
 `;
 
@@ -26,39 +27,14 @@ interface Props {
   text: string;
   onMouseDown: MouseEventHandler<HTMLDivElement>;
   onMouseUp: MouseEventHandler<HTMLDivElement>;
-  isBeingDragged: boolean;
+  isBeingDragged: boolean; // whether THIS word is currently being dragged
+  isDragActive: boolean; // whether ANY word is currently being dragged
   mouse: MousePosition;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
   setDropBeforeActive: () => void;
   setDropAfterActive: () => void;
 }
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-interface Rect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-// TODO(chloe): move into util
-/**
- * Determines if a point is inside a rectangle,
- * also returning true for boundary cases.
- */
-const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
-  point,
-  rect
-) =>
-  point.x >= rect.x &&
-  point.x <= rect.x + rect.w &&
-  point.y >= rect.y &&
-  point.y <= rect.y + rect.h;
 
 const Word = ({
   index,
@@ -69,6 +45,7 @@ const Word = ({
   onMouseDown,
   onMouseUp,
   isBeingDragged,
+  isDragActive,
   mouse,
   isDropBeforeActive,
   isDropAfterActive,
@@ -87,25 +64,31 @@ const Word = ({
 
   // TODO(chloe) optimise
 
-  const mouseInLeft = pointIsInsideRect(
-    { x: mouse.clientX ?? 0, y: mouse.clientY ?? 0 },
-    {
-      x: ref.current?.offsetLeft ?? 0,
-      y: ref.current?.offsetTop ?? 0,
-      w: (ref.current?.offsetWidth ?? 0) / 2,
-      h: ref.current?.offsetHeight ?? 0,
-    }
-  );
+  const xPosition = ref.current?.offsetLeft ?? 0;
+  const yPosition = ref.current?.offsetTop ?? 0;
+  const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
+  const height = ref.current?.offsetHeight ?? 0;
+  const mouseX = mouse.clientX ?? 0;
+  const mouseY = mouse.clientY ?? 0;
 
-  const mouseInRight = pointIsInsideRect(
-    { x: mouse.clientX ?? 0, y: mouse.clientY ?? 0 },
-    {
-      x: (ref.current?.offsetLeft ?? 0) + (ref.current?.offsetWidth ?? 0) / 2,
-      y: ref.current?.offsetTop ?? 0,
-      w: (ref.current?.offsetWidth ?? 0) / 2,
-      h: ref.current?.offsetHeight ?? 0,
-    }
-  );
+  const mousePoint: Point = {
+    x: mouseX,
+    y: mouseY,
+  };
+
+  const mouseInLeft = pointIsInsideRect(mousePoint, {
+    x: xPosition,
+    y: yPosition,
+    w: halfWidth,
+    h: height,
+  });
+
+  const mouseInRight = pointIsInsideRect(mousePoint, {
+    x: xPosition + halfWidth,
+    y: yPosition,
+    w: halfWidth,
+    h: height,
+  });
 
   useEffect(() => {
     if (mouseInLeft && !isDropBeforeActive) {
@@ -159,6 +142,8 @@ const Word = ({
     ...highlightStyles,
     ...dragStyles,
   };
+
+  const WordInner = useMemo(() => makeWordInner(isDragActive), [isDragActive]);
 
   return (
     <WordInner

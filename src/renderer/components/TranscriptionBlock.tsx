@@ -7,7 +7,7 @@ import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
-import DragCapture, { RenderTranscription } from './DragCapture';
+import DragManager, { RenderTranscription } from './DragManager';
 
 const TranscriptionBox = styled(Box)`
   background: ${colors.grey[700]};
@@ -64,8 +64,7 @@ const TranscriptionBlock = ({
         paddingLeft: '1px',
         paddingRight: '1px',
       }}
-    >
-    </span>
+    />
   );
 
   const renderTranscription: RenderTranscription = (
@@ -95,6 +94,7 @@ const TranscriptionBlock = ({
               onMouseDown={onWordMouseDown(index)}
               onMouseUp={onWordMouseUp(index)}
               isBeingDragged={isWordBeingDragged(index)}
+              isDragActive={isDragActive}
               mouse={mouse}
               isDropBeforeActive={dropBeforeIndex === index}
               isDropAfterActive={dropBeforeIndex === index + 1}
@@ -113,7 +113,7 @@ const TranscriptionBlock = ({
 
   return (
     <TranscriptionBox onClick={clearSelection}>
-      <DragCapture renderTranscription={renderTranscription} />
+      <DragManager renderTranscription={renderTranscription} />
     </TranscriptionBox>
   );
 };

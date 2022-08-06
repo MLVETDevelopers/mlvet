@@ -196,14 +196,41 @@ export const sortNumerical: (list: number[]) => void = (list) => {
 /**
  * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
  */
-export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (ranges) => {
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
+  ranges
+) => {
   const indicesSet = new Set<number>();
 
   ranges.forEach(({ startIndex, endIndex }) => {
-    for (let i=startIndex; i<endIndex; i += 1) {
+    for (let i = startIndex; i < endIndex; i += 1) {
       indicesSet.add(i);
     }
   });
 
   return indicesSet;
+};
+
+export interface Point {
+  x: number;
+  y: number;
 }
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Determines if a point is inside a rectangle,
+ * also returning true for boundary cases.
+ */
+export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x >= rect.x &&
+  point.x <= rect.x + rect.w &&
+  point.y >= rect.y &&
+  point.y <= rect.y + rect.h;

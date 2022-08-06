@@ -107,32 +107,45 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if (action.type === MOVE_WORDS) {
     const { fromRanges, toAfterIndex } = action.payload as MoveWordsPayload;
 
+    // List of indices that were moved, which need to be removed
     const affectedIndices = rangesToIndices(fromRanges);
 
+    // List of words that are being moved
     const movedWords = fromRanges.flatMap((range) =>
       transcription.words.slice(range.startIndex, range.endIndex)
     );
 
+    // All words in the transcription excluding the ones that were moved.
+    // Rather than explicitly filtering which affects the indexes, just add a marker for now
     const remainingWords = transcription.words.map((word, i) => ({
       ...word,
       shouldRemove: affectedIndices.has(i),
     }));
 
+    // List of words up to the point where the moved words are being placed,
+    // now explicitly filtering out the moved words
     const prefix = remainingWords
       .slice(0, toAfterIndex + 1)
       .filter((word) => !word.shouldRemove);
 
+    // List of words after the point where the moved words are being placed,
+    // now explicitly filtering out the moved words
     const suffix = remainingWords
       .slice(toAfterIndex + movedWords.length + 1)
       .filter((word) => !word.shouldRemove);
 
-    // TODO(chloe): remove the 'shouldRemove' attribute after this point as it's not needed anymore
-
     return {
       ...transcription,
-      words: updateOutputStartTimes([...prefix, ...movedWords, ...suffix]),
+      words: updateOutputStartTimes(
+        [...prefix, ...movedWords, ...suffix].map((word) => ({
+          ...word,
+          shouldRemove: undefined, // remove this as it isn't a standard attribute on Word objects
+        }))
+      ),
     };
   }
+
+  // TODO: UNDO_MOVE_WORDS action
 
   return transcription;
 };

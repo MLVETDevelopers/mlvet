@@ -1,23 +1,19 @@
 import { Reducer } from 'redux';
-import { mapInRanges, rangesToIndices } from 'renderer/util';
+import { mapInRanges } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
-  MoveWordsPayload,
   PasteWordsPayload,
   UndoDeleteSelectionPayload,
-  UndoMoveWordsPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
 import {
   DELETE_SELECTION,
-  MOVE_WORDS,
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
-  UNDO_MOVE_WORDS,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
 
@@ -103,80 +99,6 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       words: updateOutputStartTimes([...prefix, ...suffix]),
-    };
-  }
-
-  if (action.type === MOVE_WORDS) {
-    const { fromRanges, toAfterIndex } = action.payload as MoveWordsPayload;
-
-    // TODO(chloe) handle words that are copies (i.e. resulting from a paste) being moved -
-    // their previous locations should be explicitly deleted instead of just marked as deleted.
-    // (i.e. the actual words should be moved).
-    // May need to add extra information to the UNDO_MOVE_WORDS payload to support this
-
-    // List of words that are being moved.
-    // TODO(chloe) ensure deleted words are not selectable in the first place, as
-    // this can mess with undo-moves (which assumes they should not be deleted)
-    const movedWords = fromRanges.flatMap((range) =>
-      transcription.words.slice(range.startIndex, range.endIndex)
-    );
-
-    // Use the same paste-key logic as pasting - as moved words just mark their originals as deleted, they need unique paste keys
-    const highestExistingPasteKey = Math.max(
-      0,
-      ...transcription.words.map((word) => word.pasteKey)
-    );
-
-    const movedWordsWithNewPasteKeys = movedWords.map((word, index) => ({
-      ...word,
-      pasteKey: highestExistingPasteKey + index + 1,
-    }));
-
-    // List of indices that were moved, which need to be removed
-    const affectedIndices = rangesToIndices(fromRanges);
-
-    // Mark words that were moved as deleted
-    const remainingWords = transcription.words.map((word, i) => ({
-      ...word,
-      deleted: affectedIndices.has(i),
-    }));
-
-    // List of words up to the point where the moved words are being placed
-    const prefix = remainingWords.slice(0, toAfterIndex + 1);
-
-    // List of words after the point where the moved words are being placed
-    const suffix = remainingWords.slice(toAfterIndex + movedWords.length);
-
-    return {
-      ...transcription,
-      words: updateOutputStartTimes([
-        ...prefix,
-        ...movedWordsWithNewPasteKeys,
-        ...suffix,
-      ]),
-    };
-  }
-
-  if (action.type === UNDO_MOVE_WORDS) {
-    const { fromRanges, toAfterIndex } = action.payload as UndoMoveWordsPayload;
-
-    // List of indices that were moved, which need to be restored - these indices are for before the moved words were there
-    const affectedIndices = rangesToIndices(fromRanges);
-
-    const prefix = transcription.words.slice(0, toAfterIndex + 1);
-
-    const suffix = transcription.words.slice(
-      toAfterIndex + affectedIndices.size + 1
-    );
-
-    const previousWords = [...prefix, ...suffix].map((word) => ({
-      ...word,
-      deleted: false,
-    }));
-
-    return {
-      ...transcription,
-      words: updateOutputStartTimes(previousWords),
     };
   }
 

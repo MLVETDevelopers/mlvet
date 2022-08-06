@@ -3,6 +3,7 @@
 import {
   Dispatch,
   MouseEventHandler,
+  RefObject,
   SetStateAction,
   useRef,
   useState,
@@ -11,23 +12,30 @@ import useMouse, { MousePosition } from '@react-hook/mouse-position';
 import { useSelector } from 'react-redux';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeMoveWords } from 'renderer/store/undoStack/ops';
+import { Point } from 'electron';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
 
 export type WordMouseHandler = CurriedByWordIndex<
-  MouseEventHandler<HTMLDivElement>
+  (wordRef: RefObject<HTMLDivElement>) => MouseEventHandler<HTMLDivElement>
 >;
 
 export type RenderTranscription = (
   onWordMouseDown: WordMouseHandler,
   onWordMouseUp: WordMouseHandler,
+  dragState: DragState,
   isDragActive: boolean,
   isWordBeingDragged: CurriedByWordIndex<boolean>,
   mouse: MousePosition,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>
 ) => JSX.Element;
+
+export type DragState = null | {
+  offset: Point;
+  wordIndex: number;
+};
 
 interface Props {
   renderTranscription: RenderTranscription;
@@ -38,9 +46,7 @@ const DragManager = ({ renderTranscription }: Props) => {
     (store: ApplicationStore) => store.currentProject?.transcription?.words
   );
 
-  const [currentDraggedWordIndex, setCurrentDraggedWordIndex] = useState<
-    number | null
-  >(null);
+  const [dragState, setDragState] = useState<DragState>(null);
 
   const [dropBeforeIndex, setDropBeforeIndex] = useState<number | null>(null);
 
@@ -51,19 +57,20 @@ const DragManager = ({ renderTranscription }: Props) => {
   const onMouseDown: MouseEventHandler<HTMLDivElement> = () => {};
 
   const onMouseUp: MouseEventHandler<HTMLDivElement> = () => {
-    setCurrentDraggedWordIndex(null);
+    setDragState(null);
 
     if (
       dropBeforeIndex !== null &&
-      currentDraggedWordIndex !== null &&
+      dragState !== null &&
+      dragState.wordIndex !== null &&
       words !== undefined
     ) {
       dispatchOp(
         makeMoveWords(
           [
             {
-              startIndex: currentDraggedWordIndex,
-              endIndex: currentDraggedWordIndex + 1,
+              startIndex: dragState.wordIndex,
+              endIndex: dragState.wordIndex + 1,
             },
           ],
           dropBeforeIndex - 1
@@ -74,14 +81,27 @@ const DragManager = ({ renderTranscription }: Props) => {
 
   const onMouseMove: MouseEventHandler<HTMLDivElement> = () => {};
 
-  const onWordMouseDown: WordMouseHandler = (wordIndex) => () => {
-    setCurrentDraggedWordIndex(wordIndex);
-  };
+  const onWordMouseDown: WordMouseHandler =
+    (wordIndex) => (wordRef) => (event) => {
+      console.log(
+        wordRef.current,
+        wordRef.current?.offsetLeft,
+        event.clientX,
+        event
+      );
 
-  const onWordMouseUp: WordMouseHandler = () => () => {};
+      const offset: Point = {
+        x: (wordRef.current?.offsetLeft ?? 0) - event.clientX,
+        y: (wordRef.current?.offsetTop ?? 0) - event.clientY,
+      };
+
+      setDragState({ offset, wordIndex });
+    };
+
+  const onWordMouseUp: WordMouseHandler = () => () => () => {};
 
   const isWordBeingDragged: (wordIndex: number) => boolean = (wordIndex) => {
-    return currentDraggedWordIndex === wordIndex;
+    return dragState?.wordIndex === wordIndex;
   };
 
   return (
@@ -94,7 +114,8 @@ const DragManager = ({ renderTranscription }: Props) => {
       {renderTranscription(
         onWordMouseDown,
         onWordMouseUp,
-        currentDraggedWordIndex !== null,
+        dragState,
+        dragState !== null,
         isWordBeingDragged,
         mouse,
         dropBeforeIndex,

@@ -107,12 +107,25 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   }
 
   if (action.type === MOVE_WORDS) {
+    // TODO: generate pasteKeys for moved words (this should fix duplication bugs, mostly)
+
     const { fromRanges, toAfterIndex } = action.payload as MoveWordsPayload;
 
     // List of words that are being moved
     const movedWords = fromRanges.flatMap((range) =>
       transcription.words.slice(range.startIndex, range.endIndex)
     );
+
+    // Use the same paste-key logic as pasting - as moved words just mark their originals as deleted, they need unique paste keys
+    const highestExistingPasteKey = Math.max(
+      0,
+      ...transcription.words.map((word) => word.pasteKey)
+    );
+
+    const movedWordsWithNewPasteKeys = movedWords.map((word, i) => ({
+      ...word,
+      pasteKey: highestExistingPasteKey + i + 1,
+    }));
 
     // List of indices that were moved, which need to be removed
     const affectedIndices = rangesToIndices(fromRanges);
@@ -132,7 +145,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       words: updateOutputStartTimes(
-        [...prefix, ...movedWords, ...suffix].map((word) => ({
+        [...prefix, ...movedWordsWithNewPasteKeys, ...suffix].map((word) => ({
           ...word,
         }))
       ),
@@ -149,7 +162,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     // Rather than explicitly filtering which affects the indexes, just add a marker for now
     const remainingWords = transcription.words.map((word, i) => ({
       ...word,
-      deleted: affectedIndices.has(i) ? false : word.deleted,
+      deleted: affectedIndices.has(i) ? false : word.deleted, // TODO(chloe): account for moving deleted words
     }));
 
     const prefix = remainingWords.slice(0, toAfterIndex + 1);

@@ -1,9 +1,16 @@
 import styled from '@emotion/styled';
-import { MouseEventHandler, useEffect, useRef, useMemo } from 'react';
+import {
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useMemo,
+  RefObject,
+} from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
-import { Point, pointIsInsideRect } from 'renderer/util';
+import { pointIsInsideRect } from 'renderer/util';
 import colors from '../colors';
 import { handleSelectWord } from '../selection';
+import { DragState } from './DragManager';
 
 const makeWordInner = (isDragActive: boolean) => styled('div')`
   display: inline-block;
@@ -25,15 +32,19 @@ interface Props {
   isPlaying: boolean;
   isSelected: boolean;
   text: string;
-  onMouseDown: MouseEventHandler<HTMLDivElement>;
-  onMouseUp: MouseEventHandler<HTMLDivElement>;
+  onMouseDown: (
+    wordRef: RefObject<HTMLDivElement>
+  ) => MouseEventHandler<HTMLDivElement>;
+  onMouseUp: (
+    wordRef: RefObject<HTMLDivElement>
+  ) => MouseEventHandler<HTMLDivElement>;
+  dragState: DragState;
   isBeingDragged: boolean; // whether THIS word is currently being dragged
   isDragActive: boolean; // whether ANY word is currently being dragged
   mouse: MousePosition;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
-  setDropBeforeActive: () => void;
-  setDropAfterActive: () => void;
+  setDropBeforeIndex: (index: number) => void;
 }
 
 const Word = ({
@@ -44,67 +55,82 @@ const Word = ({
   text,
   onMouseDown,
   onMouseUp,
+  dragState,
   isBeingDragged,
   isDragActive,
   mouse,
   isDropBeforeActive,
   isDropAfterActive,
-  setDropBeforeActive,
-  setDropAfterActive,
+  setDropBeforeIndex,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    seekToWord();
-    handleSelectWord(event, index);
+  const xPosition = useMemo(() => ref.current?.offsetLeft ?? 0, [ref]);
+  const yPosition = useMemo(() => ref.current?.offsetTop ?? 0, [ref]);
+  const halfWidth = useMemo(() => (ref.current?.offsetWidth ?? 0) / 2, [ref]);
+  const height = useMemo(() => ref.current?.offsetHeight ?? 0, [ref]);
+  const mouseX = useMemo(() => mouse.clientX ?? 0, [mouse]);
+  const mouseY = useMemo(() => mouse.clientY ?? 0, [mouse]);
 
-    // Prevent event from being received by the transcription block and therefore intercepted
-    event.stopPropagation();
-  };
+  const mouseInLeft = useMemo(
+    () =>
+      !isBeingDragged &&
+      pointIsInsideRect(
+        {
+          x: mouseX,
+          y: mouseY,
+        },
+        {
+          x: xPosition,
+          y: yPosition,
+          w: halfWidth,
+          h: height,
+        }
+      ),
+    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
+  );
 
-  // TODO(chloe) optimise
-
-  const xPosition = ref.current?.offsetLeft ?? 0;
-  const yPosition = ref.current?.offsetTop ?? 0;
-  const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
-  const height = ref.current?.offsetHeight ?? 0;
-  const mouseX = mouse.clientX ?? 0;
-  const mouseY = mouse.clientY ?? 0;
-
-  const mousePoint: Point = {
-    x: mouseX,
-    y: mouseY,
-  };
-
-  const mouseInLeft = pointIsInsideRect(mousePoint, {
-    x: xPosition,
-    y: yPosition,
-    w: halfWidth,
-    h: height,
-  });
-
-  const mouseInRight = pointIsInsideRect(mousePoint, {
-    x: xPosition + halfWidth,
-    y: yPosition,
-    w: halfWidth,
-    h: height,
-  });
+  const mouseInRight = useMemo(
+    () =>
+      !isBeingDragged &&
+      pointIsInsideRect(
+        {
+          x: mouseX,
+          y: mouseY,
+        },
+        {
+          x: xPosition + halfWidth,
+          y: yPosition,
+          w: halfWidth,
+          h: height,
+        }
+      ),
+    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
+  );
 
   useEffect(() => {
     if (mouseInLeft && !isDropBeforeActive) {
-      setDropBeforeActive();
-    }
-    if (mouseInRight && !isDropAfterActive) {
-      setDropAfterActive();
+      setDropBeforeIndex(index);
+    } else if (mouseInRight && !isDropAfterActive) {
+      setDropBeforeIndex(index + 1);
     }
   }, [
     mouseInLeft,
     mouseInRight,
     isDropBeforeActive,
     isDropAfterActive,
-    setDropBeforeActive,
-    setDropAfterActive,
+    setDropBeforeIndex,
+    index,
   ]);
+
+  const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    seekToWord();
+    handleSelectWord(event, index);
+
+    // Prevent event from being received by the transcription block and therefore intercepted,
+    // which would clear the selection
+    event.stopPropagation();
+  };
 
   const defaultStyles: React.CSSProperties = {
     zIndex: 0,
@@ -131,8 +157,8 @@ const Word = ({
   const dragStyles: React.CSSProperties = isBeingDragged
     ? {
         position: 'fixed',
-        left: mouse.clientX ?? undefined,
-        top: mouse.clientY ?? undefined,
+        left: mouseX + (dragState?.offset.x ?? 0),
+        top: mouseY + (dragState?.offset.y ?? 0),
         zIndex: 100,
       }
     : {};
@@ -149,8 +175,8 @@ const Word = ({
     <WordInner
       ref={ref}
       onClick={onClick}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
+      onMouseDown={onMouseDown(ref)}
+      onMouseUp={onMouseUp(ref)}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >
       {text}

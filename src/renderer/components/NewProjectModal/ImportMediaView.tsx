@@ -9,10 +9,7 @@ import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
-import ipc from '../../ipc';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
-
-const { extractAudio } = ipc;
 
 interface Props {
   prevView: () => void;

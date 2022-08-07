@@ -111,7 +111,6 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       } catch {
         setAsyncState(AsyncState.ERROR);
       }
-      return null;
     };
 
     startProcessing();

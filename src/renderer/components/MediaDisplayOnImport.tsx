@@ -34,8 +34,9 @@ const MediaDisplayOnImport = ({ fileName, removeMediaFromImport }: Props) => {
         </Stack>
         <IconButton
           sx={{ color: colors.yellow[500], fontSize: 24, margin: '5px' }}
+          onClick={removeMediaFromImport}
         >
-          <DeleteIcon onClick={removeMediaFromImport} />
+          <DeleteIcon />
         </IconButton>
       </Stack>
     </CustomBox>

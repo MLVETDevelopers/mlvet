@@ -1,5 +1,9 @@
 import { BrowserWindow, dialog } from 'electron';
 import { writeFile } from 'fs/promises';
+import {
+  saveChangesDialog,
+  SaveDialogSelections,
+} from '../file/saveChangesDialog';
 import { PersistedProject, RuntimeProject } from '../../../sharedTypes';
 
 export const getSaveFilePath: (
@@ -54,19 +58,15 @@ export const confirmSave: (
     throw new Error('Main window not defined');
   }
 
-  const cancelled = 2;
-
-  const confirmSaveDialogResponse = await dialog.showMessageBox(mainWindow, {
-    message: `Do you want to save the changes you have made to ${proposedFileName}?`,
-    detail: "Your changes will be lost if you don't save them",
-    buttons: ['Save', "Don't save", 'Cancel'],
-    defaultId: 0,
-  });
+  const confirmSaveDialogResponse = saveChangesDialog(
+    mainWindow,
+    proposedFileName
+  );
 
   // if cancel button is selected
-  if (confirmSaveDialogResponse.response === cancelled) {
-    throw new Error('Dialog cancelled');
+  if (confirmSaveDialogResponse === SaveDialogSelections.SAVE_CANCELLED) {
+    console.log('Dialog cancelled');
   }
 
-  return confirmSaveDialogResponse.response as number;
+  return confirmSaveDialogResponse;
 };

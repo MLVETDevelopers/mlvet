@@ -7,10 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import {
-  updateProjectWithMedia,
-  updateProjectWithExtractedAudio,
-} from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
 import ipc from '../../ipc';
@@ -45,6 +41,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  const dispatch = useDispatch();
+
+  const setCurrentProject = (project: RuntimeProject) => {
+    return dispatch(projectCreated(project));
+  };
+
   // Reset the import - for when delete button is pressed on media
   const removeMediaFromImport: () => void = () => {
     setIsAwaitingMedia(true);
@@ -52,44 +54,22 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     setMediaFileName(null);
   };
 
-  const dispatch = useDispatch();
-
   if (currentProject === null) {
     return null;
   }
 
   const projectName = currentProject.name;
 
-  const setCurrentProject = (project: RuntimeProject) =>
-    dispatch(projectCreated(project));
-
   const handleTranscribe = async () => {
-    if (mediaFilePath === null) {
+    const projectWithMedia = {
+      ...currentProject,
+      mediaFilePath,
+    };
+
+    if (projectWithMedia.mediaFilePath == null) {
       return;
     }
-
-    const projectWithMedia = await updateProjectWithMedia(
-      currentProject,
-      mediaFilePath
-    );
-
-    if (projectWithMedia === null) {
-      return;
-    }
-
-    const audioFilePath = await extractAudio(projectWithMedia);
-
-    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
-      projectWithMedia,
-      audioFilePath
-    );
-
-    if (projectWithAudioExtract === null) {
-      return;
-    }
-
-    setCurrentProject(projectWithAudioExtract);
-
+    setCurrentProject(projectWithMedia);
     nextView();
   };
 

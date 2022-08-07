@@ -1,8 +1,11 @@
 import { Box, styled, colors, BoxProps } from '@mui/material';
+import { clamp } from 'main/timeUtils';
 import { useRef } from 'react';
 
 interface ResizeSliderProps extends BoxProps {
-  onDragHandler: (dragDistance: number) => void;
+  targetWidth: number;
+  setTargetWidth: (targetWidth: number) => void;
+  options: { minTargetWidth: number; maxTargetWidth: number };
 }
 
 const Divider = styled(Box)({
@@ -33,35 +36,42 @@ const Slider = styled(Box)({
   },
 });
 
-const ResizeSlider = ({ onDragHandler, ...props }: ResizeSliderProps) => {
+const ResizeSlider = ({
+  targetWidth,
+  setTargetWidth,
+  options: { minTargetWidth, maxTargetWidth },
+  ...props
+}: ResizeSliderProps) => {
+  const dragStartWidth = useRef(targetWidth);
   const dragStartPositionRef = useRef(0);
 
-  const onDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    dragStartPositionRef.current = e.clientX;
-    console.log('onDragStart');
+  const onMouseMove = (e: { pageX: number }) => {
+    const dragDistance = e.pageX - dragStartPositionRef.current;
+    const newWidth = clamp(
+      minTargetWidth,
+      dragStartWidth.current - dragDistance,
+      maxTargetWidth
+    );
+    setTargetWidth(newWidth);
   };
 
-  const onDrag = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.clientX !== 0) {
-      onDragHandler(e.clientX - dragStartPositionRef.current);
-      dragStartPositionRef.current = e.clientX;
-    }
-    console.log('onDrag');
+  const onMouseUp = () => {
+    dragStartPositionRef.current = 0;
+    document.body.removeEventListener('mousemove', onMouseMove);
   };
 
-  const onDragEnd = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log('onDragEnd', e.clientX);
+  const onMouseDown = (e: { pageX: number }) => {
+    dragStartWidth.current = targetWidth;
+    dragStartPositionRef.current = e.pageX;
+
+    document.body.addEventListener('mousemove', onMouseMove);
+    document.body.addEventListener('mouseup', onMouseUp, { once: true });
   };
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <Divider id="divider" {...props}>
-      <Slider
-        id="slider"
-        onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
-      />
+      <Slider id="slider" onMouseDown={onMouseDown} />
     </Divider>
   );
 };

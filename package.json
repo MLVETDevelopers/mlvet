@@ -228,7 +228,8 @@
     "redux": "^4.1.2",
     "socket.io-client": "^4.5.0",
     "uuid": "^8.3.2",
-    "vimond-replay": "^3.3.0"
+    "vimond-replay": "^3.3.0",
+    "vosk": "^0.3.39"
   },
   "devEngines": {
     "node": "16.x",

@@ -1,0 +1,245 @@
+{
+    "alternatives": [
+        {
+            "confidence": 1304.749146,
+            "result": [
+                {
+                    "end": 2.28,
+                    "start": 0.09,
+                    "word": "the"
+                },
+                {
+                    "end": 2.64,
+                    "start": 2.28,
+                    "word": "because"
+                },
+                {
+                    "end": 3.12,
+                    "start": 2.64,
+                    "word": "know"
+                },
+                {
+                    "end": 4.5,
+                    "start": 4.32,
+                    "word": "i"
+                },
+                {
+                    "end": 4.74,
+                    "start": 4.5,
+                    "word": "know"
+                },
+                {
+                    "end": 4.95,
+                    "start": 4.74,
+                    "word": "what"
+                },
+                {
+                    "end": 5.04,
+                    "start": 4.95,
+                    "word": "i"
+                },
+                {
+                    "end": 5.37,
+                    "start": 5.04,
+                    "word": "must"
+                },
+                {
+                    "end": 5.55,
+                    "start": 5.37,
+                    "word": "do"
+                },
+                {
+                    "end": 7.14,
+                    "start": 6.9,
+                    "word": "i"
+                },
+                {
+                    "end": 7.71,
+                    "start": 7.14,
+                    "word": "will"
+                },
+                {
+                    "end": 8.97,
+                    "start": 8.25,
+                    "word": "shred"
+                },
+                {
+                    "end": 9.24,
+                    "start": 9,
+                    "word": "this"
+                },
+                {
+                    "end": 9.84,
+                    "start": 9.24,
+                    "word": "universe"
+                },
+                {
+                    "end": 10.23,
+                    "start": 9.87,
+                    "word": "down"
+                },
+                {
+                    "end": 10.41,
+                    "start": 10.23,
+                    "word": "to"
+                },
+                {
+                    "end": 10.59,
+                    "start": 10.41,
+                    "word": "its"
+                },
+                {
+                    "end": 11.04,
+                    "start": 10.59,
+                    "word": "last"
+                },
+                {
+                    "end": 11.46,
+                    "start": 11.04,
+                    "word": "adam"
+                },
+                {
+                    "end": 13.56,
+                    "start": 13.02,
+                    "word": "men"
+                },
+                {
+                    "end": 14.82,
+                    "start": 14.67,
+                    "word": "with"
+                },
+                {
+                    "end": 14.88,
+                    "start": 14.82,
+                    "word": "the"
+                },
+                {
+                    "end": 15.42,
+                    "start": 14.88,
+                    "word": "stones"
+                },
+                {
+                    "end": 15.66,
+                    "start": 15.42,
+                    "word": "you've"
+                },
+                {
+                    "end": 16.2,
+                    "start": 15.66,
+                    "word": "collected"
+                },
+                {
+                    "end": 16.56,
+                    "start": 16.2,
+                    "word": "for"
+                },
+                {
+                    "end": 16.92,
+                    "start": 16.56,
+                    "word": "me"
+                },
+                {
+                    "end": 18.18,
+                    "start": 17.79,
+                    "word": "create"
+                },
+                {
+                    "end": 18.24,
+                    "start": 18.18,
+                    "word": "a"
+                },
+                {
+                    "end": 18.48,
+                    "start": 18.24,
+                    "word": "new"
+                },
+                {
+                    "end": 18.75,
+                    "start": 18.48,
+                    "word": "one"
+                },
+                {
+                    "end": 20.85,
+                    "start": 20.28,
+                    "word": "teaming"
+                },
+                {
+                    "end": 21.45,
+                    "start": 20.94,
+                    "word": "life"
+                },
+                {
+                    "end": 22.53,
+                    "start": 22.41,
+                    "word": "that"
+                },
+                {
+                    "end": 22.86,
+                    "start": 22.53,
+                    "word": "knows"
+                },
+                {
+                    "end": 23.25,
+                    "start": 22.86,
+                    "word": "not"
+                },
+                {
+                    "end": 23.49,
+                    "start": 23.25,
+                    "word": "what"
+                },
+                {
+                    "end": 23.58,
+                    "start": 23.49,
+                    "word": "it"
+                },
+                {
+                    "end": 23.76,
+                    "start": 23.58,
+                    "word": "is"
+                },
+                {
+                    "end": 24.21,
+                    "start": 23.76,
+                    "word": "loss"
+                },
+                {
+                    "end": 24.45,
+                    "start": 24.3,
+                    "word": "but"
+                },
+                {
+                    "end": 24.99,
+                    "start": 24.48,
+                    "word": "only"
+                },
+                {
+                    "end": 25.2,
+                    "start": 24.99,
+                    "word": "what"
+                },
+                {
+                    "end": 25.32,
+                    "start": 25.2,
+                    "word": "it"
+                },
+                {
+                    "end": 25.47,
+                    "start": 25.32,
+                    "word": "has"
+                },
+                {
+                    "end": 25.65,
+                    "start": 25.47,
+                    "word": "been"
+                },
+                {
+                    "end": 26.01,
+                    "start": 25.65,
+                    "word": "given"
+                }
+            ],
+            "text": "the because know i know what i must do i will shred this universe down to its last adam men with the stones you've collected for me create a new one teaming life that knows not what it is loss but only what it has been given"
+        }
+    ]
+}

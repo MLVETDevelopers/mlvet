@@ -1,0 +1,110 @@
+{
+    "alternatives": [
+        {
+            "confidence": 497.351105,
+            "result": [
+                {
+                    "end": 1.47,
+                    "start": 1.29,
+                    "word": "alright"
+                },
+                {
+                    "end": 1.59,
+                    "start": 1.47,
+                    "word": "so"
+                },
+                {
+                    "end": 1.74,
+                    "start": 1.59,
+                    "word": "here"
+                },
+                {
+                    "end": 1.86,
+                    "start": 1.74,
+                    "word": "we"
+                },
+                {
+                    "end": 2.13,
+                    "start": 1.86,
+                    "word": "are"
+                },
+                {
+                    "end": 4.68,
+                    "start": 2.34,
+                    "word": "the"
+                },
+                {
+                    "end": 5.67,
+                    "start": 5.16,
+                    "word": "clothing"
+                },
+                {
+                    "end": 5.97,
+                    "start": 5.85,
+                    "word": "for"
+                },
+                {
+                    "end": 6.18,
+                    "start": 5.97,
+                    "word": "these"
+                },
+                {
+                    "end": 6.48,
+                    "start": 6.18,
+                    "word": "guys"
+                },
+                {
+                    "end": 7.83,
+                    "start": 6.51,
+                    "word": "the"
+                },
+                {
+                    "end": 8.31,
+                    "start": 7.86,
+                    "word": "really"
+                },
+                {
+                    "end": 9.51,
+                    "start": 9.09,
+                    "word": "really"
+                },
+                {
+                    "end": 9.93,
+                    "start": 9.54,
+                    "word": "really"
+                },
+                {
+                    "end": 10.53,
+                    "start": 10.08,
+                    "word": "long"
+                },
+                {
+                    "end": 17.28,
+                    "start": 10.71,
+                    "word": "the"
+                },
+                {
+                    "end": 17.46,
+                    "start": 17.31,
+                    "word": "pretty"
+                },
+                {
+                    "end": 17.64,
+                    "start": 17.46,
+                    "word": "much"
+                },
+                {
+                    "end": 17.91,
+                    "start": 17.64,
+                    "word": "all"
+                },
+                {
+                    "end": 18.93,
+                    "start": 17.94,
+                    "word": "the"
+                }
+            ],
+            "text": "alright so here we are the clothing for these guys the really really really long the pretty much all the"
+        }
+    ]
+}

@@ -6,11 +6,11 @@ For large model: https://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip
 
 Extract the the compressed folder's contents. They should look like this:
 model-name
-model-name
-am
-conf
-...
-...
+-->model-name
+---->am
+---->conf
+---->...
+---->...
 
 Move the INNER-MOST 'model-name' directory into THIS DIRECTORY (/src/transcriptionAlternativeSpikes/vosk).
 

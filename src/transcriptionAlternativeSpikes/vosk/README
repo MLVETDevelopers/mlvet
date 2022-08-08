@@ -1,0 +1,20 @@
+Download the model you want to use:
+
+For medium model (good but not great): https://alphacephei.com/vosk/models/vosk-model-en-us-0.22-lgraph.zip
+
+For large model: https://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip
+
+Extract the the compressed folder's contents. They should look like this:
+model-name
+model-name
+am
+conf
+...
+...
+
+Move the INNER-MOST 'model-name' directory into THIS DIRECTORY (/src/transcriptionAlternativeSpikes/vosk).
+
+Edit the voskSpike.js file at line 9 so modelName refers to whatever the name of the directory (above) is.
+
+Edit voskSpike.js file at line 8 so fileName refers to whatever audio file you want to test with (depending where it is, you might also need to edit line 12).
+NOTE that only .wav files with mono audio channel are compatible

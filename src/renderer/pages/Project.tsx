@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import VideoController from 'renderer/components/VideoController';
@@ -8,6 +8,8 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import ResizeSlider from 'renderer/components/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
+import { useWindowResizer } from 'renderer/utils/hooks';
+import { clamp } from 'main/timeUtils';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { bufferedWordDuration } from '../../sharedUtils';
@@ -33,9 +35,17 @@ const ProjectPage = () => {
   const [videoPreviewContainerWidth, setVideoPreviewContainerWidth] =
     useDebounce(400, 0.1);
 
-  const [pageLayoutContainer, setPageLayoutContainer] =
-    useState<HTMLDivElement | null>(null);
+  const [pageWidth, setPageWidth] = useState<number>(1000);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+
+  useMemo(() => setPageWidth(window.innerWidth), []);
+
+  const pageResizeHandler = useCallback(
+    (width) => setPageWidth(width),
+    [setPageWidth]
+  );
+
+  useWindowResizer(pageResizeHandler);
 
   const videoPreviewOptions = useRef({
     minTranscriptionWidth: 120,
@@ -45,20 +55,20 @@ const ProjectPage = () => {
   // A manual way of calculating the min and max width of the viedeo preview container.
   // Will need to be updated if styling changes are made to avoid bugs
   const videoPreviewResizeOptions = useMemo(() => {
-    const pageLayoutContainerWidth = pageLayoutContainer
-      ? pageLayoutContainer?.clientWidth ?? 1000
-      : 1000;
-
     const pageLayoutPadding = 96 * 2 + 2;
 
     const minTargetWidth = videoPreviewOptions.current.minVideoPreviewWidth;
     const maxTargetWidth =
-      pageLayoutContainerWidth -
+      pageWidth -
       videoPreviewOptions.current.minTranscriptionWidth -
       pageLayoutPadding;
 
+    setVideoPreviewContainerWidth(
+      clamp(minTargetWidth, videoPreviewContainerWidth, maxTargetWidth)
+    );
+
     return { minTargetWidth, maxTargetWidth };
-  }, [pageLayoutContainer]);
+  }, [pageWidth, videoPreviewContainerWidth, setVideoPreviewContainerWidth]);
 
   const play = () => videoPreviewControllerRef?.current?.play();
   const pause = () => videoPreviewControllerRef?.current?.pause();
@@ -118,7 +128,6 @@ const ProjectPage = () => {
           px: '48px',
           py: '32px',
         }}
-        ref={setPageLayoutContainer}
       >
         <Stack id="transcription-container" spacing={4} sx={{ flex: '5 1 0' }}>
           {currentProject?.transcription && (

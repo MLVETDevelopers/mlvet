@@ -211,6 +211,7 @@
     "@fontsource/rubik": "^4.5.6",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.1",
+    "@react-hook/debounce": "^4.0.0",
     "buffer": "^6.0.3",
     "child_process": "^1.0.2",
     "dotenv": "^16.0.0",

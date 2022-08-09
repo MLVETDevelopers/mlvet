@@ -1,7 +1,7 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
@@ -44,9 +44,6 @@ const NewProjectView = ({
   projectName,
   setProjectName,
 }: Props) => {
-  const [isAwaitingProjectName, setIsAwaitingProjectName] =
-    useState<boolean>(true);
-
   const dispatch = useDispatch();
 
   const setProjectInStore = async (project: RuntimeProject) => {
@@ -66,17 +63,12 @@ const NewProjectView = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setProjectName(event.target.value);
-    if (event.target.value !== '') {
-      setIsAwaitingProjectName(false);
-    } else {
-      setIsAwaitingProjectName(true);
-    }
   };
 
   const continueButton = (
     <PrimaryButton
       onClick={handleContinue}
-      disabled={isAwaitingProjectName}
+      disabled={!projectName.trim()}
       fullWidth
     >
       Continue

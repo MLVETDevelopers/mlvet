@@ -18,10 +18,10 @@ const Divider = styled(Box)({
 const Slider = styled(Box)({
   opacity: 0,
   position: 'absolute',
-  left: '-5px',
-  right: '-5px',
-  top: '-5px',
-  bottom: '-5px',
+  left: '-8px',
+  right: '-8px',
+  top: '-8px',
+  bottom: '-8px',
   cursor: 'ew-resize',
   '&:active': {
     cursor: 'pointer',
@@ -31,7 +31,7 @@ const Slider = styled(Box)({
   '&:hover': {
     opacity: 0.5,
     backgroundColor: colors.grey[600],
-    borderRadius: '7px',
+    borderRadius: '9px',
     transition: '0.3s opacity ease',
   },
 });

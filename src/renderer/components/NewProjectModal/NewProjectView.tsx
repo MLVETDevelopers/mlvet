@@ -1,11 +1,4 @@
-import {
-  styled,
-  Stack,
-  Box,
-  TextField,
-  Typography,
-  Button,
-} from '@mui/material';
+import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ChangeEvent, useState } from 'react';
@@ -14,37 +7,34 @@ import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
 import { RuntimeProject } from '../../../sharedTypes';
+import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 
 interface Props {
   closeModal: () => void;
   nextView: () => void;
 }
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-  height: 100%;
-`;
+const CustomStack = styled(Stack)({
+  width: '100%',
+  height: '100%',
+});
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-`;
+const CustomColumnStack = styled(CustomStack)({
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+});
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
 
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-  height: 200px;
-`;
-
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+  height: '200px',
+});
 
 const NewProjectView = ({ closeModal, nextView }: Props) => {
   const [projectName, setProjectName] = useState<string>('');
@@ -78,20 +68,19 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
   };
 
   const continueButton = (
-    <CustomButton
-      color="primary"
+    <PrimaryButton
       onClick={handleContinue}
       disabled={isAwaitingProjectName}
-      sx={{ width: '100%' }}
+      fullWidth
     >
       Continue
-    </CustomButton>
+    </PrimaryButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={closeModal} sx={{ width: '100%' }}>
+    <SecondaryButton onClick={closeModal} fullWidth>
       Cancel
-    </CustomButton>
+    </SecondaryButton>
   );
 
   return (

@@ -1,4 +1,4 @@
-import { Box, styled, Stack, Typography, Button } from '@mui/material';
+import { Box, styled, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,34 +18,31 @@ import {
 } from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
+import { PrimaryButton } from '../Blocks/Buttons';
 
 const { extractAudio } = ipc;
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
+const CustomStack = styled(Stack)({
+  width: '100%',
+});
+
 const processTranscription = async (project: RuntimeProject) =>
   requestTranscription(project);
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-`;
+const CustomColumnStack = styled(CustomStack)({
+  flexDirection: 'column',
+});
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-`;
-
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+});
 
 interface Props {
   closeModal: () => void;
@@ -136,9 +133,9 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   getFileName();
 
   const completedButton = (
-    <CustomButton color="primary" onClick={nextView} sx={{ width: '100%' }}>
+    <PrimaryButton onClick={nextView} fullWidth>
       Get Started
-    </CustomButton>
+    </PrimaryButton>
   );
 
   return (

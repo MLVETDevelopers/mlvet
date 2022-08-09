@@ -9,9 +9,9 @@ interface Props {
   removeMediaFromImport: () => void;
 }
 
-const CustomBox = styled(Box)`
-  width: 100%;
-`;
+const CustomBox = styled(Box)({
+  width: '100%',
+});
 
 const MediaDisplayOnImport = ({ fileName, removeMediaFromImport }: Props) => {
   if (fileName === null) {

@@ -20,6 +20,8 @@ assets/videos/*
 
 # OSX
 .DS_Store
+# X-Code
+xcuserdata/
 
 release/app/dist
 release/build

@@ -10,7 +10,6 @@ const Slider = styled(SliderUnstyled)(`
   display: inline-block;
   position: relative;
   cursor: pointer;
-  touch-action: none;
 
   & .${sliderUnstyledClasses.rail} {
     display: block;
@@ -55,16 +54,35 @@ interface ScrubberProps {
   startTime: number;
   endTime: number;
   currentTime: number;
+  onScrubberChange: (newTime: number | null) => void;
 }
 
-const Scrubber = ({ startTime, endTime, currentTime }: ScrubberProps) => {
+const Scrubber = ({
+  startTime,
+  endTime,
+  currentTime,
+  onScrubberChange,
+}: ScrubberProps) => {
   const sliderValue = useMemo(() => {
     return (currentTime / endTime) * 100;
   }, [endTime, currentTime]);
 
+  const getNewTime = (newSliderValue: number | number[]) => {
+    if (typeof newSliderValue === 'number') {
+      return (newSliderValue / 100) * endTime;
+    }
+
+    const value = newSliderValue.shift();
+    return value ? (value / 100) * endTime : null;
+  };
+
   return (
     <div>
-      <Slider defaultValue={0} value={sliderValue} />
+      <Slider
+        defaultValue={0}
+        value={sliderValue}
+        onChange={(_, value) => onScrubberChange(getNewTime(value))}
+      />
       <TimestampContainer>
         <Timestamp>{startTime}</Timestamp>
         <Timestamp>{endTime}</Timestamp>

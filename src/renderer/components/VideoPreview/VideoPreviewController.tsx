@@ -29,6 +29,7 @@ export interface VideoPreviewControllerRef {
   setPlaybackTime: (time: number) => void;
   seekForward: () => void;
   seekBack: () => void;
+  seekNSeconds: (nSeconds: number) => void;
 }
 
 interface Props {
@@ -196,12 +197,17 @@ const VideoPreviewControllerBase = (
     setPlaybackTime(clockRef.current.time - skip.current);
   };
 
+  const seekNSeconds = (nSeconds: number) => {
+    setPlaybackTime(clockRef.current.time + nSeconds);
+  };
+
   useImperativeHandle(ref, () => ({
     play,
     pause,
     setPlaybackTime,
     seekForward,
     seekBack,
+    seekNSeconds,
   }));
 
   useEffect(() => {

@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import SliderUnstyled, {
   sliderUnstyledClasses,
 } from '@mui/base/SliderUnstyled';
 import { styled } from '@mui/material';
-import { useMemo } from 'react';
+import { secondToTimestampUI } from 'main/timeUtils';
 
 const Slider = styled(SliderUnstyled)(`
   width: 100%;
@@ -91,8 +92,8 @@ const Scrubber = ({
         onChange={(_, value) => onScrubberChange(getNewTime(value))}
       />
       <TimestampContainer>
-        <Timestamp>{startTime}</Timestamp>
-        <Timestamp>{endTime}</Timestamp>
+        <Timestamp>{secondToTimestampUI(startTime)}</Timestamp>
+        <Timestamp>{secondToTimestampUI(endTime)}</Timestamp>
       </TimestampContainer>
     </div>
   );

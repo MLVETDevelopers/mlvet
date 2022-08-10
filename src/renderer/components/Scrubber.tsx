@@ -4,6 +4,7 @@ import SliderUnstyled, {
 } from '@mui/base/SliderUnstyled';
 import { styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
+import colors from 'renderer/colors';
 
 const Slider = styled(SliderUnstyled)(`
   width: 100%;
@@ -22,14 +23,14 @@ const Slider = styled(SliderUnstyled)(`
     position: absolute;
     width: 100%;
     height: 5px;
-    background-color: #D9D9D9;
+    background-color: ${colors.grey[300]};
   }
 
   & .${sliderUnstyledClasses.track} {
     display: block;
     position: absolute;
     height: 5px;
-    background-color: #FFB355CC;
+    background-color: ${colors.yellow[500]}CC;
   }
 
   & .${sliderUnstyledClasses.thumb} {
@@ -39,7 +40,7 @@ const Slider = styled(SliderUnstyled)(`
     margin-left: -5px;
     margin-top: -5px;
     border-radius: 50%;
-    background-color: #FFB355;
+    background-color: ${colors.yellow[500]};
     opacity: 0;
     transition: opacity 0.2s ease;
   }

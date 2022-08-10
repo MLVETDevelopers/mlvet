@@ -11,6 +11,11 @@ const Slider = styled(SliderUnstyled)(`
   position: relative;
   cursor: pointer;
 
+  &:hover .${sliderUnstyledClasses.thumb} {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
   & .${sliderUnstyledClasses.rail} {
     display: block;
     position: absolute;
@@ -23,7 +28,7 @@ const Slider = styled(SliderUnstyled)(`
     display: block;
     position: absolute;
     height: 5px;
-    background-color: #FFB3554D;
+    background-color: #FFB355CC;
   }
 
   & .${sliderUnstyledClasses.thumb} {
@@ -34,6 +39,8 @@ const Slider = styled(SliderUnstyled)(`
     margin-top: -5px;
     border-radius: 50%;
     background-color: #FFB355;
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 `);
 

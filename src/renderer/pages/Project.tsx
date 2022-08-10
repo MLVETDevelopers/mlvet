@@ -8,6 +8,7 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import ResizeSlider from 'renderer/components/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
+import Scrubber from 'renderer/components/Scrubber';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { bufferedWordDuration } from '../../sharedUtils';
@@ -146,6 +147,7 @@ const ProjectPage = () => {
               setIsPlaying={setIsPlaying}
               ref={videoPreviewControllerRef}
             />
+            <Scrubber startTime={0} endTime={65.79} currentTime={time} />
           </Box>
         </Stack>
         {isExporting && (

@@ -76,8 +76,6 @@ const Scrubber = ({
     return (currentTimeSeconds / totalDuration) * 100;
   }, [currentTimeSeconds, totalDuration]);
 
-  // @ Dan Feltham - stop peeking at my commits
-
   const sliderValueToSeconds = (value: number) => (value / 100) * totalDuration;
 
   const getNewTime = (newSliderValue: number | number[]) => {
@@ -101,11 +99,14 @@ const Scrubber = ({
         onChange={(_, value) => onScrubberChange(getNewTime(value))}
       />
       <TimestampContainer>
-        <Timestamp>{secondToTimestampUI(currentTimeSeconds)}</Timestamp>
+        <Timestamp>{secondToTimestampUI(currentTimeSeconds, false)}</Timestamp>
         <Timestamp onClick={() => setShowRemainingTime(!showRemainingTime)}>
           {showRemainingTime
-            ? `-${secondToTimestampUI(totalDuration - currentTimeSeconds)}`
-            : secondToTimestampUI(totalDuration)}
+            ? `-${secondToTimestampUI(
+                totalDuration - currentTimeSeconds,
+                false
+              )}`
+            : secondToTimestampUI(totalDuration, false)}
         </Timestamp>
       </TimestampContainer>
     </div>

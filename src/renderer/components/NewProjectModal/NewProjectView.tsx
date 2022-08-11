@@ -1,7 +1,7 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
@@ -12,6 +12,8 @@ import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 interface Props {
   closeModal: () => void;
   nextView: () => void;
+  projectName: string;
+  setProjectName: (projectName: string) => void;
 }
 
 const CustomStack = styled(Stack)({
@@ -36,11 +38,12 @@ const Container = styled(Box)({
   height: '200px',
 });
 
-const NewProjectView = ({ closeModal, nextView }: Props) => {
-  const [projectName, setProjectName] = useState<string>('');
-  const [isAwaitingProjectName, setIsAwaitingProjectName] =
-    useState<boolean>(true);
-
+const NewProjectView = ({
+  closeModal,
+  nextView,
+  projectName,
+  setProjectName,
+}: Props) => {
   const dispatch = useDispatch();
 
   const setProjectInStore = async (project: RuntimeProject) => {
@@ -60,17 +63,12 @@ const NewProjectView = ({ closeModal, nextView }: Props) => {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setProjectName(event.target.value);
-    if (event.target.value !== '') {
-      setIsAwaitingProjectName(false);
-    } else {
-      setIsAwaitingProjectName(true);
-    }
   };
 
   const continueButton = (
     <PrimaryButton
       onClick={handleContinue}
-      disabled={isAwaitingProjectName}
+      disabled={!projectName.trim()}
       fullWidth
     >
       Continue

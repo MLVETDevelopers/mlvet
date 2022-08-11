@@ -114,11 +114,9 @@ const ProjectPage = () => {
     }
   };
 
-  const onScrubberChange = (newTime: number | null) => {
-    if (newTime) {
-      const nSeconds = newTime - time;
-      videoPreviewControllerRef.current?.seekNSeconds(nSeconds);
-    }
+  const onScrubberChange = (newTime: number) => {
+    const nSeconds = newTime - time;
+    videoPreviewControllerRef.current?.seekNSeconds(nSeconds);
   };
 
   return (
@@ -170,9 +168,8 @@ const ProjectPage = () => {
               ref={videoPreviewControllerRef}
             />
             <Scrubber
-              startTime={0}
-              endTime={videoEndTime}
-              currentTime={time}
+              totalDuration={videoEndTime}
+              currentTimeSeconds={time}
               onScrubberChange={onScrubberChange}
             />
           </Box>

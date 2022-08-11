@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import SliderUnstyled, {
   sliderUnstyledClasses,
 } from '@mui/base/SliderUnstyled';
@@ -57,32 +57,40 @@ const TimestampContainer = styled('div')({
 const Timestamp = styled('div')({
   fontFamily: '"Roboto Mono", monospace',
   fontSize: 12,
+  cursor: 'pointer',
 });
 
 interface ScrubberProps {
-  startTime: number;
-  endTime: number;
-  currentTime: number;
-  onScrubberChange: (newTime: number | null) => void;
+  totalDuration: number;
+  currentTimeSeconds: number;
+  onScrubberChange: (newTime: number) => void;
 }
 
 const Scrubber = ({
-  startTime,
-  endTime,
-  currentTime,
+  totalDuration,
+  currentTimeSeconds,
   onScrubberChange,
 }: ScrubberProps) => {
+  const [showRemainingTime, setShowRemainingTime] = useState(false);
   const sliderValue = useMemo(() => {
-    return (currentTime / endTime) * 100;
-  }, [endTime, currentTime]);
+    return (currentTimeSeconds / totalDuration) * 100;
+  }, [currentTimeSeconds, totalDuration]);
+
+  // @ Dan Feltham - stop peeking at my commits
+
+  const sliderValueToSeconds = (value: number) => (value / 100) * totalDuration;
 
   const getNewTime = (newSliderValue: number | number[]) => {
+    // The MUI slider component can return a number or an array of numbers. For this usage
+    // we only get a single number, however we still need to check if the value is an array or
+    // not. If it is an array, we take the first value. This does however have a side effect
+    // of the value being null, in this case, we just return the current timestamp.
     if (typeof newSliderValue === 'number') {
-      return (newSliderValue / 100) * endTime;
+      return sliderValueToSeconds(newSliderValue);
     }
 
     const value = newSliderValue.shift();
-    return value ? (value / 100) * endTime : null;
+    return value ? sliderValueToSeconds(value) : currentTimeSeconds;
   };
 
   return (
@@ -93,8 +101,12 @@ const Scrubber = ({
         onChange={(_, value) => onScrubberChange(getNewTime(value))}
       />
       <TimestampContainer>
-        <Timestamp>{secondToTimestampUI(startTime)}</Timestamp>
-        <Timestamp>{secondToTimestampUI(endTime)}</Timestamp>
+        <Timestamp>{secondToTimestampUI(currentTimeSeconds)}</Timestamp>
+        <Timestamp onClick={() => setShowRemainingTime(!showRemainingTime)}>
+          {showRemainingTime
+            ? `-${secondToTimestampUI(totalDuration - currentTimeSeconds)}`
+            : secondToTimestampUI(totalDuration)}
+        </Timestamp>
       </TimestampContainer>
     </div>
   );

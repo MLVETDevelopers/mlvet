@@ -9,18 +9,18 @@ import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 import CancelProjectModal from '../CancelProjectModal';
 
-const CustomModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+const CustomModal = styled(Modal)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
 
-const CustomModalInner = styled(Box)`
-  background: ${colors.grey[700]};
-  padding: 15px 30px 30px 30px;
-  border-radius: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-`;
+const CustomModalInner = styled(Box)({
+  background: colors.grey[700],
+  padding: '15px 30px 30px 30px',
+  borderRadius: '5px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+});
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +29,7 @@ interface Props {
 
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
+  const [projectName, setProjectName] = useState<string>('');
 
   const dispatch = useDispatch();
 
@@ -51,6 +52,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const handleModalClose: () => void = () => {
     closeModal();
     setCurrentView(0);
+    setProjectName('');
   };
 
   const nextView: () => void = () => {
@@ -75,7 +77,12 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     switch (viewComponent) {
       case NewProjectView:
         return (
-          <NewProjectView closeModal={showCancelProject} nextView={nextView} />
+          <NewProjectView
+            closeModal={showCancelProject}
+            nextView={nextView}
+            projectName={projectName}
+            setProjectName={setProjectName}
+          />
         );
       case ImportMediaView:
         return (

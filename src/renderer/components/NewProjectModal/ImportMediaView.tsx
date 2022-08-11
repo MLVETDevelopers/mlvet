@@ -1,21 +1,15 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Stack, styled, Typography } from '@mui/material';
+import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import {
-  updateProjectWithMedia,
-  updateProjectWithExtractedAudio,
-} from '../../util';
 import SelectMediaBlock from '../SelectMediaBlock';
 import MediaDisplayOnImport from '../MediaDisplayOnImport';
-import ipc from '../../ipc';
-
-const { extractAudio } = ipc;
+import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 
 interface Props {
   prevView: () => void;
@@ -23,26 +17,18 @@ interface Props {
   nextView: () => void;
 }
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-`;
+const CustomStack = styled(Stack)({ width: '100%' });
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-`;
+const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-`;
-
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+});
 
 const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   const [isAwaitingMedia, setIsAwaitingMedia] = useState<boolean>(true);
@@ -52,6 +38,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     (store: ApplicationStore) => store.currentProject
   );
 
+  const dispatch = useDispatch();
+
+  const setCurrentProject = (project: RuntimeProject) => {
+    return dispatch(projectCreated(project));
+  };
+
   // Reset the import - for when delete button is pressed on media
   const removeMediaFromImport: () => void = () => {
     setIsAwaitingMedia(true);
@@ -59,62 +51,39 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     setMediaFileName(null);
   };
 
-  const dispatch = useDispatch();
-
   if (currentProject === null) {
     return null;
   }
 
   const projectName = currentProject.name;
 
-  const setCurrentProject = (project: RuntimeProject) =>
-    dispatch(projectCreated(project));
-
   const handleTranscribe = async () => {
-    if (mediaFilePath === null) {
+    const projectWithMedia = {
+      ...currentProject,
+      mediaFilePath,
+    };
+
+    if (projectWithMedia.mediaFilePath == null) {
       return;
     }
-
-    const projectWithMedia = await updateProjectWithMedia(
-      currentProject,
-      mediaFilePath
-    );
-
-    if (projectWithMedia === null) {
-      return;
-    }
-
-    const audioFilePath = await extractAudio(projectWithMedia);
-
-    const projectWithAudioExtract = await updateProjectWithExtractedAudio(
-      projectWithMedia,
-      audioFilePath
-    );
-
-    if (projectWithAudioExtract === null) {
-      return;
-    }
-
-    setCurrentProject(projectWithAudioExtract);
-
+    setCurrentProject(projectWithMedia);
     nextView();
   };
 
   const transcribeButton = (
-    <CustomButton
-      color="primary"
+    <PrimaryButton
       onClick={handleTranscribe}
       disabled={isAwaitingMedia}
-      sx={{ width: '100%' }}
+      fullWidth
     >
       Transcribe
-    </CustomButton>
+    </PrimaryButton>
   );
 
   const cancelButton = (
-    <CustomButton color="secondary" onClick={prevView} sx={{ width: '100%' }}>
+    <SecondaryButton onClick={prevView} fullWidth>
       Back
-    </CustomButton>
+    </SecondaryButton>
   );
 
   return (

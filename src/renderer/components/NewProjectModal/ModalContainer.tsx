@@ -1,14 +1,4 @@
-import {
-  Modal,
-  styled,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Modal, styled, Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/currentPage/actions';
@@ -17,6 +7,7 @@ import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
+import CancelProjectModal from '../CancelProjectModal';
 
 const CustomModal = styled(Modal)`
   display: flex;
@@ -31,10 +22,6 @@ const CustomModalInner = styled(Box)`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
-const CustomDialog = styled(Dialog)`
-  background: ${colors.grey[700]};
-`;
-
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
@@ -42,7 +29,6 @@ interface Props {
 
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
-  const [openDialog, setOpenDialog] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -51,6 +37,10 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
       dispatch(pageChanged(applicationPage)),
     [dispatch]
   );
+  const [showingCancelProject, setShowingCancelProject] = useState(false);
+
+  const closeCancelProject = () => setShowingCancelProject(false);
+  const showCancelProject = () => setShowingCancelProject(true);
 
   const viewComponents = [
     NewProjectView,
@@ -59,7 +49,6 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   ];
 
   const handleModalClose: () => void = () => {
-    setOpenDialog(false);
     closeModal();
     setCurrentView(0);
   };
@@ -86,20 +75,20 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     switch (viewComponent) {
       case NewProjectView:
         return (
-          <NewProjectView closeModal={handleModalClose} nextView={nextView} />
+          <NewProjectView closeModal={showCancelProject} nextView={nextView} />
         );
       case ImportMediaView:
         return (
           <ImportMediaView
             prevView={prevView}
-            closeModal={handleModalClose}
+            closeModal={showCancelProject}
             nextView={nextView}
           />
         );
       case RunTranscriptionView:
         return (
           <RunTranscriptionView
-            closeModal={handleModalClose}
+            closeModal={showCancelProject}
             nextView={nextView}
           />
         );
@@ -108,39 +97,18 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     }
   })();
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-  };
-  const runOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
   return (
     <div>
-      <CustomModal open={isOpen} onClose={runOpenDialog}>
+      <CustomModal open={isOpen} onClose={showCancelProject}>
         <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
           {view}
         </CustomModalInner>
       </CustomModal>
-      <CustomDialog
-        open={openDialog}
-        onClose={handleDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Cancel new project</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to cancel this project?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose}>Yes</Button>
-          <Button onClick={handleDialogClose} autoFocus>
-            No
-          </Button>
-        </DialogActions>
-      </CustomDialog>
+      <CancelProjectModal
+        isOpen={showingCancelProject}
+        closeDialog={closeCancelProject}
+        handleModalClose={handleModalClose}
+      />
     </div>
   );
 };

@@ -1,0 +1,672 @@
+results {
+  alternatives {
+    transcript: "because now"
+    confidence: 0.9721954464912415
+    words {
+      start_time {
+        seconds: 2
+      }
+      end_time {
+        seconds: 2
+        nanos: 400000000
+      }
+      word: "because"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 2
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 2
+        nanos: 800000000
+      }
+      word: "now"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 4
+    nanos: 60000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " I know what I must do"
+    confidence: 0.9721954464912415
+    words {
+      start_time {
+        seconds: 4
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 300000000
+      }
+      word: "I"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 600000000
+      }
+      word: "know"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      word: "what"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      word: "I"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 5
+        nanos: 200000000
+      }
+      word: "must"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 5
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 5
+        nanos: 400000000
+      }
+      word: "do"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 6
+    nanos: 400000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " I will"
+    confidence: 0.9721954464912415
+    words {
+      start_time {
+        seconds: 6
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 6
+        nanos: 900000000
+      }
+      word: "I"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 6
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 7
+        nanos: 400000000
+      }
+      word: "will"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 8
+    nanos: 250000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " shred this universe down to its last Adam"
+    confidence: 0.9507287740707397
+    words {
+      start_time {
+        seconds: 8
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 8
+        nanos: 800000000
+      }
+      word: "shred"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 8
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 9
+        nanos: 200000000
+      }
+      word: "this"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 9
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 9
+        nanos: 700000000
+      }
+      word: "universe"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 9
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 10
+      }
+      word: "down"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 10
+      }
+      end_time {
+        seconds: 10
+        nanos: 200000000
+      }
+      word: "to"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 10
+        nanos: 400000000
+      }
+      word: "its"
+      confidence: 0.9635798931121826
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 10
+        nanos: 900000000
+      }
+      word: "last"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 11
+        nanos: 400000000
+      }
+      word: "Adam"
+      confidence: 0.8090775012969971
+    }
+  }
+  result_end_time {
+    seconds: 11
+    nanos: 930000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " and then"
+    confidence: 0.9614695310592651
+    words {
+      start_time {
+        seconds: 12
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 900000000
+      }
+      word: "and"
+      confidence: 0.953160285949707
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 13
+        nanos: 400000000
+      }
+      word: "then"
+      confidence: 0.969778835773468
+    }
+  }
+  result_end_time {
+    seconds: 14
+    nanos: 310000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " with the stones you\'ve collected for me"
+    confidence: 0.9363561868667603
+    words {
+      start_time {
+        seconds: 14
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 15
+      }
+      word: "with"
+      confidence: 0.850356936454773
+    }
+    words {
+      start_time {
+        seconds: 15
+      }
+      end_time {
+        seconds: 15
+        nanos: 100000000
+      }
+      word: "the"
+      confidence: 0.850356936454773
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 300000000
+      }
+      word: "stones"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 500000000
+      }
+      word: "you\'ve"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 900000000
+      }
+      word: "collected"
+      confidence: 0.9649975895881653
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 16
+        nanos: 400000000
+      }
+      word: "for"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 16
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 16
+        nanos: 700000000
+      }
+      word: "me"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 17
+    nanos: 510000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " create a new one"
+    confidence: 0.9721954464912415
+    words {
+      start_time {
+        seconds: 17
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 200000000
+      }
+      word: "create"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 300000000
+      }
+      word: "a"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 300000000
+      }
+      word: "new"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 600000000
+      }
+      word: "one"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 19
+    nanos: 290000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " teaming with life"
+    confidence: 0.8760380148887634
+    words {
+      start_time {
+        seconds: 20
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 20
+        nanos: 800000000
+      }
+      word: "teaming"
+      confidence: 0.8068981170654297
+    }
+    words {
+      start_time {
+        seconds: 20
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 20
+        nanos: 800000000
+      }
+      word: "with"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 20
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 21
+        nanos: 300000000
+      }
+      word: "life"
+      confidence: 0.8490204811096191
+    }
+  }
+  result_end_time {
+    seconds: 21
+    nanos: 920000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " that knows not what it is lost but only what it is been given"    confidence: 0.9342970848083496
+    words {
+      start_time {
+        seconds: 22
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 22
+        nanos: 500000000
+      }
+      word: "that"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 22
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 22
+        nanos: 900000000
+      }
+      word: "knows"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 22
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 100000000
+      }
+      word: "not"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 300000000
+      }
+      word: "what"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 500000000
+      }
+      word: "it"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 600000000
+      }
+      word: "is"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 24
+        nanos: 100000000
+      }
+      word: "lost"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 24
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 24
+        nanos: 400000000
+      }
+      word: "but"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 24
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 24
+        nanos: 800000000
+      }
+      word: "only"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 24
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 100000000
+      }
+      word: "what"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 200000000
+      }
+      word: "it"
+      confidence: 0.9721954464912415
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 300000000
+      }
+      word: "is"
+      confidence: 0.7069059610366821
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 500000000
+      }
+      word: "been"
+      confidence: 0.7069059610366821
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 900000000
+      }
+      word: "given"
+      confidence: 0.9721954464912415
+    }
+  }
+  result_end_time {
+    seconds: 26
+    nanos: 930000000
+  }
+  language_code: "en-us"
+}
+total_billed_time {
+  seconds: 30
+}

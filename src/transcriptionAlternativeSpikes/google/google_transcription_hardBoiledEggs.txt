@@ -1,0 +1,3917 @@
+results {
+  alternatives {
+    transcript: "that was actually an example of how not so amazing you want spoil you really going through something here I know"
+    confidence: 0.8174037933349609
+    words {
+      start_time {
+        nanos: 400000000
+      }
+      end_time {
+        nanos: 500000000
+      }
+      word: "that"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        nanos: 500000000
+      }
+      end_time {
+        nanos: 600000000
+      }
+      word: "was"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        nanos: 600000000
+      }
+      end_time {
+        nanos: 900000000
+      }
+      word: "actually"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 1
+      }
+      word: "an"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 1
+      }
+      end_time {
+        seconds: 1
+        nanos: 500000000
+      }
+      word: "example"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 1
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 1
+        nanos: 600000000
+      }
+      word: "of"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 1
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 1
+        nanos: 700000000
+      }
+      word: "how"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 1
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 2
+        nanos: 100000000
+      }
+      word: "not"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 2
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 2
+        nanos: 300000000
+      }
+      word: "so"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 2
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 2
+        nanos: 800000000
+      }
+      word: "amazing"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 2
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 3
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 3
+      }
+      end_time {
+        seconds: 3
+        nanos: 200000000
+      }
+      word: "want"
+      confidence: 0.7409875392913818
+    }
+    words {
+      start_time {
+        seconds: 3
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 3
+        nanos: 500000000
+      }
+      word: "spoil"
+      confidence: 0.7137386202812195
+    }
+    words {
+      start_time {
+        seconds: 3
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 3
+        nanos: 600000000
+      }
+      word: "you"
+      confidence: 0.7015619277954102
+    }
+    words {
+      start_time {
+        seconds: 3
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 3
+        nanos: 800000000
+      }
+      word: "really"
+      confidence: 0.7461945414543152
+    }
+    words {
+      start_time {
+        seconds: 3
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 100000000
+      }
+      word: "going"
+      confidence: 0.7276666760444641
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 300000000
+      }
+      word: "through"
+      confidence: 0.7209270596504211
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      word: "something"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 4
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 5
+        nanos: 200000000
+      }
+      word: "here"
+      confidence: 0.6348586678504944
+    }
+    words {
+      start_time {
+        seconds: 6
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 6
+        nanos: 400000000
+      }
+      word: "I"
+      confidence: 0.6821598410606384
+    }
+    words {
+      start_time {
+        seconds: 6
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 7
+        nanos: 100000000
+      }
+      word: "know"
+      confidence: 0.5433189272880554
+    }
+  }
+  result_end_time {
+    seconds: 7
+    nanos: 470000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " funny all those years when I pretended to cry I used to use dad\'s death to get me going I tried it with moms but I just end up smiling and ruining it but it feels like real you know and you haven\'t really allowed yourself to grieve much at all my relationship with Dad was much more much more complicated than the origins of predicated a lot on secrets and lies there wasn\'t a whole lot of trust there you know here he comes here comes John Wayne"
+    confidence: 0.9056819677352905
+    words {
+      start_time {
+        seconds: 8
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 8
+        nanos: 800000000
+      }
+      word: "funny"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 9
+      }
+      end_time {
+        seconds: 9
+        nanos: 200000000
+      }
+      word: "all"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 9
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 9
+        nanos: 500000000
+      }
+      word: "those"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 9
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 9
+        nanos: 900000000
+      }
+      word: "years"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 9
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 10
+      }
+      word: "when"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 10
+      }
+      end_time {
+        seconds: 10
+        nanos: 100000000
+      }
+      word: "I"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 10
+        nanos: 500000000
+      }
+      word: "pretended"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 10
+        nanos: 600000000
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 10
+        nanos: 800000000
+      }
+      word: "cry"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 10
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 11
+      }
+      word: "I"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 11
+      }
+      end_time {
+        seconds: 11
+        nanos: 200000000
+      }
+      word: "used"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 11
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 11
+        nanos: 200000000
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 11
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 11
+        nanos: 500000000
+      }
+      word: "use"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 11
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 11
+        nanos: 800000000
+      }
+      word: "dad\'s"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 11
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 100000000
+      }
+      word: "death"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 200000000
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 400000000
+      }
+      word: "get"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 500000000
+      }
+      word: "me"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 12
+        nanos: 900000000
+      }
+      word: "going"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 12
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 13
+      }
+      word: "I"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 13
+      }
+      end_time {
+        seconds: 13
+        nanos: 200000000
+      }
+      word: "tried"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 13
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 13
+        nanos: 300000000
+      }
+      word: "it"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 13
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 13
+        nanos: 400000000
+      }
+      word: "with"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 13
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 13
+        nanos: 800000000
+      }
+      word: "moms"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 13
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 14
+      }
+      word: "but"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 14
+      }
+      end_time {
+        seconds: 14
+        nanos: 100000000
+      }
+      word: "I"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 14
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 14
+        nanos: 400000000
+      }
+      word: "just"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 14
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 14
+        nanos: 500000000
+      }
+      word: "end"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 14
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 14
+        nanos: 800000000
+      }
+      word: "up"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 14
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 300000000
+      }
+      word: "smiling"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 500000000
+      }
+      word: "and"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 15
+        nanos: 800000000
+      }
+      word: "ruining"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 15
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 16
+      }
+      word: "it"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 16
+      }
+      end_time {
+        seconds: 16
+        nanos: 400000000
+      }
+      word: "but"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 17
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 17
+        nanos: 300000000
+      }
+      word: "it"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 17
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 17
+        nanos: 700000000
+      }
+      word: "feels"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 17
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 18
+      }
+      word: "like"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 18
+      }
+      end_time {
+        seconds: 18
+        nanos: 400000000
+      }
+      word: "real"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 600000000
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 18
+        nanos: 900000000
+      }
+      word: "know"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 18
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 19
+        nanos: 400000000
+      }
+      word: "and"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 19
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 19
+        nanos: 500000000
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 19
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 19
+        nanos: 900000000
+      }
+      word: "haven\'t"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 19
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 20
+        nanos: 100000000
+      }
+      word: "really"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 20
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 20
+        nanos: 500000000
+      }
+      word: "allowed"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 20
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 20
+        nanos: 900000000
+      }
+      word: "yourself"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 20
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 21
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 21
+      }
+      end_time {
+        seconds: 21
+        nanos: 500000000
+      }
+      word: "grieve"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 21
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 21
+        nanos: 700000000
+      }
+      word: "much"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 21
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 21
+        nanos: 800000000
+      }
+      word: "at"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 21
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 22
+        nanos: 100000000
+      }
+      word: "all"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 22
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 23
+      }
+      word: "my"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 23
+      }
+      end_time {
+        seconds: 23
+        nanos: 500000000
+      }
+      word: "relationship"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 600000000
+      }
+      word: "with"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 23
+        nanos: 800000000
+      }
+      word: "Dad"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 23
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 24
+      }
+      word: "was"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 24
+      }
+      end_time {
+        seconds: 24
+        nanos: 300000000
+      }
+      word: "much"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 24
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 24
+        nanos: 700000000
+      }
+      word: "more"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 500000000
+      }
+      word: "much"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 25
+        nanos: 600000000
+      }
+      word: "more"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 25
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 26
+        nanos: 300000000
+      }
+      word: "complicated"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 26
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 26
+        nanos: 400000000
+      }
+      word: "than"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 26
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 26
+        nanos: 400000000
+      }
+      word: "the"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 26
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 26
+        nanos: 700000000
+      }
+      word: "origins"
+      confidence: 0.78377366065979
+    }
+    words {
+      start_time {
+        seconds: 26
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 26
+        nanos: 800000000
+      }
+      word: "of"
+      confidence: 0.7837738990783691
+    }
+    words {
+      start_time {
+        seconds: 26
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 27
+        nanos: 200000000
+      }
+      word: "predicated"
+      confidence: 0.9055529236793518
+    }
+    words {
+      start_time {
+        seconds: 27
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 27
+        nanos: 300000000
+      }
+      word: "a"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 27
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 27
+        nanos: 400000000
+      }
+      word: "lot"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 27
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 27
+        nanos: 600000000
+      }
+      word: "on"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 27
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 28
+      }
+      word: "secrets"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 28
+      }
+      end_time {
+        seconds: 28
+        nanos: 200000000
+      }
+      word: "and"
+      confidence: 0.8739418387413025
+    }
+    words {
+      start_time {
+        seconds: 28
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 28
+        nanos: 500000000
+      }
+      word: "lies"
+      confidence: 0.8549730777740479
+    }
+    words {
+      start_time {
+        seconds: 28
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 28
+        nanos: 600000000
+      }
+      word: "there"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 28
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 28
+        nanos: 800000000
+      }
+      word: "wasn\'t"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 28
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 28
+        nanos: 900000000
+      }
+      word: "a"
+      confidence: 0.7837738990783691
+    }
+    words {
+      start_time {
+        seconds: 28
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 29
+      }
+      word: "whole"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 29
+      }
+      end_time {
+        seconds: 29
+        nanos: 200000000
+      }
+      word: "lot"
+      confidence: 0.8520779609680176
+    }
+    words {
+      start_time {
+        seconds: 29
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 29
+        nanos: 500000000
+      }
+      word: "of"
+      confidence: 0.8789571523666382
+    }
+    words {
+      start_time {
+        seconds: 30
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 30
+        nanos: 600000000
+      }
+      word: "trust"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 30
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 31
+      }
+      word: "there"
+      confidence: 0.8768883347511292
+    }
+    words {
+      start_time {
+        seconds: 31
+      }
+      end_time {
+        seconds: 31
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 31
+      }
+      end_time {
+        seconds: 31
+        nanos: 400000000
+      }
+      word: "know"
+      confidence: 0.8977140188217163
+    }
+    words {
+      start_time {
+        seconds: 31
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 32
+        nanos: 100000000
+      }
+      word: "here"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 32
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 32
+        nanos: 200000000
+      }
+      word: "he"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 32
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 32
+        nanos: 900000000
+      }
+      word: "comes"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 33
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 33
+        nanos: 600000000
+      }
+      word: "here"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 33
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 34
+      }
+      word: "comes"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 34
+      }
+      end_time {
+        seconds: 34
+        nanos: 400000000
+      }
+      word: "John"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 34
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 35
+      }
+      word: "Wayne"
+      confidence: 0.9128385782241821
+    }
+  }
+  result_end_time {
+    seconds: 35
+    nanos: 600000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+    transcript: " I\'m not going to cry about my Paw I\'m going to build an airport put my name on it why Michael so you can fly away from your feelings you can keep them bottled up but they will come out Michael sometimes in the most unexpected hey where the hell are my hard-boiled eggs"
+    confidence: 0.9128382802009583
+    words {
+      start_time {
+        seconds: 36
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 37
+        nanos: 100000000
+      }
+      word: "I\'m"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 37
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 37
+        nanos: 400000000
+      }
+      word: "not"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 37
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 37
+        nanos: 600000000
+      }
+      word: "going"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 37
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 37
+        nanos: 700000000
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 37
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 38
+        nanos: 200000000
+      }
+      word: "cry"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 38
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 38
+        nanos: 700000000
+      }
+      word: "about"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 38
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 38
+        nanos: 900000000
+      }
+      word: "my"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 38
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 39
+        nanos: 700000000
+      }
+      word: "Paw"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 40
+      }
+      end_time {
+        seconds: 40
+        nanos: 300000000
+      }
+      word: "I\'m"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 40
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 40
+        nanos: 400000000
+      }
+      word: "going"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 40
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 40
+        nanos: 500000000
+      }
+      word: "to"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 40
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 40
+        nanos: 900000000
+      }
+      word: "build"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 40
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 41
+      }
+      word: "an"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 41
+      }
+      end_time {
+        seconds: 41
+        nanos: 800000000
+      }
+      word: "airport"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 41
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 42
+      }
+      word: "put"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 42
+      }
+      end_time {
+        seconds: 42
+        nanos: 100000000
+      }
+      word: "my"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 42
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 42
+        nanos: 500000000
+      }
+      word: "name"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 42
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 42
+        nanos: 700000000
+      }
+      word: "on"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 42
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 43
+      }
+      word: "it"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 43
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 43
+        nanos: 400000000
+      }
+      word: "why"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 43
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 44
+      }
+      word: "Michael"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 44
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 44
+        nanos: 800000000
+      }
+      word: "so"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 44
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 44
+        nanos: 900000000
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 44
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 45
+        nanos: 100000000
+      }
+      word: "can"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 45
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 45
+        nanos: 500000000
+      }
+      word: "fly"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 45
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 45
+        nanos: 900000000
+      }
+      word: "away"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 45
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 46
+        nanos: 100000000
+      }
+      word: "from"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 46
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 46
+        nanos: 200000000
+      }
+      word: "your"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 46
+        nanos: 200000000
+      }
+      end_time {
+        seconds: 46
+        nanos: 900000000
+      }
+      word: "feelings"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 48
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 48
+        nanos: 400000000
+      }
+      word: "you"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 48
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 48
+        nanos: 500000000
+      }
+      word: "can"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 48
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 48
+        nanos: 700000000
+      }
+      word: "keep"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 48
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 48
+        nanos: 900000000
+      }
+      word: "them"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 48
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 49
+        nanos: 300000000
+      }
+      word: "bottled"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 49
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 49
+        nanos: 400000000
+      }
+      word: "up"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 49
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 49
+        nanos: 600000000
+      }
+      word: "but"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 49
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 49
+        nanos: 700000000
+      }
+      word: "they"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 49
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 50
+        nanos: 100000000
+      }
+      word: "will"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 50
+        nanos: 100000000
+      }
+      end_time {
+        seconds: 50
+        nanos: 300000000
+      }
+      word: "come"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 50
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 50
+        nanos: 500000000
+      }
+      word: "out"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 50
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 50
+        nanos: 900000000
+      }
+      word: "Michael"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 50
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 51
+        nanos: 600000000
+      }
+      word: "sometimes"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 51
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 51
+        nanos: 700000000
+      }
+      word: "in"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 51
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 51
+        nanos: 800000000
+      }
+      word: "the"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 51
+        nanos: 800000000
+      }
+      end_time {
+        seconds: 52
+        nanos: 300000000
+      }
+      word: "most"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 52
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 53
+        nanos: 700000000
+      }
+      word: "unexpected"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 54
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 55
+        nanos: 100000000
+      }
+      word: "hey"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 55
+        nanos: 500000000
+      }
+      end_time {
+        seconds: 55
+        nanos: 700000000
+      }
+      word: "where"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 55
+        nanos: 700000000
+      }
+      end_time {
+        seconds: 55
+        nanos: 900000000
+      }
+      word: "the"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 55
+        nanos: 900000000
+      }
+      end_time {
+        seconds: 56
+      }
+      word: "hell"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 56
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 56
+        nanos: 400000000
+      }
+      word: "are"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 56
+        nanos: 400000000
+      }
+      end_time {
+        seconds: 56
+        nanos: 600000000
+      }
+      word: "my"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 56
+        nanos: 600000000
+      }
+      end_time {
+        seconds: 57
+        nanos: 300000000
+      }
+      word: "hard-boiled"
+      confidence: 0.9128385782241821
+    }
+    words {
+      start_time {
+        seconds: 57
+        nanos: 300000000
+      }
+      end_time {
+        seconds: 57
+        nanos: 800000000
+      }
+      word: "eggs"
+      confidence: 0.9128385782241821
+    }
+  }
+  result_end_time {
+    seconds: 58
+    nanos: 280000000
+  }
+  language_code: "en-us"
+}
+results {
+  alternatives {
+  }
+  result_end_time {
+    seconds: 65
+    nanos: 740000000
+  }
+  language_code: "en-us"
+}
+total_billed_time {
+  seconds: 75
+}
+alternatives {
+  transcript: "that was actually an example of how not so amazing you want spoil you really going through something here I know"
+  confidence: 0.8174037933349609
+  words {
+    start_time {
+      nanos: 400000000
+    }
+    end_time {
+      nanos: 500000000
+    }
+    word: "that"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      nanos: 500000000
+    }
+    end_time {
+      nanos: 600000000
+    }
+    word: "was"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      nanos: 600000000
+    }
+    end_time {
+      nanos: 900000000
+    }
+    word: "actually"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 1
+    }
+    word: "an"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 1
+    }
+    end_time {
+      seconds: 1
+      nanos: 500000000
+    }
+    word: "example"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 1
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 1
+      nanos: 600000000
+    }
+    word: "of"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 1
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 1
+      nanos: 700000000
+    }
+    word: "how"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 1
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 2
+      nanos: 100000000
+    }
+    word: "not"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 2
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 2
+      nanos: 300000000
+    }
+    word: "so"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 2
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 2
+      nanos: 800000000
+    }
+    word: "amazing"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 2
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 3
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 3
+    }
+    end_time {
+      seconds: 3
+      nanos: 200000000
+    }
+    word: "want"
+    confidence: 0.7409875392913818
+  }
+  words {
+    start_time {
+      seconds: 3
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 3
+      nanos: 500000000
+    }
+    word: "spoil"
+    confidence: 0.7137386202812195
+  }
+  words {
+    start_time {
+      seconds: 3
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 3
+      nanos: 600000000
+    }
+    word: "you"
+    confidence: 0.7015619277954102
+  }
+  words {
+    start_time {
+      seconds: 3
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 3
+      nanos: 800000000
+    }
+    word: "really"
+    confidence: 0.7461945414543152
+  }
+  words {
+    start_time {
+      seconds: 3
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 4
+      nanos: 100000000
+    }
+    word: "going"
+    confidence: 0.7276666760444641
+  }
+  words {
+    start_time {
+      seconds: 4
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 4
+      nanos: 300000000
+    }
+    word: "through"
+    confidence: 0.7209270596504211
+  }
+  words {
+    start_time {
+      seconds: 4
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 4
+      nanos: 800000000
+    }
+    word: "something"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 4
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 5
+      nanos: 200000000
+    }
+    word: "here"
+    confidence: 0.6348586678504944
+  }
+  words {
+    start_time {
+      seconds: 6
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 6
+      nanos: 400000000
+    }
+    word: "I"
+    confidence: 0.6821598410606384
+  }
+  words {
+    start_time {
+      seconds: 6
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 7
+      nanos: 100000000
+    }
+    word: "know"
+    confidence: 0.5433189272880554
+  }
+}
+result_end_time {
+  seconds: 7
+  nanos: 470000000
+}
+language_code: "en-us"
+alternatives {
+  transcript: " funny all those years when I pretended to cry I used to use dad\'s death to get me going I tried it with moms but I just end up smiling and ruining it but it feels like real you know and you haven\'t really allowed yourself to grieve much at all my relationship with Dad was much more much more complicated than the origins of predicated a lot on secrets and lies there wasn\'t a whole lot of trust there you know here he comes here comes John Wayne"
+  confidence: 0.9056819677352905
+  words {
+    start_time {
+      seconds: 8
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 8
+      nanos: 800000000
+    }
+    word: "funny"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 9
+    }
+    end_time {
+      seconds: 9
+      nanos: 200000000
+    }
+    word: "all"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 9
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 9
+      nanos: 500000000
+    }
+    word: "those"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 9
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 9
+      nanos: 900000000
+    }
+    word: "years"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 9
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 10
+    }
+    word: "when"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 10
+    }
+    end_time {
+      seconds: 10
+      nanos: 100000000
+    }
+    word: "I"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 10
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 10
+      nanos: 500000000
+    }
+    word: "pretended"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 10
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 10
+      nanos: 600000000
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 10
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 10
+      nanos: 800000000
+    }
+    word: "cry"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 10
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 11
+    }
+    word: "I"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 11
+    }
+    end_time {
+      seconds: 11
+      nanos: 200000000
+    }
+    word: "used"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 11
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 11
+      nanos: 200000000
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 11
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 11
+      nanos: 500000000
+    }
+    word: "use"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 11
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 11
+      nanos: 800000000
+    }
+    word: "dad\'s"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 11
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 12
+      nanos: 100000000
+    }
+    word: "death"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 12
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 12
+      nanos: 200000000
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 12
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 12
+      nanos: 400000000
+    }
+    word: "get"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 12
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 12
+      nanos: 500000000
+    }
+    word: "me"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 12
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 12
+      nanos: 900000000
+    }
+    word: "going"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 12
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 13
+    }
+    word: "I"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 13
+    }
+    end_time {
+      seconds: 13
+      nanos: 200000000
+    }
+    word: "tried"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 13
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 13
+      nanos: 300000000
+    }
+    word: "it"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 13
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 13
+      nanos: 400000000
+    }
+    word: "with"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 13
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 13
+      nanos: 800000000
+    }
+    word: "moms"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 13
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 14
+    }
+    word: "but"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 14
+    }
+    end_time {
+      seconds: 14
+      nanos: 100000000
+    }
+    word: "I"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 14
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 14
+      nanos: 400000000
+    }
+    word: "just"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 14
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 14
+      nanos: 500000000
+    }
+    word: "end"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 14
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 14
+      nanos: 800000000
+    }
+    word: "up"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 14
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 15
+      nanos: 300000000
+    }
+    word: "smiling"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 15
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 15
+      nanos: 500000000
+    }
+    word: "and"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 15
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 15
+      nanos: 800000000
+    }
+    word: "ruining"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 15
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 16
+    }
+    word: "it"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 16
+    }
+    end_time {
+      seconds: 16
+      nanos: 400000000
+    }
+    word: "but"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 17
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 17
+      nanos: 300000000
+    }
+    word: "it"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 17
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 17
+      nanos: 700000000
+    }
+    word: "feels"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 17
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 18
+    }
+    word: "like"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 18
+    }
+    end_time {
+      seconds: 18
+      nanos: 400000000
+    }
+    word: "real"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 18
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 18
+      nanos: 600000000
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 18
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 18
+      nanos: 900000000
+    }
+    word: "know"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 18
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 19
+      nanos: 400000000
+    }
+    word: "and"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 19
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 19
+      nanos: 500000000
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 19
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 19
+      nanos: 900000000
+    }
+    word: "haven\'t"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 19
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 20
+      nanos: 100000000
+    }
+    word: "really"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 20
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 20
+      nanos: 500000000
+    }
+    word: "allowed"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 20
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 20
+      nanos: 900000000
+    }
+    word: "yourself"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 20
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 21
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 21
+    }
+    end_time {
+      seconds: 21
+      nanos: 500000000
+    }
+    word: "grieve"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 21
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 21
+      nanos: 700000000
+    }
+    word: "much"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 21
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 21
+      nanos: 800000000
+    }
+    word: "at"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 21
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 22
+      nanos: 100000000
+    }
+    word: "all"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 22
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 23
+    }
+    word: "my"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 23
+    }
+    end_time {
+      seconds: 23
+      nanos: 500000000
+    }
+    word: "relationship"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 23
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 23
+      nanos: 600000000
+    }
+    word: "with"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 23
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 23
+      nanos: 800000000
+    }
+    word: "Dad"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 23
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 24
+    }
+    word: "was"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 24
+    }
+    end_time {
+      seconds: 24
+      nanos: 300000000
+    }
+    word: "much"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 24
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 24
+      nanos: 700000000
+    }
+    word: "more"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 25
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 25
+      nanos: 500000000
+    }
+    word: "much"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 25
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 25
+      nanos: 600000000
+    }
+    word: "more"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 25
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 26
+      nanos: 300000000
+    }
+    word: "complicated"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 26
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 26
+      nanos: 400000000
+    }
+    word: "than"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 26
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 26
+      nanos: 400000000
+    }
+    word: "the"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 26
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 26
+      nanos: 700000000
+    }
+    word: "origins"
+    confidence: 0.78377366065979
+  }
+  words {
+    start_time {
+      seconds: 26
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 26
+      nanos: 800000000
+    }
+    word: "of"
+    confidence: 0.7837738990783691
+  }
+  words {
+    start_time {
+      seconds: 26
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 27
+      nanos: 200000000
+    }
+    word: "predicated"
+    confidence: 0.9055529236793518
+  }
+  words {
+    start_time {
+      seconds: 27
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 27
+      nanos: 300000000
+    }
+    word: "a"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 27
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 27
+      nanos: 400000000
+    }
+    word: "lot"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 27
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 27
+      nanos: 600000000
+    }
+    word: "on"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 27
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 28
+    }
+    word: "secrets"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 28
+    }
+    end_time {
+      seconds: 28
+      nanos: 200000000
+    }
+    word: "and"
+    confidence: 0.8739418387413025
+  }
+  words {
+    start_time {
+      seconds: 28
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 28
+      nanos: 500000000
+    }
+    word: "lies"
+    confidence: 0.8549730777740479
+  }
+  words {
+    start_time {
+      seconds: 28
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 28
+      nanos: 600000000
+    }
+    word: "there"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 28
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 28
+      nanos: 800000000
+    }
+    word: "wasn\'t"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 28
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 28
+      nanos: 900000000
+    }
+    word: "a"
+    confidence: 0.7837738990783691
+  }
+  words {
+    start_time {
+      seconds: 28
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 29
+    }
+    word: "whole"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 29
+    }
+    end_time {
+      seconds: 29
+      nanos: 200000000
+    }
+    word: "lot"
+    confidence: 0.8520779609680176
+  }
+  words {
+    start_time {
+      seconds: 29
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 29
+      nanos: 500000000
+    }
+    word: "of"
+    confidence: 0.8789571523666382
+  }
+  words {
+    start_time {
+      seconds: 30
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 30
+      nanos: 600000000
+    }
+    word: "trust"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 30
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 31
+    }
+    word: "there"
+    confidence: 0.8768883347511292
+  }
+  words {
+    start_time {
+      seconds: 31
+    }
+    end_time {
+      seconds: 31
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 31
+    }
+    end_time {
+      seconds: 31
+      nanos: 400000000
+    }
+    word: "know"
+    confidence: 0.8977140188217163
+  }
+  words {
+    start_time {
+      seconds: 31
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 32
+      nanos: 100000000
+    }
+    word: "here"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 32
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 32
+      nanos: 200000000
+    }
+    word: "he"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 32
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 32
+      nanos: 900000000
+    }
+    word: "comes"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 33
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 33
+      nanos: 600000000
+    }
+    word: "here"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 33
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 34
+    }
+    word: "comes"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 34
+    }
+    end_time {
+      seconds: 34
+      nanos: 400000000
+    }
+    word: "John"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 34
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 35
+    }
+    word: "Wayne"
+    confidence: 0.9128385782241821
+  }
+}
+result_end_time {
+  seconds: 35
+  nanos: 600000000
+}
+language_code: "en-us"
+alternatives {
+  transcript: " I\'m not going to cry about my Paw I\'m going to build an airport put my name on it why Michael so you can fly away from your feelings you can keep them bottled up but they will come out Michael sometimes in the most unexpected hey where the hell are my hard-boiled eggs"
+  confidence: 0.9128382802009583
+  words {
+    start_time {
+      seconds: 36
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 37
+      nanos: 100000000
+    }
+    word: "I\'m"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 37
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 37
+      nanos: 400000000
+    }
+    word: "not"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 37
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 37
+      nanos: 600000000
+    }
+    word: "going"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 37
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 37
+      nanos: 700000000
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 37
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 38
+      nanos: 200000000
+    }
+    word: "cry"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 38
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 38
+      nanos: 700000000
+    }
+    word: "about"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 38
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 38
+      nanos: 900000000
+    }
+    word: "my"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 38
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 39
+      nanos: 700000000
+    }
+    word: "Paw"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 40
+    }
+    end_time {
+      seconds: 40
+      nanos: 300000000
+    }
+    word: "I\'m"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 40
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 40
+      nanos: 400000000
+    }
+    word: "going"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 40
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 40
+      nanos: 500000000
+    }
+    word: "to"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 40
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 40
+      nanos: 900000000
+    }
+    word: "build"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 40
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 41
+    }
+    word: "an"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 41
+    }
+    end_time {
+      seconds: 41
+      nanos: 800000000
+    }
+    word: "airport"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 41
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 42
+    }
+    word: "put"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 42
+    }
+    end_time {
+      seconds: 42
+      nanos: 100000000
+    }
+    word: "my"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 42
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 42
+      nanos: 500000000
+    }
+    word: "name"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 42
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 42
+      nanos: 700000000
+    }
+    word: "on"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 42
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 43
+    }
+    word: "it"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 43
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 43
+      nanos: 400000000
+    }
+    word: "why"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 43
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 44
+    }
+    word: "Michael"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 44
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 44
+      nanos: 800000000
+    }
+    word: "so"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 44
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 44
+      nanos: 900000000
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 44
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 45
+      nanos: 100000000
+    }
+    word: "can"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 45
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 45
+      nanos: 500000000
+    }
+    word: "fly"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 45
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 45
+      nanos: 900000000
+    }
+    word: "away"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 45
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 46
+      nanos: 100000000
+    }
+    word: "from"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 46
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 46
+      nanos: 200000000
+    }
+    word: "your"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 46
+      nanos: 200000000
+    }
+    end_time {
+      seconds: 46
+      nanos: 900000000
+    }
+    word: "feelings"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 48
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 48
+      nanos: 400000000
+    }
+    word: "you"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 48
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 48
+      nanos: 500000000
+    }
+    word: "can"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 48
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 48
+      nanos: 700000000
+    }
+    word: "keep"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 48
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 48
+      nanos: 900000000
+    }
+    word: "them"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 48
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 49
+      nanos: 300000000
+    }
+    word: "bottled"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 49
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 49
+      nanos: 400000000
+    }
+    word: "up"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 49
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 49
+      nanos: 600000000
+    }
+    word: "but"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 49
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 49
+      nanos: 700000000
+    }
+    word: "they"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 49
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 50
+      nanos: 100000000
+    }
+    word: "will"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 50
+      nanos: 100000000
+    }
+    end_time {
+      seconds: 50
+      nanos: 300000000
+    }
+    word: "come"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 50
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 50
+      nanos: 500000000
+    }
+    word: "out"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 50
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 50
+      nanos: 900000000
+    }
+    word: "Michael"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 50
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 51
+      nanos: 600000000
+    }
+    word: "sometimes"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 51
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 51
+      nanos: 700000000
+    }
+    word: "in"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 51
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 51
+      nanos: 800000000
+    }
+    word: "the"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 51
+      nanos: 800000000
+    }
+    end_time {
+      seconds: 52
+      nanos: 300000000
+    }
+    word: "most"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 52
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 53
+      nanos: 700000000
+    }
+    word: "unexpected"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 54
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 55
+      nanos: 100000000
+    }
+    word: "hey"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 55
+      nanos: 500000000
+    }
+    end_time {
+      seconds: 55
+      nanos: 700000000
+    }
+    word: "where"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 55
+      nanos: 700000000
+    }
+    end_time {
+      seconds: 55
+      nanos: 900000000
+    }
+    word: "the"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 55
+      nanos: 900000000
+    }
+    end_time {
+      seconds: 56
+    }
+    word: "hell"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 56
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 56
+      nanos: 400000000
+    }
+    word: "are"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 56
+      nanos: 400000000
+    }
+    end_time {
+      seconds: 56
+      nanos: 600000000
+    }
+    word: "my"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 56
+      nanos: 600000000
+    }
+    end_time {
+      seconds: 57
+      nanos: 300000000
+    }
+    word: "hard-boiled"
+    confidence: 0.9128385782241821
+  }
+  words {
+    start_time {
+      seconds: 57
+      nanos: 300000000
+    }
+    end_time {
+      seconds: 57
+      nanos: 800000000
+    }
+    word: "eggs"
+    confidence: 0.9128385782241821
+  }
+}
+result_end_time {
+  seconds: 58
+  nanos: 280000000
+}
+language_code: "en-us"
+alternatives {
+}
+result_end_time {
+  seconds: 65
+  nanos: 740000000
+}
+language_code: "en-us"

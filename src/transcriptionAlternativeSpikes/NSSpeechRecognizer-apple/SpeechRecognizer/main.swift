@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             guard let recognitionRequest = self.recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
             recognitionRequest.shouldReportPartialResults = true
             let fileUrl = URL(fileURLWithPath: "/Users/justin/Desktop/hardBoiledEggs.mp4")
+            let start = DispatchTime.now()
             let request = SFSpeechURLRecognitionRequest(url: fileUrl)
             speechRecognizer.recognitionTask(
               with: request,
@@ -33,9 +34,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     if result.isFinal {
                         print("\n Final Result: \n")
                         print(result.bestTranscription.formattedString)
+                        let end = DispatchTime.now()
+                        print("Time Taken: \(Float(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1000000000)")
                         exit(0)
                     }
                   print(result.bestTranscription.formattedString)
+                    
                 }
             }
         )

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ipcMain } from 'electron';
 
 import { IpcContext } from './types';
@@ -28,6 +29,7 @@ import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
+import setExportEnabled from './handlers/menu/setExportEnabled';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -96,6 +98,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-save-enabled',
     async (_event, saveEnabled, saveAsEnabled) =>
       setSaveEnabled(ipcContext, saveEnabled, saveAsEnabled)
+  );
+
+  ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
+    setExportEnabled(ipcContext, exportEnabled)
   );
 
   ipcMain.handle(

@@ -1,7 +1,7 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
@@ -45,30 +45,57 @@ const NewProjectView = ({
   setProjectName,
 }: Props) => {
   const dispatch = useDispatch();
+  const [isAwaitingProjectName, setIsAwaitingProjectName] =
+    useState<boolean>(true);
 
-  const setProjectInStore = async (project: RuntimeProject) => {
-    dispatch(projectCreated(project));
-  };
+  const setProjectInStore = useCallback(
+    async (project: RuntimeProject) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
 
-  const handleContinue = async () => {
+  const handleContinue = useCallback(async () => {
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
     setProjectInStore(project);
     nextView();
-  };
+  }, [nextView, projectName, setProjectInStore]);
+
+  useEffect(() => {
+    const handleKeypress = async (event: KeyboardEvent) => {
+      if (
+        (event.code === 'Enter' || event.code === 'NumpadEnter') &&
+        !isAwaitingProjectName
+      ) {
+        handleContinue();
+      }
+    };
+
+    window.addEventListener('keypress', handleKeypress);
+
+    return () => {
+      window.removeEventListener('keypress', handleKeypress);
+    };
+  }, [handleContinue, isAwaitingProjectName]);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProjectName(event.target.value);
+    setProjectName(event.target.value.trim());
+    if (event.target.value !== '') {
+      setIsAwaitingProjectName(false);
+    } else {
+      setIsAwaitingProjectName(true);
+    }
   };
 
   const continueButton = (
     <PrimaryButton
       onClick={handleContinue}
-      disabled={!projectName.trim()}
+      disabled={isAwaitingProjectName}
       fullWidth
     >
       Continue

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
@@ -40,9 +40,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setCurrentProject = (project: RuntimeProject) => {
-    return dispatch(projectCreated(project));
-  };
+  const setCurrentProject = useCallback(
+    (project: RuntimeProject) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
 
   // Reset the import - for when delete button is pressed on media
   const removeMediaFromImport: () => void = () => {
@@ -51,13 +54,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     setMediaFileName(null);
   };
 
-  if (currentProject === null) {
-    return null;
-  }
-
-  const projectName = currentProject.name;
-
-  const handleTranscribe = async () => {
+  const handleTranscribe = useCallback(async () => {
     const projectWithMedia = {
       ...currentProject,
       mediaFilePath,
@@ -66,9 +63,32 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     if (projectWithMedia.mediaFilePath == null) {
       return;
     }
-    setCurrentProject(projectWithMedia);
+    setCurrentProject(projectWithMedia as RuntimeProject);
     nextView();
-  };
+  }, [currentProject, mediaFilePath, nextView, setCurrentProject]);
+
+  useEffect(() => {
+    const handleKeypress = async (event: KeyboardEvent) => {
+      if (
+        (event.code === 'Enter' || event.code === 'NumpadEnter') &&
+        !isAwaitingMedia
+      ) {
+        handleTranscribe();
+      }
+    };
+
+    window.addEventListener('keypress', handleKeypress);
+
+    return () => {
+      window.removeEventListener('keypress', handleKeypress);
+    };
+  }, [handleTranscribe, isAwaitingMedia]);
+
+  if (currentProject === null) {
+    return null;
+  }
+
+  const projectName = currentProject.name;
 
   const transcribeButton = (
     <PrimaryButton

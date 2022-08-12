@@ -61,21 +61,23 @@ const TranscriptionBlock = ({
     }
   };
 
-  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element = (
-    key,
-    isDropMarkerActive
-  ) => (
-    <span
-      key={key}
-      style={{
-        background: isDropMarkerActive ? 'white' : 'none',
-        transition: 'background 0.2s',
-        width: '2px',
-        paddingLeft: '1px',
-        paddingRight: '1px',
-      }}
-    />
-  );
+  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element =
+    useMemo(
+      () => (key, isDropMarkerActive) =>
+        (
+          <span
+            key={key}
+            style={{
+              background: isDropMarkerActive ? 'white' : 'none',
+              transition: 'background 0.2s',
+              width: '2px',
+              paddingLeft: '1px',
+              paddingRight: '1px',
+            }}
+          />
+        ),
+      []
+    );
 
   const renderTranscription: RenderTranscription = (
     onWordMouseDown,

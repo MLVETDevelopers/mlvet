@@ -4,6 +4,7 @@ import { Action } from '../action';
 export const SELECTION_RANGE_ADDED = 'SELECTION_RANGE_ADDED';
 export const SELECTION_RANGE_REMOVED = 'SELECTION_RANGE_REMOVED';
 export const SELECTION_RANGE_TOGGLED = 'SELECTION_RANGE_TOGGLED';
+export const SELECTION_RANGE_SET_TO = 'SELECTION_RANGE_SET_TO';
 export const SELECTION_CLEARED = 'SELECTION_CLEARED';
 
 /**
@@ -40,6 +41,18 @@ export const selectionRangeToggled: (
 ) => Action<IndexRange> = (indexRange) => {
   return {
     type: SELECTION_RANGE_TOGGLED,
+    payload: indexRange,
+  };
+};
+
+/**
+ * Sets the range to be a certain value, minimally modifying the existing range for efficiency.
+ */
+export const selectionRangeSetTo: (
+  indexRange: IndexRange
+) => Action<IndexRange> = (indexRange) => {
+  return {
+    type: SELECTION_RANGE_SET_TO,
     payload: indexRange,
   };
 };

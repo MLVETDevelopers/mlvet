@@ -14,11 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Point } from 'electron';
 import { useThrottle } from '@react-hook/throttle';
 import { IndexRange } from 'sharedTypes';
+import { useDebounceCallback } from '@react-hook/debounce';
 import { dispatchOp } from '../store/undoStack/opHelpers';
 import { makeMoveWords } from '../store/undoStack/ops';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from '../store/selection/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { MouseButton, rangeLengthOne } from '../util';
@@ -136,11 +137,12 @@ const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
         endIndex: Math.max(wordIndex, dragSelectAnchor) + 1,
       };
 
-      dispatch(selectionCleared());
-      dispatch(selectionRangeAdded(range));
+      dispatch(selectionRangeSetTo(range));
     },
     [dragSelectAnchor, dispatch]
   );
+
+  const onWordMouseMoveDebounced = useDebounceCallback(onWordMouseMove, 10);
 
   // Helper to determine whether a given word is being dragged
   const isWordBeingDragged: (wordIndex: number) => boolean = useMemo(
@@ -183,7 +185,7 @@ const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
     <div onMouseUp={onMouseUp}>
       {renderTranscription(
         onWordMouseDown,
-        onWordMouseMove,
+        onWordMouseMoveDebounced,
         dragState,
         isWordBeingDragged,
         mouse,

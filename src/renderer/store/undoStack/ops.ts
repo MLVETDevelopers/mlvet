@@ -1,34 +1,33 @@
-import { Word } from 'sharedTypes';
+import { IndexRange, Word } from '../../../sharedTypes';
 import { Op } from './helpers';
 import {
-  DeleteWordsPayload,
-  UndoDeleteWordsPayload,
   PasteWordsPayload,
   UndoPasteWordsPayload,
+  DeleteSelectionPayload,
+  UndoDeleteSelectionPayload,
 } from './opPayloads';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 
-export const DELETE_WORD = 'DELETE_WORD';
-export const UNDO_DELETE_WORD = 'UNDO_DELETE_WORD';
+export const DELETE_SELECTION = 'DELETE_SELECTION';
+export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
 
 export const PASTE_WORD = 'PASTE_WORD';
 export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
 
-export const makeDeleteWord: (
-  deleteFrom: number,
-  deleteTo: number
-) => DeleteWordsOp = (deleteFrom, deleteTo) => ({
+export const makeDeleteSelection: (
+  ranges: IndexRange[]
+) => DeleteSelectionOp = (ranges) => ({
   do: [
     {
-      type: DELETE_WORD,
-      payload: { startIndex: deleteFrom, endIndex: deleteTo },
+      type: DELETE_SELECTION,
+      payload: { ranges },
     },
   ],
   undo: [
     {
-      type: UNDO_DELETE_WORD,
-      payload: { startIndex: deleteFrom, endIndex: deleteTo },
+      type: UNDO_DELETE_SELECTION,
+      payload: { ranges },
     },
   ],
 });
@@ -53,5 +52,8 @@ export const makePasteWord: (
   };
 };
 
-export type DeleteWordsOp = Op<DeleteWordsPayload, UndoDeleteWordsPayload>;
+export type DeleteSelectionOp = Op<
+  DeleteSelectionPayload,
+  UndoDeleteSelectionPayload
+>;
 export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;

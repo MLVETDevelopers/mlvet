@@ -2,14 +2,14 @@ import { Stack, styled, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
 import colors from '../colors';
 
-const Card = styled(Stack)`
-  width: 232px;
-  height: 68px;
-  padding: 12px 16px;
-  gap: 6px;
-  background-color: ${colors.grey[600]};
-  border-radius: 5px;
-`;
+const Card = styled(Stack)({
+  width: '232px',
+  height: '68px',
+  padding: '12px 16px',
+  gap: '6px',
+  backgroundColor: colors.grey[600],
+  borderRadius: '5px',
+});
 
 interface Props {
   progress: number;

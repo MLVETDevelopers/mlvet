@@ -3,9 +3,12 @@ import { Transcription, Cut } from '../sharedTypes';
 import { bufferedWordDuration, roundToMs } from '../sharedUtils';
 
 const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
-  const words = updateOutputStartTimes(
-    transcript.words.filter((word) => !word.deleted)
-  );
+  const wordsNotYetUpdated = transcript.words.filter((word) => !word.deleted);
+  if (wordsNotYetUpdated.length === 0) {
+    return [];
+  }
+
+  const words = updateOutputStartTimes(wordsNotYetUpdated);
 
   let currentStartWord = words[0];
   let currentDuration = bufferedWordDuration(currentStartWord);
@@ -18,15 +21,13 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
 
     if (isFinalWord) {
       // Add the final cut
-      return cutsSoFar.concat([
-        {
-          startTime:
-            currentStartWord.startTime - currentStartWord.bufferDurationBefore,
-          duration: roundToMs(currentDuration),
-          outputStartTime: currentStartWord.outputStartTime,
-          index: cutsSoFar.length,
-        },
-      ]);
+      return cutsSoFar.concat({
+        startTime:
+          currentStartWord.startTime - currentStartWord.bufferDurationBefore,
+        duration: roundToMs(currentDuration),
+        outputStartTime: currentStartWord.outputStartTime,
+        index: cutsSoFar.length,
+      });
     }
 
     // If we make it to here, we're dealing with a word other than the last one, so we
@@ -59,7 +60,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
     currentDuration = bufferedWordDuration(nextWord);
 
     // Append the cut we just made to the cuts we already have, and return it
-    return cutsSoFar.concat([newCut]);
+    return cutsSoFar.concat(newCut);
   }, []);
 
   return cuts;

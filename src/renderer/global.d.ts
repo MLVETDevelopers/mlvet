@@ -66,7 +66,7 @@ declare global {
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
-      handleOsQuery: () => OperatingSystems | null;
+      handleOsQuery: () => Promise<OperatingSystems | null>;
 
       setClipboardEnabled: (
         cutEnabled: boolean,

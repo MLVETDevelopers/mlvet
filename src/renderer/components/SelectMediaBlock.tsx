@@ -1,37 +1,38 @@
-import { Box, styled, Typography, Stack, Button } from '@mui/material';
+import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 import colors from '../colors';
 import ipc from '../ipc';
+import { PrimaryButton } from './Blocks/Buttons';
 
 const { getFileNameWithExtension } = ipc;
 
-const SelectMediaBox = styled(Box)`
-  width: 100%;
+const SelectMediaBox = styled(Box)({
+  width: '100%',
 
-  &:hover {
-    background: ${colors.grey[600]};
-  }
-`;
+  '&:hover': {
+    background: colors.grey[600],
+  },
+});
 
-const SelectMediaBoxOverlay = styled(Box)`
-  width: 100%;
+const SelectMediaBoxOverlay = styled(Box)({
+  width: '100%',
 
-  background: ${colors.grey[600]};
-`;
+  background: colors.grey[600],
+});
 
-const InnerBox = styled(Box)`
-  border-style: dashed;
-  border-width: 1px;
-  border-radius: 5px;
-  border-color: ${colors.grey[500]};
-  color: ${colors.grey[300]};
-  padding: 20px;
+const InnerBox = styled(Box)({
+  borderStyle: 'dashed',
+  borderWidth: '1px',
+  borderRadius: '5px',
+  borderColor: colors.grey[500],
+  color: colors.grey[300],
+  padding: '20px',
 
-  &:hover {
-    cursor: pointer;
-    background: ${colors.grey[600]};
-  }
-`;
+  '&:hover': {
+    cursor: 'pointer',
+    background: colors.grey[600],
+  },
+});
 
 interface Props {
   setMediaFileName: Dispatch<SetStateAction<string | null>>;
@@ -132,9 +133,7 @@ const SelectMediaBlock = ({
           >
             <Typography variant="p-300">Drag and drop file here</Typography>
             <Typography variant="p-300">or</Typography>
-            <Button color="primary" onClick={selectMedia}>
-              Browse
-            </Button>
+            <PrimaryButton onClick={selectMedia}>Browse</PrimaryButton>
           </Stack>
         </InnerBox>
       )}

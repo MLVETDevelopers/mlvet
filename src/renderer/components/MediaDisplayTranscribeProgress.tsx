@@ -17,10 +17,10 @@ interface Props {
   asyncState: AsyncState;
 }
 
-const CustomBox = styled(Box)`
-  width: 100%;
-  margin-top: 5px;
-`;
+const CustomBox = styled(Box)({
+  width: '100%',
+  marginTop: '5px',
+});
 
 const MediaDisplayTranscribeProgress = ({ fileName, asyncState }: Props) => {
   if (fileName === null) {

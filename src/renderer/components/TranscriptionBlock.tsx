@@ -1,20 +1,20 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useMemo } from 'react';
+import { Fragment, RefObject, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
-import DragManager, { RenderTranscription } from './DragManager';
+import DragManager, { RenderTranscription } from './WordDragManager';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
   borderRadius: '5px',
   color: colors.grey[300],
-  overflowY: 'scroll',
   overflowX: 'hidden',
+  overflowY: 'scroll',
   height: '100%',
   padding: '20px',
   userSelect: 'none',
@@ -33,12 +33,14 @@ interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
   seekToWord: (wordIndex: number) => void;
+  containerRef: RefObject<HTMLDivElement>;
 }
 
 const TranscriptionBlock = ({
   seekToWord,
   transcription,
   nowPlayingWordIndex,
+  containerRef,
 }: Props) => {
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
@@ -75,7 +77,8 @@ const TranscriptionBlock = ({
     mouse,
     mouseThrottled,
     dropBeforeIndex,
-    setDropBeforeIndex
+    setDropBeforeIndex,
+    cancelDrag
   ) => (
     <TranscriptionBox onClick={clearSelection}>
       {transcription.words.map((word, index) =>
@@ -99,6 +102,7 @@ const TranscriptionBlock = ({
               isDropBeforeActive={dropBeforeIndex === index}
               isDropAfterActive={dropBeforeIndex === index + 1}
               setDropBeforeIndex={setDropBeforeIndex}
+              cancelDrag={cancelDrag}
             />
             {index === transcription.words.length - 1 &&
               space(
@@ -112,7 +116,12 @@ const TranscriptionBlock = ({
     </TranscriptionBox>
   );
 
-  return <DragManager renderTranscription={renderTranscription} />;
+  return (
+    <DragManager
+      renderTranscription={renderTranscription}
+      containerRef={containerRef}
+    />
+  );
 };
 
 export default TranscriptionBlock;

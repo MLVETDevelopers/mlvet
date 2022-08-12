@@ -10,7 +10,7 @@ import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/util';
 import colors from '../colors';
 import { handleSelectWord } from '../selection';
-import { DragState } from './DragManager';
+import { DragState } from './WordDragManager';
 
 const makeWordInner = (isDragActive: boolean) =>
   styled('div')({
@@ -42,6 +42,7 @@ interface Props {
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
   setDropBeforeIndex: (index: number) => void;
+  cancelDrag: () => void;
 }
 
 const Word = ({
@@ -57,6 +58,7 @@ const Word = ({
   isDropBeforeActive,
   isDropAfterActive,
   setDropBeforeIndex,
+  cancelDrag,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -66,6 +68,12 @@ const Word = ({
   const height = ref.current?.offsetHeight ?? 0;
   const mouseX = mouse.clientX ?? 0;
   const mouseY = mouse.clientY ?? 0;
+
+  useEffect(() => {
+    if ((isBeingDragged && mouse.clientX === null) || mouse.clientY === null) {
+      cancelDrag();
+    }
+  }, [isBeingDragged, mouse, cancelDrag]);
 
   const mouseInLeft = useMemo(
     () =>

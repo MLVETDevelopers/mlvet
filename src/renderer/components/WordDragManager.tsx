@@ -7,7 +7,6 @@ import {
   SetStateAction,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import useMouse, { MousePosition } from '@react-hook/mouse-position';
@@ -33,7 +32,8 @@ export type RenderTranscription = (
   mouse: MousePosition,
   mouseThrottled: MousePosition,
   dropBeforeIndex: number | null,
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>
+  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>,
+  cancelDrag: () => void
 ) => JSX.Element;
 
 export type DragState = null | {
@@ -43,9 +43,10 @@ export type DragState = null | {
 
 interface Props {
   renderTranscription: RenderTranscription;
+  containerRef: RefObject<HTMLDivElement>;
 }
 
-const DragManager = ({ renderTranscription }: Props) => {
+const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
   const dispatch = useDispatch();
 
   const words = useSelector(
@@ -59,9 +60,7 @@ const DragManager = ({ renderTranscription }: Props) => {
   // Index of the word that is currently marked as the 'drop' receiver for the word being dragged
   const [dropBeforeIndex, setDropBeforeIndex] = useState<number | null>(null);
 
-  // Refs to the DragManager container div and the mouse position
-  const ref = useRef<HTMLDivElement>(null);
-  const mouse = useMouse(ref);
+  const mouse = useMouse(containerRef);
 
   // Default throttle is 30 fps, seems reasonable for now
   const [mouseThrottled, setMouseThrottled] = useThrottle(mouse);
@@ -127,8 +126,12 @@ const DragManager = ({ renderTranscription }: Props) => {
     [dropBeforeIndex, dragState, words, setDragState]
   );
 
+  const cancelDrag = () => {
+    setDragState(null);
+  };
+
   return (
-    <div ref={ref} onMouseUp={onMouseUp}>
+    <div onMouseUp={onMouseUp}>
       {renderTranscription(
         onWordMouseDown,
         dragState,
@@ -136,10 +139,11 @@ const DragManager = ({ renderTranscription }: Props) => {
         mouse,
         mouseThrottled,
         dropBeforeIndex,
-        setDropBeforeIndex
+        setDropBeforeIndex,
+        cancelDrag
       )}
     </div>
   );
 };
 
-export default DragManager;
+export default WordDragManager;

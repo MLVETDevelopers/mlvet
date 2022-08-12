@@ -1,19 +1,19 @@
 import { Reducer } from 'redux';
-import { mapInRange } from 'renderer/util';
+import { mapInRanges } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
-  DeleteWordsPayload,
+  DeleteSelectionPayload,
   PasteWordsPayload,
-  UndoDeleteWordsPayload,
+  UndoDeleteSelectionPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
 import {
-  DELETE_WORD,
-  UNDO_DELETE_WORD,
+  DELETE_SELECTION,
   PASTE_WORD,
+  UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
 
@@ -38,28 +38,28 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
    * will need to call 'updateOutputStartTimes' so that output start times are kept accurate!
    */
 
-  if (action.type === DELETE_WORD) {
-    const { startIndex, endIndex } = action.payload as DeleteWordsPayload;
+  if (action.type === DELETE_SELECTION) {
+    const { ranges } = action.payload as DeleteSelectionPayload;
 
     const markDeleted = (word: Word) => ({ ...word, deleted: true });
 
+    const newWords = mapInRanges(transcription.words, markDeleted, ranges);
+
     return {
       ...transcription,
-      words: updateOutputStartTimes(
-        mapInRange(transcription.words, markDeleted, startIndex, endIndex)
-      ),
+      words: updateOutputStartTimes(newWords),
     };
   }
 
-  if (action.type === UNDO_DELETE_WORD) {
-    const { startIndex, endIndex } = action.payload as UndoDeleteWordsPayload;
+  if (action.type === UNDO_DELETE_SELECTION) {
+    const { ranges } = action.payload as UndoDeleteSelectionPayload;
 
     const markUndeleted = (word: Word) => ({ ...word, deleted: false });
 
     return {
       ...transcription,
       words: updateOutputStartTimes(
-        mapInRange(transcription.words, markUndeleted, startIndex, endIndex)
+        mapInRanges(transcription.words, markUndeleted, ranges)
       ),
     };
   }

@@ -14,6 +14,7 @@ const TranscriptionBox = styled(Box)({
   borderRadius: '5px',
   color: colors.grey[300],
   overflowY: 'scroll',
+  overflowX: 'hidden',
   height: '100%',
   padding: '20px',
   userSelect: 'none',

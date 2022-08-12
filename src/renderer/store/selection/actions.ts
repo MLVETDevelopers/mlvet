@@ -46,7 +46,7 @@ export const selectionRangeToggled: (
 };
 
 /**
- * Sets the range to be a certain value, minimally modifying the existing range for efficiency.
+ * Efficiently sets the range to be a certain value.
  */
 export const selectionRangeSetTo: (
   indexRange: IndexRange

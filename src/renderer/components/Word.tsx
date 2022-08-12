@@ -12,19 +12,20 @@ import colors from '../colors';
 import { handleSelectWord } from '../selection';
 import { DragState } from './DragManager';
 
-const makeWordInner = (isDragActive: boolean) => styled('div')`
-  display: inline-block;
-  cursor: pointer;
-  color: ${colors.white};
-  transition: padding 0.1s, background 0.1s;
-  padding: 0 2px;
-  margin: 2px 0;
+const makeWordInner = (isDragActive: boolean) =>
+  styled('div')({
+    display: 'inline-block',
+    cursor: 'pointer',
+    color: colors.white,
+    transition: 'padding 0.1s, background 0.1s',
+    padding: '0 2px',
+    margin: '2px 0',
 
-  &:hover {
-    color: ${colors.grey['000']};
-    background: ${isDragActive ? 'none' : `${colors.yellow[500]}50`};
-  }
-`;
+    '&:hover': {
+      color: colors.grey['000'],
+      background: isDragActive ? 'none' : `${colors.yellow[500]}50`,
+    },
+  });
 
 interface Props {
   index: number;

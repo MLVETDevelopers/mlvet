@@ -9,24 +9,24 @@ import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
 import DragManager, { RenderTranscription } from './DragManager';
 
-const TranscriptionBox = styled(Box)`
-  background: ${colors.grey[700]};
-  border-radius: 5px;
-  color: ${colors.grey[300]};
-  overflow-y: scroll;
-  height: 100%;
-  padding: 20px;
-  user-select: none;
+const TranscriptionBox = styled(Box)({
+  background: colors.grey[700],
+  borderRadius: '5px',
+  color: colors.grey[300],
+  overflowY: 'scroll',
+  height: '100%',
+  padding: '20px',
+  userSelect: 'none',
 
-  ::-webkit-scrollbar {
-    width: 3px;
-  }
+  '::-webkit-scrollbar': {
+    width: '3px',
+  },
 
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: ${colors.yellow[500]};
-  }
-`;
+  '::-webkit-scrollbar-thumb': {
+    borderRadius: '10px',
+    background: colors.yellow[500],
+  },
+});
 
 interface Props {
   transcription: Transcription;

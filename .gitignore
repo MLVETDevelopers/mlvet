@@ -42,3 +42,4 @@ src/pyServer/deepspeech-0.9.3-models.pbmm
 src/pyServer/deepspeech-0.9.3-models.scorer
 
 experiments/**/assets
+src/pyServer/transcription_output.txt

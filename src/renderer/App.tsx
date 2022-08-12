@@ -11,11 +11,11 @@ import applicationStore from './store/store';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
 
-const RootContainer = styled(Box)`
-  margin: 0;
-  background: ${colors.grey[900]};
-  height: 100vh;
-`;
+const RootContainer = styled(Box)({
+  margin: 0,
+  background: colors.grey[900],
+  height: '100vh',
+});
 
 function Router() {
   const currentPage = useSelector(

@@ -70,7 +70,7 @@ const Word = ({
   const mouseY = mouse.clientY ?? 0;
 
   useEffect(() => {
-    if ((isBeingDragged && mouse.clientX === null) || mouse.clientY === null) {
+    if (isBeingDragged && (mouse.clientX === null || mouse.clientY === null)) {
       cancelDrag();
     }
   }, [isBeingDragged, mouse, cancelDrag]);

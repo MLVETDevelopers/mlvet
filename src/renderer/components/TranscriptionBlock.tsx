@@ -3,6 +3,8 @@ import { Box } from '@mui/material';
 import { Fragment, RefObject, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
+import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
+import { makeCorrectWord } from 'renderer/store/undoStack/ops';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
@@ -120,6 +122,9 @@ const TranscriptionBlock = ({
               isDropAfterActive={dropBeforeIndex === index + 1}
               setDropBeforeIndex={setDropBeforeIndex}
               cancelDrag={cancelDrag}
+              updateWordText={(newText: string) =>
+                dispatchOp(makeCorrectWord(transcription.words, index, newText))
+              }
             />
             {index === transcription.words.length - 1 &&
               space(

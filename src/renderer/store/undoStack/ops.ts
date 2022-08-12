@@ -1,9 +1,12 @@
+import { rangeLengthOne } from 'renderer/util';
 import { IndexRange, Word } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
   selectionDeleted,
   undoSelectionDeleted,
   undoWordPasted,
+  wordCorrected,
+  undoWordCorrected,
   wordPasted,
 } from '../transcription/actions';
 import { Op } from './helpers';
@@ -12,6 +15,8 @@ import {
   UndoPasteWordsPayload,
   DeleteSelectionPayload,
   UndoDeleteSelectionPayload,
+  UndoCorrectWordPayload,
+  CorrectWordPayload,
 } from './opPayloads';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
@@ -72,6 +77,27 @@ export const makeMoveWords: (
   };
 };
 
+export const makeCorrectWord: (
+  words: Word[],
+  index: number,
+  newText: string
+) => CorrectWordOp = (words, index, newText) => {
+  const prevText = words[index].word;
+
+  return {
+    do: [
+      wordCorrected(index, newText),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(index)),
+    ],
+    undo: [
+      undoWordCorrected(index, prevText),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(index)),
+    ],
+  };
+};
+
 export type DeleteSelectionOp = Op<
   DeleteSelectionPayload | null,
   UndoDeleteSelectionPayload | null | IndexRange
@@ -85,4 +111,9 @@ export type PasteWordsOp = Op<
 export type MoveWordsOp = Op<
   DeleteSelectionPayload | PasteWordsPayload | IndexRange | null,
   UndoDeleteSelectionPayload | UndoPasteWordsPayload | IndexRange | null
+>;
+
+export type CorrectWordOp = Op<
+  CorrectWordPayload | IndexRange | null,
+  UndoCorrectWordPayload | IndexRange | null
 >;

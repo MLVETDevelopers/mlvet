@@ -1,8 +1,10 @@
 import { IndexRange, Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   PasteWordsPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
@@ -14,6 +16,9 @@ export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
 
 export const PASTE_WORD = 'PASTE_WORD';
 export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
+
+export const CORRECT_WORD = 'CORRECT_WORD';
+export const UNDO_CORRECT_WORD = 'UNDO_CORRECT_WORD';
 
 export const transcriptionCreated: (
   transcription: Transcription
@@ -50,4 +55,20 @@ export const undoWordPasted: (
 ) => Action<UndoPasteWordsPayload> = (startIndex, clipboardLength) => ({
   type: UNDO_PASTE_WORD,
   payload: { startIndex, clipboardLength },
+});
+
+export const wordCorrected: (
+  index: number,
+  newText: string
+) => Action<CorrectWordPayload> = (index, newText) => ({
+  type: CORRECT_WORD,
+  payload: { index, text: newText },
+});
+
+export const undoWordCorrected: (
+  index: number,
+  prevText: string
+) => Action<UndoCorrectWordPayload> = (index, prevText) => ({
+  type: UNDO_CORRECT_WORD,
+  payload: { index, prevText },
 });

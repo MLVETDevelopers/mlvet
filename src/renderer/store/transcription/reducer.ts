@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges, rangeLengthOne } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import {
   TRANSCRIPTION_CREATED,
@@ -7,12 +7,16 @@ import {
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
+  CORRECT_WORD,
+  UNDO_CORRECT_WORD,
 } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   PasteWordsPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
@@ -99,6 +103,32 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       words: updateOutputStartTimes([...prefix, ...suffix]),
+    };
+  }
+
+  if (action.type === CORRECT_WORD) {
+    const { index, text } = action.payload as CorrectWordPayload;
+
+    return {
+      ...transcription,
+      words: mapInRanges(
+        transcription.words,
+        (word) => ({ ...word, word: text }),
+        [rangeLengthOne(index)]
+      ), // no need to run updateOutputStartTimes as durations not changed
+    };
+  }
+
+  if (action.type === UNDO_CORRECT_WORD) {
+    const { index, prevText } = action.payload as UndoCorrectWordPayload;
+
+    return {
+      ...transcription,
+      words: mapInRanges(
+        transcription.words,
+        (word) => ({ ...word, word: prevText }),
+        [rangeLengthOne(index)]
+      ), // no need to run updateOutputStartTimes as durations not changed
     };
   }
 

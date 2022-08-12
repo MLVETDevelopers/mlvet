@@ -10,9 +10,11 @@ import {
 } from './actions';
 import transcriptionReducer from '../transcription/reducer';
 import {
+  CORRECT_WORD,
   DELETE_SELECTION,
   PASTE_WORD,
   TRANSCRIPTION_CREATED,
+  UNDO_CORRECT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
 } from '../transcription/actions';
@@ -87,6 +89,8 @@ const currentProjectReducer: Reducer<
       UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
     ].includes(action.type) &&
     currentProject !== null
   ) {

@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import useCustomHook from 'renderer/hooks/customHooks';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
@@ -67,22 +68,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     nextView();
   }, [currentProject, mediaFilePath, nextView, setCurrentProject]);
 
-  useEffect(() => {
-    const handleKeypress = async (event: KeyboardEvent) => {
-      if (
-        (event.code === 'Enter' || event.code === 'NumpadEnter') &&
-        !isAwaitingMedia
-      ) {
-        handleTranscribe();
-      }
-    };
-
-    window.addEventListener('keypress', handleKeypress);
-
-    return () => {
-      window.removeEventListener('keypress', handleKeypress);
-    };
-  }, [handleTranscribe, isAwaitingMedia]);
+  useCustomHook(handleTranscribe, isAwaitingMedia);
 
   if (currentProject === null) {
     return null;

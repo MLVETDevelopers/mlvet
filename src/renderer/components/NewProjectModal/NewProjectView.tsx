@@ -1,8 +1,9 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import useCustomHook from 'renderer/hooks/customHooks';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
@@ -64,22 +65,7 @@ const NewProjectView = ({
     nextView();
   }, [nextView, projectName, setProjectInStore]);
 
-  useEffect(() => {
-    const handleKeypress = async (event: KeyboardEvent) => {
-      if (
-        (event.code === 'Enter' || event.code === 'NumpadEnter') &&
-        !isAwaitingProjectName
-      ) {
-        handleContinue();
-      }
-    };
-
-    window.addEventListener('keypress', handleKeypress);
-
-    return () => {
-      window.removeEventListener('keypress', handleKeypress);
-    };
-  }, [handleContinue, isAwaitingProjectName]);
+  useCustomHook(handleContinue, isAwaitingProjectName);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

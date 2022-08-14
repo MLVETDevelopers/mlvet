@@ -34,6 +34,11 @@ declare global {
 
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
+      saveChangesDialog: (
+        mainWindow: BrowserWindow,
+        projectFileName?: string
+      ) => SaveDialogSelections;
+
       saveProject: (project: RuntimeProject) => Promise<string>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
@@ -53,6 +58,8 @@ declare global {
         project: RuntimeProject
       ) => Promise<Transcription | null>;
 
+      setExportEnabled: (exportEnabled: boolean) => void;
+
       setFileRepresentation: (
         representedFilePath: string | null,
         isEdited: boolean
@@ -63,8 +70,6 @@ declare global {
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
-
-      setExportEnabled: (exportEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 

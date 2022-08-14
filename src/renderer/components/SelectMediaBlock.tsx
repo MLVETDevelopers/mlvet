@@ -90,14 +90,19 @@ const SelectMediaBlock = ({
 
     if (draggedFiles.length > 0) {
       /* Currently only supporting single file import - taking first file */
-      const fileType = draggedFiles[0].type.split('/')[1];
-      if (getMediaType(fileType) !== null) {
-        const fileName = draggedFiles[0].name;
-        const filePath = draggedFiles[0].path;
+      const fileType = draggedFiles[0].type.split('/')[0];
+      console.log(fileType);
+      const fileTypeExtension = draggedFiles[0].type.split('/')[1];
+      console.log(fileTypeExtension);
+      if (fileType !== null && (fileType === 'audio' || fileType === 'video')) {
+        if (getMediaType(fileTypeExtension) !== null) {
+          const fileName = draggedFiles[0].name;
+          const filePath = draggedFiles[0].path;
 
-        setMediaFilePath(filePath);
-        setMediaFileName(fileName);
-        setIsAwaitingMedia(false);
+          setMediaFilePath(filePath);
+          setMediaFileName(fileName);
+          setIsAwaitingMedia(false);
+        }
       }
     }
   };

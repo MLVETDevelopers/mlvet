@@ -6,15 +6,23 @@ import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
+  MergeWordsPayload,
   PasteWordsPayload,
+  SplitWordPayload,
   UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
   UndoPasteWordsPayload,
+  UndoSplitWordPayload,
 } from '../undoStack/opPayloads';
 import {
   DELETE_SELECTION,
+  MERGE_WORDS,
   PASTE_WORD,
+  SPLIT_WORD,
   UNDO_DELETE_SELECTION,
+  UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
+  UNDO_SPLIT_WORD,
 } from '../undoStack/ops';
 
 /**
@@ -100,6 +108,48 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       ...transcription,
       words: updateOutputStartTimes([...prefix, ...suffix]),
     };
+  }
+
+  if (action.type === MERGE_WORDS) {
+    const { range } = action.payload as MergeWordsPayload;
+    const { words } = transcription;
+
+    const prefix = words.slice(0, range.startIndex);
+    const suffix = words.slice(range.endIndex);
+
+    const firstWord = words[range.startIndex];
+    const lastWord = words[range.endIndex - 1];
+    const wordsToMerge = words.slice(range.startIndex, range.endIndex);
+
+    const mergedText = wordsToMerge.map((word) => word.word).join(' ');
+
+    const mergedWord: Word = {
+      ...firstWord,
+      word: mergedText,
+    };
+
+    return {
+      ...transcription,
+      words: updateOutputStartTimes([...prefix, mergedWord, ...suffix]),
+    };
+  }
+
+  if (action.type === UNDO_MERGE_WORDS) {
+    const { index, originalWords } = action.payload as UndoMergeWordsPayload;
+
+    return transcription;
+  }
+
+  if (action.type === SPLIT_WORD) {
+    const { index } = action.payload as SplitWordPayload;
+
+    return transcription;
+  }
+
+  if (action.type === UNDO_SPLIT_WORD) {
+    const { range } = action.payload as UndoSplitWordPayload;
+
+    return transcription;
   }
 
   return transcription;

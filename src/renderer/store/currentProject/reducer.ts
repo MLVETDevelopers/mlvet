@@ -20,6 +20,10 @@ import {
   UNDO_DELETE_SELECTION,
   PASTE_WORD,
   UNDO_PASTE_WORD,
+  MERGE_WORDS,
+  UNDO_MERGE_WORDS,
+  SPLIT_WORD,
+  UNDO_SPLIT_WORD,
 } from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
@@ -87,6 +91,10 @@ const currentProjectReducer: Reducer<
       UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
+      MERGE_WORDS,
+      UNDO_MERGE_WORDS,
+      SPLIT_WORD,
+      UNDO_SPLIT_WORD,
     ].includes(action.type) &&
     currentProject !== null
   ) {

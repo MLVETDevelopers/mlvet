@@ -1,20 +1,12 @@
 import { BrowserWindow, dialog } from 'electron';
+import { SaveDialogSelections } from '../helpers/saveDialog';
 
 type SaveChangesDialog = (
   mainWindow: BrowserWindow,
   projectFileName?: string
 ) => SaveDialogSelections;
 
-export enum SaveDialogSelections {
-  SAVE_SELECTED = 0,
-  DONT_SAVE_SELECTED = 1,
-  SAVE_CANCELLED = 2,
-}
-
-export const saveChangesDialog: SaveChangesDialog = (
-  mainWindow,
-  projectFileName
-) => {
+const saveChangesDialog: SaveChangesDialog = (mainWindow, projectFileName) => {
   const result = dialog.showMessageBoxSync(mainWindow, {
     message: projectFileName
       ? `Do you want to save the changes you have made to ${projectFileName}?`
@@ -27,3 +19,5 @@ export const saveChangesDialog: SaveChangesDialog = (
 
   return result;
 };
+
+export default saveChangesDialog;

@@ -135,6 +135,29 @@ export default class MenuBuilder {
     ];
   }
 
+  buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'mergeWords',
+        label: 'Merge Words',
+        accelerator: 'CommandOrControl+M',
+        click: () => {
+          // Tell the renderer to initiate a merge-words operation
+          this.mainWindow.webContents.send('initiate-merge-words');
+        },
+      },
+      {
+        id: 'splitWords',
+        label: 'Split Words',
+        accelerator: 'Shift+CommandOrControl+M',
+        click: () => {
+          // Tell the renderer to initiate a split-words operation
+          this.mainWindow.webContents.send('initiate-split-words');
+        },
+      },
+    ];
+  }
+
   buildFileOptions(): MenuItemConstructorOptions[] {
     return [
       {
@@ -189,6 +212,8 @@ export default class MenuBuilder {
         ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         ...this.buildClipboardOptions(),
+        { type: 'separator' },
+        ...this.buildEditorAdditionalOptions(),
       ],
     };
   }
@@ -337,6 +362,7 @@ export default class MenuBuilder {
         submenu: [
           ...this.buildUndoRedoOptions(),
           ...this.buildClipboardOptions(),
+          ...this.buildEditorAdditionalOptions(),
         ],
       },
       {

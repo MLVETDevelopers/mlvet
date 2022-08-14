@@ -24,6 +24,14 @@ const configuration: webpack.Configuration = {
           },
         },
       },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },
+      {
+        test: /\.cs$/,
+        loader: 'ignore-loader',
+      },
     ],
   },
 

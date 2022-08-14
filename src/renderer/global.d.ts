@@ -64,6 +64,8 @@ declare global {
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
+      setExportEnabled: (exportEnabled: boolean) => void;
+
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       handleOsQuery: () => Promise<OperatingSystems | null>;

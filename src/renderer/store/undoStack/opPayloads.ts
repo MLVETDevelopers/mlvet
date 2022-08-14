@@ -9,6 +9,14 @@ export interface PasteWordsPayload {
   clipboard: Word[];
 }
 
+export interface MergeWordsPayload {
+  range: IndexRange;
+}
+
+export interface SplitWordPayload {
+  index: number;
+}
+
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
 
 export interface UndoPasteWordsPayload {
@@ -16,14 +24,23 @@ export interface UndoPasteWordsPayload {
   clipboardLength: number;
 }
 
+export interface UndoMergeWordsPayload {
+  index: number;
+  originalWords: Word[];
+}
+
+export interface UndoSplitWordPayload {
+  range: IndexRange;
+}
+
 export type DoPayload =
   | DeleteSelectionPayload
   | PasteWordsPayload
-  | IndexRange
-  | null;
+  | MergeWordsPayload
+  | SplitWordPayload;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
   | UndoPasteWordsPayload
-  | IndexRange
-  | null;
+  | UndoMergeWordsPayload
+  | UndoSplitWordPayload;

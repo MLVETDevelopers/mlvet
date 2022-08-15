@@ -1,8 +1,5 @@
 name: Build & Publish Electron Releases
 
-env:
-  BRANCH: chore/CI-publish
-
 on:
   push:
     branches: ['chore/CI-publish']
@@ -20,13 +17,13 @@ jobs:
 
   # Mac (including M1)
   build_on_mac:
-    if: github.event.base_ref == 'refs/heads/$BRANCH'
+    # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@$BRANCH
+      - uses: actions/checkout@chore/CI-publish
         with:
-          ref: $BRANCH
-      - uses: actions/setup-node@$BRANCH
+          ref: chore/CI-publish
+      - uses: actions/setup-node@chore/CI-publish
         with:
           node-version: 16
       - name: Install dependencies
@@ -51,10 +48,10 @@ jobs:
     # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@${{BRANCH}}
+      - uses: actions/checkout@chore/CI-publish
         with:
-          ref: $BRANCH
-      - uses: actions/setup-node@$BRANCH
+          ref: chore/CI-publish
+      - uses: actions/setup-node@chore/CI-publish
         with:
           node-version: 16
       - name: Install dependencies
@@ -72,13 +69,13 @@ jobs:
 
   # Linux
   build_on_linux:
-    if: github.event.base_ref == 'refs/heads/$BRANCH'
+    # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@$BRANCH
+      - uses: actions/checkout@chore/CI-publish
         with:
-          ref: $BRANCH
-      - uses: actions/setup-node@$BRANCH
+          ref: chore/CI-publish
+      - uses: actions/setup-node@chore/CI-publish
         with:
           node-version: 16
       - name: Install dependencies

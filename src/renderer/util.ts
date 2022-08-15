@@ -192,3 +192,36 @@ export const mapInRanges: <T>(
 export const sortNumerical: (list: number[]) => void = (list) => {
   list.sort((first, second) => first - second);
 };
+
+export const getElementStyle: (
+  elem: Element
+) => CSSStyleDeclaration | undefined = (elem) => {
+  try {
+    return window.getComputedStyle(elem);
+  } catch {
+    return undefined;
+  }
+};
+
+export const getElementSize: (elem: Element) =>
+  | {
+      width: number;
+      height: number;
+    }
+  | undefined = (elem) => {
+  const style = getElementStyle(elem);
+  return style
+    ? {
+        width: parseFloat(style.width),
+        height: parseFloat(style.height),
+      }
+    : undefined;
+};
+
+export const getAspectRatio: (
+  elem: Element,
+  defaultAspectRatio: number
+) => number = (elem, defaultAspectRatio) => {
+  const elemSize = getElementSize(elem);
+  return elemSize ? elemSize.width / elemSize.height : defaultAspectRatio;
+};

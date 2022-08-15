@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
 import VideoController from 'renderer/components/VideoController';
@@ -10,9 +10,18 @@ import ResizeSlider from 'renderer/components/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
 import { useWindowResizer } from 'renderer/utils/hooks';
 import { clamp } from 'main/timeUtils';
+import { getAspectRatio, getElementSize } from 'renderer/util';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { bufferedWordDuration } from '../../sharedUtils';
+
+// Used for calculating the max size of the video preview
+const pageLayoutPadding = { x: 96 * 2 + 2, y: 64 };
+
+const pageLayoutOptions = {
+  minTranscriptionWidth: 120,
+  minVideoPreviewWidth: 120,
+};
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -35,40 +44,62 @@ const ProjectPage = () => {
   const [videoPreviewContainerWidth, setVideoPreviewContainerWidth] =
     useDebounce(400, 0.1);
 
-  const [pageWidth, setPageWidth] = useState<number>(1000);
+  const projectPageLayoutRef = useRef<HTMLDivElement>(null);
+  const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
-  useMemo(() => setPageWidth(window.innerWidth), []);
-
-  const pageResizeHandler = useCallback(
-    (width) => setPageWidth(width),
-    [setPageWidth]
-  );
-
-  useWindowResizer(pageResizeHandler);
-
-  const videoPreviewOptions = useRef({
-    minTranscriptionWidth: 120,
-    minVideoPreviewWidth: 120,
+  const [videoResizeOptions, setVideoResizeOptions] = useState({
+    minTargetWidth: 120,
+    maxTargetWidth: 120,
   });
 
-  // A manual way of calculating the min and max width of the viedeo preview container.
-  // Will need to be updated if styling changes are made to avoid bugs
-  const videoPreviewResizeOptions = useMemo(() => {
-    const pageLayoutPadding = 96 * 2 + 2;
+  const windowResizeHandler = useCallback((newPageSize) => {
+    // A manual way of calculating the min and max width of the video preview container.
+    // Will need to be updated if styling changes are made to avoid bugs
 
-    const minTargetWidth = videoPreviewOptions.current.minVideoPreviewWidth;
-    const maxTargetWidth =
-      pageWidth -
-      videoPreviewOptions.current.minTranscriptionWidth -
-      pageLayoutPadding;
+    const pageSize =
+      getElementSize(projectPageLayoutRef?.current as HTMLDivElement) ??
+      newPageSize;
 
-    setVideoPreviewContainerWidth(
-      clamp(minTargetWidth, videoPreviewContainerWidth, maxTargetWidth)
+    const videoAspectRatio = getAspectRatio(
+      videoPreviewContainerRef.current as HTMLDivElement,
+      19 / 6
     );
 
-    return { minTargetWidth, maxTargetWidth };
-  }, [pageWidth, videoPreviewContainerWidth, setVideoPreviewContainerWidth]);
+    // Use padding and transcription size to calculate max width based on available width
+    const maxWidthBasedOnWidth =
+      pageSize.width -
+      pageLayoutPadding.x -
+      pageLayoutOptions.minTranscriptionWidth;
+
+    // Use aspect-ratio to calculate the max width based on available height
+    const maxWidthBasedOnHeight =
+      videoAspectRatio * (pageSize.height - pageLayoutPadding.y);
+
+    const maxTargetWidth = Math.min(
+      maxWidthBasedOnWidth,
+      maxWidthBasedOnHeight
+    );
+
+    setVideoResizeOptions({
+      minTargetWidth: pageLayoutOptions.minVideoPreviewWidth,
+      maxTargetWidth,
+    });
+  }, []);
+
+  useWindowResizer(windowResizeHandler);
+
+  useEffect(() => {
+    setVideoPreviewContainerWidth(
+      clamp(
+        videoResizeOptions.minTargetWidth,
+        videoPreviewContainerWidth,
+        videoResizeOptions.maxTargetWidth
+      )
+    );
+    // Don't want to run this every time user resizes video preview, only on window resize
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setVideoPreviewContainerWidth, videoResizeOptions]);
 
   const play = () => videoPreviewControllerRef?.current?.play();
   const pause = () => videoPreviewControllerRef?.current?.pause();
@@ -128,6 +159,7 @@ const ProjectPage = () => {
           px: '48px',
           py: '32px',
         }}
+        ref={projectPageLayoutRef}
       >
         <Stack id="transcription-container" spacing={4} sx={{ flex: '5 1 0' }}>
           {currentProject?.transcription && (
@@ -141,7 +173,7 @@ const ProjectPage = () => {
         <ResizeSlider
           targetWidth={videoPreviewContainerWidth}
           setTargetWidth={setVideoPreviewContainerWidth}
-          options={videoPreviewResizeOptions}
+          options={videoResizeOptions}
           sx={{ flex: '0 0 auto' }}
         />
         <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
@@ -149,6 +181,7 @@ const ProjectPage = () => {
             sx={{
               width: `${videoPreviewContainerWidth}px`,
             }}
+            ref={videoPreviewContainerRef}
           >
             <VideoPreviewController
               setTime={setTime}

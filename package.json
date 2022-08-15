@@ -15,7 +15,10 @@
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
     "prepare": "husky install",
-    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write"
+    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write",
+    "publish:l": "electron-builder -l --publish always",
+    "publish:m": "electron-builder -m  --x64 --arm64 --publish always",
+    "publish:w": "electron-builder -w --x64 --ia32 --publish always"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

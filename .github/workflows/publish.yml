@@ -1,0 +1,83 @@
+name: Build & Publish Electron Releases
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  # Mac (including M1)
+  build_on_mac:
+    if: github.event.base_ref == 'refs/heads/develop'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@develop
+        with:
+          ref: develop
+      - uses: actions/setup-node@develop
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn
+      - name: see directory HOME
+        run: echo $HOME
+      - name: Build Electron
+        env:
+          ELECTRON: true
+          PUBLISH_FOR_PULL_REQUEST: false
+          ELECTRON_CACHE: $HOME/.cache/electron
+          ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+          USE_HARD_LINKS: false
+          YARN_GPG: no
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: yarn publish:m
+      - name: see directory
+        run: ls ./dist
+  # Windows
+  build_on_win:
+    if: github.event.base_ref == 'refs/heads/develop'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@develop
+        with:
+          ref: develop
+      - uses: actions/setup-node@develop
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn
+      - name: Build Electron on Windows
+        env:
+          ELECTRON: true
+          PUBLISH_FOR_PULL_REQUEST: false
+          ELECTRON_CACHE: $HOME/.cache/electron
+          ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+          USE_HARD_LINKS: false
+          YARN_GPG: no
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: yarn publish:w
+  # Linux
+  build_on_linux:
+    if: github.event.base_ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@develop
+        with:
+          ref: develop
+      - uses: actions/setup-node@develop
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: yarn
+      - name: see directory HOME
+        run: echo $HOME
+      - name: Build Electron
+        env:
+          ELECTRON: true
+          PUBLISH_FOR_PULL_REQUEST: false
+          ELECTRON_CACHE: $HOME/.cache/electron
+          ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+          USE_HARD_LINKS: false
+          YARN_GPG: no
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: yarn publish:l
+      - name: see directory
+        run: ls ./dist

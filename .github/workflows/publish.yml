@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print event base ref
-        run: echo ${{github.event.base_ref}}
+        run: echo actions/checkout@${{BRANCH}}
 
   # Mac (including M1)
   build_on_mac:
@@ -51,7 +51,7 @@ jobs:
     # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@$BRANCH
+      - uses: actions/checkout@${{BRANCH}}
         with:
           ref: $BRANCH
       - uses: actions/setup-node@$BRANCH

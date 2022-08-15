@@ -192,3 +192,59 @@ export const mapInRanges: <T>(
 export const sortNumerical: (list: number[]) => void = (list) => {
   list.sort((first, second) => first - second);
 };
+
+/**
+ * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
+ */
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
+  ranges
+) => {
+  const indicesSet = new Set<number>();
+
+  ranges.forEach(({ startIndex, endIndex }) => {
+    for (let i = startIndex; i < endIndex; i += 1) {
+      indicesSet.add(i);
+    }
+  });
+
+  return indicesSet;
+};
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Determines if a point is inside a rectangle,
+ * returning false for boundary cases.
+ */
+export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x > rect.x &&
+  point.x < rect.x + rect.w &&
+  point.y > rect.y &&
+  point.y < rect.y + rect.h;
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
+/**
+ * Helper for making IndexRanges with a size of one, e.g. a single word
+ */
+export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
+  startIndex: index,
+  endIndex: index + 1,
+});

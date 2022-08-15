@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print event base ref
-        run: echo actions/checkout@${{BRANCH}}
+        run: echo hello
 
   # Mac (including M1)
   build_on_mac:

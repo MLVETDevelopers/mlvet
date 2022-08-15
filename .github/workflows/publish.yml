@@ -12,6 +12,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event base ref
+        run: echo github.event.base_ref
+
   # Mac (including M1)
   build_on_mac:
     if: github.event.base_ref == 'refs/heads/$BRANCH'
@@ -39,6 +45,7 @@ jobs:
         run: yarn publish:m
       - name: see directory
         run: ls ./dist
+
   # Windows
   build_on_win:
     if: github.event.base_ref == 'refs/heads/$BRANCH'
@@ -62,6 +69,7 @@ jobs:
           YARN_GPG: no
           GITHUB_TOKEN: ${{ secrets.github_token }}
         run: yarn publish:w
+
   # Linux
   build_on_linux:
     if: github.event.base_ref == 'refs/heads/$BRANCH'

@@ -64,9 +64,11 @@ declare global {
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
+      setExportEnabled: (exportEnabled: boolean) => void;
+
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
-      handleOsQuery: () => OperatingSystems | null;
+      handleOsQuery: () => Promise<OperatingSystems | null>;
 
       setClipboardEnabled: (
         cutEnabled: boolean,

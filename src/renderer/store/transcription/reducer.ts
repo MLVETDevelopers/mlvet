@@ -18,7 +18,6 @@ import {
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
-  UndoSplitWordPayload,
 } from '../undoStack/opPayloads';
 import {
   DELETE_SELECTION,
@@ -30,6 +29,8 @@ import {
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
 } from '../undoStack/ops';
+import { mergeWords } from './mergeWords';
+import { splitWord } from './splitWord';
 
 /**
  *  Nested reducer for handling transcriptions
@@ -116,46 +117,44 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     };
   }
 
-  if (action.type === MERGE_WORDS) {
+  // Doing a MERGE_WORDS action is identical to undoing a SPLIT_WORD action
+  if (action.type === MERGE_WORDS || action.type === UNDO_SPLIT_WORD) {
     const { range } = action.payload as MergeWordsPayload;
     const { words } = transcription;
 
-    const prefix = words.slice(0, range.startIndex);
-    const suffix = words.slice(range.endIndex);
-
-    const firstWord = words[range.startIndex];
-    const lastWord = words[range.endIndex - 1];
-    const wordsToMerge = words.slice(range.startIndex, range.endIndex);
-
-    const mergedText = wordsToMerge.map((word) => word.word).join(' ');
-
-    const mergedWord: Word = {
-      ...firstWord,
-      word: mergedText,
-    };
+    const mergedWords = mergeWords(words, range);
 
     return {
       ...transcription,
-      words: updateOutputStartTimes([...prefix, mergedWord, ...suffix]),
+      words: updateOutputStartTimes(mergedWords),
     };
   }
 
   if (action.type === UNDO_MERGE_WORDS) {
     const { index, originalWords } = action.payload as UndoMergeWordsPayload;
+    const { words } = transcription;
 
-    return transcription;
+    const count = originalWords.length;
+
+    const prefix = words.slice(0, index);
+    const suffix = words.slice(index + count);
+
+    return {
+      ...transcription,
+      words: [...prefix, ...originalWords, ...suffix],
+    };
   }
 
   if (action.type === SPLIT_WORD) {
     const { index } = action.payload as SplitWordPayload;
+    const { words } = transcription;
 
-    return transcription;
-  }
+    const splitWords = splitWord(words, index);
 
-  if (action.type === UNDO_SPLIT_WORD) {
-    const { range } = action.payload as UndoSplitWordPayload;
-
-    return transcription;
+    return {
+      ...transcription,
+      words: updateOutputStartTimes(splitWords),
+    };
   }
 
   return transcription;

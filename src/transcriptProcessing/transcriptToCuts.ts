@@ -1,3 +1,4 @@
+import { Output } from '@mui/icons-material';
 import { updateOutputStartTimes } from './updateOutputStartTimes';
 import { Transcription, Cut } from '../sharedTypes';
 import { bufferedWordDuration, roundToMs } from '../sharedUtils';

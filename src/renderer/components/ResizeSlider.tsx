@@ -1,6 +1,6 @@
 import { Box, styled, colors, BoxProps } from '@mui/material';
 import { clamp } from 'main/timeUtils';
-import { useEffect, useRef } from 'react';
+import { DragEvent, useEffect, useRef } from 'react';
 
 interface ResizeSliderProps extends BoxProps {
   targetWidth: number;
@@ -69,7 +69,7 @@ const ResizeSlider = ({
   };
 
   // Needed to avoid div 'forking' bug with weird cursor icon
-  const onDragStart = () => false;
+  const onDragStart = (e: DragEvent<HTMLDivElement>) => e.preventDefault();
 
   // Cleanup for event listeners when components unmounts
   useEffect(() => {

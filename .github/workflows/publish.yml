@@ -48,10 +48,10 @@ jobs:
     # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@'chore/CI-publish'
+      - uses: actions/checkout@master
         with:
           ref: ${{ github.ref }}
-      - uses: actions/setup-node@'chore/CI-publish'
+      - uses: actions/setup-node@master
         with:
           node-version: 16
       - name: Install dependencies

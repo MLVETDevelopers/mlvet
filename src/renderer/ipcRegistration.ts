@@ -17,6 +17,7 @@ import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
 import { copyText, cutText, deleteText, pasteText } from './clipboard';
+import { selectAllWords } from './selection';
 
 /**
  * Used by backend to initiate saves from front end
@@ -164,6 +165,10 @@ ipc.on('initiate-paste-text', async () => {
 
 ipc.on('initiate-delete-text', async () => {
   deleteText();
+});
+
+ipc.on('initiate-select-all', async () => {
+  selectAllWords();
 });
 
 /**

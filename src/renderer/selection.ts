@@ -149,3 +149,18 @@ export const handleSelectWord: (
     dispatch(selectionRangeToggled(singleWordRange));
   }
 };
+
+export const selectAllWords: () => void = () => {
+  const { currentProject } = store.getState();
+
+  if (currentProject === null || currentProject?.transcription === null) {
+    return;
+  }
+
+  dispatch(
+    selectionRangeAdded({
+      startIndex: 0,
+      endIndex: currentProject.transcription.words.length,
+    })
+  );
+};

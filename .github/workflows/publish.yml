@@ -1,18 +1,26 @@
 name: Build & Publish Electron Releases
+
+env:
+  BRANCH: chore/CI-publish
+
 on:
   push:
-    tags:
-      - '*'
+    branches: [$BRANCH]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Mac (including M1)
   build_on_mac:
-    if: github.event.base_ref == 'refs/heads/develop'
+    if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@develop
+      - uses: actions/checkout@$BRANCH
         with:
-          ref: develop
-      - uses: actions/setup-node@develop
+          ref: $BRANCH
+      - uses: actions/setup-node@$BRANCH
         with:
           node-version: 16
       - name: Install dependencies
@@ -33,13 +41,13 @@ jobs:
         run: ls ./dist
   # Windows
   build_on_win:
-    if: github.event.base_ref == 'refs/heads/develop'
+    if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@develop
+      - uses: actions/checkout@$BRANCH
         with:
-          ref: develop
-      - uses: actions/setup-node@develop
+          ref: $BRANCH
+      - uses: actions/setup-node@$BRANCH
         with:
           node-version: 16
       - name: Install dependencies
@@ -56,13 +64,13 @@ jobs:
         run: yarn publish:w
   # Linux
   build_on_linux:
-    if: github.event.base_ref == 'refs/heads/develop'
+    if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@develop
+      - uses: actions/checkout@$BRANCH
         with:
-          ref: develop
-      - uses: actions/setup-node@develop
+          ref: $BRANCH
+      - uses: actions/setup-node@$BRANCH
         with:
           node-version: 16
       - name: Install dependencies

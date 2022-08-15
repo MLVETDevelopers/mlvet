@@ -29,9 +29,7 @@ export interface UndoMergeWordsPayload {
   originalWords: Word[];
 }
 
-export interface UndoSplitWordPayload {
-  range: IndexRange;
-}
+export type UndoSplitWordPayload = MergeWordsPayload;
 
 export type DoPayload =
   | DeleteSelectionPayload

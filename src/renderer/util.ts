@@ -6,6 +6,7 @@ import {
   MapCallback,
   VideoFileExtension,
   IndexRange,
+  Word,
 } from '../sharedTypes';
 import ipc from './ipc';
 
@@ -192,3 +193,12 @@ export const mapInRanges: <T>(
 export const sortNumerical: (list: number[]) => void = (list) => {
   list.sort((first, second) => first - second);
 };
+
+/**
+ * Returns whether a list of words is in originalIndex order
+ */
+export const isInOriginalOrder: (words: Word[]) => boolean = (words) =>
+  words.every(
+    (word, index) =>
+      index === 0 || word.originalIndex === words[index - 1].originalIndex + 1
+  );

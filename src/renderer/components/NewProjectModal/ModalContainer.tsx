@@ -28,6 +28,7 @@ interface Props {
 
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
+  const [projectName, setProjectName] = useState<string>('');
 
   const dispatch = useDispatch();
 
@@ -70,7 +71,12 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     switch (viewComponent) {
       case NewProjectView:
         return (
-          <NewProjectView closeModal={handleModalClose} nextView={nextView} />
+          <NewProjectView
+            closeModal={handleModalClose}
+            nextView={nextView}
+            projectName={projectName}
+            setProjectName={setProjectName}
+          />
         );
       case ImportMediaView:
         return (

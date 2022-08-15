@@ -52,17 +52,25 @@ export default function StoreChangeObserver() {
       // Can't save or save as when there is no project open
       ipc.setSaveEnabled(false, false);
 
+      // No project -> no export
+      ipc.setExportEnabled(false);
+
       // No file is represented
       ipc.setFileRepresentation(null, false);
     } else if (currentProject.projectFilePath === null) {
       // Can save, but not save as, when the project hasn't been saved yet
       ipc.setSaveEnabled(true, false);
 
+      ipc.setExportEnabled(true);
+
       // No file is represented as the project hasn't been saved yet - however, we mark the window as 'dirty'
       ipc.setFileRepresentation(null, true);
     } else {
       // Can do either if the project has been saved already
       ipc.setSaveEnabled(true, true);
+
+      // Allow export when saved
+      ipc.setExportEnabled(true);
 
       // File is represented, dirty depends on if the project has been edited
       ipc.setFileRepresentation(

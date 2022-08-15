@@ -1,7 +1,7 @@
 import {
-  DELETE_WORD,
+  DELETE_SELECTION,
   PASTE_WORD,
-  UNDO_DELETE_WORD,
+  UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
 } from 'renderer/store/undoStack/ops';
 import { Word } from 'sharedTypes';
@@ -56,10 +56,14 @@ describe('Transcription reducer', () => {
         ],
       },
       {
-        type: DELETE_WORD,
+        type: DELETE_SELECTION,
         payload: {
-          startIndex: 1,
-          endIndex: 3,
+          ranges: [
+            {
+              startIndex: 1,
+              endIndex: 3,
+            },
+          ],
         },
       }
     );
@@ -91,10 +95,14 @@ describe('Transcription reducer', () => {
         ],
       },
       {
-        type: UNDO_DELETE_WORD,
+        type: UNDO_DELETE_SELECTION,
         payload: {
-          startIndex: 2,
-          endIndex: 5,
+          ranges: [
+            {
+              startIndex: 2,
+              endIndex: 5,
+            },
+          ],
         },
       }
     );
@@ -106,6 +114,84 @@ describe('Transcription reducer', () => {
     expect(output?.words).toEqual([
       makeBasicWord(0, 'a'),
       makeBasicWord(1, 'b'),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd'),
+      makeBasicWord(4, 'e'),
+    ]);
+  });
+
+  it('should handle deletions for non-contiguous ranges', () => {
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord(0, 'a'),
+          makeBasicWord(1, 'b'),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd'),
+          makeBasicWord(4, 'e'),
+        ],
+      },
+      {
+        type: DELETE_SELECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 2,
+            },
+            {
+              startIndex: 3,
+              endIndex: 4,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output?.words).toEqual([
+      makeBasicWord(0, 'a', true),
+      makeBasicWord(1, 'b', true),
+      makeBasicWord(2, 'c'),
+      makeBasicWord(3, 'd', true),
+      makeBasicWord(4, 'e'),
+    ]);
+  });
+
+  it('should handle deletions being undone for non-contiguous ranges', () => {
+    const output = transcriptionReducer(
+      {
+        confidence: 1,
+        duration: 100,
+        words: [
+          makeBasicWord(0, 'a', true),
+          makeBasicWord(1, 'b', true),
+          makeBasicWord(2, 'c'),
+          makeBasicWord(3, 'd', true),
+          makeBasicWord(4, 'e', true),
+        ],
+      },
+      {
+        type: UNDO_DELETE_SELECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 1,
+            },
+            {
+              startIndex: 3,
+              endIndex: 5,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output?.words).toEqual([
+      makeBasicWord(0, 'a'),
+      makeBasicWord(1, 'b', true),
       makeBasicWord(2, 'c'),
       makeBasicWord(3, 'd'),
       makeBasicWord(4, 'e'),

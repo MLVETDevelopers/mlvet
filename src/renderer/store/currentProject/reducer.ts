@@ -16,8 +16,8 @@ import {
   FINISH_EXPORT,
 } from '../exportIo/actions';
 import {
-  DELETE_WORD,
-  UNDO_DELETE_WORD,
+  DELETE_SELECTION,
+  UNDO_DELETE_SELECTION,
   PASTE_WORD,
   UNDO_PASTE_WORD,
 } from '../undoStack/ops';
@@ -83,8 +83,8 @@ const currentProjectReducer: Reducer<
   if (
     [
       TRANSCRIPTION_CREATED,
-      DELETE_WORD,
-      UNDO_DELETE_WORD,
+      DELETE_SELECTION,
+      UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
     ].includes(action.type) &&

@@ -48,7 +48,7 @@ jobs:
 
   # Windows
   build_on_win:
-    if: github.event.base_ref == 'refs/heads/$BRANCH'
+    # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@$BRANCH

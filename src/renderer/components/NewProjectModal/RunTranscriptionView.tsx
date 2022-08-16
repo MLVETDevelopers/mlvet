@@ -1,37 +1,48 @@
-import { Box, styled, Stack, Typography, Button } from '@mui/material';
+import { Box, styled, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
+import { projectCreated } from 'renderer/store/currentProject/actions';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
-import { Transcription, AsyncState } from '../../../sharedTypes';
+import {
+  updateProjectWithExtractedAudio,
+  updateProjectWithMedia,
+} from '../../util';
+import {
+  Transcription,
+  AsyncState,
+  RuntimeProject,
+} from '../../../sharedTypes';
 import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
+import { PrimaryButton } from '../Blocks/Buttons';
+
+const { extractAudio } = ipc;
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
-const CustomStack = styled(Stack)`
-  width: 100%;
-`;
+const CustomStack = styled(Stack)({
+  width: '100%',
+});
 
-const CustomColumnStack = styled(CustomStack)`
-  flex-direction: column;
-`;
+const processTranscription = async (project: RuntimeProject) =>
+  requestTranscription(project);
 
-const CustomRowStack = styled(CustomStack)`
-  flex-direction: row;
-  align-items: center;
-`;
+const CustomColumnStack = styled(CustomStack)({
+  flexDirection: 'column',
+});
 
-const Container = styled(Box)`
-  background-color: ${colors.grey[700]};
-`;
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
-const CustomButton = styled(Button)`
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
-`;
+const Container = styled(Box)({
+  backgroundColor: colors.grey[700],
+});
 
 interface Props {
   closeModal: () => void;
@@ -61,21 +72,53 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     ) {
       return;
     }
+    const { mediaFilePath } = currentProject;
+
+    if (mediaFilePath === null) {
+      return;
+    }
+    const setCurrentProject = (project: RuntimeProject) => {
+      return dispatch(projectCreated(project));
+    };
+
+    const extractProjectAudio = async () => {
+      const audioFilePath = await extractAudio(currentProject);
+      const projectWithAudioExtract = await updateProjectWithExtractedAudio(
+        currentProject,
+        audioFilePath
+      );
+      if (projectWithAudioExtract === null) {
+        return;
+      }
+      setCurrentProject(projectWithAudioExtract);
+    };
 
     setAsyncState(AsyncState.LOADING);
 
-    requestTranscription(currentProject)
-      .then((transcription) => {
+    const startProcessing = async () => {
+      await updateProjectWithMedia(currentProject, mediaFilePath);
+      await extractProjectAudio();
+      try {
+        const transcription = await processTranscription(currentProject);
         if (transcription === null) {
-          return null;
+          throw new Error();
         }
-
         setAsyncState(AsyncState.DONE);
         setTranscription(transcription);
-        return null;
-      })
-      .catch(() => setAsyncState(AsyncState.ERROR));
-  }, [currentProject, setAsyncState, nextView, setTranscription, asyncState]);
+      } catch {
+        setAsyncState(AsyncState.ERROR);
+      }
+    };
+
+    startProcessing();
+  }, [
+    currentProject,
+    setAsyncState,
+    nextView,
+    setTranscription,
+    asyncState,
+    dispatch,
+  ]);
 
   if (currentProject === null) {
     return null;
@@ -90,9 +133,9 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
   getFileName();
 
   const completedButton = (
-    <CustomButton color="primary" onClick={nextView} sx={{ width: '100%' }}>
+    <PrimaryButton onClick={nextView} fullWidth>
       Get Started
-    </CustomButton>
+    </PrimaryButton>
   );
 
   return (

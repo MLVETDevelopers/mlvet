@@ -1,8 +1,7 @@
-import { Word } from 'sharedTypes';
+import { IndexRange, Word } from '../../../sharedTypes';
 
-export interface DeleteWordsPayload {
-  startIndex: number;
-  endIndex: number;
+export interface DeleteSelectionPayload {
+  ranges: IndexRange[];
 }
 
 export interface PasteWordsPayload {
@@ -10,13 +9,21 @@ export interface PasteWordsPayload {
   clipboard: Word[];
 }
 
-export type UndoDeleteWordsPayload = DeleteWordsPayload;
+export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
 
 export interface UndoPasteWordsPayload {
   startIndex: number;
   clipboardLength: number;
 }
 
-export type DoPayload = DeleteWordsPayload | PasteWordsPayload;
+export type DoPayload =
+  | DeleteSelectionPayload
+  | PasteWordsPayload
+  | IndexRange
+  | null;
 
-export type UndoPayload = UndoDeleteWordsPayload | UndoPasteWordsPayload;
+export type UndoPayload =
+  | UndoDeleteSelectionPayload
+  | UndoPasteWordsPayload
+  | IndexRange
+  | null;

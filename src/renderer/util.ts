@@ -210,6 +210,21 @@ export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
   return indicesSet;
 };
 
+/**
+ * Similar to rangesToIndices, but for a single range - also returns as a list and
+ * maintains numerical order.
+ * @param range
+ */
+export const rangeToIndices: (range: IndexRange) => number[] = (range) => {
+  const indices: number[] = [];
+
+  for (let index = range.startIndex; index < range.endIndex; index += 1) {
+    indices.push(index);
+  }
+
+  return indices;
+};
+
 export interface Point {
   x: number;
   y: number;
@@ -248,3 +263,14 @@ export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
   startIndex: index,
   endIndex: index + 1,
 });
+
+/**
+ * Dev helper for measuring and printing time taken by a function
+ */
+export function measureTimeTaken<T extends (...args: any) => any>(func: T) {
+  const before = performance.now();
+  const returnValue: ReturnType<T> = func();
+  const after = performance.now();
+  console.log(after - before);
+  return returnValue;
+}

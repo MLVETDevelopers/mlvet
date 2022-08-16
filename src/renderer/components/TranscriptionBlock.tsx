@@ -50,37 +50,53 @@ const TranscriptionBlock = ({
 
   const dispatch = useDispatch();
 
-  const clearSelection: () => void = () => {
-    dispatch(selectionCleared());
+  const clearSelection: (
+    dragSelectAnchor: number | null,
+    clearAnchor: () => void
+  ) => void = (dragSelectAnchor, clearAnchor) => {
+    if (dragSelectAnchor == null) {
+      dispatch(selectionCleared());
+    } else {
+      clearAnchor();
+    }
   };
 
-  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element = (
-    key,
-    isDropMarkerActive
-  ) => (
-    <span
-      key={key}
-      style={{
-        background: isDropMarkerActive ? 'white' : 'none',
-        transition: 'background 0.2s',
-        width: '2px',
-        paddingLeft: '1px',
-        paddingRight: '1px',
-      }}
-    />
-  );
+  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element =
+    useMemo(
+      () => (key, isDropMarkerActive) =>
+        (
+          <span
+            key={key}
+            style={{
+              background: isDropMarkerActive ? 'white' : 'none',
+              transition: 'background 0.2s',
+              width: '2px',
+              paddingLeft: '1px',
+              paddingRight: '1px',
+            }}
+          />
+        ),
+      []
+    );
 
   const renderTranscription: RenderTranscription = (
     onWordMouseDown,
+    onWordMouseMove,
     dragState,
     isWordBeingDragged,
     mouse,
     mouseThrottled,
     dropBeforeIndex,
     setDropBeforeIndex,
-    cancelDrag
+    cancelDrag,
+    dragSelectAnchor,
+    setDragSelectAnchor
   ) => (
-    <TranscriptionBox onClick={clearSelection}>
+    <TranscriptionBox
+      onMouseUp={() =>
+        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
+      }
+    >
       {transcription.words.map((word, index) =>
         word.deleted ? null : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
@@ -96,6 +112,7 @@ const TranscriptionBlock = ({
               text={word.word}
               index={index}
               onMouseDown={onWordMouseDown(index)}
+              onMouseMove={() => onWordMouseMove(index)}
               dragState={dragState}
               isBeingDragged={isWordBeingDragged(index)}
               mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}

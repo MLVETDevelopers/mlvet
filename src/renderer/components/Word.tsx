@@ -36,6 +36,7 @@ interface Props {
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
   ) => MouseEventHandler<HTMLDivElement>;
+  onMouseMove: () => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isBeingDragged: boolean; // whether THIS word is currently being dragged
   mouse: MousePosition;
@@ -52,6 +53,7 @@ const Word = ({
   isSelected,
   text,
   onMouseDown,
+  onMouseMove,
   dragState,
   isBeingDragged,
   mouse,
@@ -182,6 +184,7 @@ const Word = ({
       ref={ref}
       onClick={onClick}
       onMouseDown={onMouseDown(ref)}
+      onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >
       {text}

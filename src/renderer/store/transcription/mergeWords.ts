@@ -34,7 +34,7 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
     const isLast = index === wordsToMerge.length - 1;
 
     if (isFirst) {
-      return durationSoFar + word.bufferDurationAfter;
+      return durationSoFar + word.bufferDurationAfter + word.duration;
     }
     if (isLast) {
       return durationSoFar + word.bufferDurationBefore + word.duration;

@@ -1,5 +1,5 @@
-import { Word } from 'sharedTypes';
-import { splitWord } from '../splitWord';
+import { IndexRange, Word } from 'sharedTypes';
+import { mergeWords } from '../mergeWords';
 
 const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   word: 'test',
@@ -15,8 +15,8 @@ const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   ...override,
 });
 
-describe('splitWord', () => {
-  it('should handle splitting a word into two', () => {
+describe('mergeWords', () => {
+  it('should handle merging two words into one', () => {
     const firstWord = makeBasicWord({
       originalIndex: 0,
       startTime: 1,
@@ -27,7 +27,7 @@ describe('splitWord', () => {
     });
 
     const lastWord = makeBasicWord({
-      originalIndex: 2,
+      originalIndex: 3,
       startTime: 9,
       bufferDurationBefore: 1,
       duration: 1,
@@ -41,37 +41,40 @@ describe('splitWord', () => {
         originalIndex: 1,
         startTime: 4,
         bufferDurationBefore: 1,
-        duration: 3,
-        bufferDurationAfter: 1,
-        word: 'first second',
-        pasteKey: 0,
-      }),
-      lastWord,
-    ];
-
-    const index = 1;
-
-    const splitWords = splitWord(words, index);
-
-    expect(splitWords).toEqual([
-      firstWord,
-      makeBasicWord({
-        originalIndex: 1,
-        startTime: 4,
-        bufferDurationBefore: 1,
         duration: 1.5,
         bufferDurationAfter: 0,
         word: 'first',
-        pasteKey: 1,
+        pasteKey: 0,
       }),
       makeBasicWord({
-        originalIndex: 1,
+        originalIndex: 2,
         startTime: 5.5,
         bufferDurationBefore: 0,
         duration: 1.5,
         bufferDurationAfter: 1,
         word: 'second',
-        pasteKey: 2,
+        pasteKey: 0,
+      }),
+      lastWord,
+    ];
+
+    const range: IndexRange = {
+      startIndex: 1,
+      endIndex: 3,
+    };
+
+    const mergedWords = mergeWords(words, range);
+
+    expect(mergedWords).toEqual([
+      firstWord,
+      makeBasicWord({
+        originalIndex: 1,
+        startTime: 4,
+        bufferDurationBefore: 1,
+        duration: 3,
+        bufferDurationAfter: 1,
+        word: 'first second',
+        pasteKey: 0,
       }),
       lastWord,
     ]);

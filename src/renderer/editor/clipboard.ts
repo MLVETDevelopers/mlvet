@@ -1,13 +1,13 @@
-import { Word } from '../sharedTypes';
+import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
-import { clipboardUpdated } from './store/clipboard/actions';
+import { clipboardUpdated } from '../store/clipboard/actions';
 import {
   selectionCleared,
   selectionRangeAdded,
-} from './store/selection/actions';
-import store from './store/store';
-import { dispatchOp } from './store/undoStack/opHelpers';
-import { makeDeleteSelection, makePasteWord } from './store/undoStack/ops';
+} from '../store/selection/actions';
+import store from '../store/store';
+import { dispatchOp } from '../store/undoStack/opHelpers';
+import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
 
 const { dispatch } = store;
 

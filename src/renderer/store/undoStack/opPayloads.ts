@@ -35,10 +35,14 @@ export type DoPayload =
   | DeleteSelectionPayload
   | PasteWordsPayload
   | MergeWordsPayload
-  | SplitWordPayload;
+  | SplitWordPayload
+  | IndexRange
+  | null;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
   | UndoPasteWordsPayload
   | UndoMergeWordsPayload
-  | UndoSplitWordPayload;
+  | UndoSplitWordPayload
+  | IndexRange
+  | null;

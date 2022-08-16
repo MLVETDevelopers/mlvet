@@ -1,4 +1,15 @@
 import { IndexRange, Word } from '../../../sharedTypes';
+import { selectionCleared, selectionRangeAdded } from '../selection/actions';
+import {
+  MERGE_WORDS,
+  selectionDeleted,
+  SPLIT_WORD,
+  undoSelectionDeleted,
+  undoWordPasted,
+  UNDO_MERGE_WORDS,
+  UNDO_SPLIT_WORD,
+  wordPasted,
+} from '../transcription/actions';
 import { Op } from './helpers';
 import {
   PasteWordsPayload,
@@ -13,32 +24,14 @@ import {
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 
-export const DELETE_SELECTION = 'DELETE_SELECTION';
-export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
-
-export const PASTE_WORD = 'PASTE_WORD';
-export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
-
-export const MERGE_WORDS = 'MERGE_WORDS';
-export const UNDO_MERGE_WORDS = 'UNDO_MERGE_WORDS';
-
-export const SPLIT_WORD = 'SPLIT_WORD';
-export const UNDO_SPLIT_WORD = 'UNDO_SPLIT_WORD';
-
 export const makeDeleteSelection: (
   ranges: IndexRange[]
 ) => DeleteSelectionOp = (ranges) => ({
-  do: [
-    {
-      type: DELETE_SELECTION,
-      payload: { ranges },
-    },
-  ],
+  do: [selectionDeleted(ranges), selectionCleared()],
   undo: [
-    {
-      type: UNDO_DELETE_SELECTION,
-      payload: { ranges },
-    },
+    undoSelectionDeleted(ranges),
+    selectionCleared(),
+    ...ranges.map(selectionRangeAdded),
   ],
 });
 
@@ -48,16 +41,41 @@ export const makePasteWord: (
 ) => PasteWordsOp = (pasteTo, clipboard) => {
   return {
     do: [
-      {
-        type: PASTE_WORD,
-        payload: { startIndex: pasteTo, clipboard },
-      },
+      wordPasted(pasteTo, clipboard),
+      selectionCleared(),
+      selectionRangeAdded({
+        startIndex: pasteTo + 1,
+        endIndex: pasteTo + clipboard.length + 1,
+      }),
+    ],
+    undo: [undoWordPasted(pasteTo, clipboard.length), selectionCleared()],
+  };
+};
+
+export const makeMoveWords: (
+  words: Word[],
+  fromRanges: IndexRange[],
+  toAfterIndex: number
+) => MoveWordsOp = (words, fromRanges, toAfterIndex) => {
+  const clipboard = fromRanges.flatMap((range) =>
+    words.slice(range.startIndex, range.endIndex)
+  );
+
+  return {
+    do: [
+      selectionDeleted(fromRanges),
+      wordPasted(toAfterIndex, clipboard),
+      selectionCleared(),
+      selectionRangeAdded({
+        startIndex: toAfterIndex + 1,
+        endIndex: toAfterIndex + clipboard.length + 1,
+      }),
     ],
     undo: [
-      {
-        type: UNDO_PASTE_WORD,
-        payload: { startIndex: pasteTo, clipboardLength: clipboard.length },
-      },
+      undoWordPasted(toAfterIndex, clipboard.length),
+      undoSelectionDeleted(fromRanges),
+      selectionCleared(),
+      ...fromRanges.map(selectionRangeAdded),
     ],
   };
 };
@@ -128,11 +146,19 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
 };
 
 export type DeleteSelectionOp = Op<
-  DeleteSelectionPayload,
-  UndoDeleteSelectionPayload
+  DeleteSelectionPayload | null,
+  UndoDeleteSelectionPayload | null | IndexRange
 >;
 
-export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
+export type PasteWordsOp = Op<
+  PasteWordsPayload | null | IndexRange,
+  UndoPasteWordsPayload | null
+>;
+
+export type MoveWordsOp = Op<
+  DeleteSelectionPayload | PasteWordsPayload | IndexRange | null,
+  UndoDeleteSelectionPayload | UndoPasteWordsPayload | IndexRange | null
+>;
 
 export type MergeWordsOp = Op<MergeWordsPayload, UndoMergeWordsPayload>;
 

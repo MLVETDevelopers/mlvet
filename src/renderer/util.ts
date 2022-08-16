@@ -26,7 +26,7 @@ export const extractFileExtension: (filePath: string) => string | null = (
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
   extension
 ) => {
-  const audioFileExtensions = ['mp3'];
+  const audioFileExtensions = ['mp3', 'mpeg'];
   const videoFileExtensions = ['mp4'];
 
   if (audioFileExtensions.includes(extension)) {
@@ -203,11 +203,66 @@ export const isInOriginalOrder: (words: Word[]) => boolean = (words) =>
       index === 0 || word.originalIndex === words[index - 1].originalIndex + 1
   );
 
-
 export const assert: (statement: boolean) => void = (statement) => {
   if (statement) {
     return;
   }
-  
+
   throw new Error('assertion failed');
+};
+
+/*
+ * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
+ */
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
+  ranges
+) => {
+  const indicesSet = new Set<number>();
+
+  ranges.forEach(({ startIndex, endIndex }) => {
+    for (let i = startIndex; i < endIndex; i += 1) {
+      indicesSet.add(i);
+    }
+  });
+
+  return indicesSet;
+};
+
+export interface Point {
+  x: number;
+  y: number;
 }
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Determines if a point is inside a rectangle,
+ * returning false for boundary cases.
+ */
+export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x > rect.x &&
+  point.x < rect.x + rect.w &&
+  point.y > rect.y &&
+  point.y < rect.y + rect.h;
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
+/**
+ * Helper for making IndexRanges with a size of one, e.g. a single word
+ */
+export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
+  startIndex: index,
+  endIndex: index + 1,
+});

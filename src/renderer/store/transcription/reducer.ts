@@ -1,7 +1,17 @@
 import { Reducer } from 'redux';
 import { mapInRanges } from 'renderer/util';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
-import { TRANSCRIPTION_CREATED } from './actions';
+import {
+  TRANSCRIPTION_CREATED,
+  DELETE_SELECTION,
+  PASTE_WORD,
+  UNDO_DELETE_SELECTION,
+  UNDO_PASTE_WORD,
+  MERGE_WORDS,
+  UNDO_SPLIT_WORD,
+  UNDO_MERGE_WORDS,
+  SPLIT_WORD,
+} from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
@@ -13,16 +23,6 @@ import {
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
 } from '../undoStack/opPayloads';
-import {
-  DELETE_SELECTION,
-  MERGE_WORDS,
-  PASTE_WORD,
-  SPLIT_WORD,
-  UNDO_DELETE_SELECTION,
-  UNDO_MERGE_WORDS,
-  UNDO_PASTE_WORD,
-  UNDO_SPLIT_WORD,
-} from '../undoStack/ops';
 import { mergeWords } from './mergeWords';
 import { splitWord } from './splitWord';
 

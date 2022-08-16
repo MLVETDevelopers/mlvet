@@ -4,7 +4,8 @@ import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl';
 
 import * as use from '@tensorflow-models/universal-sentence-encoder';
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-node-gpu'; // <-- GPU
+// import * as tf from '@tensorflow/tfjs-node'; // <-- CPU
 import { Tensor2D } from '@tensorflow/tfjs-node';
 
 const sentences = [
@@ -45,12 +46,16 @@ const similarityScore = async (
   return scoreData[0];
 };
 
-export const findSimilarities = async (threshold = 0.66) => {
+export const findSimilarities = async (threshold = 0.65) => {
   console.log('Instantiating Model...');
   console.time('Model Embedding');
   const model = await use.load();
   const embeddings = await model.embed(sentences);
   console.timeEnd('Model Embedding');
+  /*
+   Expect ~9s on cpu
+   Expect ~7.6s on gpu
+   */
 
   console.log(sentences);
   await sentences.map(async (_, index, array) => {

@@ -166,6 +166,14 @@ ipc.on('initiate-delete-text', async () => {
   deleteText();
 });
 
+ipc.on('initiate-merge-words', async () => {
+  mergeWords();
+});
+
+ipc.on('initiate-split-word', async () => {
+  splitWord();
+});
+
 /**
  * Used by backend to initiate return to home from front end
  */

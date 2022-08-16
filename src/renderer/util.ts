@@ -202,3 +202,12 @@ export const isInOriginalOrder: (words: Word[]) => boolean = (words) =>
     (word, index) =>
       index === 0 || word.originalIndex === words[index - 1].originalIndex + 1
   );
+
+
+export const assert: (statement: boolean) => void = (statement) => {
+  if (statement) {
+    return;
+  }
+  
+  throw new Error('assertion failed');
+}

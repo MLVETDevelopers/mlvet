@@ -20,6 +20,7 @@ import { pingServer, startServer } from './pyServer';
 import { IpcContext } from './types';
 import { appDataStoragePath, isDevelopment, mkdir } from './util';
 import createWindow from './window';
+import * as takeDetection from '../takeDetection/takeDetection';
 
 let pyServer: ChildProcess | null = null;
 
@@ -83,6 +84,8 @@ app
       pingServer(pyServer);
 
       startExpressServer();
+
+      await takeDetection.findSimilarities();
     });
 
     mainWindow.on('closed', () => {

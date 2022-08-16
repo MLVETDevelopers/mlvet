@@ -23,6 +23,8 @@ const pageLayoutOptions = {
   minVideoPreviewWidth: 120,
 };
 
+const defaultAspectRatio = 16 / 9;
+
 /*
 This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
@@ -48,10 +50,30 @@ const ProjectPage = () => {
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
 
+  const videoAspectRatioRef = useRef({
+    ratio: defaultAspectRatio,
+    isSaved: false,
+  });
+
   const [videoResizeOptions, setVideoResizeOptions] = useState({
     minTargetWidth: 120,
     maxTargetWidth: 120,
   });
+
+  const getVideoAspectRatio = () => {
+    const videoAspectRatio = videoAspectRatioRef.current.isSaved
+      ? videoAspectRatioRef.current.ratio
+      : getAspectRatio(
+          videoPreviewContainerRef.current as HTMLDivElement,
+          defaultAspectRatio
+        );
+
+    if (!videoAspectRatioRef.current.isSaved) {
+      videoAspectRatioRef.current = { ratio: videoAspectRatio, isSaved: true };
+    }
+
+    return videoAspectRatio;
+  };
 
   const windowResizeHandler = useCallback((newPageSize) => {
     // A manual way of calculating the min and max width of the video preview container.
@@ -61,10 +83,7 @@ const ProjectPage = () => {
       getElementSize(projectPageLayoutRef?.current as HTMLDivElement) ??
       newPageSize;
 
-    const videoAspectRatio = getAspectRatio(
-      videoPreviewContainerRef.current as HTMLDivElement,
-      19 / 6
-    );
+    const videoAspectRatio = getVideoAspectRatio();
 
     // Use padding and transcription size to calculate max width based on available width
     const maxWidthBasedOnWidth =
@@ -81,8 +100,13 @@ const ProjectPage = () => {
       maxWidthBasedOnHeight
     );
 
+    const minTargetWidth = Math.min(
+      pageLayoutOptions.minVideoPreviewWidth,
+      maxTargetWidth
+    );
+
     setVideoResizeOptions({
-      minTargetWidth: pageLayoutOptions.minVideoPreviewWidth,
+      minTargetWidth,
       maxTargetWidth,
     });
   }, []);

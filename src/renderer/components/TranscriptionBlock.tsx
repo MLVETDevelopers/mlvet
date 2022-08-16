@@ -9,6 +9,8 @@ import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
 import DragManager, { RenderTranscription } from './WordDragManager';
 
+import EditMarker from './EditMarker';
+
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
   borderRadius: '5px',
@@ -82,7 +84,9 @@ const TranscriptionBlock = ({
   ) => (
     <TranscriptionBox onClick={clearSelection}>
       {transcription.words.map((word, index) =>
-        word.deleted ? null : (
+        word.deleted ? (
+          <EditMarker />
+        ) : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
             {space(
               `space-${word.originalIndex}-${word.pasteKey}`,

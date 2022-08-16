@@ -17,6 +17,7 @@ const CustomModalInner = styled(Box)`
   padding: 15px 30px 30px 30px;
   border-radius: 5px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 400px;
 `;
 
 const CustomRowStack = styled(CustomStack)`
@@ -27,7 +28,9 @@ const CustomRowStack = styled(CustomStack)`
 
 const CustomButton = styled(Button)`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.8));
+  width: 100%;
 `;
+
 interface Props {
   isOpen: boolean;
   closeDialog: () => void;
@@ -49,14 +52,14 @@ const CancelProjectModal = ({
   };
 
   const cancelProjectButton = (
-    <CustomButton color="secondary" onClick={cancelProject}>
+    <CustomButton color="primary" onClick={cancelProject}>
       Cancel Project
     </CustomButton>
   );
 
   const continueProjectButton = (
-    <CustomButton color="primary" onClick={continueProject}>
-      Continue Project
+    <CustomButton color="secondary" onClick={continueProject}>
+      Continue
     </CustomButton>
   );
 
@@ -65,14 +68,17 @@ const CancelProjectModal = ({
       <CustomModal open={isOpen} onClose={continueProject}>
         <CustomModalInner>
           <CustomStack>
-            <Typography variant="h3" paddingTop="20px">
-              Are you sure you want to cancel this project?
+            <Typography variant="h1" color={colors.grey[400]}>
+              Cancel Project
+            </Typography>
+            <Typography variant="p-300" paddingTop="10px">
+              Are you sure you want to cancel? Your progress will not be saved.
             </Typography>
             <CustomRowStack
               sx={{ paddingTop: '30px', alignItems: 'flex-end', gap: '32px' }}
             >
-              {cancelProjectButton}
               {continueProjectButton}
+              {cancelProjectButton}
             </CustomRowStack>
           </CustomStack>
         </CustomModalInner>

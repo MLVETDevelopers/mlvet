@@ -166,6 +166,14 @@ Object.keys(EDITOR_ACTIONS).forEach((key) => {
   });
 });
 
+ipc.on('initiate-merge-words', async () => {
+  mergeWords();
+});
+
+ipc.on('initiate-split-word', async () => {
+  splitWord();
+});
+
 /**
  * Used by backend to initiate return to home from front end
  */

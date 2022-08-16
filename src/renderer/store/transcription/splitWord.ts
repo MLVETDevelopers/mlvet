@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assert } from 'console';
+import { assert } from 'renderer/util';
 import { Word } from '../../../sharedTypes';
 
 /**

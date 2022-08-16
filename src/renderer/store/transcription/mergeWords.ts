@@ -1,7 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assert } from 'console';
-import { isInOriginalOrder } from 'renderer/util';
+import { assert, isInOriginalOrder } from 'renderer/util';
 import { bufferedWordDuration } from '../../../sharedUtils';
 import { IndexRange, Word } from '../../../sharedTypes';
 

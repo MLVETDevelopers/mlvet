@@ -149,19 +149,19 @@ export default class MenuBuilder {
       {
         id: 'mergeWords',
         label: 'Merge Words',
-        accelerator: 'CommandOrControl+M',
+        accelerator: 'CommandOrControl+L', // 'M' already taken by window 'minimize'
         click: () => {
           // Tell the renderer to initiate a merge-words operation
           this.mainWindow.webContents.send('initiate-merge-words');
         },
       },
       {
-        id: 'splitWords',
-        label: 'Split Words',
-        accelerator: 'Shift+CommandOrControl+M',
+        id: 'splitWord',
+        label: 'Split Word',
+        accelerator: 'Shift+CommandOrControl+L',
         click: () => {
           // Tell the renderer to initiate a split-words operation
-          this.mainWindow.webContents.send('initiate-split-words');
+          this.mainWindow.webContents.send('initiate-split-word');
         },
       },
     ];

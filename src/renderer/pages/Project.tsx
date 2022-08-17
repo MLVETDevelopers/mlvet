@@ -27,21 +27,6 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.exportIo
   );
 
-  // Need a more efficient way of getting this
-  // TODO: Figure out how to get the actual video duration, not just what the transcription thinks it is
-  const videoEndTime = useMemo(() => {
-    const words = currentProject?.transcription?.words.filter(
-      (word) => !word.deleted
-    );
-    const lastWord = words?.pop();
-
-    if (!lastWord) {
-      return 0;
-    }
-
-    return lastWord.startTime + lastWord.bufferDurationAfter;
-  }, [currentProject]);
-
   // UI states
   const [time, setTime] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -168,7 +153,7 @@ const ProjectPage = () => {
               ref={videoPreviewControllerRef}
             />
             <Scrubber
-              totalDuration={videoEndTime}
+              totalDuration={currentProject?.transcription?.outputDuration ?? 0}
               currentTimeSeconds={time}
               onScrubberChange={onScrubberChange}
             />

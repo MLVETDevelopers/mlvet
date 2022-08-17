@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { mapInRanges } from 'renderer/util';
-import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
+import { updateOutputTimes } from 'transcriptProcessing/updateOutputTimes';
 import { TRANSCRIPTION_CREATED } from './actions';
 import { Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
@@ -35,7 +35,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
   /**
    * Important: if you make an update to the transcription here, usually you
-   * will need to call 'updateOutputStartTimes' so that output start times are kept accurate!
+   * will need to call 'updateOutputTimes' so that output start times and output duration are kept accurate!
    */
 
   if (action.type === DELETE_SELECTION) {
@@ -47,7 +47,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     return {
       ...transcription,
-      words: updateOutputStartTimes(newWords),
+      ...updateOutputTimes(newWords),
     };
   }
 
@@ -58,7 +58,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     return {
       ...transcription,
-      words: updateOutputStartTimes(
+      ...updateOutputTimes(
         mapInRanges(transcription.words, markUndeleted, ranges)
       ),
     };
@@ -85,7 +85,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     return {
       ...transcription,
-      words: updateOutputStartTimes([...prefix, ...wordsToPaste, ...suffix]),
+      ...updateOutputTimes([...prefix, ...wordsToPaste, ...suffix]),
     };
   }
 
@@ -98,7 +98,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
     return {
       ...transcription,
-      words: updateOutputStartTimes([...prefix, ...suffix]),
+      ...updateOutputTimes([...prefix, ...suffix]),
     };
   }
 

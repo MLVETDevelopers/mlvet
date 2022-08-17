@@ -12,14 +12,27 @@ const makeBasicWord: (
   originalIndex: number,
   text: string,
   isDeleted?: boolean,
-  pasteKey?: number
-) => Word = (originalIndex, text, isDeleted = false, pasteKey = 0) => ({
+  pasteKey?: number,
+  startTime?: number,
+  outputStartTime?: number,
+  outputDuration?: number,
+  bufferDurationBefore?: number
+) => Word = (
+  originalIndex,
+  text,
+  isDeleted = false,
+  pasteKey = 0,
+  startTime = 0,
+  outputStartTime = 0,
+  duration = 0,
+  bufferDurationAfter = 0
+) => ({
   word: text,
-  startTime: 0,
-  duration: 0,
+  startTime,
+  duration,
   bufferDurationBefore: 0,
-  bufferDurationAfter: 0,
-  outputStartTime: 0,
+  bufferDurationAfter,
+  outputStartTime,
   deleted: isDeleted,
   originalIndex,
   pasteKey,
@@ -47,6 +60,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -86,6 +100,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -125,6 +140,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -164,6 +180,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a', true),
           makeBasicWord(1, 'b', true),
@@ -203,6 +220,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -251,6 +269,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -305,6 +324,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b', true),
@@ -353,6 +373,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -401,6 +422,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -449,6 +471,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(1, 'b'),
@@ -486,6 +509,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a', true),
           makeBasicWord(1, 'b'),
@@ -523,6 +547,7 @@ describe('Transcription reducer', () => {
       {
         confidence: 1,
         duration: 100,
+        outputDuration: 100,
         words: [
           makeBasicWord(0, 'a'),
           makeBasicWord(0, 'a', false, 1),
@@ -549,5 +574,84 @@ describe('Transcription reducer', () => {
       makeBasicWord(0, 'a', false, 2),
       makeBasicWord(0, 'a', false, 3),
     ]);
+  });
+
+  it('output start time should be updated after deleting words', () => {
+    const transcript = {
+      confidence: 1,
+      duration: 7.84,
+      outputDuration: 7.84,
+      words: [
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.4, 2.4, 1.3, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 4.6, 4.6, 0.24, 3),
+      ],
+    };
+
+    const deleteOutput = transcriptionReducer(transcript, {
+      type: DELETE_SELECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    // expect duration to remain the same and outputDuration to be updated
+    expect(deleteOutput?.duration).toEqual(7.84);
+    expect(deleteOutput?.outputDuration).toEqual(4.74);
+
+    expect(deleteOutput?.words).toEqual([
+      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0.5),
+      makeBasicWord(0, 'a', true, undefined, 1.5, 0, 0.7, 0.2),
+      makeBasicWord(0, 'a', true, undefined, 2.4, 0, 1.3, 0.9),
+      makeBasicWord(0, 'a', false, undefined, 4.6, 1.5, 0.24, 3),
+    ]);
+  });
+
+  it('output start time should be the same as original when deleting and straight after undoing delete', () => {
+    const transcript = {
+      confidence: 1,
+      duration: 7.84,
+      outputDuration: 7.84,
+      words: [
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.4, 2.4, 1.3, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 4.6, 4.6, 0.24, 3),
+      ],
+    };
+
+    transcriptionReducer(transcript, {
+      type: DELETE_SELECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    const undoOutput = transcriptionReducer(transcript, {
+      type: UNDO_DELETE_SELECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    expect(undoOutput?.duration).toEqual(transcript.duration);
+    expect(undoOutput?.outputDuration).toEqual(transcript.outputDuration);
+    expect(undoOutput?.words).toEqual(transcript.words);
   });
 });

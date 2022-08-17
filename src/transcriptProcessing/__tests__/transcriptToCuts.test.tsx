@@ -47,6 +47,7 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
+      outputDuration: 6,
     });
 
     const expectedCuts = [
@@ -83,6 +84,7 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
+      outputDuration: 6,
     });
 
     const expectedCuts = [
@@ -133,6 +135,7 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
+      outputDuration: 6,
     });
 
     const expectedCuts = [

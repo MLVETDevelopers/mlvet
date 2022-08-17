@@ -1,5 +1,6 @@
 import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { getMediaType } from '../util';
 import colors from '../colors';
 import ipc from '../ipc';
 import { PrimaryButton } from './Blocks/Buttons';
@@ -85,19 +86,25 @@ const SelectMediaBlock = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     e.preventDefault();
-
     exitDragZone();
-
     const draggedFiles = e.dataTransfer.files;
 
     if (draggedFiles.length > 0) {
       /* Currently only supporting single file import - taking first file */
-      const fileName = draggedFiles[0].name;
-      const filePath = draggedFiles[0].path;
+      const fileType = draggedFiles[0].type.split('/')[0];
+      console.log(fileType);
+      const fileTypeExtension = draggedFiles[0].type.split('/')[1];
+      console.log(fileTypeExtension);
+      if (fileType !== null && (fileType === 'audio' || fileType === 'video')) {
+        if (getMediaType(fileTypeExtension) !== null) {
+          const fileName = draggedFiles[0].name;
+          const filePath = draggedFiles[0].path;
 
-      setMediaFilePath(filePath);
-      setMediaFileName(fileName);
-      setIsAwaitingMedia(false);
+          setMediaFilePath(filePath);
+          setMediaFileName(fileName);
+          setIsAwaitingMedia(false);
+        }
+      }
     }
   };
 
@@ -131,7 +138,8 @@ const SelectMediaBlock = ({
             justifyContent="space-between"
             sx={{ height: '150px' }}
           >
-            <Typography variant="p-300">Drag and drop file here</Typography>
+            <Typography variant="p-300">Drag and drop</Typography>
+            <Typography variant="p-300">MP4 or MP3 file here</Typography>
             <Typography variant="p-300">or</Typography>
             <PrimaryButton onClick={selectMedia}>Browse</PrimaryButton>
           </Stack>

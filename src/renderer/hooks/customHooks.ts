@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
+import { FunctionReturnVoid, FunctionReturnPromiseVoid } from 'sharedTypes';
 
 function useKeypress(
-  eventHandler: () => Promise<void>,
+  eventHandler: FunctionReturnPromiseVoid | FunctionReturnVoid,
   condition: boolean,
   keypressCodes: string[]
 ) {

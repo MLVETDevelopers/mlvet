@@ -48,11 +48,11 @@ const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
   const lastWord = currentTranscriptWords.pop();
 
   if (lastWord) {
-    return (
+    return roundToMs(
       lastWord.outputStartTime +
-      lastWord.duration +
-      lastWord.bufferDurationBefore +
-      lastWord.bufferDurationAfter
+        lastWord.duration +
+        lastWord.bufferDurationBefore +
+        lastWord.bufferDurationAfter
     );
   }
 

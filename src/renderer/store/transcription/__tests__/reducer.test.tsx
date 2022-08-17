@@ -16,7 +16,8 @@ const makeBasicWord: (
   startTime?: number,
   outputStartTime?: number,
   outputDuration?: number,
-  bufferDurationBefore?: number
+  bufferDurationBefore?: number,
+  bufferDurationAfter?: number
 ) => Word = (
   originalIndex,
   text,
@@ -25,12 +26,13 @@ const makeBasicWord: (
   startTime = 0,
   outputStartTime = 0,
   duration = 0,
+  bufferDurationBefore = 0,
   bufferDurationAfter = 0
 ) => ({
   word: text,
   startTime,
   duration,
-  bufferDurationBefore: 0,
+  bufferDurationBefore,
   bufferDurationAfter,
   outputStartTime,
   deleted: isDeleted,
@@ -579,13 +581,13 @@ describe('Transcription reducer', () => {
   it('output start time should be updated after deleting words', () => {
     const transcript = {
       confidence: 1,
-      duration: 7.84,
-      outputDuration: 7.84,
+      duration: 9.04,
+      outputDuration: 9.04,
       words: [
-        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0.5),
-        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.2),
-        makeBasicWord(0, 'a', undefined, undefined, 2.4, 2.4, 1.3, 0.9),
-        makeBasicWord(0, 'a', undefined, undefined, 4.6, 4.6, 0.24, 3),
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 5.6, 5.6, 0.24, 0.2, 3),
       ],
     };
 
@@ -602,27 +604,27 @@ describe('Transcription reducer', () => {
     });
 
     // expect duration to remain the same and outputDuration to be updated
-    expect(deleteOutput?.duration).toEqual(7.84);
-    expect(deleteOutput?.outputDuration).toEqual(4.74);
+    expect(deleteOutput?.duration).toEqual(9.04);
+    expect(deleteOutput?.outputDuration).toEqual(4.94);
 
     expect(deleteOutput?.words).toEqual([
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0.5),
-      makeBasicWord(0, 'a', true, undefined, 1.5, 0, 0.7, 0.2),
-      makeBasicWord(0, 'a', true, undefined, 2.4, 0, 1.3, 0.9),
-      makeBasicWord(0, 'a', false, undefined, 4.6, 1.5, 0.24, 3),
+      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWord(0, 'a', true, undefined, 1.5, 0, 0.7, 0.5, 0.2),
+      makeBasicWord(0, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
+      makeBasicWord(0, 'a', false, undefined, 5.6, 1.5, 0.24, 0.2, 3),
     ]);
   });
 
   it('output start time should be the same as original when deleting and straight after undoing delete', () => {
     const transcript = {
       confidence: 1,
-      duration: 7.84,
-      outputDuration: 7.84,
+      duration: 9.04,
+      outputDuration: 9.04,
       words: [
-        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0.5),
-        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.2),
-        makeBasicWord(0, 'a', undefined, undefined, 2.4, 2.4, 1.3, 0.9),
-        makeBasicWord(0, 'a', undefined, undefined, 4.6, 4.6, 0.24, 3),
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 5.6, 5.6, 0.24, 0.2, 3),
       ],
     };
 
@@ -653,5 +655,79 @@ describe('Transcription reducer', () => {
     expect(undoOutput?.duration).toEqual(transcript.duration);
     expect(undoOutput?.outputDuration).toEqual(transcript.outputDuration);
     expect(undoOutput?.words).toEqual(transcript.words);
+  });
+
+  it('output start time should be 0 after deleting all words', () => {
+    const transcript = {
+      confidence: 1,
+      duration: 9.04,
+      outputDuration: 9.04,
+      words: [
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      ],
+    };
+
+    const deleteOutput = transcriptionReducer(transcript, {
+      type: DELETE_SELECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 0,
+            endIndex: 4,
+          },
+        ],
+      },
+    });
+
+    // expect duration to remain the same and outputDuration to be updated
+    expect(deleteOutput?.duration).toEqual(9.04);
+    expect(deleteOutput?.outputDuration).toEqual(0);
+
+    expect(deleteOutput?.words).toEqual([
+      makeBasicWord(0, 'a', true, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWord(0, 'a', true, undefined, 1.5, 0, 0.7, 0.5, 0.2),
+      makeBasicWord(0, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
+      makeBasicWord(0, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
+    ]);
+  });
+
+  it('output start time should calculated from last non deleted word (not always last word)', () => {
+    const transcript = {
+      confidence: 1,
+      duration: 9.04,
+      outputDuration: 9.04,
+      words: [
+        makeBasicWord(0, 'a', undefined, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWord(0, 'a', undefined, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWord(0, 'a', undefined, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+        makeBasicWord(0, 'a', undefined, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      ],
+    };
+
+    const deleteOutput = transcriptionReducer(transcript, {
+      type: DELETE_SELECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 2,
+            endIndex: 4,
+          },
+        ],
+      },
+    });
+
+    // expect duration to remain the same and outputDuration to be updated
+    expect(deleteOutput?.duration).toEqual(9.04);
+    expect(deleteOutput?.outputDuration).toEqual(2.9);
+
+    expect(deleteOutput?.words).toEqual([
+      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWord(0, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+      makeBasicWord(0, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
+      makeBasicWord(0, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
+    ]);
   });
 });

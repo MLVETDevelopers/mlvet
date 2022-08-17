@@ -21,6 +21,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 0,
@@ -47,7 +48,6 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
-      outputDuration: 6,
     });
 
     const expectedCuts = [
@@ -66,6 +66,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 0,
@@ -84,7 +85,6 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
-      outputDuration: 6,
     });
 
     const expectedCuts = [
@@ -109,6 +109,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 1,
@@ -135,7 +136,6 @@ describe('transcript To Cuts', () => {
           bufferDurationAfter: 0.5,
         }),
       ],
-      outputDuration: 6,
     });
 
     const expectedCuts = [

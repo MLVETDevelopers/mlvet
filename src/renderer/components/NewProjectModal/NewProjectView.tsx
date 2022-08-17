@@ -81,7 +81,7 @@ const NewProjectView = ({
   const continueButton = (
     <PrimaryButton
       onClick={handleContinue}
-      disabled={isAwaitingProjectName}
+      disabled={!projectName.trim()}
       fullWidth
     >
       Continue

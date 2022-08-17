@@ -27,7 +27,7 @@ const dummyTranscribeRequest: () => string = () => {
 const transcribeRequest: (project: RuntimeProject) => Promise<string> = async (
   project
 ) => {
-  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
+  const socket = io(`http://localhost:5000`);
   return new Promise((resolve) => {
     socket.emit(
       'transcribe',

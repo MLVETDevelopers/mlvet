@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
-import useKeypress from 'renderer/hooks/customHooks';
+import useKeypress from 'renderer/utils/hooks';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import {

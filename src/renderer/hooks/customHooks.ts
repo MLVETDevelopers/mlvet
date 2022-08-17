@@ -1,16 +1,14 @@
 import { useEffect } from 'react';
 
-function useCustomHook(
-  handleContinue: () => Promise<void>,
-  condition: boolean
+function useKeypress(
+  eventHandler: () => Promise<void>,
+  condition: boolean,
+  keypressCodes: string[]
 ) {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
-      if (
-        (event.code === 'Enter' || event.code === 'NumpadEnter') &&
-        !condition
-      ) {
-        handleContinue();
+      if (keypressCodes.includes(event.code) && !condition) {
+        eventHandler();
       }
     };
 
@@ -19,7 +17,7 @@ function useCustomHook(
     return () => {
       window.removeEventListener('keypress', handleKeypress);
     };
-  }, [handleContinue, condition]);
+  }, [eventHandler, condition, keypressCodes]);
 }
 
-export default useCustomHook;
+export default useKeypress;

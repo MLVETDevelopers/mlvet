@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import useCustomHook from 'renderer/hooks/customHooks';
+import useKeypress from 'renderer/hooks/customHooks';
 import { makeProjectWithoutMedia } from '../../util';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
@@ -65,7 +65,7 @@ const NewProjectView = ({
     nextView();
   }, [nextView, projectName, setProjectInStore]);
 
-  useCustomHook(handleContinue, isAwaitingProjectName);
+  useKeypress(handleContinue, isAwaitingProjectName, ['Enter', 'NumpadEnter']);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

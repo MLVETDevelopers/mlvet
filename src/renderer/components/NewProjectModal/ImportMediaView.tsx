@@ -4,7 +4,7 @@ import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import useCustomHook from 'renderer/hooks/customHooks';
+import useKeypress from 'renderer/hooks/customHooks';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
@@ -68,7 +68,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     nextView();
   }, [currentProject, mediaFilePath, nextView, setCurrentProject]);
 
-  useCustomHook(handleTranscribe, isAwaitingMedia);
+  useKeypress(handleTranscribe, isAwaitingMedia, ['Enter', 'NumpadEnter']);
 
   if (currentProject === null) {
     return null;

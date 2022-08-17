@@ -2,13 +2,12 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { Fragment, RefObject, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription } from 'sharedTypes';
+import { Transcription, Word as WordType } from 'sharedTypes';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
 import DragManager, { RenderTranscription } from './WordDragManager';
-
 import EditMarker from './EditMarker';
 
 const TranscriptionBox = styled(Box)({
@@ -72,6 +71,31 @@ const TranscriptionBlock = ({
     />
   );
 
+  const renderEditMarker = (
+    word: WordType,
+    index: number
+  ): JSX.Element | null => {
+    const isInOriginalPos = word.originalIndex === index;
+
+    // word index has changed but still in the same relative position
+    const hasNotMoved =
+      index !== 0
+        ? transcription.words[index - 1].originalIndex ===
+          word.originalIndex - 1
+        : transcription.words[index + 1].originalIndex ===
+          word.originalIndex + 1;
+
+    // preventing two markers from being next to each other
+    const hasNoNeighbourMarker =
+      index !== 0
+        ? !transcription.words[index - 1].deleted
+        : !transcription.words[index + 1].deleted;
+
+    return (isInOriginalPos || hasNotMoved) && hasNoNeighbourMarker ? (
+      <EditMarker />
+    ) : null;
+  };
+
   const renderTranscription: RenderTranscription = (
     onWordMouseDown,
     dragState,
@@ -85,7 +109,7 @@ const TranscriptionBlock = ({
     <TranscriptionBox onClick={clearSelection}>
       {transcription.words.map((word, index) =>
         word.deleted ? (
-          <EditMarker />
+          renderEditMarker(word, index)
         ) : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
             {space(

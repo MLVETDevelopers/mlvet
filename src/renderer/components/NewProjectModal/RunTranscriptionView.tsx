@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
+import useKeypress from 'renderer/hooks/customHooks';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import {
@@ -118,6 +119,12 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     setTranscription,
     asyncState,
     dispatch,
+  ]);
+
+  // we use !== instead of === since the useKeypress hook negates the condition that is given to it.
+  useKeypress(nextView, asyncState !== AsyncState.DONE, [
+    'Enter',
+    'NumpadEnter',
   ]);
 
   if (currentProject === null) {

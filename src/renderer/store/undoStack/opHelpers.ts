@@ -3,7 +3,6 @@ import { undoStackPopped, undoStackPushed, opRedone } from './actions';
 import { Op } from './helpers';
 import { DoPayload, UndoPayload } from './opPayloads';
 import store from '../store';
-import { selectionCleared } from '../selection/actions';
 
 const { setUndoRedoEnabled } = ipc;
 const { dispatch } = store;
@@ -54,9 +53,6 @@ export const dispatchUndo: () => void = () => {
   // Let the undo stack know we just did an undo so it can decrement its index
   dispatch(undoStackPopped());
 
-  // Clear the current selection
-  dispatch(selectionCleared());
-
   updateUndoRedoEnabledInMenu();
 };
 
@@ -77,9 +73,6 @@ export const dispatchRedo: () => void = () => {
 
   // Let the undo stack know we just did a redo so it can increment its index
   dispatch(opRedone());
-
-  // Clear the current selection
-  dispatch(selectionCleared());
 
   updateUndoRedoEnabledInMenu();
 };

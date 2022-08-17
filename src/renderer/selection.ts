@@ -6,7 +6,7 @@ import {
   selectionRangeToggled,
 } from './store/selection/actions';
 import store from './store/store';
-import { sortNumerical } from './util';
+import { rangeLengthOne, sortNumerical } from './util';
 
 const { dispatch } = store;
 
@@ -78,12 +78,7 @@ export const expandSelectionToWord: (wordIndex: number) => void = (
 
   // If the selection is empty, select the word normally
   if (selection.length === 0) {
-    dispatch(
-      selectionRangeAdded({
-        startIndex: wordIndex,
-        endIndex: wordIndex + 1,
-      })
-    );
+    dispatch(selectionRangeAdded(rangeLengthOne(wordIndex)));
     return;
   }
 
@@ -126,10 +121,7 @@ export const handleSelectWord: (
   event: React.MouseEvent<HTMLDivElement>,
   wordIndex: number
 ) => Promise<void> = async (event, index) => {
-  const singleWordRange: IndexRange = {
-    startIndex: index,
-    endIndex: index + 1,
-  };
+  const singleWordRange = rangeLengthOne(index);
 
   const os = await ipc.handleOsQuery();
   const hasCmdCtrlModifier =
@@ -148,4 +140,19 @@ export const handleSelectWord: (
     dispatch(selectionCleared());
     dispatch(selectionRangeToggled(singleWordRange));
   }
+};
+
+export const selectAllWords: () => void = () => {
+  const { currentProject } = store.getState();
+
+  if (currentProject === null || currentProject?.transcription === null) {
+    return;
+  }
+
+  dispatch(
+    selectionRangeAdded({
+      startIndex: 0,
+      endIndex: currentProject.transcription.words.length,
+    })
+  );
 };

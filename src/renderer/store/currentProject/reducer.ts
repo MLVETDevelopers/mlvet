@@ -9,18 +9,18 @@ import {
   PROJECT_SAVED,
 } from './actions';
 import transcriptionReducer from '../transcription/reducer';
-import { TRANSCRIPTION_CREATED } from '../transcription/actions';
+import {
+  DELETE_SELECTION,
+  PASTE_WORD,
+  TRANSCRIPTION_CREATED,
+  UNDO_DELETE_SELECTION,
+  UNDO_PASTE_WORD,
+} from '../transcription/actions';
 import {
   EXPORT_PROGRESS_UPDATE,
   START_EXPORT,
   FINISH_EXPORT,
 } from '../exportIo/actions';
-import {
-  DELETE_WORD,
-  UNDO_DELETE_WORD,
-  PASTE_WORD,
-  UNDO_PASTE_WORD,
-} from '../undoStack/ops';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -83,8 +83,8 @@ const currentProjectReducer: Reducer<
   if (
     [
       TRANSCRIPTION_CREATED,
-      DELETE_WORD,
-      UNDO_DELETE_WORD,
+      DELETE_SELECTION,
+      UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
     ].includes(action.type) &&

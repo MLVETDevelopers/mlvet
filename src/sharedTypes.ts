@@ -89,6 +89,12 @@ export enum AsyncState {
   ERROR = 'ERROR',
 }
 
+// Interface for index ranges, usually start-inclusive and end-exclusive.
+export interface IndexRange {
+  startIndex: number;
+  endIndex: number;
+}
+
 /** Utility types */
 
 // Callback to be passed into a map function.

@@ -205,8 +205,11 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    if (currentProject?.transcription != null) {
+    if (currentProject !== null && currentProject?.transcription !== null) {
       cuts.current = convertTranscriptToCuts(currentProject.transcription);
+      if (cuts.current.length === 0) {
+        return;
+      }
       const lastCut = cuts.current[cuts.current.length - 1];
       outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
       setPlaybackTime(clockRef.current.time);

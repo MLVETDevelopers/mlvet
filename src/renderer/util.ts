@@ -5,6 +5,7 @@ import {
   RuntimeProject,
   MapCallback,
   VideoFileExtension,
+  IndexRange,
 } from '../sharedTypes';
 import ipc from './ipc';
 
@@ -24,7 +25,7 @@ export const extractFileExtension: (filePath: string) => string | null = (
 export const getMediaType: (extension: string) => 'audio' | 'video' | null = (
   extension
 ) => {
-  const audioFileExtensions = ['mp3'];
+  const audioFileExtensions = ['mp3', 'mpeg'];
   const videoFileExtensions = ['mp4'];
 
   if (audioFileExtensions.includes(extension)) {
@@ -162,17 +163,150 @@ export const removeExtension: (fileName: string) => string = (fileName) => {
 
 /**
  * Maps the values of a list using a given map function,
- * but only for those values within a range of indices.
+ * but only for those values within specified ranges.
  * Values outside of the given indices will be unaltered.
  * @returns the mapped list
  */
-export const mapInRange: <T>(
+export const mapInRanges: <T>(
   list: T[],
-  predicate: MapCallback<T, T>,
-  startIndex: number,
-  endIndex: number
-) => T[] = (list, mapCallback, startIndex, endIndex) => [
-  ...list.slice(0, startIndex),
-  ...list.slice(startIndex, endIndex).map(mapCallback),
-  ...list.slice(endIndex),
-];
+  mapCallback: MapCallback<T, T>,
+  ranges: IndexRange[]
+) => T[] = (list, mapCallback, ranges) => {
+  const listNew = [...list];
+
+  ranges.forEach((range) => {
+    const { startIndex, endIndex } = range;
+    for (let i = startIndex; i < endIndex; i += 1) {
+      listNew[i] = mapCallback(list[i], i, list);
+    }
+  });
+
+  return listNew;
+};
+
+/**
+ * By default the Array.sort() function sorts alphabetically, e.g. 10 comes before 2.
+ * This function properly sorts number arrays.
+ * It mutates the input array.
+ */
+export const sortNumerical: (list: number[]) => void = (list) => {
+  list.sort((first, second) => first - second);
+};
+
+/* Returns the style declaration for an element */
+export const getElementStyle: (
+  elem: Element
+) => CSSStyleDeclaration | undefined = (elem) => {
+  try {
+    return window.getComputedStyle(elem);
+  } catch {
+    return undefined;
+  }
+};
+
+/* Returns the height and width of an element */
+export const getElementSize: (elem: Element) =>
+  | {
+      width: number;
+      height: number;
+    }
+  | undefined = (elem) => {
+  const style = getElementStyle(elem);
+  return style
+    ? {
+        width: parseFloat(style.width),
+        height: parseFloat(style.height),
+      }
+    : undefined;
+};
+
+/* Returns the aspect ratio of an element calculated as width / height */
+export const getAspectRatio: (
+  elem: Element,
+  defaultAspectRatio: number
+) => number = (elem, defaultAspectRatio) => {
+  const elemSize = getElementSize(elem);
+  return elemSize ? elemSize.width / elemSize.height : defaultAspectRatio;
+};
+
+/**
+ * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
+ */
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
+  ranges
+) => {
+  const indicesSet = new Set<number>();
+
+  ranges.forEach(({ startIndex, endIndex }) => {
+    for (let i = startIndex; i < endIndex; i += 1) {
+      indicesSet.add(i);
+    }
+  });
+
+  return indicesSet;
+};
+
+/**
+ * Similar to rangesToIndices, but for a single range - also returns as a list and
+ * maintains numerical order.
+ * @param range
+ */
+export const rangeToIndices: (range: IndexRange) => number[] = (range) => {
+  const indices: number[] = [];
+
+  for (let index = range.startIndex; index < range.endIndex; index += 1) {
+    indices.push(index);
+  }
+
+  return indices;
+};
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Determines if a point is inside a rectangle,
+ * returning false for boundary cases.
+ */
+export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x > rect.x &&
+  point.x < rect.x + rect.w &&
+  point.y > rect.y &&
+  point.y < rect.y + rect.h;
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
+/**
+ * Helper for making IndexRanges with a size of one, e.g. a single word
+ */
+export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
+  startIndex: index,
+  endIndex: index + 1,
+});
+
+/**
+ * Dev helper for measuring and printing time taken by a function
+ */
+export function measureTimeTaken<T extends (...args: any) => any>(func: T) {
+  const before = performance.now();
+  const returnValue: ReturnType<T> = func();
+  const after = performance.now();
+  console.log(after - before);
+  return returnValue;
+}

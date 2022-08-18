@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ipcMain } from 'electron';
 
 import { IpcContext } from './types';
@@ -11,6 +12,7 @@ import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
 import saveAsProject from './handlers/file/saveAsProjectHandler';
+import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
 import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
@@ -18,6 +20,7 @@ import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
 import loadThumbnail from './handlers/media/thumbnailLoad';
 import requestTranscription from './handlers/media/transcriptionHandler';
+import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
@@ -57,6 +60,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     saveAsProject(ipcContext, project)
   );
 
+  ipcMain.handle(
+    'save-changes-dialog',
+    async (_event, mainWindow, projectFileName) =>
+      saveChangesDialog(mainWindow, projectFileName)
+  );
+
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
   );
@@ -85,6 +94,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)
+  );
+
+  ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
+    setExportEnabled(ipcContext, exportEnabled)
   );
 
   ipcMain.handle(

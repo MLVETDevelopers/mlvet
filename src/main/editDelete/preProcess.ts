@@ -132,8 +132,7 @@ const preProcessTranscript = (
       jsonTranscript.words
         .map(camelCase)
         .map(punctuate(duration, averageSilenceDuration))
-        .map(injectAttributes(fileName))
-        .flat()
+        .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))
     ),
     duration,

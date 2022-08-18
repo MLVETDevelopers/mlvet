@@ -3,12 +3,12 @@ import { FunctionReturnVoid, FunctionReturnPromiseVoid } from 'sharedTypes';
 
 function useKeypress(
   eventHandler: FunctionReturnPromiseVoid | FunctionReturnVoid,
-  condition: boolean,
+  isKeypressEnabled: boolean,
   keypressCodes: string[]
 ) {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
-      if (keypressCodes.includes(event.code) && condition) {
+      if (keypressCodes.includes(event.code) && isKeypressEnabled) {
         eventHandler();
       }
     };
@@ -18,7 +18,7 @@ function useKeypress(
     return () => {
       window.removeEventListener('keypress', handleKeypress);
     };
-  }, [eventHandler, condition, keypressCodes]);
+  }, [eventHandler, isKeypressEnabled, keypressCodes]);
 }
 
 export default useKeypress;

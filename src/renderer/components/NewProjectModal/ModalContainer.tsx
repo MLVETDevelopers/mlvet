@@ -38,22 +38,30 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
       dispatch(pageChanged(applicationPage)),
     [dispatch]
   );
-  const [showingCancelProject, setShowingCancelProject] = useState(false);
-
-  const closeCancelProject = () => setShowingCancelProject(false);
-  const showCancelProject = () => setShowingCancelProject(true);
-
-  const viewComponents = [
-    NewProjectView,
-    ImportMediaView,
-    RunTranscriptionView,
-  ];
 
   const handleModalClose: () => void = () => {
     closeModal();
     setCurrentView(0);
     setProjectName('');
   };
+
+  const [showingCancelProject, setShowingCancelProject] = useState(false);
+
+  const closeCancelProject = () => setShowingCancelProject(false);
+
+  const showCancelProject = () => {
+    if (projectName.length > 0) {
+      setShowingCancelProject(true);
+    } else {
+      handleModalClose();
+    }
+  };
+
+  const viewComponents = [
+    NewProjectView,
+    ImportMediaView,
+    RunTranscriptionView,
+  ];
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {

@@ -8,7 +8,7 @@ function useKeypress(
 ) {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
-      if (keypressCodes.includes(event.code) && !condition) {
+      if (keypressCodes.includes(event.code) && condition) {
         eventHandler();
       }
     };

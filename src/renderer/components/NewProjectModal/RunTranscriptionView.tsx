@@ -121,8 +121,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     dispatch,
   ]);
 
-  // we use !== instead of === since the useKeypress hook negates the condition that is given to it.
-  useKeypress(nextView, asyncState !== AsyncState.DONE, [
+  useKeypress(nextView, asyncState === AsyncState.DONE, [
     'Enter',
     'NumpadEnter',
   ]);

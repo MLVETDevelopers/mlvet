@@ -68,7 +68,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     nextView();
   }, [currentProject, mediaFilePath, nextView, setCurrentProject]);
 
-  useKeypress(handleTranscribe, isAwaitingMedia, ['Enter', 'NumpadEnter']);
+  useKeypress(handleTranscribe, !isAwaitingMedia, ['Enter', 'NumpadEnter']);
 
   if (currentProject === null) {
     return null;

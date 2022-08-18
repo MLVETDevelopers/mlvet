@@ -46,8 +46,7 @@ const NewProjectView = ({
   setProjectName,
 }: Props) => {
   const dispatch = useDispatch();
-  const [isAwaitingProjectName, setIsAwaitingProjectName] =
-    useState<boolean>(true);
+  const [isAwaitingProjectName, setIsAwaitingProjectName] = useState(true);
 
   const setProjectInStore = useCallback(
     async (project: RuntimeProject) => {

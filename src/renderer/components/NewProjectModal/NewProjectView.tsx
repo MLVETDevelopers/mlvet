@@ -71,11 +71,7 @@ const NewProjectView = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setProjectName(event.target.value.trim());
-    if (event.target.value !== '') {
-      setIsAwaitingProjectName(false);
-    } else {
-      setIsAwaitingProjectName(true);
-    }
+    setIsAwaitingProjectName(event.target.value === '');
   };
 
   const continueButton = (

@@ -74,8 +74,6 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     return null;
   }
 
-  const projectName = currentProject.name;
-
   const transcribeButton = (
     <PrimaryButton
       onClick={handleTranscribe}
@@ -106,7 +104,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
             variant="h1"
             sx={{ color: colors.grey[400] }}
           >
-            {projectName}
+            {currentProject.name}
           </Typography>
           <IconButton
             sx={{ color: colors.yellow[500], fontSize: 20 }}

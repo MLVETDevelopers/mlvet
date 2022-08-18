@@ -16,6 +16,14 @@ export interface UndoPasteWordsPayload {
   clipboardLength: number;
 }
 
-export type DoPayload = DeleteSelectionPayload | PasteWordsPayload;
+export type DoPayload =
+  | DeleteSelectionPayload
+  | PasteWordsPayload
+  | IndexRange
+  | null;
 
-export type UndoPayload = UndoDeleteSelectionPayload | UndoPasteWordsPayload;
+export type UndoPayload =
+  | UndoDeleteSelectionPayload
+  | UndoPasteWordsPayload
+  | IndexRange
+  | null;

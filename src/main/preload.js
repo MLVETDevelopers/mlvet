@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
+  saveChangesDialog: (mainWindow, projectFileName) =>
+    ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
+
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
   writeRecentProjects: (recentProjects) =>
@@ -33,6 +36,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
+
+  setExportEnabled: (exportEnabled) =>
+    ipcRenderer.invoke('set-export-enabled', exportEnabled),
 
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(

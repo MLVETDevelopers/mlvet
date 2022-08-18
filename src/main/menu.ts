@@ -132,6 +132,15 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-delete-text');
         },
       },
+      {
+        id: 'selectAll',
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-all');
+        },
+      },
     ];
   }
 

@@ -1,6 +1,6 @@
 import { Box, styled, colors, BoxProps } from '@mui/material';
 import { clamp } from 'main/timeUtils';
-import { useRef } from 'react';
+import { DragEvent, useEffect, useRef } from 'react';
 
 interface ResizeSliderProps extends BoxProps {
   targetWidth: number;
@@ -18,10 +18,10 @@ const Divider = styled(Box)({
 const Slider = styled(Box)({
   opacity: 0,
   position: 'absolute',
-  left: '-5px',
-  right: '-5px',
-  top: '-5px',
-  bottom: '-5px',
+  left: '-16px',
+  right: '-16px',
+  top: '-16px',
+  bottom: '-16px',
   cursor: 'ew-resize',
   '&:active': {
     cursor: 'pointer',
@@ -31,7 +31,7 @@ const Slider = styled(Box)({
   '&:hover': {
     opacity: 0.5,
     backgroundColor: colors.grey[600],
-    borderRadius: '7px',
+    borderRadius: '17px',
     transition: '0.3s opacity ease',
   },
 });
@@ -68,10 +68,21 @@ const ResizeSlider = ({
     document.body.addEventListener('mouseup', onMouseUp, { once: true });
   };
 
+  // Needed to avoid div 'forking' bug with weird cursor icon
+  const onDragStart = (e: DragEvent<HTMLDivElement>) => e.preventDefault();
+
+  // Cleanup for event listeners when components unmounts
+  useEffect(() => {
+    return () => {
+      document.body.removeEventListener('mousemove', onMouseMove);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <Divider id="divider" {...props}>
-      <Slider id="slider" onMouseDown={onMouseDown} />
+      <Slider id="slider" onMouseDown={onMouseDown} onDragStart={onDragStart} />
     </Divider>
   );
 };

@@ -27,9 +27,7 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
 
     const markDeleted = (word: Word) => ({ ...word, deleted: true });
 
-    const newWords = mapInRanges(words, markDeleted, ranges);
-
-    return newWords;
+    return mapInRanges(words, markDeleted, ranges);
   }
 
   if (action.type === UNDO_DELETE_SELECTION) {

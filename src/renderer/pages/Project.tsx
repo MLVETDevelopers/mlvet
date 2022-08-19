@@ -1,12 +1,12 @@
 import { Box, Stack } from '@mui/material';
 import { useCallback, useEffect, useRef, useState, RefObject } from 'react';
 import { useSelector } from 'react-redux';
-import TranscriptionBlock from 'renderer/components/TranscriptionBlock';
-import VideoController from 'renderer/components/VideoController';
+import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
+import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
 } from 'renderer/components/VideoPreview/VideoPreviewController';
-import ResizeSlider from 'renderer/components/ResizeSlider';
+import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
 import { useWindowResizer } from 'renderer/utils/hooks';
 import { clamp } from 'main/timeUtils';

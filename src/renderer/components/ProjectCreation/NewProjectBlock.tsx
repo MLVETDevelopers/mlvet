@@ -1,8 +1,8 @@
 import { Box, Paper, Stack, styled, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
-import ModalContainer from './NewProjectModal/ModalContainer';
-import colors from '../colors';
+import ModalContainer from './ModalContainer';
+import colors from '../../colors';
 
 const NewProjectBox = styled(Paper)({
   background: colors.grey[700],

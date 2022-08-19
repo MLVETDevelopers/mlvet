@@ -8,6 +8,7 @@ import colors from '../colors';
 import Word from './Word';
 import { selectionCleared } from '../store/selection/actions';
 import DragManager, { RenderTranscription } from './WordDragManager';
+import WordSpace from './WordSpace';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -61,24 +62,6 @@ const TranscriptionBlock = ({
     }
   };
 
-  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element =
-    useMemo(
-      () => (key, isDropMarkerActive) =>
-        (
-          <span
-            key={key}
-            style={{
-              background: isDropMarkerActive ? 'white' : 'none',
-              transition: 'background 0.2s',
-              width: '2px',
-              paddingLeft: '1px',
-              paddingRight: '1px',
-            }}
-          />
-        ),
-      []
-    );
-
   const renderTranscription: RenderTranscription = (
     onWordMouseDown,
     onWordMouseMove,
@@ -100,10 +83,12 @@ const TranscriptionBlock = ({
       {transcription.words.map((word, index) =>
         word.deleted ? null : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
-            {space(
-              `space-${word.originalIndex}-${word.pasteKey}`,
-              dragState !== null && dropBeforeIndex === index
-            )}
+            <WordSpace
+              key={`space-${word.originalIndex}-${word.pasteKey}`}
+              isDropMarkerActive={
+                dragState !== null && dropBeforeIndex === index
+              }
+            />
             <Word
               key={`word-${word.originalIndex}-${word.pasteKey}`}
               seekToWord={() => seekToWord(index)}
@@ -121,12 +106,15 @@ const TranscriptionBlock = ({
               setDropBeforeIndex={setDropBeforeIndex}
               cancelDrag={cancelDrag}
             />
-            {index === transcription.words.length - 1 &&
-              space(
-                `space-end`,
-                dragState !== null &&
+            {index === transcription.words.length - 1 && (
+              <WordSpace
+                key="space-end"
+                isDropMarkerActive={
+                  dragState !== null &&
                   dropBeforeIndex === transcription.words.length
-              )}
+                }
+              />
+            )}
           </Fragment>
         )
       )}

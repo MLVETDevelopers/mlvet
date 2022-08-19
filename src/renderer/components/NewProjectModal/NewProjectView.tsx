@@ -46,7 +46,6 @@ const NewProjectView = ({
   setProjectName,
 }: Props) => {
   const dispatch = useDispatch();
-  const [isAwaitingProjectName, setIsAwaitingProjectName] = useState(true);
 
   const setProjectInStore = useCallback(
     async (project: RuntimeProject) => {
@@ -73,7 +72,6 @@ const NewProjectView = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setProjectName(event.target.value.trim());
-    setIsAwaitingProjectName(event.target.value === '');
   };
 
   const continueButton = (

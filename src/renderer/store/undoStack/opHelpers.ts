@@ -27,7 +27,7 @@ export const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
   op: Op<T, U>
 ) => void = (op) => {
   // Dispatch the actual actions
-  op.do.forEach((doAction) => dispatch(doAction()));
+  op.do.forEach(dispatch);
 
   // Push the entire op to the undo stack, so that we can support undo and redo of this action
   dispatch(undoStackPushed(op));
@@ -48,7 +48,7 @@ export const dispatchUndo: () => void = () => {
   const lastAction = stack[index - 1];
 
   // Dispatch the undo operations
-  lastAction.undo.forEach((undoAction) => dispatch(undoAction()));
+  lastAction.undo.forEach(dispatch);
 
   // Let the undo stack know we just did an undo so it can decrement its index
   dispatch(undoStackPopped());
@@ -69,7 +69,7 @@ export const dispatchRedo: () => void = () => {
   const lastAction = stack[index];
 
   // Dispatch the redo
-  lastAction.do.forEach((doAction) => dispatch(doAction()));
+  lastAction.do.forEach(dispatch);
 
   // Let the undo stack know we just did a redo so it can increment its index
   dispatch(opRedone());

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
 import { isMergeSplitAllowed } from './store/selection/helpers';
 import { indicesToRanges } from './util';
+import { ApplicationPage } from './store/currentPage/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -16,6 +17,17 @@ export default function StoreChangeObserver() {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const words = useMemo(
+    () => currentProject?.transcription?.words ?? [],
+    [currentProject]
+  );
+
+  const currentPage = useSelector(
+    (store: ApplicationStore) => store.currentPage
+  );
+
+  const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selection = useSelector((store: ApplicationStore) => store.selection);
 
@@ -84,10 +96,29 @@ export default function StoreChangeObserver() {
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
 
-  // Update merge/split options in menu
+  // Update 'go to home' option in menu when page is changed
   useEffect(() => {
-    const words = currentProject?.transcription?.words;
+    const homeEnabled = currentPage === ApplicationPage.PROJECT;
 
+    ipc.setHomeEnabled(homeEnabled);
+  }, [currentPage]);
+
+  // Update clipboard options in edit menu when clipboard or selection is changed
+  useEffect(() => {
+    const cutCopyDeleteEnabled = selection.length > 0;
+
+    const pasteEnabled = clipboard.length > 0;
+
+    ipc.setClipboardEnabled(
+      cutCopyDeleteEnabled,
+      cutCopyDeleteEnabled,
+      pasteEnabled,
+      cutCopyDeleteEnabled
+    );
+  }, [clipboard, selection]);
+
+  // Update merge/split options in edit menu when selection is changed
+  useEffect(() => {
     if (words === undefined) {
       ipc.setMergeSplitEnabled(false, false);
     }
@@ -98,7 +129,7 @@ export default function StoreChangeObserver() {
     );
 
     ipc.setMergeSplitEnabled(merge, split);
-  }, [currentProject, selection]);
+  }, [words, selection]);
 
   // Component doesn't render anything
   return null;

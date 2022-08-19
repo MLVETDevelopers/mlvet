@@ -28,11 +28,11 @@ import {
 export const makeDeleteSelection: (
   ranges: IndexRange[]
 ) => DeleteSelectionOp = (ranges) => ({
-  do: [() => selectionDeleted(ranges), selectionCleared],
+  do: [selectionDeleted(ranges), selectionCleared()],
   undo: [
-    () => undoSelectionDeleted(ranges),
-    selectionCleared,
-    ...ranges.map((range) => () => selectionRangeAdded(range)),
+    undoSelectionDeleted(ranges),
+    selectionCleared(),
+    ...ranges.map(selectionRangeAdded),
   ],
 });
 
@@ -42,15 +42,14 @@ export const makePasteWord: (
 ) => PasteWordsOp = (pasteTo, clipboard) => {
   return {
     do: [
-      () => wordPasted(pasteTo, clipboard),
-      selectionCleared,
-      () =>
-        selectionRangeAdded({
-          startIndex: pasteTo + 1,
-          endIndex: pasteTo + clipboard.length + 1,
-        }),
+      wordPasted(pasteTo, clipboard),
+      selectionCleared(),
+      selectionRangeAdded({
+        startIndex: pasteTo + 1,
+        endIndex: pasteTo + clipboard.length + 1,
+      }),
     ],
-    undo: [() => undoWordPasted(pasteTo, clipboard.length), selectionCleared],
+    undo: [undoWordPasted(pasteTo, clipboard.length), selectionCleared()],
   };
 };
 
@@ -65,20 +64,19 @@ export const makeMoveWords: (
 
   return {
     do: [
-      () => selectionDeleted(fromRanges),
-      () => wordPasted(toAfterIndex, clipboard),
-      selectionCleared,
-      () =>
-        selectionRangeAdded({
-          startIndex: toAfterIndex + 1,
-          endIndex: toAfterIndex + clipboard.length + 1,
-        }),
+      selectionDeleted(fromRanges),
+      wordPasted(toAfterIndex, clipboard),
+      selectionCleared(),
+      selectionRangeAdded({
+        startIndex: toAfterIndex + 1,
+        endIndex: toAfterIndex + clipboard.length + 1,
+      }),
     ],
     undo: [
-      () => undoWordPasted(toAfterIndex, clipboard.length),
-      () => undoSelectionDeleted(fromRanges),
-      selectionCleared,
-      ...fromRanges.map((range) => () => selectionRangeAdded(range)),
+      undoWordPasted(toAfterIndex, clipboard.length),
+      undoSelectionDeleted(fromRanges),
+      selectionCleared(),
+      ...fromRanges.map(selectionRangeAdded),
     ],
   };
 };
@@ -98,14 +96,14 @@ export const makeMergeWords: (
 
   return {
     do: [
-      () => wordsMerged(range),
-      selectionCleared,
-      () => selectionRangeAdded(rangeLengthOne(range.startIndex)),
+      wordsMerged(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(range.startIndex)),
     ],
     undo: [
-      () => undoWordsMerged(range.startIndex, originalWords),
-      selectionCleared,
-      () => selectionRangeAdded(range),
+      undoWordsMerged(range.startIndex, originalWords),
+      selectionCleared(),
+      selectionRangeAdded(range),
     ],
   };
 };
@@ -131,15 +129,11 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
   };
 
   return {
-    do: [
-      () => wordSplit(index),
-      selectionCleared,
-      () => selectionRangeAdded(range),
-    ],
+    do: [wordSplit(index), selectionCleared(), selectionRangeAdded(range)],
     undo: [
-      () => undoWordSplit(range),
-      selectionCleared,
-      () => selectionRangeAdded(rangeLengthOne(index)),
+      undoWordSplit(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(index)),
     ],
   };
 };

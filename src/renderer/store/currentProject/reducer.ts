@@ -10,21 +10,21 @@ import {
 } from './actions';
 import transcriptionReducer from '../transcription/reducer';
 import {
-  DELETE_SELECTION,
-  PASTE_WORD,
+  EXPORT_PROGRESS_UPDATE,
+  START_EXPORT,
+  FINISH_EXPORT,
+} from '../exportIo/actions';
+import {
   TRANSCRIPTION_CREATED,
+  DELETE_SELECTION,
   UNDO_DELETE_SELECTION,
+  PASTE_WORD,
   UNDO_PASTE_WORD,
   MERGE_WORDS,
   UNDO_MERGE_WORDS,
   SPLIT_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcription/actions';
-import {
-  EXPORT_PROGRESS_UPDATE,
-  START_EXPORT,
-  FINISH_EXPORT,
-} from '../exportIo/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],

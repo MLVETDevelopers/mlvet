@@ -3,6 +3,7 @@ import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeMergeWords, makeSplitWord } from 'renderer/store/undoStack/ops';
 import { Word } from 'sharedTypes';
 import store from '../store/store';
+import { getSelectionRanges } from './selection';
 
 const getWords: () => Word[] | null = () => {
   return store.getState().currentProject?.transcription?.words ?? null;

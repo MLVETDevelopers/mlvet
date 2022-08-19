@@ -119,7 +119,7 @@ export default function StoreChangeObserver() {
 
   // Update merge/split options in edit menu when selection is changed
   useEffect(() => {
-    if (words === undefined) {
+    if (words.length === 0) {
       ipc.setMergeSplitEnabled(false, false);
     }
 

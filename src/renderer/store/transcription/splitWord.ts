@@ -16,7 +16,7 @@ export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
   const wordToSplit = words[wordIndex];
 
   // Sanity checks
-  assert(!wordToSplit.deleted);
+  assert(!wordToSplit.deleted, "word to split can't be deleted");
 
   const splitWordsText = wordToSplit.word.split(' ');
 

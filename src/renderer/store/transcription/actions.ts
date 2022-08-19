@@ -2,9 +2,13 @@ import { IndexRange, Transcription, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
+  MergeWordsPayload,
   PasteWordsPayload,
+  SplitWordPayload,
   UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
   UndoPasteWordsPayload,
+  UndoSplitWordPayload,
 } from '../undoStack/opPayloads';
 
 export const TRANSCRIPTION_CREATED = 'TRANSCRIPTION_CREATED';
@@ -50,4 +54,33 @@ export const undoWordPasted: (
 ) => Action<UndoPasteWordsPayload> = (startIndex, clipboardLength) => ({
   type: UNDO_PASTE_WORD,
   payload: { startIndex, clipboardLength },
+});
+
+export const wordsMerged: (range: IndexRange) => Action<MergeWordsPayload> = (
+  range
+) => ({
+  type: MERGE_WORDS,
+  payload: { range },
+});
+
+export const undoWordsMerged: (
+  index: number,
+  originalWords: Word[]
+) => Action<UndoMergeWordsPayload> = (index, originalWords) => ({
+  type: UNDO_MERGE_WORDS,
+  payload: { index, originalWords },
+});
+
+export const wordSplit: (index: number) => Action<SplitWordPayload> = (
+  index
+) => ({
+  type: SPLIT_WORD,
+  payload: { index },
+});
+
+export const undoWordSplit: (
+  range: IndexRange
+) => Action<UndoSplitWordPayload> = (range) => ({
+  type: UNDO_SPLIT_WORD,
+  payload: { range },
 });

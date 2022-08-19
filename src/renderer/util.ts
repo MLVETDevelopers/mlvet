@@ -197,17 +197,118 @@ export const sortNumerical: (list: number[]) => void = (list) => {
 /**
  * Returns whether a list of words is in originalIndex order
  */
-export const isInOriginalOrder: (words: Word[]) => boolean = (words) =>
-  words.every(
-    (word, index) =>
-      index === 0 || word.originalIndex === words[index - 1].originalIndex + 1
-  );
+export const isInOriginalOrder: (
+  words: Word[],
+  range: IndexRange
+) => boolean = (words, range) =>
+  words.every((word, index) => {
+    // word not in range, skip
+    if (range.startIndex < index || range.endIndex >= index) {
+      return true;
+    }
 
+    // word in order
+    if (
+      (index === 0 && word.originalIndex === 0) ||
+      word.originalIndex === words[index - 1].originalIndex + 1
+    ) {
+      return true;
+    }
 
-export const assert: (statement: boolean) => void = (statement) => {
+    // word not in order
+    return false;
+  });
+
+export const assert: (statement: boolean, message: string) => void = (
+  statement,
+  message
+) => {
   if (statement) {
+    // assertion passes
     return;
   }
-  
-  throw new Error('assertion failed');
+
+  throw new Error(`assertion failed: ${message}`);
+};
+
+/*
+ * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
+ */
+export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (
+  ranges
+) => {
+  const indicesSet = new Set<number>();
+
+  ranges.forEach(({ startIndex, endIndex }) => {
+    for (let i = startIndex; i < endIndex; i += 1) {
+      indicesSet.add(i);
+    }
+  });
+
+  return indicesSet;
+};
+
+/**
+ * Similar to rangesToIndices, but for a single range - also returns as a list and
+ * maintains numerical order.
+ * @param range
+ */
+export const rangeToIndices: (range: IndexRange) => number[] = (range) => {
+  const indices: number[] = [];
+
+  for (let index = range.startIndex; index < range.endIndex; index += 1) {
+    indices.push(index);
+  }
+
+  return indices;
+};
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * Determines if a point is inside a rectangle,
+ * returning false for boundary cases.
+ */
+export const pointIsInsideRect: (point: Point, rect: Rect) => boolean = (
+  point,
+  rect
+) =>
+  point.x > rect.x &&
+  point.x < rect.x + rect.w &&
+  point.y > rect.y &&
+  point.y < rect.y + rect.h;
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}
+
+/**
+ * Helper for making IndexRanges with a size of one, e.g. a single word
+ */
+export const rangeLengthOne: (index: number) => IndexRange = (index) => ({
+  startIndex: index,
+  endIndex: index + 1,
+});
+
+/**
+ * Dev helper for measuring and printing time taken by a function
+ */
+export function measureTimeTaken<T extends (...args: any) => any>(func: T) {
+  const before = performance.now();
+  const returnValue: ReturnType<T> = func();
+  const after = performance.now();
+  console.log(after - before);
+  return returnValue;
 }

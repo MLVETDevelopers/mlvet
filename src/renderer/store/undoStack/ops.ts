@@ -1,3 +1,4 @@
+import { rangeLengthOne } from 'renderer/util';
 import { IndexRange, Word } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
@@ -5,6 +6,10 @@ import {
   undoSelectionDeleted,
   undoWordPasted,
   wordPasted,
+  wordsMerged,
+  undoWordsMerged,
+  wordSplit,
+  undoWordSplit,
 } from '../transcription/actions';
 import { Op } from './helpers';
 import {
@@ -103,16 +108,14 @@ export const makeMergeWords: (
 
   return {
     do: [
-      {
-        type: MERGE_WORDS,
-        payload: { range },
-      },
+      wordsMerged(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(range.startIndex)),
     ],
     undo: [
-      {
-        type: UNDO_MERGE_WORDS,
-        payload: { index: range.startIndex, originalWords },
-      },
+      undoWordsMerged(range.startIndex, originalWords),
+      selectionCleared(),
+      selectionRangeAdded(range),
     ],
   };
 };
@@ -138,34 +141,25 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
   };
 
   return {
-    do: [
-      {
-        type: SPLIT_WORD,
-        payload: { index } as SplitWordPayload,
-      },
-    ],
+    do: [wordSplit(index), selectionCleared(), selectionRangeAdded(range)],
     undo: [
-      {
-        type: UNDO_SPLIT_WORD,
-        payload: { range } as UndoSplitWordPayload,
-      },
+      undoWordSplit(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(index)),
     ],
   };
 };
 
 export type DeleteSelectionOp = Op<
-  DeleteSelectionPayload | null,
-  UndoDeleteSelectionPayload | null | IndexRange
+  DeleteSelectionPayload,
+  UndoDeleteSelectionPayload
 >;
 
-export type PasteWordsOp = Op<
-  PasteWordsPayload | null | IndexRange,
-  UndoPasteWordsPayload | null
->;
+export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
 
 export type MoveWordsOp = Op<
-  DeleteSelectionPayload | PasteWordsPayload | IndexRange | null,
-  UndoDeleteSelectionPayload | UndoPasteWordsPayload | IndexRange | null
+  DeleteSelectionPayload | PasteWordsPayload,
+  UndoDeleteSelectionPayload | UndoPasteWordsPayload
 >;
 
 export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;

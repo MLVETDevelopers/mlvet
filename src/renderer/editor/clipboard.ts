@@ -1,9 +1,9 @@
-import { Word } from '../sharedTypes';
+import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
-import { clipboardUpdated } from './store/clipboard/actions';
-import store from './store/store';
-import { dispatchOp } from './store/undoStack/opHelpers';
-import { makeDeleteSelection, makePasteWord } from './store/undoStack/ops';
+import { clipboardUpdated } from '../store/clipboard/actions';
+import store from '../store/store';
+import { dispatchOp } from '../store/undoStack/opHelpers';
+import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
 
 const { dispatch } = store;
 
@@ -16,19 +16,14 @@ const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
 };
 
 export const copyText = () => {
-  const { currentProject } = store.getState();
-  if (currentProject === null) {
-    return;
-  }
-
-  const { transcription } = currentProject;
-  if (transcription === null) {
+  const words = store.getState().currentProject?.transcription?.words;
+  if (words === undefined) {
     return;
   }
 
   const ranges = getSelectionRanges();
   const clipboard = ranges.flatMap((range) =>
-    transcription.words.slice(range.startIndex, range.endIndex)
+    words.slice(range.startIndex, range.endIndex)
   );
   dispatch(clipboardUpdated(clipboard));
 };

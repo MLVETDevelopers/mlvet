@@ -8,6 +8,7 @@ const mockIpc = {
   setFileRepresentation: () => null,
   openProject: async () => null,
   setClipboardEnabled: async () => null,
+  setHomeEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

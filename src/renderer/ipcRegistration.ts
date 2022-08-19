@@ -16,8 +16,8 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
-import { copyText, cutText, deleteText, pasteText } from './clipboard';
-import { selectAllWords } from './selection';
+import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
+import { selectAllWords } from './editor/selection';
 
 /**
  * Used by backend to initiate saves from front end
@@ -151,24 +151,19 @@ ipc.on('initiate-export-project', async () => {
   store.dispatch(startExport(currentProject.id, filePath));
 });
 
-ipc.on('initiate-cut-text', async () => {
-  cutText();
-});
+const EDITOR_ACTIONS: Record<string, () => void> = {
+  'initiate-cut-text': cutText,
+  'initiate-copy-text': copyText,
+  'initiate-paste-text': pasteText,
+  'initiate-delete-text': deleteText,
+  'initiate-select-all': selectAllWords,
+};
 
-ipc.on('initiate-copy-text', async () => {
-  copyText();
-});
-
-ipc.on('initiate-paste-text', async () => {
-  pasteText();
-});
-
-ipc.on('initiate-delete-text', async () => {
-  deleteText();
-});
-
-ipc.on('initiate-select-all', async () => {
-  selectAllWords();
+// Register the editor actions as IPC receivers
+Object.keys(EDITOR_ACTIONS).forEach((key) => {
+  ipc.on(key, async () => {
+    EDITOR_ACTIONS[key]();
+  });
 });
 
 /**

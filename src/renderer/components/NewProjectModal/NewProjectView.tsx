@@ -64,7 +64,10 @@ const NewProjectView = ({
     nextView();
   }, [nextView, projectName, setProjectInStore]);
 
-  useKeypress(handleContinue, !isAwaitingProjectName, ['Enter', 'NumpadEnter']);
+  useKeypress(handleContinue, projectName.trim() !== '', [
+    'Enter',
+    'NumpadEnter',
+  ]);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

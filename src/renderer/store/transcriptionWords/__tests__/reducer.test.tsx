@@ -1,12 +1,12 @@
+import { Word } from 'sharedTypes';
+import { TRANSCRIPTION_CREATED } from 'renderer/store/transcription/actions';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
-  TRANSCRIPTION_CREATED,
-} from 'renderer/store/transcription/actions';
-import { Word } from 'sharedTypes';
-import transcriptionReducer from '../reducer';
+} from '../actions';
+import transcriptionReducer from '../../transcription/reducer';
 
 const makeBasicWord: (
   originalIndex: number,

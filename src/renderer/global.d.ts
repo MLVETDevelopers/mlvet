@@ -2,7 +2,8 @@
 // IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
 // If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
-import { IpcRendererEvent } from 'electron';
+import { BrowserWindow, IpcRendererEvent } from 'electron';
+import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
 import {
   OperatingSystems,
   RuntimeProject,

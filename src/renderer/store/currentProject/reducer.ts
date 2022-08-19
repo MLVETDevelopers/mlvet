@@ -12,15 +12,15 @@ import transcriptionReducer from '../transcription/reducer';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
-  TRANSCRIPTION_CREATED,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
-} from '../transcription/actions';
+} from '../transcriptionWords/actions';
 import {
   EXPORT_PROGRESS_UPDATE,
   START_EXPORT,
   FINISH_EXPORT,
 } from '../exportIo/actions';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],

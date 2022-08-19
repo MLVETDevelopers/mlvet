@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assert } from 'renderer/util';
+import { assert } from '../../util';
 import { Word } from '../../../sharedTypes';
 
 /**
- * Splits a word into multiple words
+ * Splits a word into multiple words, returning the new word list
  */
 export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
   words,

@@ -151,24 +151,19 @@ ipc.on('initiate-export-project', async () => {
   store.dispatch(startExport(currentProject.id, filePath));
 });
 
-ipc.on('initiate-cut-text', async () => {
-  cutText();
-});
+const EDITOR_ACTIONS: Record<string, () => void> = {
+  'initiate-cut-text': cutText,
+  'initiate-copy-text': copyText,
+  'initiate-paste-text': pasteText,
+  'initiate-delete-text': deleteText,
+  'initiate-select-all': selectAllWords,
+};
 
-ipc.on('initiate-copy-text', async () => {
-  copyText();
-});
-
-ipc.on('initiate-paste-text', async () => {
-  pasteText();
-});
-
-ipc.on('initiate-delete-text', async () => {
-  deleteText();
-});
-
-ipc.on('initiate-select-all', async () => {
-  selectAllWords();
+// Register the editor actions as IPC receivers
+Object.keys(EDITOR_ACTIONS).forEach((key) => {
+  ipc.on(key, async () => {
+    EDITOR_ACTIONS[key]();
+  });
 });
 
 /**

@@ -20,7 +20,7 @@ const makeBasicWord: (
   fileName: 'PLACEHOLDER FILENAME',
 });
 
-describe('Transcription words reducer', () => {
+describe('Transcription reducer', () => {
   it('should handle transcription created', () => {
     expect(
       transcriptionReducer(null, {

@@ -5,16 +5,14 @@ import {
   undoSelectionDeleted,
   undoWordPasted,
   wordPasted,
-} from '../transcriptionWords/actions';
-import { Op } from './helpers';
+} from './actions';
+import { Op } from '../undoStack/helpers';
 import {
-  PasteWordsPayload,
-  UndoPasteWordsPayload,
   DeleteSelectionPayload,
+  PasteWordsPayload,
   UndoDeleteSelectionPayload,
+  UndoPasteWordsPayload,
 } from './opPayloads';
-
-// More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 
 export const makeDeleteSelection: (
   ranges: IndexRange[]
@@ -73,16 +71,13 @@ export const makeMoveWords: (
 };
 
 export type DeleteSelectionOp = Op<
-  DeleteSelectionPayload | null,
-  UndoDeleteSelectionPayload | null | IndexRange
+  DeleteSelectionPayload,
+  UndoDeleteSelectionPayload
 >;
 
-export type PasteWordsOp = Op<
-  PasteWordsPayload | null | IndexRange,
-  UndoPasteWordsPayload | null
->;
+export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
 
 export type MoveWordsOp = Op<
-  DeleteSelectionPayload | PasteWordsPayload | IndexRange | null,
-  UndoDeleteSelectionPayload | UndoPasteWordsPayload | IndexRange | null
+  DeleteSelectionPayload | PasteWordsPayload,
+  UndoDeleteSelectionPayload | UndoPasteWordsPayload
 >;

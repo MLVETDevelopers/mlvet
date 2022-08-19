@@ -233,18 +233,38 @@ export const getAspectRatio: (
 /**
  * Returns whether a list of words is in originalIndex order
  */
-export const isInOriginalOrder: (words: Word[]) => boolean = (words) =>
-  words.every(
-    (word, index) =>
-      index === 0 || word.originalIndex === words[index - 1].originalIndex + 1
-  );
+export const isInOriginalOrder: (
+  words: Word[],
+  range: IndexRange
+) => boolean = (words, range) =>
+  words.every((word, index) => {
+    // word not in range, skip
+    if (range.startIndex < index || range.endIndex >= index) {
+      return true;
+    }
 
-export const assert: (statement: boolean) => void = (statement) => {
+    // word in order
+    if (
+      (index === 0 && word.originalIndex === 0) ||
+      word.originalIndex === words[index - 1].originalIndex + 1
+    ) {
+      return true;
+    }
+
+    // word not in order
+    return false;
+  });
+
+export const assert: (statement: boolean, message: string) => void = (
+  statement,
+  message
+) => {
   if (statement) {
+    // assertion passes
     return;
   }
 
-  throw new Error('assertion failed');
+  throw new Error(`assertion failed: ${message}`);
 };
 
 /*

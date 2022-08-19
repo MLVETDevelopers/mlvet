@@ -6,6 +6,7 @@ import {
   MapCallback,
   VideoFileExtension,
   IndexRange,
+  Word,
 } from '../sharedTypes';
 import ipc from './ipc';
 
@@ -230,6 +231,82 @@ export const getAspectRatio: (
 };
 
 /**
+ * Returns whether a list of words is in originalIndex order
+ */
+export const isInOriginalOrder: (
+  words: Word[],
+  range: IndexRange
+) => boolean = (words, range) =>
+  words.every((word, index) => {
+    // word not in range, skip
+    if (range.startIndex < index || range.endIndex >= index) {
+      return true;
+    }
+
+    // word in order
+    if (
+      (index === 0 && word.originalIndex === 0) ||
+      word.originalIndex === words[index - 1].originalIndex + 1
+    ) {
+      return true;
+    }
+
+    // word not in order
+    return false;
+  });
+
+export const indicesToRanges: (indices: number[]) => IndexRange[] = (
+  indices
+) => {
+  // make a copy to avoid mutating
+  const selection = [...indices];
+
+  // Sort the indices
+  sortNumerical(selection);
+
+  let currentStartIndex = selection[0];
+
+  /**
+   * This reduce is similar to the 'convertTranscriptToCuts' function, so refer to that
+   * for comments about the general approach.
+   * What is being achieved is turning a sorted array of indexes into a series of
+   * index ranges. For a contiguous selection, there will only be one index range.
+   */
+  const indexRanges: IndexRange[] = selection.reduce(
+    (rangesSoFar, currentIndex, j) => {
+      // Note: j refers to the index within this loop, not the index within the transcription itself.
+      const isFinalWord = j === selection.length - 1;
+
+      // Final element, so build a range no matter what
+      if (isFinalWord) {
+        return rangesSoFar.concat({
+          startIndex: currentStartIndex,
+          endIndex: currentIndex + 1,
+        });
+      }
+
+      const nextIndex = selection[j + 1];
+
+      if (currentIndex + 1 === nextIndex) {
+        return rangesSoFar;
+      }
+
+      const newRange: IndexRange = {
+        startIndex: currentStartIndex,
+        endIndex: currentIndex + 1,
+      };
+
+      currentStartIndex = nextIndex;
+
+      return rangesSoFar.concat(newRange);
+    },
+    [] as IndexRange[]
+  );
+
+  return indexRanges;
+};
+
+/*
  * Converts a list of ranges into a set of indices - the opposite of getSelectionRanges, basically
  */
 export const rangesToIndices: (ranges: IndexRange[]) => Set<number> = (

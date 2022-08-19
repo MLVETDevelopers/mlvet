@@ -16,19 +16,14 @@ const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
 };
 
 export const copyText = () => {
-  const { currentProject } = store.getState();
-  if (currentProject === null) {
-    return;
-  }
-
-  const { transcription } = currentProject;
-  if (transcription === null) {
+  const words = store.getState().currentProject?.transcription?.words;
+  if (words === undefined) {
     return;
   }
 
   const ranges = getSelectionRanges();
   const clipboard = ranges.flatMap((range) =>
-    transcription.words.slice(range.startIndex, range.endIndex)
+    words.slice(range.startIndex, range.endIndex)
   );
   dispatch(clipboardUpdated(clipboard));
 };

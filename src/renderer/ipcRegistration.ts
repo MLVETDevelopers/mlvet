@@ -16,8 +16,8 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
 import { removeExtension } from './util';
-import { copyText, cutText, deleteText, pasteText } from './clipboard';
-import { selectAllWords } from './selection';
+import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
+import { selectAllWords } from './editor/selection';
 
 /**
  * Used by backend to initiate saves from front end

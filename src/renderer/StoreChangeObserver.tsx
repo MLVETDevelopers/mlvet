@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
+import { ApplicationPage } from './store/currentPage/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -14,6 +15,14 @@ export default function StoreChangeObserver() {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const currentPage = useSelector(
+    (store: ApplicationStore) => store.currentPage
+  );
+
+  const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
+
+  const selection = useSelector((store: ApplicationStore) => store.selection);
 
   const [hasLoadedRecentProjects, setHasLoadedRecentProjects] =
     useState<boolean>(false);
@@ -79,6 +88,27 @@ export default function StoreChangeObserver() {
       );
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
+
+  // Update 'go to home' option in menu when page is changed
+  useEffect(() => {
+    const homeEnabled = currentPage === ApplicationPage.PROJECT;
+
+    ipc.setHomeEnabled(homeEnabled);
+  }, [currentPage]);
+
+  // Update clipboard options in edit menu when clipboard or selection is changed
+  useEffect(() => {
+    const cutCopyDeleteEnabled = selection.length > 0;
+
+    const pasteEnabled = clipboard.length > 0;
+
+    ipc.setClipboardEnabled(
+      cutCopyDeleteEnabled,
+      cutCopyDeleteEnabled,
+      pasteEnabled,
+      cutCopyDeleteEnabled
+    );
+  }, [clipboard, selection]);
 
   // Component doesn't render anything
   return null;

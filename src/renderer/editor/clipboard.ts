@@ -1,9 +1,9 @@
-import { Word } from '../sharedTypes';
+import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
-import { clipboardUpdated } from './store/clipboard/actions';
-import store from './store/store';
-import { dispatchOp } from './store/undoStack/opHelpers';
-import { makeDeleteSelection, makePasteWord } from './store/undoStack/ops';
+import { clipboardUpdated } from '../store/clipboard/actions';
+import store from '../store/store';
+import { dispatchOp } from '../store/undoStack/opHelpers';
+import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
 
 const { dispatch } = store;
 

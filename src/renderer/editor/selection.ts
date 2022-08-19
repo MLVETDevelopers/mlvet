@@ -1,12 +1,12 @@
-import { IndexRange, OperatingSystems } from '../sharedTypes';
-import ipc from './ipc';
+import { IndexRange, OperatingSystems } from '../../sharedTypes';
+import ipc from '../ipc';
 import {
   selectionCleared,
   selectionRangeAdded,
   selectionRangeToggled,
-} from './store/selection/actions';
-import store from './store/store';
-import { rangeLengthOne, sortNumerical } from './util';
+} from '../store/selection/actions';
+import store from '../store/store';
+import { rangeLengthOne, sortNumerical } from '../util';
 
 const { dispatch } = store;
 

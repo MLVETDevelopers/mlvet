@@ -1,4 +1,5 @@
 import { BrowserWindow, Menu } from 'electron';
+import { PartialWord, RuntimeProject } from 'sharedTypes';
 import AppState from './AppState';
 
 export interface SnakeCaseWord {
@@ -9,8 +10,12 @@ export interface SnakeCaseWord {
 
 export interface JSONTranscription {
   confidence: number;
-  words: SnakeCaseWord[];
+  words: PartialWord[];
 }
+
+export type TranscriptionFunction = (
+  project: RuntimeProject
+) => Promise<JSONTranscription>;
 
 // Context to be passed into the IPC handlers when they are initialised from main
 export interface IpcContext {

@@ -1,10 +1,13 @@
 import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
-import { MapCallback, Transcription, Word } from '../../sharedTypes';
+import {
+  MapCallback,
+  PartialWord,
+  Transcription,
+  Word,
+} from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
-
-type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
 /**
  * Replace the start_time attribute with startTime (can be generalised further but shouldn't
@@ -41,10 +44,10 @@ const calculateAverageSilenceDuration = (
 ): number => {
   let silenceSum = 0;
   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-    const endTime = jsonTranscription.words[i + 1].start_time;
+    const endTime = jsonTranscription.words[i + 1].startTime;
     const silenceDuration =
       endTime -
-      jsonTranscription.words[i].start_time -
+      jsonTranscription.words[i].startTime -
       jsonTranscription.words[i].duration;
     silenceSum += silenceDuration;
   }
@@ -130,7 +133,6 @@ const preProcessTranscript = (
     confidence: jsonTranscript.confidence,
     words: updateOutputStartTimes(
       jsonTranscript.words
-        .map(camelCase)
         .map(punctuate(duration, averageSilenceDuration))
         .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))

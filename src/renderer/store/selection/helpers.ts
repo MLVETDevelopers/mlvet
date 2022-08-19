@@ -11,7 +11,7 @@ import { IndexRange, Word } from 'sharedTypes';
  * @returns
  */
 export const isMergeSplitAllowed: (
-  words: Word[] | undefined,
+  words: Word[],
   ranges: IndexRange[]
 ) => { merge: boolean; split: boolean } = (words, ranges) => {
   if (words === undefined) {

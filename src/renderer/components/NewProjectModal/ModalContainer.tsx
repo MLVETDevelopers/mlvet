@@ -7,6 +7,7 @@ import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
+import CancelProjectModal from '../CancelProjectModal';
 
 const CustomModal = styled(Modal)({
   display: 'flex',
@@ -38,16 +39,29 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     [dispatch]
   );
 
+  const handleModalClose: () => void = () => {
+    closeModal();
+    setCurrentView(0);
+    setProjectName('');
+  };
+
+  const [showingCancelProject, setShowingCancelProject] = useState(false);
+
+  const closeCancelProject = () => setShowingCancelProject(false);
+
+  const showCancelProject = () => {
+    if (projectName.length > 0) {
+      setShowingCancelProject(true);
+    } else {
+      handleModalClose();
+    }
+  };
+
   const viewComponents = [
     NewProjectView,
     ImportMediaView,
     RunTranscriptionView,
   ];
-
-  const handleModalClose: () => void = () => {
-    closeModal();
-    setCurrentView(0);
-  };
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
@@ -72,7 +86,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
       case NewProjectView:
         return (
           <NewProjectView
-            closeModal={handleModalClose}
+            closeModal={showCancelProject}
             nextView={nextView}
             projectName={projectName}
             setProjectName={setProjectName}
@@ -82,14 +96,14 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
         return (
           <ImportMediaView
             prevView={prevView}
-            closeModal={handleModalClose}
+            closeModal={showCancelProject}
             nextView={nextView}
           />
         );
       case RunTranscriptionView:
         return (
           <RunTranscriptionView
-            closeModal={handleModalClose}
+            closeModal={showCancelProject}
             nextView={nextView}
           />
         );
@@ -99,11 +113,18 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   })();
 
   return (
-    <CustomModal open={isOpen} onClose={handleModalClose}>
-      <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
-        {view}
-      </CustomModalInner>
-    </CustomModal>
+    <div>
+      <CustomModal open={isOpen} onClose={showCancelProject}>
+        <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
+          {view}
+        </CustomModalInner>
+      </CustomModal>
+      <CancelProjectModal
+        isOpen={showingCancelProject}
+        closeDialog={closeCancelProject}
+        handleModalClose={handleModalClose}
+      />
+    </div>
   );
 };
 

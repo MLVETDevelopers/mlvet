@@ -154,6 +154,7 @@ export default class MenuBuilder {
           // Tell the renderer to initiate a merge-words operation
           this.mainWindow.webContents.send('initiate-merge-words');
         },
+        enabled: false, // by default, gets updated when selection changes
       },
       {
         id: 'splitWord',
@@ -163,6 +164,7 @@ export default class MenuBuilder {
           // Tell the renderer to initiate a split-words operation
           this.mainWindow.webContents.send('initiate-split-word');
         },
+        enabled: false, // by default, gets updated when selection changes
       },
     ];
   }

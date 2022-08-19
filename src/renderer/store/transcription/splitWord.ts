@@ -1,7 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assert } from '../../util';
+import { rangeLengthOne } from '../../util';
 import { Word } from '../../../sharedTypes';
+import { isMergeSplitAllowed } from '../selection/helpers';
 
 /**
  * Splits a word into multiple words, returning the new word list
@@ -15,8 +16,10 @@ export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
 
   const wordToSplit = words[wordIndex];
 
-  // Sanity checks
-  assert(!wordToSplit.deleted, "word to split can't be deleted");
+  // Sanity check
+  if (!isMergeSplitAllowed(words, [rangeLengthOne(wordIndex)]).split) {
+    return words;
+  }
 
   const splitWordsText = wordToSplit.word.split(' ');
 

@@ -3,8 +3,8 @@ import setMenuButtonEnabled from '../helpers/menuUtils';
 
 type SetMergeSplitEnabled = (
   ipcContext: IpcContext,
-  undoEnabled: boolean,
-  redoEnabled: boolean
+  mergeEnabled: boolean,
+  splitEnabled: boolean
 ) => void;
 
 const setMergeSplitEnabled: SetMergeSplitEnabled = async (
@@ -15,7 +15,7 @@ const setMergeSplitEnabled: SetMergeSplitEnabled = async (
   const { menu } = ipcContext;
 
   setMenuButtonEnabled(menu, 'edit', 'mergeWords', mergeEnabled);
-  setMenuButtonEnabled(menu, 'edit', 'splitWords', splitEnabled);
+  setMenuButtonEnabled(menu, 'edit', 'splitWord', splitEnabled);
 };
 
 export default setMergeSplitEnabled;

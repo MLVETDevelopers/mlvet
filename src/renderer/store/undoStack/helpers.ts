@@ -3,7 +3,7 @@ import { DoPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
 
 // Selection payloads can be applied to any op do or undo
-type SelectionPayload = IndexRange | null;
+export type SelectionPayload = IndexRange | null;
 
 /**
  * An Op is a representation of an action that can be both done and undone.
@@ -12,8 +12,8 @@ type SelectionPayload = IndexRange | null;
  * The list of 'undo' actions is represented in the order the actions are undone.
  */
 export interface Op<T extends DoPayload, U extends UndoPayload> {
-  do: Action<T | SelectionPayload>[];
-  undo: Action<U | SelectionPayload>[];
+  do: (() => Action<T | SelectionPayload>)[];
+  undo: (() => Action<U | SelectionPayload>)[];
 }
 
 /**

@@ -219,16 +219,55 @@ export const isInOriginalOrder: (
     return false;
   });
 
-export const assert: (statement: boolean, message: string) => void = (
-  statement,
-  message
+export const indicesToRanges: (indices: number[]) => IndexRange[] = (
+  indices
 ) => {
-  if (statement) {
-    // assertion passes
-    return;
-  }
+  // make a copy to avoid mutating
+  const selection = [...indices];
 
-  throw new Error(`assertion failed: ${message}`);
+  // Sort the indices
+  sortNumerical(selection);
+
+  let currentStartIndex = selection[0];
+
+  /**
+   * This reduce is similar to the 'convertTranscriptToCuts' function, so refer to that
+   * for comments about the general approach.
+   * What is being achieved is turning a sorted array of indexes into a series of
+   * index ranges. For a contiguous selection, there will only be one index range.
+   */
+  const indexRanges: IndexRange[] = selection.reduce(
+    (rangesSoFar, currentIndex, j) => {
+      // Note: j refers to the index within this loop, not the index within the transcription itself.
+      const isFinalWord = j === selection.length - 1;
+
+      // Final element, so build a range no matter what
+      if (isFinalWord) {
+        return rangesSoFar.concat({
+          startIndex: currentStartIndex,
+          endIndex: currentIndex + 1,
+        });
+      }
+
+      const nextIndex = selection[j + 1];
+
+      if (currentIndex + 1 === nextIndex) {
+        return rangesSoFar;
+      }
+
+      const newRange: IndexRange = {
+        startIndex: currentStartIndex,
+        endIndex: currentIndex + 1,
+      };
+
+      currentStartIndex = nextIndex;
+
+      return rangesSoFar.concat(newRange);
+    },
+    [] as IndexRange[]
+  );
+
+  return indexRanges;
 };
 
 /*

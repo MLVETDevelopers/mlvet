@@ -6,7 +6,7 @@ import {
   selectionRangeToggled,
 } from '../store/selection/actions';
 import store from '../store/store';
-import { sortNumerical } from '../util';
+import { indicesToRanges, rangeLengthOne, sortNumerical } from '../util';
 
 const { dispatch } = store;
 

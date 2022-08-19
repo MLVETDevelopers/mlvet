@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
-import { ApplicationPage } from './store/currentPage/helpers';
+import { isMergeSplitAllowed } from './store/selection/helpers';
+import { indicesToRanges } from './util';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -15,12 +16,6 @@ export default function StoreChangeObserver() {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
-
-  const currentPage = useSelector(
-    (store: ApplicationStore) => store.currentPage
-  );
-
-  const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selection = useSelector((store: ApplicationStore) => store.selection);
 
@@ -89,27 +84,21 @@ export default function StoreChangeObserver() {
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
 
-  // Update 'go to home' option in menu when page is changed
+  // Update merge/split options in menu
   useEffect(() => {
-    const homeEnabled = currentPage === ApplicationPage.PROJECT;
+    const words = currentProject?.transcription?.words;
 
-    ipc.setHomeEnabled(homeEnabled);
-  }, [currentPage]);
+    if (words === undefined) {
+      ipc.setMergeSplitEnabled(false, false);
+    }
 
-  // Update clipboard options in edit menu when clipboard or selection is changed
-  useEffect(() => {
-    const cutCopyDeleteEnabled = selection.length > 0;
-
-    // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled = selection.length > 0 && clipboard.length > 0;
-
-    ipc.setClipboardEnabled(
-      cutCopyDeleteEnabled,
-      cutCopyDeleteEnabled,
-      pasteEnabled,
-      cutCopyDeleteEnabled
+    const { merge, split } = isMergeSplitAllowed(
+      words,
+      indicesToRanges(selection)
     );
-  }, [clipboard, selection]);
+
+    ipc.setMergeSplitEnabled(merge, split);
+  }, [currentProject, selection]);
 
   // Component doesn't render anything
   return null;

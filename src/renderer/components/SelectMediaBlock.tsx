@@ -1,6 +1,6 @@
 import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { getMediaType } from '../util';
+import { getMediaType } from '../utils/file';
 import colors from '../colors';
 import ipc from '../ipc';
 import { PrimaryButton } from './Blocks/Buttons';

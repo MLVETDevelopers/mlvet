@@ -10,7 +10,7 @@ import ResizeSlider from 'renderer/components/ResizeSlider';
 import { useDebounce } from '@react-hook/debounce';
 import { useWindowResizer } from 'renderer/utils/hooks';
 import { clamp } from 'main/timeUtils';
-import { getAspectRatio, getElementSize } from 'renderer/util';
+import { getAspectRatio, getElementSize } from 'renderer/utils/ui';
 import ExportCard from '../components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { bufferedWordDuration } from '../../sharedUtils';

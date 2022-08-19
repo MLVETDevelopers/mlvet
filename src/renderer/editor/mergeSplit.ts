@@ -5,16 +5,12 @@ import { Word } from 'sharedTypes';
 import store from '../store/store';
 import { getSelectionRanges } from './selection';
 
-const getWords: () => Word[] | null = () => {
-  return store.getState().currentProject?.transcription?.words ?? null;
+const getWords: () => Word[] = () => {
+  return store.getState().currentProject?.transcription?.words ?? [];
 };
 
 export const mergeWords: () => void = () => {
   const words = getWords();
-  if (words === null) {
-    return;
-  }
-
   const ranges = getSelectionRanges();
 
   // sanity check
@@ -27,10 +23,6 @@ export const mergeWords: () => void = () => {
 
 export const splitWord: () => void = () => {
   const words = getWords();
-  if (words === null) {
-    return;
-  }
-
   const ranges = getSelectionRanges();
 
   // sanity check

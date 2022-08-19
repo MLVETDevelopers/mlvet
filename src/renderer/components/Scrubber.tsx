@@ -6,6 +6,7 @@ import { styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from 'renderer/colors';
 import { roundToMs } from 'sharedUtils';
+import { getPercentage } from 'renderer/util';
 
 const Slider = styled(SliderUnstyled)({
   width: '100%',
@@ -75,12 +76,10 @@ const Scrubber = ({
 
   const sliderValue = useMemo(() => {
     // Prevent the slider from going past the end of the video
-    const currentTime =
-      currentTimeSeconds > totalDuration ? totalDuration : currentTimeSeconds;
+    const currentTime = Math.min(currentTimeSeconds, totalDuration);
 
     // Round to two dp to avoid precision errors
-    const percentageCompleted =
-      Math.round((currentTime / totalDuration + Number.EPSILON) * 10000) / 100;
+    const percentageCompleted = getPercentage(currentTime, totalDuration);
 
     return percentageCompleted;
   }, [currentTimeSeconds, totalDuration]);
@@ -107,11 +106,7 @@ const Scrubber = ({
     // Sometimes the actual video playback timer (currentTime) is ever so slightly more then the
     // transcript total duration. This causes the remaining time to be negative. In this case we
     // just return 0.
-    if (remainingSeconds < 0) {
-      return `-${secondToTimestampUI(0, false)}`;
-    }
-
-    return `-${secondToTimestampUI(remainingSeconds, false)}`;
+    return `-${secondToTimestampUI(Math.max(0, remainingSeconds), false)}`;
   };
 
   return (

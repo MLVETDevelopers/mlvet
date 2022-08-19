@@ -274,3 +274,10 @@ export function measureTimeTaken<T extends (...args: any) => any>(func: T) {
   console.log(after - before);
   return returnValue;
 }
+
+/**
+ * Returns the percentage rounded to two dp
+ */
+export const getPercentage = (value: number, total: number) => {
+  return Math.round((value / total) * 10000) / 100;
+};

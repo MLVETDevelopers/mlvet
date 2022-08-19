@@ -104,8 +104,7 @@ const ProjectPage = ({ containerRef }: Props) => {
   };
 
   const onScrubberChange = (newTime: number) => {
-    const nSeconds = newTime - time;
-    videoPreviewControllerRef.current?.seekNSeconds(nSeconds);
+    videoPreviewControllerRef.current?.setPlaybackTime(newTime);
   };
 
   return (

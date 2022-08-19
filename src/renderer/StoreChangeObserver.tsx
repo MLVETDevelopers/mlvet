@@ -7,6 +7,10 @@ import { ApplicationPage } from './store/currentPage/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
+/**
+ * Component that handles sending off side effects when the store changes -
+ * e.g. updating which menu items are active
+ */
 export default function StoreChangeObserver() {
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
@@ -23,6 +27,8 @@ export default function StoreChangeObserver() {
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selection = useSelector((store: ApplicationStore) => store.selection);
+
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   const [hasLoadedRecentProjects, setHasLoadedRecentProjects] =
     useState<boolean>(false);
@@ -110,6 +116,16 @@ export default function StoreChangeObserver() {
       cutCopyDeleteEnabled
     );
   }, [clipboard, selection]);
+
+  // Update undo/redo options in edit menu when undo stack is changed
+  useEffect(() => {
+    const { stack, index } = undoStack;
+
+    const undoEnabled = index > 0;
+    const redoEnabled = index < stack.length;
+
+    ipc.setUndoRedoEnabled(undoEnabled, redoEnabled);
+  }, [undoStack]);
 
   // Component doesn't render anything
   return null;

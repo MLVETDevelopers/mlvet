@@ -9,6 +9,7 @@ const mockIpc = {
   openProject: async () => null,
   setClipboardEnabled: async () => null,
   setHomeEnabled: async () => null,
+  setUndoRedoEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

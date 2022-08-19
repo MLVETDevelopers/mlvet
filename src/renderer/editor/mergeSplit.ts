@@ -1,3 +1,4 @@
+import { isMergeSplitAllowed } from 'renderer/store/selection/helpers';
 import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
 import { makeMergeWords, makeSplitWord } from 'renderer/store/undoStack/ops';
 import { Word } from 'sharedTypes';
@@ -5,32 +6,19 @@ import store from '../store/store';
 import { getSelectionRanges } from './selection';
 
 const getWords: () => Word[] | null = () => {
-  const { currentProject } = store.getState();
-
-  if (currentProject === null) {
-    return null;
-  }
-
-  const { transcription } = currentProject;
-  if (transcription === null) {
-    return null;
-  }
-
-  const { words } = transcription;
-
-  return words;
+  return store.getState().currentProject?.transcription?.words ?? null;
 };
 
 export const mergeWords: () => void = () => {
-  const ranges = getSelectionRanges();
-
-  // Ensure a continuous range selected
-  if (ranges.length !== 1) {
+  const words = getWords();
+  if (words === null) {
     return;
   }
 
-  const words = getWords();
-  if (words === null) {
+  const ranges = getSelectionRanges();
+
+  // sanity check
+  if (!isMergeSplitAllowed(words, ranges).merge) {
     return;
   }
 
@@ -45,10 +33,8 @@ export const splitWord: () => void = () => {
 
   const ranges = getSelectionRanges();
 
-  // Ensure a single word selected
-  if (
-    !(ranges.length === 1 && ranges[0].endIndex - ranges[0].startIndex === 1)
-  ) {
+  // sanity check
+  if (!isMergeSplitAllowed(words, ranges).split) {
     return;
   }
 

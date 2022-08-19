@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assert, isInOriginalOrder } from 'renderer/util';
 import { bufferedWordDuration } from '../../../sharedUtils';
 import { IndexRange, Word } from '../../../sharedTypes';
+import { isMergeSplitAllowed } from '../selection/helpers';
 
 /**
  * Merges words in a range into a single word
@@ -19,17 +19,10 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
 
   const wordsToMerge = words.slice(range.startIndex, range.endIndex);
 
-  // Basic assertions to sanity check usage
-  assert(wordsToMerge.length > 1, 'must select at least two words to merge');
-  assert(
-    wordsToMerge.every((word) => !word.deleted),
-    "can't merge deleted words"
-  );
-  assert(isInOriginalOrder(words, range), 'words must be in original order');
-  assert(
-    wordsToMerge.every((word) => word.fileName === firstWord.fileName),
-    'words must be from the same media'
-  );
+  // Sanity check
+  if (!isMergeSplitAllowed(words, [range]).merge) {
+    return words;
+  }
 
   // Resulting text of the merged words
   const mergedText = wordsToMerge.map((word) => word.word).join(' ');

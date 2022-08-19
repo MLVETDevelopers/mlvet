@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
+import { isMergeSplitAllowed } from './store/selection/helpers';
+import { indicesToRanges } from './util';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -14,6 +16,8 @@ export default function StoreChangeObserver() {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const selection = useSelector((store: ApplicationStore) => store.selection);
 
   const [hasLoadedRecentProjects, setHasLoadedRecentProjects] =
     useState<boolean>(false);
@@ -79,6 +83,22 @@ export default function StoreChangeObserver() {
       );
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
+
+  // Update merge/split options in menu
+  useEffect(() => {
+    const words = currentProject?.transcription?.words;
+
+    if (words === undefined) {
+      ipc.setMergeSplitEnabled(false, false);
+    }
+
+    const { merge, split } = isMergeSplitAllowed(
+      words,
+      indicesToRanges(selection)
+    );
+
+    ipc.setMergeSplitEnabled(merge, split);
+  }, [currentProject, selection]);
 
   // Component doesn't render anything
   return null;

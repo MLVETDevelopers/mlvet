@@ -12,8 +12,8 @@ export type SelectionPayload = IndexRange | null;
  * The list of 'undo' actions is represented in the order the actions are undone.
  */
 export interface Op<T extends DoPayload, U extends UndoPayload> {
-  do: (() => Action<T | SelectionPayload>)[];
-  undo: (() => Action<U | SelectionPayload>)[];
+  do: Action<T | SelectionPayload>[];
+  undo: Action<U | SelectionPayload>[];
 }
 
 /**

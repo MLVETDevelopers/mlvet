@@ -19,6 +19,12 @@ export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
 export const PASTE_WORD = 'PASTE_WORD';
 export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
 
+export const MERGE_WORDS = 'MERGE_WORDS';
+export const UNDO_MERGE_WORDS = 'UNDO_MERGE_WORDS';
+
+export const SPLIT_WORD = 'SPLIT_WORD';
+export const UNDO_SPLIT_WORD = 'UNDO_SPLIT_WORD';
+
 export const transcriptionCreated: (
   transcription: Transcription
 ) => Action<Transcription> = (transcription) => ({

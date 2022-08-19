@@ -18,6 +18,7 @@ import store from './store/store';
 import { removeExtension } from './util';
 import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
 import { selectAllWords } from './editor/selection';
+import { mergeWords, splitWord } from './editor/mergeSplit';
 
 /**
  * Used by backend to initiate saves from front end
@@ -122,20 +123,6 @@ ipc.on(
   }
 );
 
-/*
- * Used by backend to initiate undo from edit menu
- */
-ipc.on('initiate-undo', async () => {
-  dispatchUndo();
-});
-
-/**
- * Used by backend to initiate redo from edit menu
- */
-ipc.on('initiate-redo', async () => {
-  dispatchRedo();
-});
-
 /**
  * Used by backend to initiate export from front end
  */
@@ -157,6 +144,10 @@ const EDITOR_ACTIONS: Record<string, () => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-merge-words': mergeWords,
+  'initiate-split-word': splitWord,
+  'initiate-undo': dispatchUndo,
+  'initiate-redo': dispatchRedo,
 };
 
 // Register the editor actions as IPC receivers
@@ -164,14 +155,6 @@ Object.keys(EDITOR_ACTIONS).forEach((key) => {
   ipc.on(key, async () => {
     EDITOR_ACTIONS[key]();
   });
-});
-
-ipc.on('initiate-merge-words', async () => {
-  mergeWords();
-});
-
-ipc.on('initiate-split-word', async () => {
-  splitWord();
 });
 
 /**

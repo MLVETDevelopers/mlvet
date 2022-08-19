@@ -25,18 +25,6 @@ import {
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 
-export const DELETE_SELECTION = 'DELETE_SELECTION';
-export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
-
-export const PASTE_WORD = 'PASTE_WORD';
-export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
-
-export const MERGE_WORDS = 'MERGE_WORDS';
-export const UNDO_MERGE_WORDS = 'UNDO_MERGE_WORDS';
-
-export const SPLIT_WORD = 'SPLIT_WORD';
-export const UNDO_SPLIT_WORD = 'UNDO_SPLIT_WORD';
-
 export const makeDeleteSelection: (
   ranges: IndexRange[]
 ) => DeleteSelectionOp = (ranges) => ({
@@ -161,8 +149,6 @@ export type MoveWordsOp = Op<
   DeleteSelectionPayload | PasteWordsPayload,
   UndoDeleteSelectionPayload | UndoPasteWordsPayload
 >;
-
-export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
 
 export type MergeWordsOp = Op<MergeWordsPayload, UndoMergeWordsPayload>;
 

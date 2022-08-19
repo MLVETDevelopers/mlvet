@@ -107,7 +107,8 @@ export default function StoreChangeObserver() {
   useEffect(() => {
     const cutCopyDeleteEnabled = selection.length > 0;
 
-    const pasteEnabled = clipboard.length > 0;
+    // Selection must not be empty as we need somewhere to paste to
+    const pasteEnabled = selection.length > 0 && clipboard.length > 0;
 
     ipc.setClipboardEnabled(
       cutCopyDeleteEnabled,

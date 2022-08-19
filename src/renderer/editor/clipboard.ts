@@ -58,5 +58,5 @@ export const pasteText: () => void = () => {
   // End index is exclusive, so subtract one to get the actual word to paste after
   pasteWord(endIndex - 1, clipboard);
 
-  // TODO(chloe): should also seek to the start of the pasted text
+  // TODO(chloe): should also seek to the start of the pasted text.
 };

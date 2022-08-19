@@ -1,3 +1,5 @@
+import { UseButtonParameters } from '@mui/base';
+import { LargeNumberLike } from 'crypto';
 import { BrowserWindow, Menu } from 'electron';
 import { PartialWord, RuntimeProject } from 'sharedTypes';
 import AppState from './AppState';
@@ -6,6 +8,12 @@ export interface SnakeCaseWord {
   word: string;
   duration: number;
   start_time: number; // TODO: change this to camel case before it touches TS
+}
+
+export interface VoskWord {
+  end: number;
+  start: number;
+  word: string;
 }
 
 export interface JSONTranscription {

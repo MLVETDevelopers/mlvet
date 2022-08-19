@@ -14,6 +14,7 @@ import {
   JSONTranscription,
   SnakeCaseWord,
   TranscriptionFunction,
+  VoskWord,
 } from '../../types';
 import { USE_DUMMY } from '../../config';
 import { getAudioExtractPath } from '../../util';
@@ -31,19 +32,18 @@ const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
   startTime: word.start_time,
 });
 
-const dummyTranscribeRequest: () => JSONTranscription = () => {
+const dummyTranscribeRequest: TranscriptionFunction = async () => {
   const rawTranscript = fs
     .readFileSync(
       path.join(__dirname, '../../../../assets/SampleTranscript.json')
     )
     .toString();
-  const jsonTranscript = JSON.parse(rawTranscript);
-  jsonTranscript.transcripts[0].words =
-    jsonTranscript.transcripts[0].words.map(camelCase);
-  return jsonTranscript.transcripts[0];
+  const jsonTranscript = JSON.parse(rawTranscript).transcripts[0];
+  jsonTranscript.words = jsonTranscript.words.map(camelCase);
+  return jsonTranscript;
 };
 
-const transcribeRequest: TranscriptionFunction = async (project) => {
+const deepspeechTranscribeRequest: TranscriptionFunction = async (project) => {
   const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
   const deepspeechPromise = new Promise((resolve) => {
     socket.emit(
@@ -54,10 +54,26 @@ const transcribeRequest: TranscriptionFunction = async (project) => {
       }
     );
   });
-  const jsonTranscript = JSON.parse((await deepspeechPromise) as string);
-  jsonTranscript.transcripts[0].words =
-    jsonTranscript.transcripts[0].words.map(camelCase);
-  return jsonTranscript.transcripts[0];
+  const jsonTranscript = JSON.parse((await deepspeechPromise) as string)
+    .transcripts[0];
+  jsonTranscript.words = jsonTranscript.words.map(camelCase);
+  return jsonTranscript;
+};
+const voskAdaptor: MapCallback<VoskWord, PartialWord> = (result) => ({
+  word: result.word,
+  duration: result.end - result.start,
+  startTime: result.start,
+});
+
+const voskTranscribeRequest: TranscriptionFunction = async (project) => {
+  const rawTranscript = fs
+    .readFileSync(
+      path.join(__dirname, '../../../../assets/SampleTranscriptVosk.json')
+    )
+    .toString();
+  const jsonTranscript = JSON.parse(rawTranscript).alternatives[0];
+  jsonTranscript.words = jsonTranscript.result.map(voskAdaptor);
+  return jsonTranscript;
 };
 
 /**
@@ -106,7 +122,7 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = dummyTranscribeRequest();
+  const transcript = await voskTranscribeRequest(project);
 
   if (!validateJsonTranscription(transcript)) {
     throw new Error('JSON transcript is invalid');

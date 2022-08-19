@@ -1,10 +1,6 @@
 import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
 import { clipboardUpdated } from '../store/clipboard/actions';
-import {
-  selectionCleared,
-  selectionRangeAdded,
-} from '../store/selection/actions';
 import store from '../store/store';
 import { dispatchOp } from '../store/undoStack/opHelpers';
 import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
@@ -20,19 +16,14 @@ const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
 };
 
 export const copyText = () => {
-  const { currentProject } = store.getState();
-  if (currentProject === null) {
-    return;
-  }
-
-  const { transcription } = currentProject;
-  if (transcription === null) {
+  const words = store.getState().currentProject?.transcription?.words;
+  if (words === undefined) {
     return;
   }
 
   const ranges = getSelectionRanges();
   const clipboard = ranges.flatMap((range) =>
-    transcription.words.slice(range.startIndex, range.endIndex)
+    words.slice(range.startIndex, range.endIndex)
   );
   dispatch(clipboardUpdated(clipboard));
 };
@@ -45,8 +36,6 @@ export const deleteText: () => void = () => {
   if (currentProject && currentProject.transcription) {
     dispatchOp(makeDeleteSelection(ranges));
   }
-
-  dispatch(selectionCleared());
 };
 
 export const cutText: () => void = () => {
@@ -68,15 +57,6 @@ export const pasteText: () => void = () => {
 
   // End index is exclusive, so subtract one to get the actual word to paste after
   pasteWord(endIndex - 1, clipboard);
-
-  // Select the pasted text
-  dispatch(selectionCleared());
-  dispatch(
-    selectionRangeAdded({
-      startIndex: endIndex,
-      endIndex: endIndex + clipboard.length,
-    })
-  );
 
   // TODO(chloe): should also seek to the start of the pasted text
 };

@@ -1,4 +1,4 @@
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges } from 'renderer/utils/list';
 
 describe('mapInRanges', () => {
   it('should map values in specified ranges successfully while ignoring others', () => {

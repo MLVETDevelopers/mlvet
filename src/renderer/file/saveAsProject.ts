@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import store from 'renderer/store/store';
-import { removeExtension } from 'renderer/util';
+import { removeExtension } from 'renderer/utils/file';
 import { RuntimeProject } from 'sharedTypes';
 import ipc from 'renderer/ipc';
 import {

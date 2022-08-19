@@ -26,7 +26,7 @@ const makeBasicWord: (
   fileName: 'PLACEHOLDER FILENAME',
 });
 
-describe('Transcription reducer', () => {
+describe('Transcription words reducer', () => {
   it('should handle transcription created', () => {
     expect(
       transcriptionReducer(null, {

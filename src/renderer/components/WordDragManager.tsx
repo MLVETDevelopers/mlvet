@@ -22,7 +22,8 @@ import {
   selectionRangeSetTo,
 } from '../store/selection/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
-import { MouseButton, rangeLengthOne } from '../util';
+import { rangeLengthOne } from '../utils/range';
+import { MouseButton } from '../utils/input';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
 

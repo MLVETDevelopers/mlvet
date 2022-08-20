@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, RefObject, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import Word from './Word';
+import WordDragManager from './WordDragManager';
 import { selectionCleared } from '../../store/selection/actions';
-import DragManager, { RenderTranscription } from './WordDragManager';
-import WordSpace from '../WordSpace';
+import WordSpace from './WordSpace';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -34,14 +34,12 @@ interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
   seekToWord: (wordIndex: number) => void;
-  containerRef: RefObject<HTMLDivElement>;
 }
 
 const TranscriptionBlock = ({
   seekToWord,
   transcription,
   nowPlayingWordIndex,
-  containerRef,
 }: Props) => {
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
@@ -62,70 +60,67 @@ const TranscriptionBlock = ({
     }
   };
 
-  const renderTranscription: RenderTranscription = (
-    onWordMouseDown,
-    onWordMouseMove,
-    dragState,
-    isWordBeingDragged,
-    mouse,
-    mouseThrottled,
-    dropBeforeIndex,
-    setDropBeforeIndex,
-    cancelDrag,
-    dragSelectAnchor,
-    setDragSelectAnchor
-  ) => (
-    <TranscriptionBox
-      onMouseUp={() =>
-        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
-      }
-    >
-      {transcription.words.map((word, index) =>
-        word.deleted ? null : (
-          <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
-            <WordSpace
-              key={`space-${word.originalIndex}-${word.pasteKey}`}
-              isDropMarkerActive={
-                dragState !== null && dropBeforeIndex === index
-              }
-            />
-            <Word
-              key={`word-${word.originalIndex}-${word.pasteKey}`}
-              seekToWord={() => seekToWord(index)}
-              isPlaying={index === nowPlayingWordIndex}
-              isSelected={selectionSet.has(index)}
-              text={word.word}
-              index={index}
-              onMouseDown={onWordMouseDown(index)}
-              onMouseMove={() => onWordMouseMove(index)}
-              dragState={dragState}
-              isBeingDragged={isWordBeingDragged(index)}
-              mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
-              isDropBeforeActive={dropBeforeIndex === index}
-              isDropAfterActive={dropBeforeIndex === index + 1}
-              setDropBeforeIndex={setDropBeforeIndex}
-              cancelDrag={cancelDrag}
-            />
-            {index === transcription.words.length - 1 && (
-              <WordSpace
-                key="space-end"
-                isDropMarkerActive={
-                  dragState !== null &&
-                  dropBeforeIndex === transcription.words.length
-                }
-              />
-            )}
-          </Fragment>
-        )
-      )}
-    </TranscriptionBox>
-  );
-
   return (
-    <DragManager
-      renderTranscription={renderTranscription}
-      containerRef={containerRef}
-    />
+    <WordDragManager>
+      {(
+        onWordMouseDown,
+        onWordMouseMove,
+        dragState,
+        isWordBeingDragged,
+        mouse,
+        mouseThrottled,
+        dropBeforeIndex,
+        setDropBeforeIndex,
+        cancelDrag,
+        dragSelectAnchor,
+        setDragSelectAnchor
+      ) => (
+        <TranscriptionBox
+          onMouseUp={() =>
+            clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
+          }
+        >
+          {transcription.words.map((word, index) =>
+            word.deleted ? null : (
+              <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+                <WordSpace
+                  key={`space-${word.originalIndex}-${word.pasteKey}`}
+                  isDropMarkerActive={
+                    dragState !== null && dropBeforeIndex === index
+                  }
+                />
+                <Word
+                  key={`word-${word.originalIndex}-${word.pasteKey}`}
+                  seekToWord={() => seekToWord(index)}
+                  isPlaying={index === nowPlayingWordIndex}
+                  isSelected={selectionSet.has(index)}
+                  text={word.word}
+                  index={index}
+                  onMouseDown={onWordMouseDown(index)}
+                  onMouseMove={() => onWordMouseMove(index)}
+                  dragState={dragState}
+                  isBeingDragged={isWordBeingDragged(index)}
+                  mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
+                  isDropBeforeActive={dropBeforeIndex === index}
+                  isDropAfterActive={dropBeforeIndex === index + 1}
+                  setDropBeforeIndex={setDropBeforeIndex}
+                  cancelDrag={cancelDrag}
+                />
+                {index === transcription.words.length - 1 && (
+                  <WordSpace
+                    key="space-end"
+                    isDropMarkerActive={
+                      dragState !== null &&
+                      dropBeforeIndex === transcription.words.length
+                    }
+                  />
+                )}
+              </Fragment>
+            )
+          )}
+        </TranscriptionBox>
+      )}
+    </WordDragManager>
   );
 };
 

@@ -1,20 +1,16 @@
 import { Box, Stack } from '@mui/material';
-import { useRef, RefObject } from 'react';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
 } from 'renderer/components/VideoPreview/VideoPreviewController';
-import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import PlaybackManager from 'renderer/components/Editor/PlaybackManager';
 import ResizeManager from 'renderer/components/Editor/ResizeManager';
-import ExportCard from '../components/ExportCard';
+import { useRef } from 'react';
+import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
+import ExportCard from 'renderer/components/ExportCard';
 import { ApplicationStore } from '../store/sharedHelpers';
-
-interface Props {
-  containerRef: RefObject<HTMLDivElement>;
-}
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -22,7 +18,7 @@ It will be primarily composed of the transcription area, an editable text box wh
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
-const ProjectPage = ({ containerRef }: Props) => {
+const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
@@ -91,7 +87,6 @@ const ProjectPage = ({ containerRef }: Props) => {
                       transcription={currentProject.transcription}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       seekToWord={seekToWord}
-                      containerRef={containerRef}
                     />
                   )}
                 </Stack>

@@ -8,7 +8,7 @@ import colors from '../../colors';
 import Word from './Word';
 import { selectionCleared } from '../../store/selection/actions';
 import DragManager, { RenderTranscription } from './WordDragManager';
-import WordSpace from './WordSpace';
+import WordSpace from '../WordSpace';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],

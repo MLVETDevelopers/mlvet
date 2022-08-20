@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeProjectWithoutMedia } from '../../util';
+import { makeProjectWithoutMedia } from '../../utils/project';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
 import { RuntimeProject } from '../../../sharedTypes';

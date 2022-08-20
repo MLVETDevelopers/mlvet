@@ -5,12 +5,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
-import { transcriptionCreated } from '../../store/transcription/actions';
-import { ApplicationStore } from '../../store/sharedHelpers';
 import {
   updateProjectWithExtractedAudio,
   updateProjectWithMedia,
-} from '../../util';
+} from 'renderer/utils/project';
+import { transcriptionCreated } from '../../store/transcription/actions';
+import { ApplicationStore } from '../../store/sharedHelpers';
 import {
   Transcription,
   AsyncState,

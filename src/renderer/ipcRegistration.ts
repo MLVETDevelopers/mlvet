@@ -15,7 +15,7 @@ import {
 import { ApplicationPage } from './store/currentPage/helpers';
 import { dispatchRedo, dispatchUndo } from './store/undoStack/opHelpers';
 import store from './store/store';
-import { removeExtension } from './util';
+import { removeExtension } from './utils/file';
 import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
 import { selectAllWords } from './editor/selection';
 

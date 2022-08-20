@@ -16,8 +16,8 @@ import { Point } from 'electron';
 import { useThrottle } from '@react-hook/throttle';
 import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
+import dispatchOp from 'renderer/store/dispatchOp';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { dispatchOp } from '../../store/undoStack/opHelpers';
 import { makeMoveWords } from '../../store/undoStack/ops';
 import {
   selectionCleared,

@@ -2,7 +2,7 @@ import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
-import { dispatchOp } from '../store/undoStack/opHelpers';
+import dispatchOp from '../store/dispatchOp';
 import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
 
 const { dispatch } = store;

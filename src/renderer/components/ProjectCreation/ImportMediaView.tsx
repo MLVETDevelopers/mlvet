@@ -7,8 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
-import SelectMediaBlock from '../SelectMediaBlock';
-import MediaDisplayOnImport from '../MediaDisplayOnImport';
+import SelectMediaBlock from './SelectMediaBlock';
+import MediaDisplayOnImport from './MediaDisplayOnImport';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 
 interface Props {

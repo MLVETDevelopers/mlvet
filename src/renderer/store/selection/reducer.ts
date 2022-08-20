@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { rangeToIndices } from 'renderer/util';
+import { rangeToIndices } from 'renderer/utils/range';
 import { IndexRange } from '../../../sharedTypes';
 import {
   SELECTION_RANGE_ADDED,

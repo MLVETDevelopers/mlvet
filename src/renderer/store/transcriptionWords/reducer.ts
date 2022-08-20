@@ -2,16 +2,25 @@ import { Reducer } from 'react';
 import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
 import { Action } from '../action';
+import { mergeWords } from './mergeWords';
+import { splitWord } from './splitWord';
 import {
   DELETE_SELECTION,
+  MERGE_WORDS,
   PASTE_WORD,
+  SPLIT_WORD,
   UNDO_DELETE_SELECTION,
+  UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
+  UNDO_SPLIT_WORD,
 } from './actions';
 import {
   DeleteSelectionPayload,
+  MergeWordsPayload,
   PasteWordsPayload,
+  SplitWordPayload,
   UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
   UndoPasteWordsPayload,
 } from './opPayloads';
 
@@ -68,6 +77,32 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
     const suffix = words.slice(startIndex + clipboardLength + 1);
 
     return [...prefix, ...suffix];
+  }
+
+  // Doing a MERGE_WORDS action is identical to undoing a SPLIT_WORD action
+  if (action.type === MERGE_WORDS || action.type === UNDO_SPLIT_WORD) {
+    const { range } = action.payload as MergeWordsPayload;
+
+    return mergeWords(words, range);
+  }
+
+  if (action.type === UNDO_MERGE_WORDS) {
+    const { index, originalWords } = action.payload as UndoMergeWordsPayload;
+
+    const count = originalWords.length;
+
+    const prefix = words.slice(0, index);
+    const suffix = words.slice(index + count);
+
+    return [...prefix, ...originalWords, ...suffix];
+  }
+
+  if (action.type === SPLIT_WORD) {
+    const { index } = action.payload as SplitWordPayload;
+
+    const split = splitWord(words, index);
+
+    return split;
   }
 
   return words;

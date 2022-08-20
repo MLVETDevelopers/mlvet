@@ -9,6 +9,7 @@ import onExportFinish from './file/onExportFinish';
 import exportProject from './file/exportProject';
 import returnToHome from './navigation/returnToHome';
 import { performUndo, performRedo } from './editor/undoRedo';
+import { mergeWords, splitWord } from './editor/mergeSplit';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -25,6 +26,8 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-merge-words': mergeWords,
+  'initiate-split-word': splitWord,
   'initiate-undo': performUndo,
   'initiate-redo': performRedo,
 

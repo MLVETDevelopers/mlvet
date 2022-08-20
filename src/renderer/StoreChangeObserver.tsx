@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
+import { isMergeSplitAllowed } from './store/selection/helpers';
+import { indicesToRanges } from './utils/range';
 import { ApplicationPage } from './store/currentPage/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
@@ -18,6 +20,11 @@ export default function StoreChangeObserver() {
 
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
+  );
+
+  const words = useMemo(
+    () => currentProject?.transcription?.words ?? [],
+    [currentProject]
   );
 
   const currentPage = useSelector(
@@ -116,6 +123,20 @@ export default function StoreChangeObserver() {
       cutCopyDeleteEnabled
     );
   }, [clipboard, selection]);
+
+  // Update merge/split options in edit menu when selection is changed
+  useEffect(() => {
+    if (words.length === 0) {
+      ipc.setMergeSplitEnabled(false, false);
+    }
+
+    const { merge, split } = isMergeSplitAllowed(
+      words,
+      indicesToRanges(selection)
+    );
+
+    ipc.setMergeSplitEnabled(merge, split);
+  }, [words, selection]);
 
   // Update undo/redo options in edit menu when undo stack is changed
   useEffect(() => {

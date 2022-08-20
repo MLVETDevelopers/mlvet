@@ -68,6 +68,11 @@ declare global {
 
       setHomeEnabled: (homeEnabled: boolean) => void;
 
+      setMergeSplitEnabled: (
+        mergeEnabled: boolean,
+        splitEnabled: boolean
+      ) => void;
+
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;

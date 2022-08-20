@@ -15,3 +15,18 @@ export interface UndoPasteWordsPayload {
   startIndex: number;
   clipboardLength: number;
 }
+
+export interface MergeWordsPayload {
+  range: IndexRange;
+}
+
+export interface SplitWordPayload {
+  index: number;
+}
+
+export interface UndoMergeWordsPayload {
+  index: number;
+  originalWords: Word[];
+}
+
+export type UndoSplitWordPayload = MergeWordsPayload;

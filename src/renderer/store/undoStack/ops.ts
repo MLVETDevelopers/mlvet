@@ -1,3 +1,4 @@
+import { rangeLengthOne } from 'renderer/utils/range';
 import { IndexRange, Word } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
@@ -5,14 +6,22 @@ import {
   undoSelectionDeleted,
   undoWordPasted,
   wordPasted,
+  wordsMerged,
+  undoWordsMerged,
+  wordSplit,
+  undoWordSplit,
 } from '../transcriptionWords/actions';
-import { Op } from './helpers';
 import {
-  PasteWordsPayload,
-  UndoPasteWordsPayload,
   DeleteSelectionPayload,
+  MergeWordsPayload,
+  PasteWordsPayload,
+  SplitWordPayload,
   UndoDeleteSelectionPayload,
-} from './opPayloads';
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
+import { Op } from './helpers';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 
@@ -72,17 +81,75 @@ export const makeMoveWords: (
   };
 };
 
+/**
+ * Merges a contiguous range of words into a single word, absorbing any buffers between
+ * into the duration
+ * @param words - current words in the transcription
+ * @param range - range of words to merge into a single word
+ * @returns op containing do and undo for a merge operation
+ */
+export const makeMergeWords: (
+  words: Word[],
+  range: IndexRange
+) => MergeWordsOp = (words, range) => {
+  const originalWords = words.slice(range.startIndex, range.endIndex);
+
+  return {
+    do: [
+      wordsMerged(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(range.startIndex)),
+    ],
+    undo: [
+      undoWordsMerged(range.startIndex, originalWords),
+      selectionCleared(),
+      selectionRangeAdded(range),
+    ],
+  };
+};
+
+/**
+ * Splits a word that contains multiple words in its text, creating new words with evenly split durations.
+ * @param words - current words in the transcription
+ * @param index - index of word to split into multiple words
+ * @returns op containing do and undo for a merge operation
+ */
+export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
+  words,
+  index
+) => {
+  const word = words[index];
+
+  // Number of words that the word will be split into
+  const wordCount = word.word.split(' ').length;
+
+  const range = {
+    startIndex: index,
+    endIndex: index + wordCount,
+  };
+
+  return {
+    do: [wordSplit(index), selectionCleared(), selectionRangeAdded(range)],
+    undo: [
+      undoWordSplit(range),
+      selectionCleared(),
+      selectionRangeAdded(rangeLengthOne(index)),
+    ],
+  };
+};
+
 export type DeleteSelectionOp = Op<
-  DeleteSelectionPayload | null,
-  UndoDeleteSelectionPayload | null | IndexRange
+  DeleteSelectionPayload,
+  UndoDeleteSelectionPayload
 >;
 
-export type PasteWordsOp = Op<
-  PasteWordsPayload | null | IndexRange,
-  UndoPasteWordsPayload | null
->;
+export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
 
 export type MoveWordsOp = Op<
-  DeleteSelectionPayload | PasteWordsPayload | IndexRange | null,
-  UndoDeleteSelectionPayload | UndoPasteWordsPayload | IndexRange | null
+  DeleteSelectionPayload | PasteWordsPayload,
+  UndoDeleteSelectionPayload | UndoPasteWordsPayload
 >;
+
+export type MergeWordsOp = Op<MergeWordsPayload, UndoMergeWordsPayload>;
+
+export type SplitWordOp = Op<SplitWordPayload, UndoSplitWordPayload>;

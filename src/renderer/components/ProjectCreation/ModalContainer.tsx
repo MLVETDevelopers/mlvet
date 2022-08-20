@@ -7,7 +7,7 @@ import NewProjectView from './NewProjectView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
-import CancelProjectModal from '../CancelProjectModal';
+import CancelProjectModal from './CancelProjectModal';
 
 const CustomModal = styled(Modal)({
   display: 'flex',

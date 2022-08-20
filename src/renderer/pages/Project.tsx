@@ -46,7 +46,8 @@ const ProjectPage = () => {
         pause,
         seekForward,
         seekBack,
-        seekToWord
+        seekToWord,
+        setPlaybackTime
       ) => (
         <ResizeManager
           projectPageLayoutRef={projectPageLayoutRef}
@@ -114,7 +115,7 @@ const ProjectPage = () => {
                         currentProject?.transcription?.outputDuration ?? 0
                       }
                       currentTimeSeconds={time}
-                      onScrubberChange={setTime}
+                      onScrubberChange={setPlaybackTime}
                     />
                   </Box>
                 </Stack>

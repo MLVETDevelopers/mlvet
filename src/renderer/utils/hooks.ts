@@ -23,7 +23,7 @@ export const useWindowResizer = (
 };
 
 function useKeypress(
-  eventHandler: () => void | (() => Promise<void>),
+  eventHandler: (() => void) | (() => Promise<void>),
   isKeypressEnabled: boolean,
   keypressCodes: string[]
 ) {

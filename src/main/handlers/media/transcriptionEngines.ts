@@ -16,11 +16,7 @@ interface VoskWord {
   start: number;
   word: string;
 }
-export enum TranscriptionEngine {
-  DUMMY,
-  VOSK,
-  DEEPSPEECH,
-}
+
 const voskAdaptor: MapCallback<VoskWord, PartialWord> = (result) => ({
   word: result.word,
   duration: result.end - result.start,
@@ -36,6 +32,14 @@ const voskTranscribeRequest: TranscriptionFunction = async (project) => {
   jsonTranscript.words = jsonTranscript.result.map(voskAdaptor);
   return jsonTranscript;
 };
+
+/**
+ * Replace the start_time attribute with startTime (can be generalised further but shouldn't
+ * need this once python outputs camelcase anyway)
+ * @param word snake cased partial word
+ * @returns camel cased partial word
+ *
+ */
 const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
   word: word.word,
   duration: word.duration,
@@ -71,10 +75,17 @@ const deepspeechTranscribeRequest: TranscriptionFunction = async (project) => {
   return jsonTranscript;
 };
 
+// To add a new transcription engine, create a function of type Transcription function
 type TranscriptionFunction = (
   project: RuntimeProject
 ) => Promise<JSONTranscription>;
-
+// Then add the new engine to this enum
+export enum TranscriptionEngine {
+  DUMMY,
+  VOSK,
+  DEEPSPEECH,
+}
+// Then add to the mapping the TranscriptionEngine enum and the TranscriptionFunction function
 const getTranscriptionFunction = new Map<
   TranscriptionEngine,
   TranscriptionFunction
@@ -86,6 +97,13 @@ getTranscriptionFunction.set(
 );
 getTranscriptionFunction.set(TranscriptionEngine.DUMMY, dummyTranscribeRequest);
 
+/**
+ * Runs the transcription using the selected transcription engine
+ * @param project the file to transcribe
+ * @param transcriptionEngine The engine type used to transcribe
+ * @returns a promise returning the JSONTranscription object of the transcription data
+ *
+ */
 export const transcribe = async (
   project: RuntimeProject,
   transcriptionEngine: TranscriptionEngine

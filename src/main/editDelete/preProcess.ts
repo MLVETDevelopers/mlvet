@@ -5,22 +5,9 @@ import {
   Transcription,
   Word,
 } from '../../sharedTypes';
-import { JSONTranscription, SnakeCaseWord } from '../types';
+import { JSONTranscription } from '../types';
 import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
-
-/**
- * Replace the start_time attribute with startTime (can be generalised further but shouldn't
- * need this once python outputs camelcase anyway)
- * @param word snake cased partial word
- * @returns camel cased partial word
- *
- */
-const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
-  word: word.word,
-  duration: word.duration,
-  startTime: word.start_time,
-});
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word

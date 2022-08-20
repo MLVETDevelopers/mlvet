@@ -8,12 +8,12 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       words: [
         {
           word: 'abc',
-          start_time: 0,
+          startTime: 0,
           duration: 1,
         },
         {
           word: 'def',
-          start_time: 1,
+          startTime: 1,
           duration: 1,
         },
       ],
@@ -64,17 +64,17 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       words: [
         {
           word: 'heat',
-          start_time: 5,
+          startTime: 5,
           duration: 2,
         },
         {
           word: 'from',
-          start_time: 8,
+          startTime: 8,
           duration: 3,
         },
         {
           word: 'fire',
-          start_time: 11.2,
+          startTime: 11.2,
           duration: 0.9,
         },
       ],
@@ -137,17 +137,17 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       words: [
         {
           word: 'heat',
-          start_time: 5,
+          startTime: 5,
           duration: 2.5,
         },
         {
           word: 'from',
-          start_time: 8,
+          startTime: 8,
           duration: 3,
         },
         {
           word: 'fire',
-          start_time: 11.2,
+          startTime: 11.2,
           duration: 0.9,
         },
       ],

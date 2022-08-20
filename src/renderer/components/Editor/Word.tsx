@@ -7,9 +7,9 @@ import {
   RefObject,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
-import { pointIsInsideRect } from 'renderer/util';
-import colors from '../colors';
-import { handleSelectWord } from '../editor/selection';
+import { pointIsInsideRect } from 'renderer/utils/geometry';
+import colors from '../../colors';
+import { handleSelectWord } from '../../editor/selection';
 import { DragState } from './WordDragManager';
 
 const makeWordInner = (isDragActive: boolean) =>

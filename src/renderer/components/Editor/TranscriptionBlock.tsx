@@ -3,11 +3,11 @@ import { Box } from '@mui/material';
 import { Fragment, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
-import { ApplicationStore } from '../store/sharedHelpers';
-import colors from '../colors';
+import { ApplicationStore } from '../../store/sharedHelpers';
+import colors from '../../colors';
 import Word from './Word';
-import { selectionCleared } from '../store/selection/actions';
 import WordDragManager from './WordDragManager';
+import { selectionCleared } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 
 const TranscriptionBox = styled(Box)({

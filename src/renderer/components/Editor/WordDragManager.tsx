@@ -17,14 +17,15 @@ import { useThrottle } from '@react-hook/throttle';
 import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { dispatchOp } from '../store/undoStack/opHelpers';
-import { makeMoveWords } from '../store/undoStack/ops';
+import { dispatchOp } from '../../store/undoStack/opHelpers';
+import { makeMoveWords } from '../../store/undoStack/ops';
 import {
   selectionCleared,
   selectionRangeSetTo,
-} from '../store/selection/actions';
-import { ApplicationStore } from '../store/sharedHelpers';
-import { MouseButton, rangeLengthOne } from '../util';
+} from '../../store/selection/actions';
+import { rangeLengthOne } from '../../utils/range';
+import { MouseButton } from '../../utils/input';
+import { ApplicationStore } from '../../store/sharedHelpers';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
 

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges } from 'renderer/utils/list';
 import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
 import {
   TRANSCRIPTION_CREATED,

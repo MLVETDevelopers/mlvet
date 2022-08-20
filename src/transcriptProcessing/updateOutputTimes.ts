@@ -48,12 +48,7 @@ const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
   const lastWord = currentTranscriptWords.pop();
 
   if (lastWord) {
-    return roundToMs(
-      lastWord.outputStartTime +
-        lastWord.duration +
-        lastWord.bufferDurationBefore +
-        lastWord.bufferDurationAfter
-    );
+    return roundToMs(lastWord.outputStartTime + bufferedWordDuration(lastWord));
   }
 
   // If there are no words in the filtered word list, we assume duration is 0

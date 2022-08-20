@@ -1,9 +1,9 @@
 import { Box, styled, Typography, Stack } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { getMediaType } from '../utils/file';
-import colors from '../colors';
-import ipc from '../ipc';
-import { PrimaryButton } from './Blocks/Buttons';
+import { getMediaType } from '../../utils/file';
+import ipc from '../../ipc';
+import colors from '../../colors';
+import { PrimaryButton } from '../Blocks/Buttons';
 
 const { getFileNameWithExtension } = ipc;
 

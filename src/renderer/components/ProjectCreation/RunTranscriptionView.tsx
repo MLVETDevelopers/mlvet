@@ -16,7 +16,7 @@ import {
   AsyncState,
   RuntimeProject,
 } from '../../../sharedTypes';
-import MediaDisplayTranscribeProgress from '../MediaDisplayTranscribeProgress';
+import MediaDisplayTranscribeProgress from './MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
 import { PrimaryButton } from '../Blocks/Buttons';
 

@@ -9,8 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
-import colors from '../colors';
-import { AsyncState } from '../../sharedTypes';
+import colors from '../../colors';
+import { AsyncState } from '../../../sharedTypes';
 
 interface Props {
   fileName: string | null;

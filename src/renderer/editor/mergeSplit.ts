@@ -1,5 +1,5 @@
 import { isMergeSplitAllowed } from 'renderer/store/selection/helpers';
-import { dispatchOp } from 'renderer/store/undoStack/opHelpers';
+import dispatchOp from 'renderer/store/dispatchOp';
 import { makeMergeWords, makeSplitWord } from 'renderer/store/undoStack/ops';
 import { Word } from 'sharedTypes';
 import store from '../store/store';

@@ -8,9 +8,11 @@ import {
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
+  SPLIT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
+  UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
 
 /**
@@ -38,6 +40,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       UNDO_PASTE_WORD,
       MERGE_WORDS,
       UNDO_MERGE_WORDS,
+      SPLIT_WORD,
+      UNDO_SPLIT_WORD,
     ].includes(action.type)
   ) {
     return {

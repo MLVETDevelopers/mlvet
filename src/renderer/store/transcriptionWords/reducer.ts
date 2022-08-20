@@ -2,8 +2,8 @@ import { Reducer } from 'react';
 import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
 import { Action } from '../action';
-import { mergeWords } from '../transcription/mergeWords';
-import { splitWord } from '../transcription/splitWord';
+import { mergeWords } from './mergeWords';
+import { splitWord } from './splitWord';
 import {
   DELETE_SELECTION,
   MERGE_WORDS,
@@ -100,7 +100,9 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === SPLIT_WORD) {
     const { index } = action.payload as SplitWordPayload;
 
-    return splitWord(words, index);
+    const split = splitWord(words, index);
+
+    return split;
   }
 
   return words;

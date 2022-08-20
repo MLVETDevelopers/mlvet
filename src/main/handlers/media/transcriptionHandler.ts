@@ -1,80 +1,19 @@
-import path from 'path';
-import fs from 'fs';
-import { io } from 'socket.io-client';
 import ffmpeg from 'fluent-ffmpeg';
+import path from 'path';
+import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
-  MapCallback,
   PartialWord,
   RuntimeProject,
   Transcription,
 } from '../../../sharedTypes';
-import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import preProcessTranscript from '../../editDelete/preProcess';
-import {
-  JSONTranscription,
-  SnakeCaseWord,
-  TranscriptionFunction,
-  VoskWord,
-} from '../../types';
-import { USE_DUMMY } from '../../config';
+import { ffmpegPath, ffprobePath } from '../../ffUtils';
+import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
+import { transcribe, TranscriptionEngine } from './transcriptionEngines';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
-
-interface JSONTranscriptionContainer {
-  transcripts: JSONTranscription[];
-}
-
-const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
-  word: word.word,
-  duration: word.duration,
-  startTime: word.start_time,
-});
-
-const dummyTranscribeRequest: TranscriptionFunction = async () => {
-  const rawTranscript = fs
-    .readFileSync(
-      path.join(__dirname, '../../../../assets/SampleTranscript.json')
-    )
-    .toString();
-  const jsonTranscript = JSON.parse(rawTranscript).transcripts[0];
-  jsonTranscript.words = jsonTranscript.words.map(camelCase);
-  return jsonTranscript;
-};
-
-const deepspeechTranscribeRequest: TranscriptionFunction = async (project) => {
-  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
-  const deepspeechPromise = new Promise((resolve) => {
-    socket.emit(
-      'transcribe',
-      getAudioExtractPath(project.id),
-      (transcription: string) => {
-        resolve(transcription);
-      }
-    );
-  });
-  const jsonTranscript = JSON.parse((await deepspeechPromise) as string)
-    .transcripts[0];
-  jsonTranscript.words = jsonTranscript.words.map(camelCase);
-  return jsonTranscript;
-};
-const voskAdaptor: MapCallback<VoskWord, PartialWord> = (result) => ({
-  word: result.word,
-  duration: result.end - result.start,
-  startTime: result.start,
-});
-
-const voskTranscribeRequest: TranscriptionFunction = async (project) => {
-  const rawTranscript = fs
-    .readFileSync(
-      path.join(__dirname, '../../../../assets/SampleTranscriptVosk.json')
-    )
-    .toString();
-  const jsonTranscript = JSON.parse(rawTranscript).alternatives[0];
-  jsonTranscript.words = jsonTranscript.result.map(voskAdaptor);
-  return jsonTranscript;
-};
 
 /**
  * This is an easy (but kind of annoying) approach to validating incoming JSON.
@@ -85,7 +24,7 @@ const voskTranscribeRequest: TranscriptionFunction = async (project) => {
  * (e.g. https://github.com/YousefED/typescript-json-schema)
  */
 
-const validateWord = <(word: any) => word is SnakeCaseWord>(
+const validateWord = <(word: any) => word is PartialWord>(
   ((word) =>
     typeof word.word === 'string' &&
     typeof word.duration === 'number' &&
@@ -122,7 +61,7 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = await voskTranscribeRequest(project);
+  const transcript = await transcribe(project, TRANSCRIPTION_ENGINE);
 
   if (!validateJsonTranscription(transcript)) {
     throw new Error('JSON transcript is invalid');

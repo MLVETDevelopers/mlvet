@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { isInOriginalOrder } from 'renderer/util';
+import { isInOriginalOrder } from 'renderer/utils/words';
 import { IndexRange, Word } from 'sharedTypes';
 
 /**

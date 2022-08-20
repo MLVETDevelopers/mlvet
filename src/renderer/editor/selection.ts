@@ -1,3 +1,5 @@
+import { sortNumerical } from 'renderer/utils/list';
+import { indicesToRanges, rangeLengthOne } from 'renderer/utils/range';
 import { IndexRange, OperatingSystems } from '../../sharedTypes';
 import ipc from '../ipc';
 import {
@@ -6,7 +8,6 @@ import {
   selectionRangeToggled,
 } from '../store/selection/actions';
 import store from '../store/store';
-import { indicesToRanges, rangeLengthOne, sortNumerical } from '../util';
 
 const { dispatch } = store;
 

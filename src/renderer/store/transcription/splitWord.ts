@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { rangeLengthOne } from '../../util';
+import { rangeLengthOne } from '../../utils/range';
 import { Word } from '../../../sharedTypes';
 import { isMergeSplitAllowed } from '../selection/helpers';
 

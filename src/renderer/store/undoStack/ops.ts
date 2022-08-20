@@ -1,4 +1,4 @@
-import { rangeLengthOne } from 'renderer/util';
+import { rangeLengthOne } from 'renderer/utils/range';
 import { IndexRange, Word } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
@@ -10,18 +10,18 @@ import {
   undoWordsMerged,
   wordSplit,
   undoWordSplit,
-} from '../transcription/actions';
-import { Op } from './helpers';
+} from '../transcriptionWords/actions';
 import {
-  PasteWordsPayload,
-  UndoPasteWordsPayload,
   DeleteSelectionPayload,
-  UndoDeleteSelectionPayload,
   MergeWordsPayload,
-  UndoMergeWordsPayload,
-  UndoSplitWordPayload,
+  PasteWordsPayload,
   SplitWordPayload,
-} from './opPayloads';
+  UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
+import { Op } from './helpers';
 
 // More info on the undo stack: https://docs.google.com/document/d/1fBLBj_I3Y4AgRnIHzJ-grsXvzoKUBA03KNRv3DzABAg/edit
 

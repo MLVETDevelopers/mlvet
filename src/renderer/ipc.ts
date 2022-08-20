@@ -10,6 +10,7 @@ const mockIpc = {
   setClipboardEnabled: async () => null,
   setMergeSplitEnabled: async () => null,
   setHomeEnabled: async () => null,
+  setUndoRedoEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

@@ -1,6 +1,6 @@
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges } from '../list';
 
-describe('mapInRanges', () => {
+describe('list utils', () => {
   it('should map values in specified ranges successfully while ignoring others', () => {
     expect(
       mapInRanges(

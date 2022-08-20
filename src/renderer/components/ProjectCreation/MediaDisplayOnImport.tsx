@@ -2,7 +2,7 @@ import { styled, Box, Stack, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
-import colors from '../colors';
+import colors from '../../colors';
 
 interface Props {
   fileName: string | null;

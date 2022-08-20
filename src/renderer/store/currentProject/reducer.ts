@@ -9,13 +9,13 @@ import {
   PROJECT_SAVED,
 } from './actions';
 import transcriptionReducer from '../transcription/reducer';
+import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
-  TRANSCRIPTION_CREATED,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
-} from '../transcription/actions';
+} from '../transcriptionWords/actions';
 import {
   EXPORT_PROGRESS_UPDATE,
   START_EXPORT,

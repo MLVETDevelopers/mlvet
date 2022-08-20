@@ -1,6 +1,5 @@
 import { useDebounce } from '@react-hook/debounce';
 import { useEffect } from 'react';
-import { FunctionReturnVoid, FunctionReturnPromiseVoid } from 'sharedTypes';
 
 // eslint-disable-next-line import/prefer-default-export
 export const useWindowResizer = (
@@ -24,7 +23,7 @@ export const useWindowResizer = (
 };
 
 function useKeypress(
-  eventHandler: FunctionReturnPromiseVoid | FunctionReturnVoid,
+  eventHandler: () => void | (() => Promise<void>),
   isKeypressEnabled: boolean,
   keypressCodes: string[]
 ) {

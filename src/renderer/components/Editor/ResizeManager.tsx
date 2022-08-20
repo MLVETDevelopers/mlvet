@@ -12,7 +12,7 @@ import {
 import { useDebounce } from '@react-hook/debounce';
 import { useWindowResizer } from 'renderer/utils/hooks';
 import { clamp } from 'main/timeUtils';
-import { getAspectRatio, getElementSize } from 'renderer/util';
+import { getAspectRatio, getElementSize } from 'renderer/utils/ui';
 
 // Used for calculating the max size of the video preview
 const pageLayoutPadding = { x: 96 * 2 + 2, y: 64 };

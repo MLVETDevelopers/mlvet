@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { mapInRanges } from 'renderer/util';
+import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
 import { Action } from '../action';
 import {

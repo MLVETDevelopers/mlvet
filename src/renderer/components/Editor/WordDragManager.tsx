@@ -5,6 +5,7 @@ import React, {
   MouseEventHandler,
   RefObject,
   SetStateAction,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -16,6 +17,7 @@ import { useThrottle } from '@react-hook/throttle';
 import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
 import dispatchOp from 'renderer/store/dispatchOp';
+import { ContainerRefContext } from 'renderer/RootContainerContext';
 import { makeMoveWords } from '../../store/undoStack/ops';
 import {
   selectionCleared,
@@ -51,11 +53,12 @@ export type DragState = null | {
 };
 
 interface Props {
-  renderTranscription: RenderTranscription;
-  containerRef: RefObject<HTMLDivElement>;
+  children: RenderTranscription;
 }
 
-const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
+const WordDragManager = ({ children }: Props) => {
+  const containerRef = useContext(ContainerRefContext);
+
   const dispatch = useDispatch();
 
   const words = useSelector(
@@ -184,7 +187,7 @@ const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
 
   return (
     <div onMouseUp={onMouseUp}>
-      {renderTranscription(
+      {children(
         onWordMouseDown,
         onWordMouseMoveDebounced,
         dragState,

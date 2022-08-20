@@ -6,7 +6,7 @@ import {
   projectOpened,
   projectSaved,
 } from 'renderer/store/currentProject/actions';
-import { removeExtension } from '../util';
+import { removeExtension } from '../utils/file';
 
 const saveAsProject: () => Promise<void> = async () => {
   // Retrieve current project state from redux

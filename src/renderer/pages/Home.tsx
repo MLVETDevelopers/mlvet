@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import NewProjectBlock from '../components/NewProjectBlock';
+import NewProjectBlock from '../components/ProjectCreation/NewProjectBlock';
 import RecentProjectsBlock from '../components/RecentProjectsBlock';
 import { ApplicationStore } from '../store/sharedHelpers';
 

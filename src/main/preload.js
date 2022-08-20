@@ -50,6 +50,9 @@ contextBridge.exposeInMainWorld('electron', {
   setHomeEnabled: (homeEnabled) =>
     ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
+  setMergeSplitEnabled: (mergeEnabled, splitEnabled) =>
+    ipcRenderer.invoke('set-merge-split-enabled', mergeEnabled, splitEnabled),
+
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 

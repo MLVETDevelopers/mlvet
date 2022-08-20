@@ -5,8 +5,7 @@ import SliderUnstyled, {
 import { styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from 'renderer/colors';
-import { roundToMs } from 'sharedUtils';
-import { getPercentage } from 'renderer/util';
+import { getPercentage, roundToMs } from 'sharedUtils';
 
 const Slider = styled(SliderUnstyled)({
   width: '100%',

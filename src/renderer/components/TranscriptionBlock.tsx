@@ -17,6 +17,7 @@ interface Transcription {
   duration: number;
 }
 
+// Renamed to IWord so it doesn't clash with the imported 'Word' component
 interface IWord {
   // Text content of the word
   word: string;
@@ -123,6 +124,27 @@ const takeGroup: TakeGroup = {
   activeTakes: [0, 1],
 };
 
+const singleTake =
+  "This is a single take on it's own outside of any take groups.";
+const singleTakeWords = singleTake.split(' ').map((word, index) => {
+  return {
+    word,
+    startTime: index * 0.5 + 110,
+    duration: 0.5,
+    outputStartTime: index * 0.5 + 110,
+    bufferDurationBefore: 0,
+    bufferDurationAfter: 0,
+    deleted: false,
+    originalIndex: index,
+    pasteKey: 0,
+    fileName: 'test',
+  } as IWord;
+});
+
+const takeMock: Take = {
+  words: singleTakeWords,
+};
+
 const mockTranscription: Transcription = {
   confidence: 0.5,
   words: [],
@@ -131,6 +153,7 @@ const mockTranscription: Transcription = {
 
 textWords.forEach((e) => mockTranscription.words.push(e));
 mockTranscription.words.push(takeGroup);
+mockTranscription.words.push(takeMock);
 
 /* console.log(mockTranscription.words[0])
 console.log(mockTranscription.words.length)
@@ -181,6 +204,10 @@ const TranscriptionBlock = ({
 
   function instanceofIWord(object: any): object is IWord {
     return 'word' in object;
+  }
+
+  function instanceofTake(object: any): object is Take {
+    return 'words' in object;
   }
 
   function instanceofTakeGroup(object: any): object is TakeGroup {
@@ -290,6 +317,57 @@ const TranscriptionBlock = ({
               </div>
             );
           });
+        }
+
+        if (instanceofTake(word)) {
+          return (
+            <div
+              id="take"
+              style={{
+                border: 'true',
+                borderStyle: 'solid',
+                borderWidth: '0px',
+                borderLeftWidth: '2px',
+                borderColor: 'yellow',
+              }}
+            >
+              {word.words.map((wordA, indexA) => {
+                return wordA.deleted ? null : (
+                  <Fragment key={`${wordA.originalIndex}-${wordA.pasteKey}`}>
+                    {space(
+                      `space-${wordA.originalIndex}-${wordA.pasteKey}`,
+                      dragState !== null && dropBeforeIndex === indexA
+                    )}
+                    <Word
+                      key={`word-${wordA.originalIndex}-${wordA.pasteKey}`}
+                      seekToWord={() => seekToWord(indexA)}
+                      isPlaying={indexA === nowPlayingWordIndex}
+                      isSelected={selectionSet.has(indexA)}
+                      text={wordA.word}
+                      index={indexA}
+                      onMouseDown={onWordMouseDown(indexA)}
+                      onMouseMove={() => onWordMouseMove(indexA)}
+                      dragState={dragState}
+                      isBeingDragged={isWordBeingDragged(indexA)}
+                      mouse={
+                        isWordBeingDragged(indexA) ? mouse : mouseThrottled
+                      }
+                      isDropBeforeActive={dropBeforeIndex === indexA}
+                      isDropAfterActive={dropBeforeIndex === indexA + 1}
+                      setDropBeforeIndex={setDropBeforeIndex}
+                      cancelDrag={cancelDrag}
+                    />
+                    {indexA === transcription.words.length - 1 &&
+                      space(
+                        `space-end`,
+                        dragState !== null &&
+                          dropBeforeIndex === transcription.words.length
+                      )}
+                  </Fragment>
+                );
+              })}
+            </div>
+          );
         }
 
         return word.deleted ? null : (

@@ -25,7 +25,9 @@ jobs:
 
       # Installing dependencies with higher timeout in case of slow network
       - name: Install dependencies
-        run: yarn install:slow
+        run: |
+          yarn run install:slow
+          yarn
 
       # Installing concurrently because sometimes doesn't install as part of yarn on macos
       - name: Install Concurrently
@@ -62,7 +64,9 @@ jobs:
 
       # Installing dependencies with higher timeout in case of slow network
       - name: Install dependencies
-        run: yarn install:slow
+        run: |
+          yarn run install:slow
+          yarn
 
       # Installing electron-builder because doesn't install as part of yarn on windows
       - name: Install Electron builder
@@ -100,11 +104,9 @@ jobs:
 
       # Installing dependencies with higher timeout in case of slow network
       - name: Install dependencies
-        run: yarn install:slow
-
-      # Installing concurrently because sometimes doesn't install as part of yarn on linux
-      - name: Install Concurrently
-        run: yarn add concurrently
+        run: |
+          yarn run install:slow
+          yarn
 
       # Build and publish electron
       - name: Build Electron

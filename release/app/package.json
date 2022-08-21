@@ -1,6 +1,7 @@
 {
   "name": "electron-react-boilerplate",
   "description": "A foundation for scalable desktop apps",
+  "version": "0.0.1",
   "main": "./dist/main/main.js",
   "author": {
     "name": "Electron React Boilerplate Maintainers",

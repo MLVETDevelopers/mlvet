@@ -27,6 +27,10 @@ jobs:
       - name: Install dependencies
         run: yarn install:slow
 
+      # Installing concurrently because sometimes doesn't install as part of yarn on macos
+      - name: Install Concurrently
+        run: yarn add concurrently
+
       # Build and publish electron
       - name: Build Electron
         env:
@@ -97,6 +101,10 @@ jobs:
       # Installing dependencies with higher timeout in case of slow network
       - name: Install dependencies
         run: yarn install:slow
+
+      # Installing concurrently because sometimes doesn't install as part of yarn on linux
+      - name: Install Concurrently
+        run: yarn add concurrently
 
       # Build and publish electron
       - name: Build Electron

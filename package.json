@@ -1,8 +1,8 @@
 {
   "name": "mlvet",
   "description": "Machine Learning Video Editor Toolkit",
-  "version": "0.0.1",
-  "main": "./src/main/main.ts",
+  "version": "0.0.2",
+  "main": "./release/app/dist/main/main.ts",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",

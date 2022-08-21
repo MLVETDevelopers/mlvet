@@ -113,38 +113,38 @@ jobs:
       - name: Build
         run: yarn run build
 
+      - name: See working dir
+        run: pwd
+
       - name: List .
         run: ls .
-
-      # - name: List ./dist
-      #   run: ls ./dist
 
       - name: List ./release
         run: ls ./release
 
-      # - name: List ./release/build
-      #   run: ls ./release/build
-
       - name: List ./release/app
         run: ls ./release/app
-
-      - name: See working dir
-        run: pwd
 
       - name: List ./release/app/dist
         run: ls ./release/app/dist
 
-      # Build and publish electron
-      # - name: Build Electron
-      #   env:
-      #     ELECTRON: true
-      #     PUBLISH_FOR_PULL_REQUEST: false
-      #     ELECTRON_CACHE: $HOME/.cache/electron
-      #     ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
-      #     USE_HARD_LINKS: false
-      #     YARN_GPG: no
-      #     GITHUB_TOKEN: ${{ secrets.github_token }}
-      #   run: yarn run publish:linux
+      - name: List ./release/app/dist/main
+        run: ls ./release/app/dist/main
 
-      # - name: List all files in the release directory
-      #   run: ls ./release/build
+      - name: List ./release/app/dist/renderer
+        run: ls ./release/app/dist/renderer
+
+      # Build and publish electron
+      - name: Build Electron
+        env:
+          ELECTRON: true
+          PUBLISH_FOR_PULL_REQUEST: false
+          ELECTRON_CACHE: $HOME/.cache/electron
+          ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+          USE_HARD_LINKS: false
+          YARN_GPG: no
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        run: yarn run publish:linux
+
+      - name: List all files in the release directory
+        run: ls ./release/build

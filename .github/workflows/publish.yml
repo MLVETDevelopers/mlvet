@@ -30,8 +30,8 @@ jobs:
           yarn
 
       # Installing concurrently because sometimes doesn't install as part of yarn on macos
-      - name: Install Concurrently
-        run: yarn add concurrently
+      # - name: Install Concurrently
+      #   run: yarn add concurrently
 
       # Build and publish electron
       - name: Build Electron
@@ -69,8 +69,8 @@ jobs:
           yarn
 
       # Installing electron-builder because doesn't install as part of yarn on windows
-      - name: Install Electron builder
-        run: yarn add electron-builder
+      # - name: Install Electron builder
+      #   run: yarn add electron-builder
 
       # Build and publish electron
       - name: Build Electron

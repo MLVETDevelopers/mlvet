@@ -128,6 +128,12 @@ jobs:
       - name: List ./release/app
         run: ls ./release/app
 
+      - name: See working dir
+        run: pwd
+
+      - name: List ./release/app/dist
+        run: ls ./release/app/dist
+
       # Build and publish electron
       # - name: Build Electron
       #   env:

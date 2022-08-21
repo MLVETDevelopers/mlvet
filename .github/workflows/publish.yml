@@ -113,11 +113,11 @@ jobs:
       - name: Build
         run: yarn run build
 
-      - name: List ./dist
-        run: ls ./dist
-
       - name: List .
         run: ls .
+
+      # - name: List ./dist
+      #   run: ls ./dist
 
       - name: List ./release
         run: ls ./release

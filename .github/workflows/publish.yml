@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies
         run: yarn install:slow
 
+      # Build and publish electron
       - name: Build Electron
         env:
           ELECTRON: true
@@ -63,6 +64,7 @@ jobs:
       - name: Install Electron builder
         run: yarn add electron-builder
 
+      # Build and publish electron
       - name: Build Electron
         env:
           ELECTRON: true
@@ -96,6 +98,7 @@ jobs:
       - name: Install dependencies
         run: yarn install:slow
 
+      # Build and publish electron
       - name: Build Electron
         env:
           ELECTRON: true

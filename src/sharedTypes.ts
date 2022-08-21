@@ -34,11 +34,11 @@ export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
   confidence: number;
-  words: Word[];
+  words: WordComponent[];
   duration: number;
 }
 
-export interface Word {
+export interface WordComponent {
   // Text content of the word
   word: string;
   // Start time in the original transcript

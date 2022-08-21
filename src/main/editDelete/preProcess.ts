@@ -1,10 +1,10 @@
 import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
-import { MapCallback, Transcription, Word } from '../../sharedTypes';
+import { MapCallback, Transcription, WordComponent } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
 
-type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+type PartialWord = Pick<WordComponent, 'word' | 'startTime' | 'duration'>;
 
 /**
  * Replace the start_time attribute with startTime (can be generalised further but shouldn't
@@ -22,7 +22,9 @@ const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
  */
-const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
+const injectAttributes: (
+  fileName: string
+) => MapCallback<PartialWord, WordComponent> =
   (fileName: string) => (word, index) => ({
     ...word,
     outputStartTime: word.startTime,
@@ -54,8 +56,8 @@ const calculateAverageSilenceDuration = (
 };
 
 const calculateBufferDurationBefore: (
-  word: Word,
-  prevWord: Word | null
+  word: WordComponent,
+  prevWord: WordComponent | null
 ) => number = (word, prevWord) => {
   if (prevWord === null) {
     return word.startTime;
@@ -68,8 +70,8 @@ const calculateBufferDurationBefore: (
 };
 
 const calculateBufferDurationAfter: (
-  word: Word,
-  nextWord: Word | null,
+  word: WordComponent,
+  nextWord: WordComponent | null,
   totalDuration: number
 ) => number = (word, nextWord, totalDuration) => {
   const wordEndTime = word.startTime + word.duration;
@@ -88,7 +90,9 @@ const calculateBufferDurationAfter: (
  * For words in the middle of the transcript, the buffers are halved with the words
  * either side. For start/end words, they get the whole buffer to the start or end.
  */
-const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
+const calculateBuffers: (
+  totalDuration: number
+) => MapCallback<WordComponent, WordComponent> =
   (totalDuration) => (word, i, words) => {
     const isFirstWord = i === 0;
     const isLastWord = i === words.length - 1;

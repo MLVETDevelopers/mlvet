@@ -2,7 +2,7 @@ import {
   RuntimeProject,
   ProjectMetadata,
   RecentProject,
-  Word,
+  WordComponent,
 } from './sharedTypes';
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
@@ -33,5 +33,5 @@ export const makeRecentProject: (
   return recentProject as RecentProject;
 };
 
-export const bufferedWordDuration: (word: Word) => number = (word) =>
+export const bufferedWordDuration: (word: WordComponent) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;

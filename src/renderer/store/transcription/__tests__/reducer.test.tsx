@@ -5,7 +5,7 @@ import {
   UNDO_PASTE_WORD,
   TRANSCRIPTION_CREATED,
 } from 'renderer/store/transcription/actions';
-import { Word } from 'sharedTypes';
+import { WordComponent } from 'sharedTypes';
 import transcriptionReducer from '../reducer';
 
 const makeBasicWord: (
@@ -13,7 +13,12 @@ const makeBasicWord: (
   text: string,
   isDeleted?: boolean,
   pasteKey?: number
-) => Word = (originalIndex, text, isDeleted = false, pasteKey = 0) => ({
+) => WordComponent = (
+  originalIndex,
+  text,
+  isDeleted = false,
+  pasteKey = 0
+) => ({
   word: text,
   startTime: 0,
   duration: 0,

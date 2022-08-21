@@ -1,8 +1,10 @@
 import '@testing-library/jest-dom';
-import { Word } from '../../sharedTypes';
+import { WordComponent } from '../../sharedTypes';
 import convertTranscriptToCuts from '../transcriptToCuts';
 
-const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
+const makeBasicWord: (override: Partial<WordComponent>) => WordComponent = (
+  override
+) => ({
   word: 'test',
   duration: 0,
   startTime: 0,

@@ -8,7 +8,7 @@ import {
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
 } from './actions';
-import { Transcription, Word } from '../../../sharedTypes';
+import { Transcription, WordComponent } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
@@ -41,7 +41,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if (action.type === DELETE_SELECTION) {
     const { ranges } = action.payload as DeleteSelectionPayload;
 
-    const markDeleted = (word: Word) => ({ ...word, deleted: true });
+    const markDeleted = (word: WordComponent) => ({ ...word, deleted: true });
 
     const newWords = mapInRanges(transcription.words, markDeleted, ranges);
 
@@ -54,7 +54,10 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if (action.type === UNDO_DELETE_SELECTION) {
     const { ranges } = action.payload as UndoDeleteSelectionPayload;
 
-    const markUndeleted = (word: Word) => ({ ...word, deleted: false });
+    const markUndeleted = (word: WordComponent) => ({
+      ...word,
+      deleted: false,
+    });
 
     return {
       ...transcription,

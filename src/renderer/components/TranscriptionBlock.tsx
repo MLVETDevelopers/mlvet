@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { Fragment, RefObject, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription, Word as WordType } from 'sharedTypes';
+import { Transcription, WordComponent } from 'sharedTypes';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
@@ -80,31 +80,6 @@ const TranscriptionBlock = ({
       []
     );
 
-  const renderEditMarker = (
-    word: WordType,
-    index: number
-  ): JSX.Element | null => {
-    const isInOriginalPos = word.originalIndex === index;
-
-    // word index has changed but still in the same relative position
-    const hasNotMoved =
-      index !== 0
-        ? transcription.words[index - 1].originalIndex ===
-          word.originalIndex - 1
-        : transcription.words[index + 1].originalIndex ===
-          word.originalIndex + 1;
-
-    // preventing two markers from being next to each other
-    const hasNoNeighbourMarker =
-      index !== 0
-        ? !transcription.words[index - 1].deleted
-        : !transcription.words[index + 1].deleted;
-
-    return (isInOriginalPos || hasNotMoved) && hasNoNeighbourMarker ? (
-      <EditMarker />
-    ) : null;
-  };
-
   const renderTranscription: RenderTranscription = (
     onWordMouseDown,
     onWordMouseMove,
@@ -125,7 +100,7 @@ const TranscriptionBlock = ({
     >
       {transcription.words.map((word, index) =>
         word.deleted ? (
-          renderEditMarker(word, index)
+          <EditMarker transcription={transcription} word={word} index={index} />
         ) : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
             {space(

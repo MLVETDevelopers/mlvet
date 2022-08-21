@@ -1,4 +1,4 @@
-import { IndexRange, Word } from '../../../sharedTypes';
+import { IndexRange, WordComponent } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
   selectionDeleted,
@@ -29,7 +29,7 @@ export const makeDeleteSelection: (
 
 export const makePasteWord: (
   pasteTo: number,
-  clipboard: Word[]
+  clipboard: WordComponent[]
 ) => PasteWordsOp = (pasteTo, clipboard) => {
   return {
     do: [
@@ -45,7 +45,7 @@ export const makePasteWord: (
 };
 
 export const makeMoveWords: (
-  words: Word[],
+  words: WordComponent[],
   fromRanges: IndexRange[],
   toAfterIndex: number
 ) => MoveWordsOp = (words, fromRanges, toAfterIndex) => {

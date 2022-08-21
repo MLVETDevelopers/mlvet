@@ -1,4 +1,4 @@
-import { IndexRange, Transcription, Word } from '../../../sharedTypes';
+import { IndexRange, Transcription, WordComponent } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
@@ -38,7 +38,7 @@ export const undoSelectionDeleted: (
 
 export const wordPasted: (
   startIndex: number,
-  clipboard: Word[]
+  clipboard: WordComponent[]
 ) => Action<PasteWordsPayload> = (startIndex, clipboard) => ({
   type: PASTE_WORD,
   payload: { startIndex, clipboard },

@@ -1,4 +1,4 @@
-import { IndexRange, Word } from '../../../sharedTypes';
+import { IndexRange, WordComponent } from '../../../sharedTypes';
 
 export interface DeleteSelectionPayload {
   ranges: IndexRange[];
@@ -6,7 +6,7 @@ export interface DeleteSelectionPayload {
 
 export interface PasteWordsPayload {
   startIndex: number;
-  clipboard: Word[];
+  clipboard: WordComponent[];
 }
 
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;

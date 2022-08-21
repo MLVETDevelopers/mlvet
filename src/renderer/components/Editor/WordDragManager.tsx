@@ -5,6 +5,7 @@ import React, {
   MouseEventHandler,
   RefObject,
   SetStateAction,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -15,14 +16,16 @@ import { Point } from 'electron';
 import { useThrottle } from '@react-hook/throttle';
 import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
-import { dispatchOp } from '../store/undoStack/opHelpers';
-import { makeMoveWords } from '../store/undoStack/ops';
+import dispatchOp from 'renderer/store/dispatchOp';
+import { ContainerRefContext } from 'renderer/RootContainerContext';
+import { makeMoveWords } from '../../store/undoStack/ops';
 import {
   selectionCleared,
   selectionRangeSetTo,
-} from '../store/selection/actions';
-import { ApplicationStore } from '../store/sharedHelpers';
-import { MouseButton, rangeLengthOne } from '../util';
+} from '../../store/selection/actions';
+import { rangeLengthOne } from '../../utils/range';
+import { MouseButton } from '../../utils/input';
+import { ApplicationStore } from '../../store/sharedHelpers';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
 
@@ -50,11 +53,12 @@ export type DragState = null | {
 };
 
 interface Props {
-  renderTranscription: RenderTranscription;
-  containerRef: RefObject<HTMLDivElement>;
+  children: RenderTranscription;
 }
 
-const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
+const WordDragManager = ({ children }: Props) => {
+  const containerRef = useContext(ContainerRefContext);
+
   const dispatch = useDispatch();
 
   const words = useSelector(
@@ -183,7 +187,7 @@ const WordDragManager = ({ renderTranscription, containerRef }: Props) => {
 
   return (
     <div onMouseUp={onMouseUp}>
-      {renderTranscription(
+      {children(
         onWordMouseDown,
         onWordMouseMoveDebounced,
         dragState,

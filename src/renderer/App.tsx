@@ -1,10 +1,11 @@
 import { Box, CssBaseline, styled, ThemeProvider } from '@mui/material';
-import { ReactElement, RefObject, useRef } from 'react';
+import { ReactElement, useContext } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import './App.css';
 import colors from './colors';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
+import { ContainerRefContext, ContextStore } from './RootContainerContext';
 import { ApplicationPage } from './store/currentPage/helpers';
 import { ApplicationStore } from './store/sharedHelpers';
 import applicationStore from './store/store';
@@ -17,21 +18,33 @@ const RootContainer = styled(Box)({
   height: '100vh',
 });
 
-interface RouterProps {
-  containerRef: RefObject<HTMLDivElement>;
-}
-
-function Router({ containerRef }: RouterProps) {
+function Router() {
   const currentPage = useSelector(
     (store: ApplicationStore) => store.currentPage
   );
 
   const pageComponents: Record<ApplicationPage, ReactElement> = {
     [ApplicationPage.HOME]: <HomePage />,
-    [ApplicationPage.PROJECT]: <ProjectPage containerRef={containerRef} />,
+    [ApplicationPage.PROJECT]: <ProjectPage />,
   };
 
   return pageComponents[currentPage];
+}
+
+/**
+ * Must be a child component of App so that the ContextStore can be accessed
+ */
+function AppContents() {
+  // Ref of the overall page container used for handling mouse events
+  const containerRefContext = useContext(ContainerRefContext);
+
+  return (
+    <CssBaseline>
+      <RootContainer ref={containerRefContext}>
+        <Router />
+      </RootContainer>
+    </CssBaseline>
+  );
 }
 
 interface Props {
@@ -39,19 +52,14 @@ interface Props {
 }
 
 export default function App({ hasStoreChangeObserver }: Props) {
-  // Ref of the overall page container used for handling mouse events
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
     <Provider store={applicationStore}>
-      {hasStoreChangeObserver && <StoreChangeObserver />}
-      <ThemeProvider theme={theme}>
-        <CssBaseline>
-          <RootContainer ref={containerRef}>
-            <Router containerRef={containerRef} />
-          </RootContainer>
-        </CssBaseline>
-      </ThemeProvider>
+      <ContextStore>
+        {hasStoreChangeObserver && <StoreChangeObserver />}
+        <ThemeProvider theme={theme}>
+          <AppContents />
+        </ThemeProvider>
+      </ContextStore>
     </Provider>
   );
 }

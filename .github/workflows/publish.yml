@@ -122,8 +122,8 @@ jobs:
       - name: List ./release
         run: ls ./release
 
-      - name: List ./release/build
-        run: ls ./release/build
+      # - name: List ./release/build
+      #   run: ls ./release/build
 
       - name: List ./release/app
         run: ls ./release/app

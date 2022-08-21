@@ -11,6 +11,7 @@ jobs:
 
   # Mac (including M1)
   build_on_mac:
+    if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: macos-latest
     steps:
       # Checkout this branch
@@ -50,6 +51,7 @@ jobs:
 
   # Windows
   build_on_win:
+    if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
       # Checkout this branch
@@ -108,17 +110,35 @@ jobs:
           yarn run install:slow
           yarn
 
-      # Build and publish electron
-      - name: Build Electron
-        env:
-          ELECTRON: true
-          PUBLISH_FOR_PULL_REQUEST: false
-          ELECTRON_CACHE: $HOME/.cache/electron
-          ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
-          USE_HARD_LINKS: false
-          YARN_GPG: no
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-        run: yarn run publish:linux
+      - name: Build
+        run: yarn run build
 
-      - name: List all files in the release directory
+      - name: List ./dist
+        run: ls ./dist
+
+      - name: List .
+        run: ls .
+
+      - name: List ./release
+        run: ls ./release
+
+      - name: List ./release/build
         run: ls ./release/build
+
+      - name: List ./release/app
+        run: ls ./release/app
+
+      # Build and publish electron
+      # - name: Build Electron
+      #   env:
+      #     ELECTRON: true
+      #     PUBLISH_FOR_PULL_REQUEST: false
+      #     ELECTRON_CACHE: $HOME/.cache/electron
+      #     ELECTRON_BUILDER_CACHE: $HOME/.cache/electron-builder
+      #     USE_HARD_LINKS: false
+      #     YARN_GPG: no
+      #     GITHUB_TOKEN: ${{ secrets.github_token }}
+      #   run: yarn run publish:linux
+
+      # - name: List all files in the release directory
+      #   run: ls ./release/build

@@ -1,6 +1,7 @@
 {
   "name": "mlvet",
   "description": "Machine Learning Video Editor Toolkit",
+  "version": "0.0.1",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -16,9 +17,10 @@
     "test": "jest",
     "prepare": "husky install",
     "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write",
-    "publish:l": "electron-builder -l --publish always",
-    "publish:m": "electron-builder -m  --x64 --arm64 --publish always",
-    "publish:w": "electron-builder -w --x64 --ia32 --publish always"
+    "install:slow": "yarn config set network-timeout 100000",
+    "publish:linux": "yarn run build && electron-builder -l --publish always",
+    "publish:mac": "yarn run build && electron-builder -m  --x64 --arm64 --publish always",
+    "publish:windows": "yarn run build && electron-builder -w --x64 --ia32 --publish always"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -36,8 +38,8 @@
     ]
   },
   "build": {
-    "productName": "MachineLearningVideoEditingToolkit",
-    "appId": "edu.monash.mlvet",
+    "productName": "MLVET",
+    "appId": "edu.monash.mlvet-CI",
     "asar": true,
     "asarUnpack": [
       "**\\*.{node,dll}",
@@ -46,7 +48,6 @@
       "node_modules/ffmpeg-static/package.json"
     ],
     "files": [
-      "dist",
       "node_modules",
       "package.json"
     ],
@@ -100,13 +101,15 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "chloebrett",
-      "repo": "mlvet"
+      "owner": "hhen0005",
+      "repo": "mlvet-CI",
+      "releaseType": "release",
+      "vPrefixedTagName": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chloebrett/mlvet.git"
+    "url": "git+https://github.com/chloebrett/mlvet-CI.git"
   },
   "jest": {
     "testURL": "http://localhost/",

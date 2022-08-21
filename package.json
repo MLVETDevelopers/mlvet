@@ -93,7 +93,7 @@
       "category": "Development"
     },
     "directories": {
-      "app": "release/app",
+      "app": ".",
       "buildResources": "assets",
       "output": "release/build"
     },

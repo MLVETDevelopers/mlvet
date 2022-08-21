@@ -9,6 +9,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       confidence: 1,
       duration: 100,
+      outputDuration: 100,
       words: [
         {
           word: ' ',
@@ -59,6 +60,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       confidence: 1,
       duration: 100,
+      outputDuration: 100,
       words: [
         {
           word: 'abc',

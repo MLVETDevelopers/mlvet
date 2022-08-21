@@ -9,6 +9,13 @@ import {
 export const roundToMs: (input: number) => number = (input) =>
   Math.round(input * 1000) / 1000;
 
+/**
+ * Returns the percentage rounded to two dp
+ */
+export const getPercentage = (value: number, total: number) => {
+  return Math.round((value / total) * 10000) / 100;
+};
+
 export const makeRecentProject: (
   project: Pick<RuntimeProject, keyof (RuntimeProject | RecentProject)>,
   metadata: ProjectMetadata,

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { updateOutputStartTimes } from 'transcriptProcessing/updateOutputStartTimes';
+import { updateOutputTimes } from 'transcriptProcessing/updateOutputTimes';
 import { Transcription } from '../../../sharedTypes';
 import { Action } from '../action';
 import transcriptionWordsReducer from '../transcriptionWords/reducer';
@@ -46,7 +46,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   ) {
     return {
       ...transcription,
-      words: updateOutputStartTimes(
+      ...updateOutputTimes(
         transcriptionWordsReducer(transcription.words, action)
       ),
     };

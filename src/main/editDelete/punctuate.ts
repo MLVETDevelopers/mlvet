@@ -1,4 +1,4 @@
-import { MapCallback, PartialWord, Word } from '../../sharedTypes';
+import { MapCallback, PartialWord } from '../../sharedTypes';
 
 type Thresholds = { lowerCommaThreshold: number; upperCommaThreshold: number };
 

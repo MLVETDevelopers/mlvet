@@ -10,7 +10,7 @@ import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
-import { transcribe, TranscriptionEngine } from './transcriptionEngines';
+import transcribe from './transcribe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);

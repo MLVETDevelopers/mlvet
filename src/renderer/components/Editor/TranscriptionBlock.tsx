@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
-import { editWordIndexCleared } from 'renderer/store/editWordIndex/actions';
+import { editWordFinished } from 'renderer/store/editWord/actions';
+import { wordCorrected } from 'renderer/store/transcriptionWords/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import Word from './Word';
@@ -48,13 +49,11 @@ const TranscriptionBlock = ({
     (store: ApplicationStore) => store.selection
   );
 
-  const editWordIndex = useSelector(
-    (store: ApplicationStore) => store.editWordIndex
-  );
+  const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const selectionSet = useMemo(
-    () => (editWordIndex === null ? new Set(selectionArray) : new Set()),
-    [selectionArray, editWordIndex]
+    () => (editWord === null ? new Set(selectionArray) : new Set()),
+    [selectionArray, editWord]
   );
 
   const dispatch = useDispatch();
@@ -63,11 +62,14 @@ const TranscriptionBlock = ({
     dragSelectAnchor: number | null,
     clearAnchor: () => void
   ) => void = (dragSelectAnchor, clearAnchor) => {
+    // If there is an edit in progress, save and close it
+    if (editWord !== null) {
+      dispatch(wordCorrected(editWord.index, editWord.text));
+      dispatch(editWordFinished());
+    }
+
     if (dragSelectAnchor == null) {
       dispatch(selectionCleared());
-
-      // Also clear the edit word index to cancel any edits
-      dispatch(editWordIndexCleared());
     } else {
       clearAnchor();
     }
@@ -123,7 +125,8 @@ const TranscriptionBlock = ({
                       makeCorrectWord(transcription.words, index, newText)
                     )
                   }
-                  isBeingEdited={editWordIndex === index}
+                  isBeingEdited={editWord?.index === index}
+                  editText={editWord?.text ?? null}
                 />
                 {index === transcription.words.length - 1 && (
                   <WordSpace

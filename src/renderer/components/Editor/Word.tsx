@@ -11,9 +11,10 @@ import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
-  editWordIndexCleared,
-  editWordIndexSet,
-} from 'renderer/store/editWordIndex/actions';
+  editWordStarted,
+  editWordUpdated,
+  editWordFinished,
+} from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
 import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
@@ -54,6 +55,7 @@ interface Props {
   cancelDrag: () => void;
   updateWordText: (newText: string) => void;
   isBeingEdited: boolean;
+  editText: string | null;
 }
 
 const Word = ({
@@ -73,24 +75,17 @@ const Word = ({
   cancelDrag,
   updateWordText,
   isBeingEdited,
+  editText,
 }: Props) => {
-  const [editText, setEditText] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isBeingEdited) {
-      if (inputRef?.current !== null) {
-        console.log(inputRef.current);
-        // inputRef.current.select();
-      }
-    } else {
-      // Clear text when edit is stopped externally
-      setEditText(null);
+    if (isBeingEdited && inputRef?.current !== null) {
+      inputRef.current.select();
     }
   }, [isBeingEdited, inputRef]);
-
-  const dispatch = useDispatch();
 
   // For handling receiving double-clicks on a word
   const [awaitingSecondClick, setAwaitingSecondClick] =
@@ -163,8 +158,7 @@ const Word = ({
   ]);
 
   const startEditing = () => {
-    dispatch(editWordIndexSet(index));
-    setEditText(text);
+    dispatch(editWordStarted(index, text));
   };
 
   const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
@@ -175,7 +169,9 @@ const Word = ({
 
     setAwaitingSecondClick(true);
     const DOUBLE_CLICK_THRESHOLD = 500; // ms
-    setTimeout(() => setAwaitingSecondClick(false), DOUBLE_CLICK_THRESHOLD);
+    setTimeout(() => {
+      setAwaitingSecondClick(false);
+    }, DOUBLE_CLICK_THRESHOLD);
 
     seekToWord();
     handleSelectWord(event, index);
@@ -231,8 +227,7 @@ const Word = ({
     }
 
     updateWordText(editText);
-    setEditText(null);
-    dispatch(editWordIndexCleared());
+    dispatch(editWordFinished());
   };
 
   const submitIfEnter = (event: React.KeyboardEvent) => {
@@ -245,6 +240,10 @@ const Word = ({
     () => makeWordInner(dragState !== null),
     [dragState]
   );
+
+  const setEditText = (value: string) => {
+    dispatch(editWordUpdated(value));
+  };
 
   return (
     <WordInner

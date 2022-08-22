@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
+  saveChangesDialog: (mainWindow, projectFileName) =>
+    ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
+
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
   writeRecentProjects: (recentProjects) =>
@@ -34,6 +37,9 @@ contextBridge.exposeInMainWorld('electron', {
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
 
+  setExportEnabled: (exportEnabled) =>
+    ipcRenderer.invoke('set-export-enabled', exportEnabled),
+
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(
       'set-file-representation',
@@ -44,11 +50,11 @@ contextBridge.exposeInMainWorld('electron', {
   setHomeEnabled: (homeEnabled) =>
     ipcRenderer.invoke('set-home-enabled', homeEnabled),
 
+  setMergeSplitEnabled: (mergeEnabled, splitEnabled) =>
+    ipcRenderer.invoke('set-merge-split-enabled', mergeEnabled, splitEnabled),
+
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
-
-  setExportEnabled: (exportEnabled) =>
-    ipcRenderer.invoke('set-export-enabled', exportEnabled),
 
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),

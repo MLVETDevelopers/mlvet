@@ -17,7 +17,7 @@
     "test": "jest",
     "prepare": "husky install",
     "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write",
-    "install:slow": "yarn config set network-timeout 100000",
+    "install:slow": "yarn config set network-timeout 100000 && yarn",
     "publish:linux": "yarn pre:package && yarn run build && electron-builder -l --publish always",
     "publish:mac": "yarn pre:package && yarn run build && electron-builder -m  --x64 --arm64 --publish always",
     "publish:windows": "yarn pre:package && yarn run build && electron-builder -w --x64 --ia32 --publish always"

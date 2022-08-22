@@ -4,7 +4,7 @@ import { Fragment, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
-import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops';
+import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import Word from './Word';

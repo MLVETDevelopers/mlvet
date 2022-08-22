@@ -18,9 +18,7 @@ const EditMarker = ({ transcription, word, index }: Props) => {
 
   // preventing two markers from being next to each other
   const hasNoNeighbourMarker =
-    index !== 0
-      ? !transcription.words[index - 1].deleted
-      : !transcription.words[index + 1].deleted;
+    index !== 0 ? !transcription.words[index - 1].deleted : true;
 
   const notPasted = word.pasteKey === 0;
 

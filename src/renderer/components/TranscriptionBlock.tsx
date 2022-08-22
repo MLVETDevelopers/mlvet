@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { Fragment, RefObject, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription, WordComponent } from 'sharedTypes';
+import { Transcription } from 'sharedTypes';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
 import Word from './Word';
@@ -100,7 +100,12 @@ const TranscriptionBlock = ({
     >
       {transcription.words.map((word, index) =>
         word.deleted ? (
-          <EditMarker transcription={transcription} word={word} index={index} />
+          <EditMarker
+            key={word.originalIndex}
+            transcription={transcription}
+            word={word}
+            index={index}
+          />
         ) : (
           <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
             {space(

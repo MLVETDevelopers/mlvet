@@ -45,7 +45,7 @@ interface Props {
 }
 
 const NewProjectBlock = ({ isFullSize }: Props) => {
-  const [isShowingModal, setShowingModal] = useState<boolean>(false);
+  const [isShowingModal, setShowingModal] = useState(false);
 
   const closeModal = () => setShowingModal(false);
   const showModal = () => setShowingModal(true);

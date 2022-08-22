@@ -2,7 +2,7 @@ name: Build & Publish Electron Releases
 
 on:
   push:
-    branches: ['chore/CI-publish']
+    branches: ['uat']
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

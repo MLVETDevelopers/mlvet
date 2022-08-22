@@ -41,7 +41,7 @@
     "productName": "MLVET",
     "extraMetadata": {
       "//": "--- Prop 'version' will be automatically set by electron-builder ---",
-      "version": "0.0.1"
+      "version": "0.0.2"
     },
     "appId": "edu.monash.mlvet-CI",
     "asar": true,

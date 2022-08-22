@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux';
 import {
   editWordStarted,
   editWordUpdated,
-  editWordFinished,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
 import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
@@ -53,7 +52,7 @@ interface Props {
   isDropAfterActive: boolean;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
-  updateWordText: (newText: string) => void;
+  submitWordEdit: () => void;
   isBeingEdited: boolean;
   editText: string | null;
 }
@@ -73,7 +72,7 @@ const Word = ({
   isDropAfterActive,
   setDropBeforeIndex,
   cancelDrag,
-  updateWordText,
+  submitWordEdit,
   isBeingEdited,
   editText,
 }: Props) => {
@@ -221,18 +220,9 @@ const Word = ({
     ...dragStyles,
   };
 
-  const completeEdit = () => {
-    if (editText === null && editText !== '') {
-      return;
-    }
-
-    updateWordText(editText);
-    dispatch(editWordFinished());
-  };
-
   const submitIfEnter = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      completeEdit();
+    if (['Enter', 'Escape'].includes(event.key)) {
+      submitWordEdit();
     }
   };
 

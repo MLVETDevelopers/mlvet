@@ -6,7 +6,6 @@ import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
-import { wordCorrected } from 'renderer/store/transcriptionWords/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import Word from './Word';
@@ -58,15 +57,26 @@ const TranscriptionBlock = ({
 
   const dispatch = useDispatch();
 
+  const submitWordEdit: () => void = () => {
+    if (
+      editWord !== null &&
+      editWord.text !== '' &&
+      editWord.text !== transcription.words[editWord.index].word
+    ) {
+      dispatchOp(
+        makeCorrectWord(transcription.words, editWord.index, editWord.text)
+      );
+    }
+
+    dispatch(editWordFinished());
+  };
+
   const clearSelection: (
     dragSelectAnchor: number | null,
     clearAnchor: () => void
   ) => void = (dragSelectAnchor, clearAnchor) => {
     // If there is an edit in progress, save and close it
-    if (editWord !== null) {
-      dispatch(wordCorrected(editWord.index, editWord.text));
-      dispatch(editWordFinished());
-    }
+    submitWordEdit();
 
     if (dragSelectAnchor == null) {
       dispatch(selectionCleared());
@@ -120,11 +130,7 @@ const TranscriptionBlock = ({
                   isDropAfterActive={dropBeforeIndex === index + 1}
                   setDropBeforeIndex={setDropBeforeIndex}
                   cancelDrag={cancelDrag}
-                  updateWordText={(newText: string) =>
-                    dispatchOp(
-                      makeCorrectWord(transcription.words, index, newText)
-                    )
-                  }
+                  submitWordEdit={submitWordEdit}
                   isBeingEdited={editWord?.index === index}
                   editText={editWord?.text ?? null}
                 />

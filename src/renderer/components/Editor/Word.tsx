@@ -9,9 +9,16 @@ import {
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
-import colors from '../../colors';
-import { handleSelectWord } from '../../editor/selection';
+import { useDispatch } from 'react-redux';
+import {
+  editWordIndexCleared,
+  editWordIndexSet,
+} from 'renderer/store/editWordIndex/actions';
+import { TextField } from '@mui/material';
+import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
+import { handleSelectWord } from '../../editor/selection';
+import colors from '../../colors';
 
 const makeWordInner = (isDragActive: boolean) =>
   styled('div')({
@@ -46,6 +53,7 @@ interface Props {
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
   updateWordText: (newText: string) => void;
+  isBeingEdited: boolean;
 }
 
 const Word = ({
@@ -64,8 +72,25 @@ const Word = ({
   setDropBeforeIndex,
   cancelDrag,
   updateWordText,
+  isBeingEdited,
 }: Props) => {
   const [editText, setEditText] = useState<string | null>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isBeingEdited) {
+      if (inputRef?.current !== null) {
+        console.log(inputRef.current);
+        // inputRef.current.select();
+      }
+    } else {
+      // Clear text when edit is stopped externally
+      setEditText(null);
+    }
+  }, [isBeingEdited, inputRef]);
+
+  const dispatch = useDispatch();
 
   // For handling receiving double-clicks on a word
   const [awaitingSecondClick, setAwaitingSecondClick] =
@@ -138,6 +163,7 @@ const Word = ({
   ]);
 
   const startEditing = () => {
+    dispatch(editWordIndexSet(index));
     setEditText(text);
   };
 
@@ -164,6 +190,9 @@ const Word = ({
   };
 
   const highlightStyles: React.CSSProperties = (() => {
+    if (isBeingEdited) {
+      return {};
+    }
     if (isSelected || isBeingDragged) {
       return {
         background: `${colors.yellow[500]}cc`,
@@ -197,12 +226,13 @@ const Word = ({
   };
 
   const completeEdit = () => {
-    if (editText === null) {
+    if (editText === null && editText !== '') {
       return;
     }
 
     updateWordText(editText);
     setEditText(null);
+    dispatch(editWordIndexCleared());
   };
 
   const submitIfEnter = (event: React.KeyboardEvent) => {
@@ -224,10 +254,21 @@ const Word = ({
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >
-      {editText !== null ? (
-        <input
+      {isBeingEdited ? (
+        <TextField
+          variant="standard"
+          inputRef={inputRef}
+          inputProps={{
+            sx: {
+              height: '1em',
+              width: getTextWidth(
+                editText ?? '',
+                getCanvasFont(inputRef?.current)
+              ),
+            },
+          }}
           type="text"
-          value={editText}
+          value={editText ?? text}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
+import { editWordIndexCleared } from 'renderer/store/editWordIndex/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import Word from './Word';
@@ -47,7 +48,14 @@ const TranscriptionBlock = ({
     (store: ApplicationStore) => store.selection
   );
 
-  const selectionSet = useMemo(() => new Set(selectionArray), [selectionArray]);
+  const editWordIndex = useSelector(
+    (store: ApplicationStore) => store.editWordIndex
+  );
+
+  const selectionSet = useMemo(
+    () => (editWordIndex === null ? new Set(selectionArray) : new Set()),
+    [selectionArray, editWordIndex]
+  );
 
   const dispatch = useDispatch();
 
@@ -57,6 +65,9 @@ const TranscriptionBlock = ({
   ) => void = (dragSelectAnchor, clearAnchor) => {
     if (dragSelectAnchor == null) {
       dispatch(selectionCleared());
+
+      // Also clear the edit word index to cancel any edits
+      dispatch(editWordIndexCleared());
     } else {
       clearAnchor();
     }
@@ -112,6 +123,7 @@ const TranscriptionBlock = ({
                       makeCorrectWord(transcription.words, index, newText)
                     )
                   }
+                  isBeingEdited={editWordIndex === index}
                 />
                 {index === transcription.words.length - 1 && (
                   <WordSpace

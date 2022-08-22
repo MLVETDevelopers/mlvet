@@ -33,3 +33,58 @@ export const getAspectRatio: (
   const elemSize = getElementSize(elem);
   return elemSize ? elemSize.width / elemSize.height : defaultAspectRatio;
 };
+
+/**
+ * Measure text logic adapted from
+ * https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+
+// canvas object gets reused for better performance
+const GLOBAL_CANVAS = document.createElement('canvas');
+
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ *
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ *
+ * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+export const getTextWidth: (
+  text: string,
+  font: string | null
+) => number | null = (text, font) => {
+  if (font === null) {
+    return null;
+  }
+
+  const canvas = GLOBAL_CANVAS;
+
+  const context = canvas.getContext('2d');
+  if (context !== null) {
+    context.font = font;
+  }
+  const metrics = context?.measureText(text);
+  return metrics?.width ?? null;
+};
+
+const getCssStyle: (element: HTMLElement, prop: string) => string = (
+  element,
+  prop
+) => {
+  return window.getComputedStyle(element, null).getPropertyValue(prop);
+};
+
+export const getCanvasFont: (element: HTMLElement | null) => string | null = (
+  element
+) => {
+  if (element === null) {
+    return null;
+  }
+
+  const fontWeight = getCssStyle(element, 'font-weight') || 'normal';
+  const fontSize = getCssStyle(element, 'font-size') || '16px';
+  const fontFamily = getCssStyle(element, 'font-family') || 'Times New Roman';
+
+  return `${fontWeight} ${fontSize} ${fontFamily}`;
+};

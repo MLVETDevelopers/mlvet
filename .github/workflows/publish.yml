@@ -8,10 +8,9 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   # Mac (including M1)
   build_on_mac:
-    if: github.event.base_ref == 'refs/heads/$BRANCH'
+    # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: macos-latest
     steps:
       # Checkout this branch
@@ -51,7 +50,7 @@ jobs:
 
   # Windows
   build_on_win:
-    if: github.event.base_ref == 'refs/heads/$BRANCH'
+    # if: github.event.base_ref == 'refs/heads/$BRANCH'
     runs-on: windows-latest
     steps:
       # Checkout this branch
@@ -109,30 +108,6 @@ jobs:
         run: |
           yarn run install:slow
           yarn
-
-      - name: Build
-        run: yarn run build
-
-      - name: See working dir
-        run: pwd
-
-      - name: List .
-        run: ls .
-
-      - name: List ./release
-        run: ls ./release
-
-      - name: List ./release/app
-        run: ls ./release/app
-
-      - name: List ./release/app/dist
-        run: ls ./release/app/dist
-
-      - name: List ./release/app/dist/main
-        run: ls ./release/app/dist/main
-
-      - name: List ./release/app/dist/renderer
-        run: ls ./release/app/dist/renderer
 
       # Build and publish electron
       - name: Build Electron

@@ -15,7 +15,10 @@ export const secondToTimestamp: (num: number) => string = (num) => {
   return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
 };
 
-export const secondToTimestampUI = (time: number): string => {
+export const secondToTimestampUI = (
+  time: number,
+  showMilliseconds = true
+): string => {
   const pad = (n: number) => padZeros(n, 2);
 
   let timeRemaining = time;
@@ -30,9 +33,8 @@ export const secondToTimestampUI = (time: number): string => {
 
   const timeMilliSeconds = Math.round(timeRemaining * 100);
 
-  const formattedTime = `${pad(timeHours)}:${pad(timeMins)}:${pad(
-    timeSeconds
-  )}.${pad(timeMilliSeconds)}`;
+  let formattedTime = `${pad(timeHours)}:${pad(timeMins)}:${pad(timeSeconds)}`;
+  if (showMilliseconds) formattedTime += `.${pad(timeMilliSeconds)}`;
 
   // Include hours if video is larger than 1 hr
   return timeHours > 0 ? formattedTime : formattedTime.substring(3);

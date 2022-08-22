@@ -1,4 +1,4 @@
-import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
+import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes';
 import { MapCallback, Transcription, WordComponent } from '../../sharedTypes';
 import { JSONTranscription, SnakeCaseWord } from '../types';
 import punctuate from './punctuate';
@@ -132,14 +132,14 @@ const preProcessTranscript = (
 
   return {
     confidence: jsonTranscript.confidence,
-    words: updateOutputStartTimes(
+    duration,
+    ...updateOutputTimes(
       jsonTranscript.words
         .map(camelCase)
         .map(punctuate(duration, averageSilenceDuration))
         .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))
     ),
-    duration,
   };
 };
 

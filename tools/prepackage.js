@@ -1,3 +1,6 @@
+// This script runs before packaging/publishing so that the released project
+// has the correct version number.
+
 // eslint-disable-next-line import/no-unresolved
 const pkg = require('../package.json');
 

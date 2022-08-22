@@ -1,7 +1,7 @@
 {
   "name": "mlvet",
   "description": "Machine Learning Video Editor Toolkit",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -43,7 +43,7 @@
       "//": "--- Prop 'version' will be automatically set by electron-builder ---",
       "version": "0.0.2"
     },
-    "appId": "edu.monash.mlvet-CI",
+    "appId": "edu.monash.mlvet",
     "asar": true,
     "asarUnpack": [
       "**\\*.{node,dll}",
@@ -106,15 +106,15 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "hhen0005",
-      "repo": "mlvet-CI",
+      "owner": "chloebrett",
+      "repo": "mlvet",
       "releaseType": "release",
       "vPrefixedTagName": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chloebrett/mlvet-CI.git"
+    "url": "git+https://github.com/chloebrett/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",

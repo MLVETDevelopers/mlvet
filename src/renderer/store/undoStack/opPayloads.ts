@@ -1,41 +1,26 @@
-import { IndexRange, Word } from '../../../sharedTypes';
-
-export interface DeleteSelectionPayload {
-  ranges: IndexRange[];
-}
-
-export interface PasteWordsPayload {
-  startIndex: number;
-  clipboard: Word[];
-}
-
-export interface CorrectWordPayload {
-  index: number;
-  text: string;
-}
-
-export interface UndoCorrectWordPayload {
-  index: number;
-  prevText: string;
-}
-
-export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
-
-export interface UndoPasteWordsPayload {
-  startIndex: number;
-  clipboardLength: number;
-}
+import {
+  CorrectWordPayload,
+  DeleteSelectionPayload,
+  MergeWordsPayload,
+  PasteWordsPayload,
+  SplitWordPayload,
+  UndoCorrectWordPayload,
+  UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
 
 export type DoPayload =
   | DeleteSelectionPayload
   | PasteWordsPayload
   | CorrectWordPayload
-  | IndexRange
-  | null;
+  | MergeWordsPayload
+  | SplitWordPayload;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
   | UndoPasteWordsPayload
   | UndoCorrectWordPayload
-  | IndexRange
-  | null;
+  | UndoMergeWordsPayload
+  | UndoSplitWordPayload;

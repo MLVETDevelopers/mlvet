@@ -36,6 +36,7 @@ export interface Transcription {
   confidence: number;
   words: Word[];
   duration: number;
+  outputDuration: number;
 }
 
 export interface Word {

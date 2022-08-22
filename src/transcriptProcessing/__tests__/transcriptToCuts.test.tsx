@@ -21,6 +21,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 0,
@@ -65,6 +66,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 0,
@@ -107,6 +109,7 @@ describe('transcript To Cuts', () => {
     const cuts = convertTranscriptToCuts({
       confidence: 0,
       duration: 6,
+      outputDuration: 6,
       words: [
         makeBasicWord({
           originalIndex: 1,

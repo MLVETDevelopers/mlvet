@@ -4,9 +4,13 @@ const mockIpc = {
   readRecentProjects: async () => [],
   writeRecentProjects: async () => null,
   setSaveEnabled: async () => null,
+  setExportEnabled: async () => null,
   setFileRepresentation: () => null,
   openProject: async () => null,
   setClipboardEnabled: async () => null,
+  setMergeSplitEnabled: async () => null,
+  setHomeEnabled: async () => null,
+  setUndoRedoEnabled: async () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

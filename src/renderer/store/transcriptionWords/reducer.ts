@@ -3,8 +3,8 @@ import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
 import { rangeLengthOne } from 'renderer/utils/range';
 import { Action } from '../action';
-import { mergeWords } from './mergeWords';
-import { splitWord } from './splitWord';
+import { mergeWords } from './helpers/mergeWordsHelper';
+import { splitWord } from './helpers/splitWordHelper';
 import {
   CORRECT_WORD,
   DELETE_SELECTION,

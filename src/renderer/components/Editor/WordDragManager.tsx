@@ -18,7 +18,7 @@ import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { makeMoveWords } from '../../store/transcriptionWords/ops';
+import { makeMoveWords } from '../../store/transcriptionWords/ops/moveWords';
 import {
   selectionCleared,
   selectionRangeSetTo,

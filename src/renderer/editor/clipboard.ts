@@ -3,10 +3,8 @@ import { getSelectionRanges } from './selection';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
 import dispatchOp from '../store/dispatchOp';
-import {
-  makeDeleteSelection,
-  makePasteWord,
-} from '../store/transcriptionWords/ops';
+import { makeDeleteSelection } from '../store/transcriptionWords/ops/deleteSelection';
+import { makePasteWord } from '../store/transcriptionWords/ops/pasteWord';
 
 const { dispatch } = store;
 

@@ -77,7 +77,6 @@ const requestTranscription: RequestTranscription = async (project) => {
     duration,
     fileName
   );
-
   return processedTranscript;
 };
 

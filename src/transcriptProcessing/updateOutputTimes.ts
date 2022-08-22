@@ -43,10 +43,25 @@ export const calculateTime: (
   return roundToMs(prevWord.outputStartTime + bufferedWordDuration(prevWord));
 };
 
+const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
+  const currentTranscriptWords = words.filter((word) => word.deleted === false);
+  const lastWord = currentTranscriptWords.pop();
+
+  if (lastWord) {
+    return roundToMs(lastWord.outputStartTime + bufferedWordDuration(lastWord));
+  }
+
+  // If there are no words in the filtered word list, we assume duration is 0
+  return 0;
+};
+
 /**
  * Updates the output start times for each of the words in the transcript
  */
-export const updateOutputStartTimes: (words: Word[]) => Word[] = (words) => {
+export const updateOutputTimes: (words: Word[]) => {
+  words: Word[];
+  outputDuration: number;
+} = (words) => {
   const newWords: Word[] = [];
 
   // Using this instead of map because the calculateTime function needs the
@@ -59,5 +74,8 @@ export const updateOutputStartTimes: (words: Word[]) => Word[] = (words) => {
     });
   });
 
-  return newWords;
+  return {
+    words: newWords,
+    outputDuration: updateOutputVideoDuration(newWords),
+  };
 };

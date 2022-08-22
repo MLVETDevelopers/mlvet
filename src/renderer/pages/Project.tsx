@@ -10,6 +10,7 @@ import ResizeManager from 'renderer/components/Editor/ResizeManager';
 import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
+import Scrubber from 'renderer/components/Scrubber';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -45,7 +46,8 @@ const ProjectPage = () => {
         pause,
         seekForward,
         seekBack,
-        seekToWord
+        seekToWord,
+        setPlaybackTime
       ) => (
         <ResizeManager
           projectPageLayoutRef={projectPageLayoutRef}
@@ -107,6 +109,13 @@ const ProjectPage = () => {
                       setTime={setTime}
                       setIsPlaying={setIsPlaying}
                       ref={videoPreviewControllerRef}
+                    />
+                    <Scrubber
+                      totalDuration={
+                        currentProject?.transcription?.outputDuration ?? 0
+                      }
+                      currentTimeSeconds={time}
+                      onScrubberChange={setPlaybackTime}
                     />
                   </Box>
                 </Stack>

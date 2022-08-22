@@ -20,7 +20,8 @@ type ChildFunction = (
   pause: () => void,
   seekForward: () => void,
   seekBack: () => void,
-  seekToWord: (wordIndex: number) => void
+  seekToWord: (wordIndex: number) => void,
+  setPlaybackTime: (newPlaybackTime: number) => void
 ) => ReactElement;
 
 interface Props {
@@ -87,7 +88,8 @@ const PlaybackManager = ({
     pause,
     seekForward,
     seekBack,
-    seekToWord
+    seekToWord,
+    setPlaybackTime
   );
 };
 

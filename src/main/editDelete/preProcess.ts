@@ -1,4 +1,4 @@
-import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
+import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes';
 import {
   MapCallback,
   PartialWord,
@@ -118,13 +118,13 @@ const preProcessTranscript = (
 
   return {
     confidence: jsonTranscript.confidence,
-    words: updateOutputStartTimes(
+    duration,
+    ...updateOutputTimes(
       jsonTranscript.words
         .map(punctuate(duration, averageSilenceDuration))
         .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))
     ),
-    duration,
   };
 };
 

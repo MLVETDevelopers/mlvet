@@ -1,0 +1,830 @@
+{
+    "alternatives": [
+        {
+            "confidence": 4522.750977,
+            "result": [
+                {
+                    "end": 0.51,
+                    "start": 0.39,
+                    "word": "that"
+                },
+                {
+                    "end": 0.63,
+                    "start": 0.51,
+                    "word": "was"
+                },
+                {
+                    "end": 0.93,
+                    "start": 0.63,
+                    "word": "actually"
+                },
+                {
+                    "end": 0.99,
+                    "start": 0.93,
+                    "word": "an"
+                },
+                {
+                    "end": 1.47,
+                    "start": 0.99,
+                    "word": "example"
+                },
+                {
+                    "end": 1.59,
+                    "start": 1.47,
+                    "word": "of"
+                },
+                {
+                    "end": 1.74,
+                    "start": 1.59,
+                    "word": "how"
+                },
+                {
+                    "end": 2.07,
+                    "start": 1.74,
+                    "word": "not"
+                },
+                {
+                    "end": 2.34,
+                    "start": 2.07,
+                    "word": "so"
+                },
+                {
+                    "end": 2.79,
+                    "start": 2.34,
+                    "word": "amazing"
+                },
+                {
+                    "end": 2.97,
+                    "start": 2.79,
+                    "word": "he"
+                },
+                {
+                    "end": 3.27,
+                    "start": 2.97,
+                    "word": "was"
+                },
+                {
+                    "end": 3.45,
+                    "start": 3.27,
+                    "word": "boy"
+                },
+                {
+                    "end": 3.57,
+                    "start": 3.45,
+                    "word": "you're"
+                },
+                {
+                    "end": 3.81,
+                    "start": 3.57,
+                    "word": "really"
+                },
+                {
+                    "end": 4.05,
+                    "start": 3.81,
+                    "word": "going"
+                },
+                {
+                    "end": 4.32,
+                    "start": 4.05,
+                    "word": "through"
+                },
+                {
+                    "end": 4.77,
+                    "start": 4.32,
+                    "word": "something"
+                },
+                {
+                    "end": 5.16,
+                    "start": 4.77,
+                    "word": "here"
+                },
+                {
+                    "end": 6.42,
+                    "start": 6.18,
+                    "word": "i"
+                },
+                {
+                    "end": 7.14,
+                    "start": 6.42,
+                    "word": "know"
+                },
+                {
+                    "end": 8.25,
+                    "start": 8.1,
+                    "word": "it's"
+                },
+                {
+                    "end": 8.67,
+                    "start": 8.25,
+                    "word": "funny"
+                },
+                {
+                    "end": 9.21,
+                    "start": 8.97,
+                    "word": "all"
+                },
+                {
+                    "end": 9.45,
+                    "start": 9.21,
+                    "word": "those"
+                },
+                {
+                    "end": 9.87,
+                    "start": 9.45,
+                    "word": "years"
+                },
+                {
+                    "end": 10.02,
+                    "start": 9.87,
+                    "word": "when"
+                },
+                {
+                    "end": 10.08,
+                    "start": 10.02,
+                    "word": "i"
+                },
+                {
+                    "end": 10.5,
+                    "start": 10.08,
+                    "word": "pretended"
+                },
+                {
+                    "end": 10.62,
+                    "start": 10.5,
+                    "word": "to"
+                },
+                {
+                    "end": 10.89,
+                    "start": 10.62,
+                    "word": "cry"
+                },
+                {
+                    "end": 10.95,
+                    "start": 10.89,
+                    "word": "i"
+                },
+                {
+                    "end": 11.19,
+                    "start": 10.98,
+                    "word": "used"
+                },
+                {
+                    "end": 11.25,
+                    "start": 11.19,
+                    "word": "to"
+                },
+                {
+                    "end": 11.46,
+                    "start": 11.25,
+                    "word": "use"
+                },
+                {
+                    "end": 11.79,
+                    "start": 11.46,
+                    "word": "dad's"
+                },
+                {
+                    "end": 12.09,
+                    "start": 11.79,
+                    "word": "death"
+                },
+                {
+                    "end": 12.21,
+                    "start": 12.09,
+                    "word": "to"
+                },
+                {
+                    "end": 12.42,
+                    "start": 12.21,
+                    "word": "get"
+                },
+                {
+                    "end": 12.54,
+                    "start": 12.42,
+                    "word": "me"
+                },
+                {
+                    "end": 12.87,
+                    "start": 12.54,
+                    "word": "going"
+                },
+                {
+                    "end": 13.02,
+                    "start": 12.96,
+                    "word": "i"
+                },
+                {
+                    "end": 13.29,
+                    "start": 13.02,
+                    "word": "tried"
+                },
+                {
+                    "end": 13.35,
+                    "start": 13.29,
+                    "word": "it"
+                },
+                {
+                    "end": 13.44,
+                    "start": 13.35,
+                    "word": "with"
+                },
+                {
+                    "end": 13.83,
+                    "start": 13.44,
+                    "word": "mom's"
+                },
+                {
+                    "end": 14.01,
+                    "start": 13.83,
+                    "word": "but"
+                },
+                {
+                    "end": 14.13,
+                    "start": 14.04,
+                    "word": "i"
+                },
+                {
+                    "end": 14.37,
+                    "start": 14.13,
+                    "word": "just"
+                },
+                {
+                    "end": 14.52,
+                    "start": 14.37,
+                    "word": "end"
+                },
+                {
+                    "end": 14.64,
+                    "start": 14.52,
+                    "word": "up"
+                },
+                {
+                    "end": 15.3,
+                    "start": 14.76,
+                    "word": "smiling"
+                },
+                {
+                    "end": 15.42,
+                    "start": 15.3,
+                    "word": "and"
+                },
+                {
+                    "end": 15.81,
+                    "start": 15.45,
+                    "word": "ruining"
+                },
+                {
+                    "end": 15.96,
+                    "start": 15.81,
+                    "word": "it"
+                },
+                {
+                    "end": 16.32,
+                    "start": 16.02,
+                    "word": "but"
+                },
+                {
+                    "end": 17.31,
+                    "start": 17.1,
+                    "word": "it"
+                },
+                {
+                    "end": 17.67,
+                    "start": 17.31,
+                    "word": "feels"
+                },
+                {
+                    "end": 17.91,
+                    "start": 17.67,
+                    "word": "like"
+                },
+                {
+                    "end": 18.42,
+                    "start": 17.97,
+                    "word": "real"
+                },
+                {
+                    "end": 18.6,
+                    "start": 18.45,
+                    "word": "you"
+                },
+                {
+                    "end": 18.9,
+                    "start": 18.6,
+                    "word": "know"
+                },
+                {
+                    "end": 19.2,
+                    "start": 18.99,
+                    "word": "and"
+                },
+                {
+                    "end": 19.5,
+                    "start": 19.32,
+                    "word": "you"
+                },
+                {
+                    "end": 19.83,
+                    "start": 19.5,
+                    "word": "haven't"
+                },
+                {
+                    "end": 20.13,
+                    "start": 19.83,
+                    "word": "really"
+                },
+                {
+                    "end": 20.46,
+                    "start": 20.13,
+                    "word": "allowed"
+                },
+                {
+                    "end": 20.88,
+                    "start": 20.46,
+                    "word": "yourself"
+                },
+                {
+                    "end": 21,
+                    "start": 20.88,
+                    "word": "to"
+                },
+                {
+                    "end": 21.42,
+                    "start": 21,
+                    "word": "grieve"
+                },
+                {
+                    "end": 21.69,
+                    "start": 21.48,
+                    "word": "much"
+                },
+                {
+                    "end": 21.81,
+                    "start": 21.69,
+                    "word": "at"
+                },
+                {
+                    "end": 22.02,
+                    "start": 21.81,
+                    "word": "all"
+                },
+                {
+                    "end": 22.95,
+                    "start": 22.68,
+                    "word": "my"
+                },
+                {
+                    "end": 23.4,
+                    "start": 22.95,
+                    "word": "relationship"
+                },
+                {
+                    "end": 23.64,
+                    "start": 23.43,
+                    "word": "with"
+                },
+                {
+                    "end": 23.85,
+                    "start": 23.64,
+                    "word": "dad"
+                },
+                {
+                    "end": 24,
+                    "start": 23.85,
+                    "word": "was"
+                },
+                {
+                    "end": 24.24,
+                    "start": 24,
+                    "word": "much"
+                },
+                {
+                    "end": 24.78,
+                    "start": 24.24,
+                    "word": "more"
+                },
+                {
+                    "end": 25.47,
+                    "start": 25.26,
+                    "word": "much"
+                },
+                {
+                    "end": 25.65,
+                    "start": 25.47,
+                    "word": "more"
+                },
+                {
+                    "end": 26.28,
+                    "start": 25.65,
+                    "word": "complicated"
+                },
+                {
+                    "end": 26.37,
+                    "start": 26.28,
+                    "word": "than"
+                },
+                {
+                    "end": 26.73,
+                    "start": 26.37,
+                    "word": "europeans"
+                },
+                {
+                    "end": 26.79,
+                    "start": 26.73,
+                    "word": "are"
+                },
+                {
+                    "end": 27.24,
+                    "start": 26.79,
+                    "word": "predicated"
+                },
+                {
+                    "end": 27.27,
+                    "start": 27.24,
+                    "word": "a"
+                },
+                {
+                    "end": 27.45,
+                    "start": 27.27,
+                    "word": "lot"
+                },
+                {
+                    "end": 27.57,
+                    "start": 27.45,
+                    "word": "on"
+                },
+                {
+                    "end": 28.05,
+                    "start": 27.57,
+                    "word": "secrets"
+                },
+                {
+                    "end": 28.14,
+                    "start": 28.05,
+                    "word": "and"
+                },
+                {
+                    "end": 28.53,
+                    "start": 28.14,
+                    "word": "lies"
+                },
+                {
+                    "end": 28.59,
+                    "start": 28.53,
+                    "word": "it"
+                },
+                {
+                    "end": 28.83,
+                    "start": 28.59,
+                    "word": "wasn't"
+                },
+                {
+                    "end": 28.89,
+                    "start": 28.83,
+                    "word": "a"
+                },
+                {
+                    "end": 29.07,
+                    "start": 28.89,
+                    "word": "whole"
+                },
+                {
+                    "end": 29.28,
+                    "start": 29.07,
+                    "word": "lot"
+                },
+                {
+                    "end": 29.64,
+                    "start": 29.28,
+                    "word": "of"
+                },
+                {
+                    "end": 30.6,
+                    "start": 30.18,
+                    "word": "trust"
+                },
+                {
+                    "end": 30.9,
+                    "start": 30.6,
+                    "word": "there"
+                },
+                {
+                    "end": 31.05,
+                    "start": 30.93,
+                    "word": "you"
+                },
+                {
+                    "end": 31.29,
+                    "start": 31.05,
+                    "word": "know"
+                },
+                {
+                    "end": 32.1,
+                    "start": 31.89,
+                    "word": "here"
+                },
+                {
+                    "end": 32.25,
+                    "start": 32.1,
+                    "word": "he"
+                },
+                {
+                    "end": 32.88,
+                    "start": 32.25,
+                    "word": "comes"
+                },
+                {
+                    "end": 33.63,
+                    "start": 33.39,
+                    "word": "here"
+                },
+                {
+                    "end": 33.99,
+                    "start": 33.63,
+                    "word": "comes"
+                },
+                {
+                    "end": 34.41,
+                    "start": 33.99,
+                    "word": "john"
+                },
+                {
+                    "end": 34.92,
+                    "start": 34.41,
+                    "word": "wayne"
+                },
+                {
+                    "end": 37.14,
+                    "start": 36.87,
+                    "word": "i'm"
+                },
+                {
+                    "end": 37.41,
+                    "start": 37.14,
+                    "word": "not"
+                },
+                {
+                    "end": 37.68,
+                    "start": 37.41,
+                    "word": "gonna"
+                },
+                {
+                    "end": 38.28,
+                    "start": 37.68,
+                    "word": "cry"
+                },
+                {
+                    "end": 38.7,
+                    "start": 38.28,
+                    "word": "about"
+                },
+                {
+                    "end": 38.85,
+                    "start": 38.7,
+                    "word": "my"
+                },
+                {
+                    "end": 39.54,
+                    "start": 38.85,
+                    "word": "pa"
+                },
+                {
+                    "end": 40.26,
+                    "start": 40.02,
+                    "word": "i'm"
+                },
+                {
+                    "end": 40.44,
+                    "start": 40.26,
+                    "word": "going"
+                },
+                {
+                    "end": 40.5,
+                    "start": 40.44,
+                    "word": "to"
+                },
+                {
+                    "end": 40.89,
+                    "start": 40.5,
+                    "word": "build"
+                },
+                {
+                    "end": 41.01,
+                    "start": 40.89,
+                    "word": "an"
+                },
+                {
+                    "end": 41.61,
+                    "start": 41.01,
+                    "word": "airport"
+                },
+                {
+                    "end": 42.03,
+                    "start": 41.79,
+                    "word": "put"
+                },
+                {
+                    "end": 42.15,
+                    "start": 42.03,
+                    "word": "my"
+                },
+                {
+                    "end": 42.51,
+                    "start": 42.15,
+                    "word": "name"
+                },
+                {
+                    "end": 42.75,
+                    "start": 42.51,
+                    "word": "on"
+                },
+                {
+                    "end": 42.87,
+                    "start": 42.75,
+                    "word": "it"
+                },
+                {
+                    "end": 43.38,
+                    "start": 43.14,
+                    "word": "why"
+                },
+                {
+                    "end": 43.92,
+                    "start": 43.38,
+                    "word": "michael"
+                },
+                {
+                    "end": 44.82,
+                    "start": 44.64,
+                    "word": "so"
+                },
+                {
+                    "end": 44.94,
+                    "start": 44.82,
+                    "word": "you"
+                },
+                {
+                    "end": 45.09,
+                    "start": 44.94,
+                    "word": "can"
+                },
+                {
+                    "end": 45.6,
+                    "start": 45.09,
+                    "word": "fly"
+                },
+                {
+                    "end": 45.9,
+                    "start": 45.6,
+                    "word": "away"
+                },
+                {
+                    "end": 46.08,
+                    "start": 45.9,
+                    "word": "from"
+                },
+                {
+                    "end": 46.2,
+                    "start": 46.08,
+                    "word": "your"
+                },
+                {
+                    "end": 46.92,
+                    "start": 46.23,
+                    "word": "feelings"
+                },
+                {
+                    "end": 48.39,
+                    "start": 48.21,
+                    "word": "you"
+                },
+                {
+                    "end": 48.54,
+                    "start": 48.39,
+                    "word": "can"
+                },
+                {
+                    "end": 48.78,
+                    "start": 48.54,
+                    "word": "keep"
+                },
+                {
+                    "end": 48.87,
+                    "start": 48.78,
+                    "word": "them"
+                },
+                {
+                    "end": 49.29,
+                    "start": 48.87,
+                    "word": "bottled"
+                },
+                {
+                    "end": 49.44,
+                    "start": 49.29,
+                    "word": "up"
+                },
+                {
+                    "end": 49.62,
+                    "start": 49.44,
+                    "word": "but"
+                },
+                {
+                    "end": 49.77,
+                    "start": 49.62,
+                    "word": "they"
+                },
+                {
+                    "end": 50.1,
+                    "start": 49.77,
+                    "word": "will"
+                },
+                {
+                    "end": 50.34,
+                    "start": 50.1,
+                    "word": "come"
+                },
+                {
+                    "end": 50.55,
+                    "start": 50.34,
+                    "word": "out"
+                },
+                {
+                    "end": 50.91,
+                    "start": 50.55,
+                    "word": "michael"
+                },
+                {
+                    "end": 51.6,
+                    "start": 50.91,
+                    "word": "sometimes"
+                },
+                {
+                    "end": 51.75,
+                    "start": 51.6,
+                    "word": "in"
+                },
+                {
+                    "end": 51.84,
+                    "start": 51.75,
+                    "word": "the"
+                },
+                {
+                    "end": 52.23,
+                    "start": 51.84,
+                    "word": "most"
+                },
+                {
+                    "end": 53.43,
+                    "start": 52.38,
+                    "word": "unexpected"
+                },
+                {
+                    "end": 55.02,
+                    "start": 54.57,
+                    "word": "hey"
+                },
+                {
+                    "end": 55.68,
+                    "start": 55.5,
+                    "word": "what"
+                },
+                {
+                    "end": 55.71,
+                    "start": 55.68,
+                    "word": "are"
+                },
+                {
+                    "end": 55.89,
+                    "start": 55.71,
+                    "word": "the"
+                },
+                {
+                    "end": 56.46,
+                    "start": 56.37,
+                    "word": "are"
+                },
+                {
+                    "end": 56.61,
+                    "start": 56.46,
+                    "word": "my"
+                },
+                {
+                    "end": 56.91,
+                    "start": 56.61,
+                    "word": "hard"
+                },
+                {
+                    "end": 57.27,
+                    "start": 56.91,
+                    "word": "boiled"
+                },
+                {
+                    "end": 57.6,
+                    "start": 57.27,
+                    "word": "egg"
+                }
+            ],
+            "text": "that was actually an example of how not so amazing he was boy you're really going through something here i know it's funny all those years when i pretended to cry i used to use dad's death to get me going i tried it with mom's but i just end up smiling and ruining it but it feels like real you know and you haven't really allowed yourself to grieve much at all my relationship with dad was much more much more complicated than europeans are predicated a lot on secrets and lies it wasn't a whole lot of trust there you know here he comes here comes john wayne i'm not gonna cry about my pa i'm going to build an airport put my name on it why michael so you can fly away from your feelings you can keep them bottled up but they will come out michael sometimes in the most unexpected hey what are the are my hard boiled egg"
+        }
+    ]
+}

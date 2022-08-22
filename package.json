@@ -1,5 +1,5 @@
 {
-  "name": "mlvet",
+  "name": "MLVET",
   "description": "Machine Learning Video Editor Toolkit",
   "scripts": {
     "preinstall": "npx only-allow yarn",
@@ -33,7 +33,7 @@
     ]
   },
   "build": {
-    "productName": "MachineLearningVideoEditingToolkit",
+    "productName": "MLVET",
     "appId": "edu.monash.mlvet",
     "asar": true,
     "asarUnpack": [

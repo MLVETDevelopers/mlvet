@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import {
+import React, {
   MouseEventHandler,
   useEffect,
   useRef,
@@ -11,11 +11,12 @@ import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
+  editWordFinished,
   editWordStarted,
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
-import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
+import { getCanvasFont, getTextWidth, INPUT_FONT } from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -221,8 +222,12 @@ const Word = ({
   };
 
   const submitIfEnter = (event: React.KeyboardEvent) => {
-    if (['Enter', 'Escape'].includes(event.key)) {
+    if (event.key === 'Enter') {
+      // Save and close edit
       submitWordEdit();
+    } else if (event.key === 'Escape') {
+      // Close edit without saving
+      dispatch(editWordFinished());
     }
   };
 
@@ -235,10 +240,18 @@ const Word = ({
     dispatch(editWordUpdated(value));
   };
 
+  const onMouseUp: (event: React.MouseEvent) => void = (event) => {
+    // Prevent edit from being cancelled if clicking the word
+    if (isBeingEdited) {
+      event.stopPropagation();
+    }
+  };
+
   return (
     <WordInner
       ref={ref}
       onClick={onClick}
+      onMouseUp={onMouseUp}
       onMouseDown={onMouseDown(ref)}
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
@@ -252,7 +265,7 @@ const Word = ({
               height: '1em',
               width: getTextWidth(
                 editText ?? '',
-                getCanvasFont(inputRef?.current)
+                getCanvasFont(inputRef?.current) || INPUT_FONT
               ),
             },
           }}

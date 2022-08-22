@@ -88,3 +88,5 @@ export const getCanvasFont: (element: HTMLElement | null) => string | null = (
 
   return `${fontWeight} ${fontSize} ${fontFamily}`;
 };
+
+export const INPUT_FONT = 'bold Rubik 16px';

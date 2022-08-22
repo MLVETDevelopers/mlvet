@@ -1,9 +1,9 @@
-import { Transcription, WordComponent } from 'sharedTypes';
+import { Transcription, Word } from 'sharedTypes';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
 interface Props {
   transcription: Transcription;
-  word: WordComponent;
+  word: Word;
   index: number;
 }
 

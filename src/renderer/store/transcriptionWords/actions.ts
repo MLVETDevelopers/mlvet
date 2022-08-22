@@ -1,4 +1,4 @@
-import { IndexRange, WordComponent } from '../../../sharedTypes';
+import { IndexRange, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
   DeleteSelectionPayload,
@@ -39,7 +39,7 @@ export const undoSelectionDeleted: (
 
 export const wordPasted: (
   startIndex: number,
-  clipboard: WordComponent[]
+  clipboard: Word[]
 ) => Action<PasteWordsPayload> = (startIndex, clipboard) => ({
   type: PASTE_WORD,
   payload: { startIndex, clipboard },
@@ -62,7 +62,7 @@ export const wordsMerged: (range: IndexRange) => Action<MergeWordsPayload> = (
 
 export const undoWordsMerged: (
   index: number,
-  originalWords: WordComponent[]
+  originalWords: Word[]
 ) => Action<UndoMergeWordsPayload> = (index, originalWords) => ({
   type: UNDO_MERGE_WORDS,
   payload: { index, originalWords },

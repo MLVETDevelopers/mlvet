@@ -1,9 +1,7 @@
-import { IndexRange, WordComponent } from 'sharedTypes';
+import { IndexRange, Word } from 'sharedTypes';
 import { mergeWords } from '../mergeWords';
 
-const makeBasicWord: (override: Partial<WordComponent>) => WordComponent = (
-  override
-) => ({
+const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   word: 'test',
   duration: 0,
   startTime: 0,
@@ -37,7 +35,7 @@ describe('mergeWords', () => {
       pasteKey: 0,
     });
 
-    const words: WordComponent[] = [
+    const words: Word[] = [
       firstWord,
       makeBasicWord({
         originalIndex: 1,

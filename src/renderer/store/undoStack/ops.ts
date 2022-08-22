@@ -1,5 +1,5 @@
 import { rangeLengthOne } from 'renderer/utils/range';
-import { IndexRange, WordComponent } from '../../../sharedTypes';
+import { IndexRange, Word } from '../../../sharedTypes';
 import { selectionCleared, selectionRangeAdded } from '../selection/actions';
 import {
   selectionDeleted,
@@ -38,7 +38,7 @@ export const makeDeleteSelection: (
 
 export const makePasteWord: (
   pasteTo: number,
-  clipboard: WordComponent[]
+  clipboard: Word[]
 ) => PasteWordsOp = (pasteTo, clipboard) => {
   return {
     do: [
@@ -54,7 +54,7 @@ export const makePasteWord: (
 };
 
 export const makeMoveWords: (
-  words: WordComponent[],
+  words: Word[],
   fromRanges: IndexRange[],
   toAfterIndex: number
 ) => MoveWordsOp = (words, fromRanges, toAfterIndex) => {
@@ -89,7 +89,7 @@ export const makeMoveWords: (
  * @returns op containing do and undo for a merge operation
  */
 export const makeMergeWords: (
-  words: WordComponent[],
+  words: Word[],
   range: IndexRange
 ) => MergeWordsOp = (words, range) => {
   const originalWords = words.slice(range.startIndex, range.endIndex);
@@ -114,10 +114,10 @@ export const makeMergeWords: (
  * @param index - index of word to split into multiple words
  * @returns op containing do and undo for a merge operation
  */
-export const makeSplitWord: (
-  words: WordComponent[],
-  index: number
-) => SplitWordOp = (words, index) => {
+export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
+  words,
+  index
+) => {
   const word = words[index];
 
   // Number of words that the word will be split into

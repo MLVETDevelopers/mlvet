@@ -1,4 +1,4 @@
-import { WordComponent } from '../../sharedTypes';
+import { Word } from '../../sharedTypes';
 import { getSelectionRanges } from './selection';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
@@ -7,7 +7,7 @@ import { makeDeleteSelection, makePasteWord } from '../store/undoStack/ops';
 
 const { dispatch } = store;
 
-const pasteWord = (afterWordIndex: number, clipboard: WordComponent[]) => {
+const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
   const { currentProject } = store.getState();
 
   if (currentProject && currentProject.transcription) {

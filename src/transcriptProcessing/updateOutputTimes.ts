@@ -1,5 +1,5 @@
 import { bufferedWordDuration, roundToMs } from '../sharedUtils';
-import { WordComponent } from '../sharedTypes';
+import { Word } from '../sharedTypes';
 
 /**
  * calculates the outputStartTimes of a word based on the
@@ -10,9 +10,9 @@ import { WordComponent } from '../sharedTypes';
  * @returns the updated outputStartTime
  */
 export const calculateTime: (
-  word: WordComponent,
+  word: Word,
   i: number,
-  newWords: WordComponent[]
+  newWords: Word[]
 ) => number = (word, i, newWords) => {
   // if the word is deleted, this never gets read, so it doesn't matter what it's set to
   if (word.deleted) {
@@ -43,9 +43,7 @@ export const calculateTime: (
   return roundToMs(prevWord.outputStartTime + bufferedWordDuration(prevWord));
 };
 
-const updateOutputVideoDuration: (words: WordComponent[]) => number = (
-  words
-) => {
+const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
   const currentTranscriptWords = words.filter((word) => word.deleted === false);
   const lastWord = currentTranscriptWords.pop();
 
@@ -60,11 +58,11 @@ const updateOutputVideoDuration: (words: WordComponent[]) => number = (
 /**
  * Updates the output start times for each of the words in the transcript
  */
-export const updateOutputTimes: (words: WordComponent[]) => {
-  words: WordComponent[];
+export const updateOutputTimes: (words: Word[]) => {
+  words: Word[];
   outputDuration: number;
 } = (words) => {
-  const newWords: WordComponent[] = [];
+  const newWords: Word[] = [];
 
   // Using this instead of map because the calculateTime function needs the
   // latest start times, yet we still want to work immutably as this is part of

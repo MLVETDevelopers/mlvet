@@ -1,6 +1,6 @@
-import { MapCallback, WordComponent } from '../../sharedTypes';
+import { MapCallback, Word } from '../../sharedTypes';
 
-type PartialWord = Pick<WordComponent, 'word' | 'startTime' | 'duration'>;
+type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 type Thresholds = { lowerCommaThreshold: number; upperCommaThreshold: number };
 
 const capitalizeFirstLetter: (string: string) => string = (string) => {

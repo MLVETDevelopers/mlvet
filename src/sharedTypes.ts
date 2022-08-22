@@ -34,12 +34,12 @@ export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
   confidence: number;
-  words: WordComponent[];
+  words: Word[];
   duration: number;
   outputDuration: number;
 }
 
-export interface WordComponent {
+export interface Word {
   // Text content of the word
   word: string;
   // Start time in the original transcript

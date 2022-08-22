@@ -1,6 +1,6 @@
 import { Reducer } from 'react';
 import { mapInRanges } from 'renderer/utils/list';
-import { WordComponent } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import { Action } from '../action';
 import { mergeWords } from './mergeWords';
 import { splitWord } from './splitWord';
@@ -27,14 +27,14 @@ import {
 /**
  *  Nested reducer for handling transcription words
  */
-const transcriptionWordsReducer: Reducer<WordComponent[], Action<any>> = (
+const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   words = [],
   action
 ) => {
   if (action.type === DELETE_SELECTION) {
     const { ranges } = action.payload as DeleteSelectionPayload;
 
-    const markDeleted = (word: WordComponent) => ({ ...word, deleted: true });
+    const markDeleted = (word: Word) => ({ ...word, deleted: true });
 
     return mapInRanges(words, markDeleted, ranges);
   }
@@ -42,7 +42,7 @@ const transcriptionWordsReducer: Reducer<WordComponent[], Action<any>> = (
   if (action.type === UNDO_DELETE_SELECTION) {
     const { ranges } = action.payload as UndoDeleteSelectionPayload;
 
-    const markUndeleted = (word: WordComponent) => ({
+    const markUndeleted = (word: Word) => ({
       ...word,
       deleted: false,
     });

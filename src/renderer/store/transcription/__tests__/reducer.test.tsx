@@ -1,4 +1,4 @@
-import { WordComponent } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import { TRANSCRIPTION_CREATED } from 'renderer/store/transcription/actions';
 import {
   DELETE_SELECTION,
@@ -18,7 +18,7 @@ const makeBasicWord: (
   outputDuration?: number,
   bufferDurationBefore?: number,
   bufferDurationAfter?: number
-) => WordComponent = (
+) => Word = (
   originalIndex,
   text,
   isDeleted = false,

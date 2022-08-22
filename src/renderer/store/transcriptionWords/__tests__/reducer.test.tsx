@@ -1,4 +1,4 @@
-import { WordComponent } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
@@ -12,12 +12,7 @@ const makeBasicWord: (
   text: string,
   isDeleted?: boolean,
   pasteKey?: number
-) => WordComponent = (
-  originalIndex,
-  text,
-  isDeleted = false,
-  pasteKey = 0
-) => ({
+) => Word = (originalIndex, text, isDeleted = false, pasteKey = 0) => ({
   word: text,
   startTime: 0,
   duration: 0,

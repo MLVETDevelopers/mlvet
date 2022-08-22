@@ -1,9 +1,7 @@
-import { WordComponent } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import { splitWord } from '../splitWord';
 
-const makeBasicWord: (override: Partial<WordComponent>) => WordComponent = (
-  override
-) => ({
+const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   word: 'test',
   duration: 0,
   startTime: 0,
@@ -37,7 +35,7 @@ describe('splitWord', () => {
       pasteKey: 0,
     });
 
-    const words: WordComponent[] = [
+    const words: Word[] = [
       firstWord,
       makeBasicWord({
         originalIndex: 1,

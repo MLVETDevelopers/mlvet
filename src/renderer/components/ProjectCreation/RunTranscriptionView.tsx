@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
+import useKeypress from 'renderer/utils/hooks';
 import {
   updateProjectWithExtractedAudio,
   updateProjectWithMedia,
@@ -118,6 +119,11 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
     setTranscription,
     asyncState,
     dispatch,
+  ]);
+
+  useKeypress(nextView, asyncState === AsyncState.DONE, [
+    'Enter',
+    'NumpadEnter',
   ]);
 
   if (currentProject === null) {

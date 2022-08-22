@@ -1,8 +1,9 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import useKeypress from 'renderer/utils/hooks';
 import { makeProjectWithoutMedia } from '../../utils/project';
 import { projectCreated } from '../../store/currentProject/actions';
 import colors from '../../colors';
@@ -46,23 +47,31 @@ const NewProjectView = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const setProjectInStore = async (project: RuntimeProject) => {
-    dispatch(projectCreated(project));
-  };
+  const setProjectInStore = useCallback(
+    async (project: RuntimeProject) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
 
-  const handleContinue = async () => {
+  const handleContinue = useCallback(async () => {
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
     setProjectInStore(project);
     nextView();
-  };
+  }, [nextView, projectName, setProjectInStore]);
+
+  useKeypress(handleContinue, projectName.trim() !== '', [
+    'Enter',
+    'NumpadEnter',
+  ]);
 
   const handleProjectNameInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setProjectName(event.target.value);
+    setProjectName(event.target.value.trim());
   };
 
   const continueButton = (

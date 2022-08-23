@@ -1,6 +1,6 @@
 import { MapCallback, PartialWord } from 'sharedTypes';
-import fs from 'fs';
 import path from 'path';
+import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
 import getVoskTranscript from '../../misc/getVoskTranscript';
 
@@ -19,18 +19,15 @@ const voskTranscribeFunction: TranscriptionFunction = async (project) => {
   const modelName = 'vosk-model-en-us-0.22';
   const modelPath: string = path.join(
     __dirname,
-    `../../../voskModel/${modelName}`
-  );
-  const filePath: string = path.join(
-    __dirname,
-    '/DONT_PUSH/thanos-short-mono.wav'
+    `../../../../voskModel/${modelName}`
   );
 
-  // const filePath: string = getAudioExtractPath(project.id);
+  const filePath: string = getAudioExtractPath(project.id);
   const jsonTranscript = JSON.parse(
     (await getVoskTranscript(modelPath, filePath)) as string
-  ).transcripts[0];
-  jsonTranscript.words = jsonTranscript.result.map(voskAdaptor);
+  );
+  jsonTranscript.words = jsonTranscript.alternatives[0].result.map(voskAdaptor);
+
   return jsonTranscript;
 };
 

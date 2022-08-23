@@ -34,7 +34,8 @@ const validateWord = <(word: any) => word is PartialWord>(
 const validateJsonTranscription = <
   (transcription: any) => transcription is JSONTranscription
 >((transcription) =>
-  typeof transcription.confidence === 'number' &&
+  (typeof transcription.confidence === 'number' ||
+    typeof transcription.alternatives[0].confidence === 'number') &&
   Array.isArray(transcription.words) &&
   transcription.words.every(validateWord));
 
@@ -63,10 +64,9 @@ const requestTranscription: RequestTranscription = async (project) => {
 
   const transcript = await transcribe(project, TRANSCRIPTION_ENGINE);
 
-  // TODO: fix
-  // if (!validateJsonTranscription(transcript)) {
-  //   throw new Error('JSON transcript is invalid');
-  // }
+  if (!validateJsonTranscription(transcript)) {
+    throw new Error('JSON transcript is invalid');
+  }
 
   const duration: number =
     (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;

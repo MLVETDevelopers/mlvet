@@ -15,6 +15,5 @@
   },
   "license": "MIT",
   "dependencies": {
-    "vosk": "^0.3.39"
   }
 }

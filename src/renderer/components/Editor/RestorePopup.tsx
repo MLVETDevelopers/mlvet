@@ -1,6 +1,6 @@
 import { Box, Popover, Typography } from '@mui/material';
 import { useState } from 'react';
-import colors from '../colors';
+import colors from '../../colors';
 
 interface RestorePopoverProps {
   text: string;

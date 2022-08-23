@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Stack, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import useKeypress from 'renderer/utils/hooks';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';
 import { RuntimeProject } from '../../../sharedTypes';
@@ -40,9 +41,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
 
   const dispatch = useDispatch();
 
-  const setCurrentProject = (project: RuntimeProject) => {
-    return dispatch(projectCreated(project));
-  };
+  const setCurrentProject = useCallback(
+    (project: RuntimeProject) => {
+      dispatch(projectCreated(project));
+    },
+    [dispatch]
+  );
 
   // Reset the import - for when delete button is pressed on media
   const removeMediaFromImport: () => void = () => {
@@ -51,13 +55,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     setMediaFileName(null);
   };
 
-  if (currentProject === null) {
-    return null;
-  }
-
-  const projectName = currentProject.name;
-
-  const handleTranscribe = async () => {
+  const handleTranscribe = useCallback(async () => {
     const projectWithMedia = {
       ...currentProject,
       mediaFilePath,
@@ -66,9 +64,15 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
     if (projectWithMedia.mediaFilePath == null) {
       return;
     }
-    setCurrentProject(projectWithMedia);
+    setCurrentProject(projectWithMedia as RuntimeProject);
     nextView();
-  };
+  }, [currentProject, mediaFilePath, nextView, setCurrentProject]);
+
+  useKeypress(handleTranscribe, !isAwaitingMedia, ['Enter', 'NumpadEnter']);
+
+  if (currentProject === null) {
+    return null;
+  }
 
   const transcribeButton = (
     <PrimaryButton
@@ -100,7 +104,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
             variant="h1"
             sx={{ color: colors.grey[400] }}
           >
-            {projectName}
+            {currentProject.name}
           </Typography>
           <IconButton
             sx={{ color: colors.yellow[500], fontSize: 20 }}

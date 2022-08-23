@@ -39,6 +39,8 @@ export interface Transcription {
   outputDuration: number;
 }
 
+export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+
 export interface Word {
   // Text content of the word
   word: string;

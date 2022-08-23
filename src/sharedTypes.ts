@@ -36,7 +36,10 @@ export interface Transcription {
   confidence: number;
   words: Word[];
   duration: number;
+  outputDuration: number;
 }
+
+export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
 export interface Word {
   // Text content of the word

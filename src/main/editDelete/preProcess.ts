@@ -1,23 +1,13 @@
-import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
-import { MapCallback, Transcription, Word } from '../../sharedTypes';
-import { JSONTranscription, SnakeCaseWord } from '../types';
+import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes';
+import {
+  MapCallback,
+  PartialWord,
+  Transcription,
+  Word,
+} from '../../sharedTypes';
+import { JSONTranscription } from '../types';
 import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
-
-type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
-
-/**
- * Replace the start_time attribute with startTime (can be generalised further but shouldn't
- * need this once python outputs camelcase anyway)
- * @param word snake cased partial word
- * @returns camel cased partial word
- *
- */
-const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
-  word: word.word,
-  duration: word.duration,
-  startTime: word.start_time,
-});
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
@@ -41,10 +31,10 @@ const calculateAverageSilenceDuration = (
 ): number => {
   let silenceSum = 0;
   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-    const endTime = jsonTranscription.words[i + 1].start_time;
+    const endTime = jsonTranscription.words[i + 1].startTime;
     const silenceDuration =
       endTime -
-      jsonTranscription.words[i].start_time -
+      jsonTranscription.words[i].startTime -
       jsonTranscription.words[i].duration;
     silenceSum += silenceDuration;
   }
@@ -128,14 +118,13 @@ const preProcessTranscript = (
 
   return {
     confidence: jsonTranscript.confidence,
-    words: updateOutputStartTimes(
+    duration,
+    ...updateOutputTimes(
       jsonTranscript.words
-        .map(camelCase)
         .map(punctuate(duration, averageSilenceDuration))
         .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))
     ),
-    duration,
   };
 };
 

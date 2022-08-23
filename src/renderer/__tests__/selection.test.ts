@@ -1,5 +1,5 @@
 import { SELECTION_RANGE_ADDED } from 'renderer/store/selection/actions';
-import { expandSelectionToWord, getSelectionRanges } from '../selection';
+import { expandSelectionToWord, getSelectionRanges } from '../editor/selection';
 import { ApplicationStore, initialStore } from '../store/sharedHelpers';
 import store from '../store/store';
 

@@ -18,7 +18,7 @@ import { projectDeleted } from 'renderer/store/recentProjects/actions';
 import { useEffect, useMemo, useState } from 'react';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import { formatDate } from '../util';
+import { formatDate } from '../utils/dateTime';
 import { ProjectMetadata, RecentProject } from '../../sharedTypes';
 import ipc from '../ipc';
 

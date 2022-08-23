@@ -3,6 +3,7 @@ import voskTranscribeFunction from './transcriptionEngines/voskTranscribeFunctio
 import { TranscriptionEngine, TranscriptionFunction } from './transcribeTypes';
 import deepspeechTranscribeFunction from './transcriptionEngines/deepspeechTranscribeFunction';
 import dummyTranscribeFunction from './transcriptionEngines/dummyTranscribeFunction';
+import awsTranscribeFunction from './transcriptionEngines/awsTranscribeFunction';
 
 const getTranscriptionFunction: Record<
   TranscriptionEngine,
@@ -12,6 +13,7 @@ const getTranscriptionFunction: Record<
   [TranscriptionEngine.VOSK]: voskTranscribeFunction,
   [TranscriptionEngine.DUMMY]: dummyTranscribeFunction,
   [TranscriptionEngine.DEEPSPEECH]: deepspeechTranscribeFunction,
+  [TranscriptionEngine.AWS]: awsTranscribeFunction,
 };
 
 /**

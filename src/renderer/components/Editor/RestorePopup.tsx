@@ -46,7 +46,7 @@ const RestorePopover = ({ text }: RestorePopoverProps) => {
           p: 2,
           backgroundColor: colors.grey[600],
           border: 0.5,
-          borderColor: colors.yellow[500],
+          color: colors.yellow[500],
         }}
         noWrap
       >

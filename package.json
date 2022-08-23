@@ -34,6 +34,7 @@
   },
   "build": {
     "productName": "MLVET",
+    "copyright": "Copyright © year ${author}",
     "appId": "edu.monash.mlvet",
     "asar": true,
     "asarUnpack": [

@@ -1,6 +1,12 @@
 {
   "name": "MLVET",
+  "version": "0.2.5",
   "description": "Machine Learning Video Editor Toolkit",
+  "main": "./dist/main/main.js",
+  "author": {
+    "name": "MLVET Legends",
+    "url": "https://github.com/chloebrett/mlvet"
+  },
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -34,7 +40,7 @@
   },
   "build": {
     "productName": "MLVET",
-    "copyright": "Copyright © year ${author}",
+    "copyright": "Copyright © 2022 ${author}",
     "appId": "edu.monash.mlvet",
     "asar": true,
     "asarUnpack": [

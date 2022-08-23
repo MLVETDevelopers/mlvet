@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "MLVET",
   "version": "0.2.5",
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "MLVET Legends",
+    "email": "irmyspuy@gmail.com",
+    "url": "https://github.com/chloebrett/mlvet"
   },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",

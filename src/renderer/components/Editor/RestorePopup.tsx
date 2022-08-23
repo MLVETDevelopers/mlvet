@@ -45,7 +45,7 @@ const RestorePopover = ({ text }: RestorePopoverProps) => {
         sx={{
           p: 2,
           backgroundColor: colors.grey[600],
-          border: 1,
+          border: 0.5,
           borderColor: colors.yellow[500],
         }}
       >
@@ -65,8 +65,8 @@ const RestorePopover = ({ text }: RestorePopoverProps) => {
             top: -15,
             transform: 'rotate(45deg)',
             left: 'calc(50% - 6px)',
-            borderBottom: 1,
-            borderRight: 1,
+            borderBottom: 0.5,
+            borderRight: 0.5,
             borderColor: colors.yellow[500],
           },
         }}

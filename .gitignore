@@ -43,3 +43,5 @@ src/pyServer/deepspeech-0.9.3-models.scorer
 
 experiments/**/assets
 src/pyServer/transcription_output.txt
+
+vosk-model-en-us-0.22

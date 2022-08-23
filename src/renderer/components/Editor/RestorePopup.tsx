@@ -48,6 +48,7 @@ const RestorePopover = ({ text }: RestorePopoverProps) => {
           border: 0.5,
           borderColor: colors.yellow[500],
         }}
+        noWrap
       >
         {text}
       </Typography>

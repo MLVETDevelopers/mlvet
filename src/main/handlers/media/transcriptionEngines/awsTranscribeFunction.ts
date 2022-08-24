@@ -3,32 +3,48 @@ import fs from 'fs';
 import path from 'path';
 import { TranscriptionFunction } from '../transcribeTypes';
 
-interface Alternatives {
-  confidence: number;
-  content: string;
-}
-
 interface AwsWord {
   start_time: number;
   end_time: number;
-  alternatives: Array<Alternatives>;
-  type: string;
+  word: string;
 }
 
 const awsAdaptor: MapCallback<AwsWord, PartialWord> = (result) => ({
-  word: result.alternatives[0].content,
+  word: result.word,
   duration: result.end_time - result.start_time,
   startTime: result.start_time,
 });
 const awsTranscribeFunction: TranscriptionFunction = async (project) => {
   const rawTranscript = fs
     .readFileSync(
-      path.join(__dirname, '../../../../../assets/SampleTranscriptVosk.json')
+      path.join(__dirname, '../../../../../assets/SampleTranscriptAWS.json')
     )
     .toString();
-  const jsonTranscript = JSON.parse(rawTranscript).results.items[0];
+
+  const transcriptionWords = JSON.parse(rawTranscript).results.items;
+  console.log(transcriptionWords);
+  for (let i = 0; i < transcriptionWords.length; i += 1) {
+    // jsonTranscript[i].word = jsonTranscript.alternatives[0].content;
+    transcriptionWords[i].word = 'test';
+    delete transcriptionWords[i].alternatives;
+    transcriptionWords[i].start_time = Number(transcriptionWords[i].start_time);
+    transcriptionWords[i].end_time = Number(transcriptionWords[i].end_time);
+    if (transcriptionWords[i].type === 'punctuation') {
+      transcriptionWords[i].start_time = transcriptionWords[i - 1].end_time;
+      transcriptionWords[i].end_time = transcriptionWords[i - 1].end_time;
+    }
+    delete transcriptionWords[i].type;
+  }
+
+  const jsonTranscript: any = {
+    confidence: 5000,
+    result: [],
+    text: 'test',
+  };
+  jsonTranscript.result = transcriptionWords;
   jsonTranscript.words = jsonTranscript.result.map(awsAdaptor);
-  return jsonTranscript;
+  console.log(jsonTranscript);
+  return transcriptionWords;
 };
 
 export default awsTranscribeFunction;

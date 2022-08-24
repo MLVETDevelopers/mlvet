@@ -77,6 +77,7 @@ const TranscriptionBlock = ({
         setDragSelectAnchor
       ) => (
         <TranscriptionBox
+          id="transcription-content"
           onMouseUp={() =>
             clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
           }

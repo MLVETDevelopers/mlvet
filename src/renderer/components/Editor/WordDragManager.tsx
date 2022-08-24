@@ -186,7 +186,11 @@ const WordDragManager = ({ children }: Props) => {
   };
 
   return (
-    <div onMouseUp={onMouseUp}>
+    <div
+      id="word-drag-manager"
+      style={{ height: '100%' }}
+      onMouseUp={onMouseUp}
+    >
       {children(
         onWordMouseDown,
         onWordMouseMoveDebounced,

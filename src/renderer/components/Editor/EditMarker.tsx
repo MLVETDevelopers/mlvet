@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react';
 import { Transcription, Word } from 'sharedTypes';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
@@ -22,10 +23,30 @@ const EditMarker = ({ transcription, word, index }: Props) => {
 
   const notPasted = word.pasteKey === 0;
 
+  const onClick: MouseEventHandler<HTMLSpanElement> = () => {
+    let sectionEndIndex = 1;
+    for (let i = index; i < transcription.words.length - 1; i += 1) {
+      const currWord = transcription.words[i];
+      const nextWord = transcription.words[i + 1];
+      if (
+        !currWord.deleted ||
+        !nextWord.deleted ||
+        currWord.originalIndex + 1 !== nextWord.originalIndex
+      )
+        break;
+
+      sectionEndIndex += 1;
+    }
+
+    console.log([...transcription.words].splice(index, sectionEndIndex));
+  };
+
   return (isInOriginalPos || hasNotMoved) &&
     hasNoNeighbourMarker &&
     notPasted ? (
-    <EditMarkerSvg />
+    <span role="button" tabIndex={index} onClick={onClick} onKeyDown={() => {}}>
+      <EditMarkerSvg />
+    </span>
   ) : null;
 };
 

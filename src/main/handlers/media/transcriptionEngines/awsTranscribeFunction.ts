@@ -1,7 +1,6 @@
 import { MapCallback, PartialWord } from 'sharedTypes';
-import fs from 'fs';
-import path from 'path';
 import { TranscriptionFunction } from '../transcribeTypes';
+import getObject from '../../misc/AWS/getTranscription';
 
 interface AwsWord {
   start_time: number;
@@ -15,11 +14,7 @@ const awsAdaptor: MapCallback<AwsWord, PartialWord> = (result) => ({
   startTime: result.start_time,
 });
 const awsTranscribeFunction: TranscriptionFunction = async (project) => {
-  const rawTranscript = fs
-    .readFileSync(
-      path.join(__dirname, '../../../../../assets/SampleTranscriptAWS.json')
-    )
-    .toString();
+  const rawTranscript = await getObject('fit3170', 'js_test.json');
 
   const transcriptionWords = JSON.parse(rawTranscript).results.items;
   for (let i = 0; i < transcriptionWords.length; i += 1) {

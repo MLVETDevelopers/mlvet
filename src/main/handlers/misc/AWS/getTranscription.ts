@@ -1,8 +1,14 @@
+import * as credentials from './config.json';
+
 const AWS = require('aws-sdk');
 
-AWS.config.loadFromPath('./config.json');
-
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  region: credentials.region,
+  credentials: {
+    accessKeyId: credentials.accessKeyId,
+    secretAccessKey: credentials.secretAccessKey,
+  },
+});
 
 async function getObject(bucket: string, objectKey: string) {
   try {

@@ -34,7 +34,6 @@ const validateWord = <(word: any) => word is PartialWord>(
 const validateJsonTranscription = <
   (transcription: any) => transcription is JSONTranscription
 >((transcription) =>
-  typeof transcription.confidence === 'number' &&
   Array.isArray(transcription.words) &&
   transcription.words.every(validateWord));
 

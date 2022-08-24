@@ -22,10 +22,9 @@ const awsTranscribeFunction: TranscriptionFunction = async (project) => {
     .toString();
 
   const transcriptionWords = JSON.parse(rawTranscript).results.items;
-  console.log(transcriptionWords);
   for (let i = 0; i < transcriptionWords.length; i += 1) {
     // jsonTranscript[i].word = jsonTranscript.alternatives[0].content;
-    transcriptionWords[i].word = 'test';
+    transcriptionWords[i].word = transcriptionWords[i].alternatives[0].content;
     delete transcriptionWords[i].alternatives;
     transcriptionWords[i].start_time = Number(transcriptionWords[i].start_time);
     transcriptionWords[i].end_time = Number(transcriptionWords[i].end_time);
@@ -44,7 +43,7 @@ const awsTranscribeFunction: TranscriptionFunction = async (project) => {
   jsonTranscript.result = transcriptionWords;
   jsonTranscript.words = jsonTranscript.result.map(awsAdaptor);
   console.log(jsonTranscript);
-  return transcriptionWords;
+  return jsonTranscript;
 };
 
 export default awsTranscribeFunction;

@@ -1,5 +1,5 @@
 import { Word } from 'sharedTypes';
-import { splitWord } from '../splitWord';
+import { splitWord } from '../helpers/splitWordHelper';
 
 const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   word: 'test',

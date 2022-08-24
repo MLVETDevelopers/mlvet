@@ -41,7 +41,7 @@
     "productName": "MLVET",
     "extraMetadata": {
       "//": "--- Prop 'version' will be automatically set by electron-builder ---",
-      "version": "0.0.2"
+      "version": "0.0.1"
     },
     "appId": "edu.monash.mlvet",
     "asar": true,
@@ -172,6 +172,7 @@
     "electron-builder": "^23.3.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.1.1",
+    "electron-rebuild": "^3.2.5",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-erb": "^4.0.3",

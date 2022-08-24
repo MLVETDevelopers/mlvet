@@ -106,7 +106,7 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "hhen0005",
+      "owner": "chloebrett",
       "repo": "mlvet",
       "releaseType": "release",
       "vPrefixedTagName": false
@@ -114,7 +114,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hhen0005/mlvet.git"
+    "url": "git+https://github.com/chloebrett/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",

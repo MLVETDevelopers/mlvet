@@ -128,18 +128,18 @@ const KeyboardShortcutsDialog = ({ open, onClose }: any) => {
           <CustomRow
             wordsLeft={['Cut', 'Copy', 'Paste', 'Undo', 'Redo']}
             shortcutsLeft={[
-              'Ctrl + X/Cmd + X',
-              'Ctrl + C/Cmd + C',
-              'Ctrl + V/Cmd + V',
-              'Ctrl + Z/Cmd + Z',
-              'Ctrl + Shift + Z / Cmd + Shift + Z',
+              'Ctrl + X/⌘ + X',
+              'Ctrl + C/⌘ + C',
+              'Ctrl + V/⌘ + V',
+              'Ctrl + Z/⌘ + Z',
+              'Ctrl + Shift + Z / ⌘ + Shift + Z',
             ]}
             wordsRight={['Delete', 'Select All', 'Merge Words', 'Split Words']}
             shortcutsRight={[
               'Backspace',
-              'Ctrl + A/Cmd + A',
-              'Ctrl + L/Cmd + L',
-              'Ctrl + Shift + L / Cmd + Shift + L',
+              'Ctrl + A/⌘ + A',
+              'Ctrl + L/⌘ + L',
+              'Ctrl + Shift + L / ⌘ + Shift + L',
             ]}
           />
           <Typography
@@ -153,14 +153,14 @@ const KeyboardShortcutsDialog = ({ open, onClose }: any) => {
           <CustomRow
             wordsLeft={['Open File', 'Save', 'Save As']}
             shortcutsLeft={[
-              'Ctrl + O/Cmd + O',
-              'Ctrl + S/Cmd + S',
-              'Ctrl + Shift + S / Cmd + Shift + S',
+              'Ctrl + O/⌘ + O',
+              'Ctrl + S/⌘ + S',
+              'Ctrl + Shift + S / ⌘ + Shift + S',
             ]}
             wordsRight={['Export Project', 'Return to Home']}
             shortcutsRight={[
-              'Ctrl + E/Cmd + E',
-              'Ctrl + Shift + H / Cmd + Shift + H',
+              'Ctrl + E/⌘ + E',
+              'Ctrl + Shift + H / ⌘ + Shift + H',
             ]}
           />
           <CustomRowStack>

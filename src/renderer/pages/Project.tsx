@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
@@ -7,10 +7,11 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import PlaybackManager from 'renderer/components/Editor/PlaybackManager';
 import ResizeManager from 'renderer/components/Editor/ResizeManager';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
+import KeyboardShortcutsDialog from 'renderer/components/KeyboardShortcutsDialog';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -30,6 +31,16 @@ const ProjectPage = () => {
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <PlaybackManager
@@ -116,6 +127,11 @@ const ProjectPage = () => {
                       }
                       currentTimeSeconds={time}
                       onScrubberChange={setPlaybackTime}
+                    />
+                    <Button onClick={handleOpenDialog} />
+                    <KeyboardShortcutsDialog
+                      open={openDialog}
+                      onClose={handleCloseDialog}
                     />
                   </Box>
                 </Stack>

@@ -25,6 +25,9 @@ let pyServer: ChildProcess | null = null;
 
 dotenv.config();
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS =
+  'C:/Users/Daniel/Documents/Code/transcription_spike/service-account-file.json';
+
 // If app data storage path doesn't exist, create it
 mkdir(appDataStoragePath());
 

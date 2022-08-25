@@ -7,7 +7,6 @@
     "url": "https://github.com/chloebrett/mlvet"
   },
   "version": "0.0.1",
-
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -226,6 +225,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^1.4.1",
     "@fontsource/rubik": "^4.5.6",
+    "@google-cloud/speech": "^4.10.2",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.1",
     "@react-hook/debounce": "^4.0.0",
@@ -242,6 +242,7 @@
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "history": "^5.3.0",
+    "node-fetch": "^3.2.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",

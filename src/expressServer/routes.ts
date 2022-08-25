@@ -1,7 +1,9 @@
 import express from 'express';
 import fs from 'fs';
+import speech from '@google-cloud/speech';
 
 const router = express.Router();
+const client = new speech.SpeechClient();
 
 router.get('/', (_, res) => {
   res.send('Server Running');
@@ -49,5 +51,37 @@ const streamVideo: (req: any, res: any) => void = (req, res) => {
 };
 
 router.get('/video/:name', streamVideo);
+
+const transcribeGoogle = async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  const gcsUri = 'gs://mlvet/thanos.wav';
+  const audio = {
+    uri: gcsUri,
+  };
+  const config = {
+    languageCode: 'en-US',
+    audioChannelCount: 2,
+    // enable_separate_recognition_per_channel = True,
+    enableWordConfidence: true,
+    enableWordTimeOffsets: true,
+    model: 'video',
+    enableAutomaticPunctuation: true,
+  };
+
+  const request = {
+    audio,
+    config,
+  };
+
+  const [operation] = await client.longRunningRecognize(request);
+  const [response] = await operation.promise();
+  // const transcription = response.results
+  //   .map((result) => result.alternatives[0].transcript)
+  //   .join('\n');
+  console.log('Returning transcription');
+  res.send(response);
+};
+
+router.get('/transcribe/google', transcribeGoogle);
 
 export default router;

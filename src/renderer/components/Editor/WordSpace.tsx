@@ -1,16 +1,32 @@
+import colors from 'renderer/colors';
+
 interface Props {
   isDropMarkerActive: boolean;
+  isBetweenHighlightedWords: boolean;
 }
 
-const WordSpace = ({ isDropMarkerActive }: Props) => {
+const WordSpace = ({
+  isDropMarkerActive,
+  isBetweenHighlightedWords,
+}: Props) => {
+  const background: string = (() => {
+    if (isDropMarkerActive) {
+      return 'white';
+    }
+    if (isBetweenHighlightedWords) {
+      return `${colors.blue[500]}cc`;
+    }
+    return 'none';
+  })();
+
   return (
-    <span
+    <div
       style={{
-        background: isDropMarkerActive ? 'white' : 'none',
-        transition: 'background 0.2s',
+        display: 'inline-block',
+        background,
         width: '2px',
-        paddingLeft: '1px',
-        paddingRight: '1px',
+        height: '24px',
+        padding: '0 1px',
       }}
     />
   );

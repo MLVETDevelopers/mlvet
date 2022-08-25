@@ -31,6 +31,10 @@ const TranscriptionBox = styled(Box)({
   },
 });
 
+const WordAndSpaceContainer = styled(Box)({
+  display: 'inline-flex',
+});
+
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
@@ -82,51 +86,59 @@ const TranscriptionBlock = ({
             clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
           }
         >
-          {transcription.words.map((word, index) =>
-            word.deleted ? (
-              <EditMarker
-                key={word.originalIndex}
-                transcription={transcription}
-                word={word}
-                index={index}
-              />
-            ) : (
-              <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
-                <WordSpace
-                  key={`space-${word.originalIndex}-${word.pasteKey}`}
-                  isDropMarkerActive={
-                    dragState !== null && dropBeforeIndex === index
-                  }
-                />
-                <WordComponent
-                  key={`word-${word.originalIndex}-${word.pasteKey}`}
-                  seekToWord={() => seekToWord(index)}
-                  isPlaying={index === nowPlayingWordIndex}
-                  isSelected={selectionSet.has(index)}
-                  text={word.word}
+          {transcription.words.map((word, index) => (
+            <WordAndSpaceContainer
+              key={`container-${word.originalIndex}-${word.pasteKey}`}
+            >
+              {word.deleted ? (
+                <EditMarker
+                  key={word.originalIndex}
+                  transcription={transcription}
+                  word={word}
                   index={index}
-                  onMouseDown={onWordMouseDown(index)}
-                  onMouseMove={() => onWordMouseMove(index)}
-                  dragState={dragState}
-                  isBeingDragged={isWordBeingDragged(index)}
-                  mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
-                  isDropBeforeActive={dropBeforeIndex === index}
-                  isDropAfterActive={dropBeforeIndex === index + 1}
-                  setDropBeforeIndex={setDropBeforeIndex}
-                  cancelDrag={cancelDrag}
                 />
-                {index === transcription.words.length - 1 && (
+              ) : (
+                <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
                   <WordSpace
-                    key="space-end"
+                    key={`space-${word.originalIndex}-${word.pasteKey}`}
                     isDropMarkerActive={
-                      dragState !== null &&
-                      dropBeforeIndex === transcription.words.length
+                      dragState !== null && dropBeforeIndex === index
+                    }
+                    isBetweenHighlightedWords={
+                      selectionSet.has(index - 1) && selectionSet.has(index)
                     }
                   />
-                )}
-              </Fragment>
-            )
-          )}
+                  <WordComponent
+                    key={`word-${word.originalIndex}-${word.pasteKey}`}
+                    seekToWord={() => seekToWord(index)}
+                    isPlaying={index === nowPlayingWordIndex}
+                    isSelected={selectionSet.has(index)}
+                    text={word.word}
+                    index={index}
+                    onMouseDown={onWordMouseDown(index)}
+                    onMouseMove={() => onWordMouseMove(index)}
+                    dragState={dragState}
+                    isBeingDragged={isWordBeingDragged(index)}
+                    mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
+                    isDropBeforeActive={dropBeforeIndex === index}
+                    isDropAfterActive={dropBeforeIndex === index + 1}
+                    setDropBeforeIndex={setDropBeforeIndex}
+                    cancelDrag={cancelDrag}
+                  />
+                  {index === transcription.words.length - 1 && (
+                    <WordSpace
+                      key="space-end"
+                      isDropMarkerActive={
+                        dragState !== null &&
+                        dropBeforeIndex === transcription.words.length
+                      }
+                      isBetweenHighlightedWords={false}
+                    />
+                  )}
+                </Fragment>
+              )}
+            </WordAndSpaceContainer>
+          ))}
         </TranscriptionBox>
       )}
     </WordDragManager>

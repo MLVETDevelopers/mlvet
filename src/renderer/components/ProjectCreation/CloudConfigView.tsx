@@ -128,7 +128,7 @@ const CloudConfigView = ({
             </Typography>
             <Typography variant="p-400">{text}</Typography>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <Link onClick={handleHelpClick}>
+            <Link onClick={handleHelpClick} sx={{ cursor: 'pointer' }}>
               {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
               How can I get an API key and client secret? &gt;
             </Link>

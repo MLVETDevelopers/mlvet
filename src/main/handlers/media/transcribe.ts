@@ -7,6 +7,7 @@ import {
 } from '../helpers/transcribeTypes';
 import deepspeechTranscribeFunction from '../helpers/transcriptionEngines/deepspeechTranscribeFunction';
 import dummyTranscribeFunction from '../helpers/transcriptionEngines/dummyTranscribeFunction';
+import googleTranscribeFunction from '../helpers/transcriptionEngines/googleTranscribeFunction';
 
 const getTranscriptionFunction: Record<
   TranscriptionEngine,
@@ -16,6 +17,7 @@ const getTranscriptionFunction: Record<
   [TranscriptionEngine.VOSK]: voskTranscribeFunction,
   [TranscriptionEngine.DUMMY]: dummyTranscribeFunction,
   [TranscriptionEngine.DEEPSPEECH]: deepspeechTranscribeFunction,
+  [TranscriptionEngine.GOOGLE]: googleTranscribeFunction,
 };
 
 type Transcribe = (

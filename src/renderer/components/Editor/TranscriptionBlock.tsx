@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useContext, useEffect, useMemo } from 'react';
+import { Fragment, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -51,13 +51,11 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
-  const containerRef = useContext(ContainerRefContext);
+  const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
   );
-
-  const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const selectionSet = useMemo(
     () => (editWord === null ? new Set(selectionArray) : new Set()),
@@ -66,7 +64,7 @@ const TranscriptionBlock = ({
 
   const dispatch = useDispatch();
 
-  const submitWordEdit: () => void = () => {
+  const submitWordEdit: () => void = useCallback(() => {
     if (editWord === null) {
       return;
     }
@@ -91,20 +89,23 @@ const TranscriptionBlock = ({
 
     // Mark the edit as over
     dispatch(editWordFinished());
-  };
+  }, [editWord, dispatch, transcription]);
 
   const clearSelection: (
     dragSelectAnchor: number | null,
     clearAnchor: () => void
-  ) => void = (dragSelectAnchor, clearAnchor) => {
-    if (editWord !== null) {
-      submitWordEdit();
-    } else if (dragSelectAnchor === null) {
-      dispatch(selectionCleared());
-    } else {
-      clearAnchor();
-    }
-  };
+  ) => void = useCallback(
+    (dragSelectAnchor, clearAnchor) => {
+      if (editWord !== null) {
+        submitWordEdit();
+      } else if (dragSelectAnchor === null) {
+        dispatch(selectionCleared());
+      } else {
+        clearAnchor();
+      }
+    },
+    [editWord, submitWordEdit, dispatch]
+  );
 
   return (
     <WordDragManager clearSelection={clearSelection}>
@@ -117,16 +118,9 @@ const TranscriptionBlock = ({
         mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex,
-        cancelDrag,
-        dragSelectAnchor,
-        setDragSelectAnchor
+        cancelDrag
       ) => (
-        <TranscriptionBox
-          id="transcription-content"
-          onMouseUp={() =>
-            clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
-          }
-        >
+        <TranscriptionBox id="transcription-content">
           {transcription.words.map((word, index) =>
             word.deleted ? (
               <EditMarker

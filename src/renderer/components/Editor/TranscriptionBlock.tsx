@@ -6,11 +6,16 @@ import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
+import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { rangeLengthOne } from 'renderer/utils/range';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';
 import WordDragManager from './WordDragManager';
-import { selectionCleared } from '../../store/selection/actions';
+import {
+  selectionCleared,
+  selectionRangeAdded,
+} from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 import EditMarker from './EditMarker';
 
@@ -59,16 +64,29 @@ const TranscriptionBlock = ({
   const dispatch = useDispatch();
 
   const submitWordEdit: () => void = () => {
-    if (
-      editWord !== null &&
-      editWord.text !== '' &&
-      editWord.text !== transcription.words[editWord.index].word
-    ) {
-      dispatchOp(
-        makeCorrectWord(transcription.words, editWord.index, editWord.text)
-      );
+    if (editWord === null) {
+      return;
     }
 
+    const { index } = editWord;
+
+    // Clear the selection to start with - the word might be re-selected later
+    dispatch(selectionCleared());
+
+    if (editWord.text === '') {
+      // If the user edits a word to be empty, treat this as a delete action
+      dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
+    } else if (editWord.text === transcription.words[index].word) {
+      // If the user edits a word but leaves it unchanged, just select it without
+      // dispatching an update to the word itself
+      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+    } else {
+      // If the user edits a word, update the word then select it
+      dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
+      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+    }
+
+    // Mark the edit as over
     dispatch(editWordFinished());
   };
 
@@ -77,9 +95,9 @@ const TranscriptionBlock = ({
     clearAnchor: () => void
   ) => void = (dragSelectAnchor, clearAnchor) => {
     // If there is an edit in progress, save and close it
-    submitWordEdit();
-
-    if (dragSelectAnchor == null) {
+    if (editWord !== null) {
+      submitWordEdit();
+    } else if (dragSelectAnchor == null) {
       dispatch(selectionCleared());
     } else {
       clearAnchor();

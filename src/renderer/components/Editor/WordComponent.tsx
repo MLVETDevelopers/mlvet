@@ -247,6 +247,8 @@ const WordComponent = ({
     }
   };
 
+  const MIN_EDIT_WIDTH = 10;
+
   return (
     <WordInner
       ref={ref}
@@ -263,9 +265,12 @@ const WordComponent = ({
           inputProps={{
             sx: {
               height: '1em',
-              width: getTextWidth(
-                editText ?? '',
-                getCanvasFont(inputRef?.current)
+              width: Math.max(
+                MIN_EDIT_WIDTH,
+                getTextWidth(
+                  editText ?? '',
+                  getCanvasFont(inputRef?.current)
+                ) ?? 0
               ),
             },
           }}

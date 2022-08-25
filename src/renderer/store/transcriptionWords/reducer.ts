@@ -2,8 +2,8 @@ import { Reducer } from 'react';
 import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
 import { Action } from '../action';
-import { mergeWords } from './mergeWords';
-import { splitWord } from './splitWord';
+import { mergeWords } from './helpers/mergeWordsHelper';
+import { splitWord } from './helpers/splitWordHelper';
 import {
   DELETE_SELECTION,
   MERGE_WORDS,
@@ -42,7 +42,10 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === UNDO_DELETE_SELECTION) {
     const { ranges } = action.payload as UndoDeleteSelectionPayload;
 
-    const markUndeleted = (word: Word) => ({ ...word, deleted: false });
+    const markUndeleted = (word: Word) => ({
+      ...word,
+      deleted: false,
+    });
 
     return mapInRanges(words, markUndeleted, ranges);
   }

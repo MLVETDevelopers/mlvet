@@ -3,6 +3,7 @@ import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
 import getObject from '../../misc/AWS/getTranscription';
 import uploadFile from '../../misc/AWS/uploadFile';
+import createTranscription from '../../misc/AWS/createTranscription';
 
 interface AwsWord {
   start_time: number;
@@ -18,10 +19,11 @@ const awsAdaptor: MapCallback<AwsWord, PartialWord> = (result) => ({
 const awsTranscribeFunction: TranscriptionFunction = async (project) => {
   const file: string = getAudioExtractPath(project.id);
   const bucket = 'fit3170';
-  const fileName = await uploadFile(bucket, file);
+  const transcriptionName = 'mlvet_test2.json.json';
 
-  const rawTranscript = await getObject(bucket, 'js_test.json');
-
+  await uploadFile(bucket, file);
+  // await createTranscription(bucket, transcriptionName);
+  const rawTranscript = await getObject(bucket, transcriptionName);
   const transcriptionWords = JSON.parse(rawTranscript).results.items;
   for (let i = 0; i < transcriptionWords.length; i += 1) {
     // jsonTranscript[i].word = jsonTranscript.alternatives[0].content;
@@ -43,7 +45,6 @@ const awsTranscribeFunction: TranscriptionFunction = async (project) => {
   };
   jsonTranscript.result = transcriptionWords;
   jsonTranscript.words = jsonTranscript.result.map(awsAdaptor);
-  console.log(jsonTranscript);
   return jsonTranscript;
 };
 

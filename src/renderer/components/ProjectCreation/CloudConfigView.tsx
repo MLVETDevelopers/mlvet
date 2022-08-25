@@ -11,6 +11,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
 import { ChangeEvent, useState } from 'react';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
+import ipc from '../../ipc';
+
+const { openExternalLink } = ipc;
 
 interface Props {
   prevView: () => void;
@@ -83,7 +86,7 @@ const CloudConfigView = ({
   );
 
   const handleHelpClick: () => void = () => {
-    // shell.openExternal('https://mlvet.app');
+    openExternalLink('https://mlvet.app');
   };
 
   const defaultText =

@@ -1,6 +1,5 @@
 {
   "name": "MLVET",
-  "version": "0.2.5",
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {

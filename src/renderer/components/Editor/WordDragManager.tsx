@@ -18,7 +18,7 @@ import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { makeMoveWords } from '../../store/undoStack/ops';
+import { makeMoveWords } from '../../store/transcriptionWords/ops/moveWords';
 import {
   selectionCleared,
   selectionRangeSetTo,
@@ -186,7 +186,11 @@ const WordDragManager = ({ children }: Props) => {
   };
 
   return (
-    <div onMouseUp={onMouseUp}>
+    <div
+      id="word-drag-manager"
+      style={{ height: '100%' }}
+      onMouseUp={onMouseUp}
+    >
       {children(
         onWordMouseDown,
         onWordMouseMoveDebounced,

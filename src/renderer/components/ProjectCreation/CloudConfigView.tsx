@@ -56,20 +56,14 @@ const CloudConfigView = ({
     nextView();
   };
 
-  const handleAPIKeyInput = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const key = event.target.value;
-    setAPIKey(key);
-    setAwaitingAPIKey(key.length === 0);
+  const handleAPIKeyInput = (value: string) => {
+    setAPIKey(value);
+    setAwaitingAPIKey(value.length === 0);
   };
 
-  const handleClientSecretInput = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const secret = event.target.value;
-    setClientSecret(secret);
-    setAwaitingClientSecret(secret.length === 0);
+  const handleClientSecretInput = (value: string) => {
+    setClientSecret(value);
+    setAwaitingClientSecret(value.length === 0);
   };
 
   const saveButton = (
@@ -143,7 +137,7 @@ const CloudConfigView = ({
             <TextField
               label="API Key"
               value={APIKey}
-              onChange={(event) => handleAPIKeyInput(event)}
+              onChange={(event) => handleAPIKeyInput(event.target.value)}
               autoFocus
             />
           </CustomStack>
@@ -151,7 +145,7 @@ const CloudConfigView = ({
             <TextField
               label="Client Secret"
               value={clientSecret}
-              onChange={(event) => handleClientSecretInput(event)}
+              onChange={(event) => handleClientSecretInput(event.target.value)}
               autoFocus
             />
           </CustomStack>

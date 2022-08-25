@@ -24,9 +24,9 @@ const punctuate: (
     const endTime = isLastWord ? totalDuration : words[index + 1].startTime;
     const silenceDuration = endTime - word.startTime - word.duration;
 
-    if (index === 0) {
-      words[index].word = capitalizeFirstLetter(words[index].word);
-    }
+    // if (index === 0) {
+    //   words[index].word = capitalizeFirstLetter(words[index].word);
+    // }
 
     const thresholds: Thresholds = calculateThresholds(averageSilenceDuration);
 
@@ -37,17 +37,17 @@ const punctuate: (
       punctuation = ',';
     } else {
       punctuation = '.';
-      if (!isLastWord) {
-        words[index + 1].word = capitalizeFirstLetter(words[index + 1].word);
-      }
+      // if (!isLastWord) {
+      //   words[index + 1].word = capitalizeFirstLetter(words[index + 1].word);
+      // }
     }
 
-    // capitalise 'I' and 'I'm'
-    if (word.word === 'i' || word.word === "i'm") {
-      word.word = capitalizeFirstLetter(word.word);
-    }
+    // // capitalise 'I' and 'I'm'
+    // if (word.word === 'i' || word.word === "i'm") {
+    //   word.word = capitalizeFirstLetter(word.word);
+    // }
 
-    const punctuatedWord: string = word.word + punctuation;
+    const punctuatedWord: string = word.word; // + punctuation;
 
     return {
       ...word,

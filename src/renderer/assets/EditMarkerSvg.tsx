@@ -6,6 +6,9 @@ const EditMarkerSvg = (): JSX.Element => {
       viewBox="0 0 5 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        transform: 'translateY(-7px)',
+      }}
     >
       <line
         x1="2.5"

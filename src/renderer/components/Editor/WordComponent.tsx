@@ -31,6 +31,8 @@ interface Props {
   seekToWord: () => void;
   isPlaying: boolean;
   isSelected: boolean;
+  isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
+  isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -50,6 +52,8 @@ const WordComponent = ({
   seekToWord,
   isPlaying,
   isSelected,
+  isSelectedLeftCap,
+  isSelectedRightCap,
   text,
   onMouseDown,
   onMouseMove,
@@ -142,9 +146,15 @@ const WordComponent = ({
 
   const highlightStyles: React.CSSProperties = (() => {
     if (isSelected || isBeingDragged) {
+      const borderRadiusAmount = '6px';
+
       return {
         background: `${colors.blue[500]}cc`,
         color: colors.white,
+        borderTopLeftRadius: isSelectedLeftCap ? borderRadiusAmount : 0,
+        borderBottomLeftRadius: isSelectedLeftCap ? borderRadiusAmount : 0,
+        borderTopRightRadius: isSelectedRightCap ? borderRadiusAmount : 0,
+        borderBottomRightRadius: isSelectedRightCap ? borderRadiusAmount : 0,
       };
     }
     if (isPlaying) {

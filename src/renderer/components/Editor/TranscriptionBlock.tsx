@@ -33,6 +33,8 @@ const TranscriptionBox = styled(Box)({
 
 const WordAndSpaceContainer = styled(Box)({
   display: 'inline-flex',
+  alignItems: 'center',
+  height: '24px',
 });
 
 interface Props {
@@ -113,6 +115,12 @@ const TranscriptionBlock = ({
                     seekToWord={() => seekToWord(index)}
                     isPlaying={index === nowPlayingWordIndex}
                     isSelected={selectionSet.has(index)}
+                    isSelectedLeftCap={
+                      selectionSet.has(index) && !selectionSet.has(index - 1)
+                    }
+                    isSelectedRightCap={
+                      selectionSet.has(index) && !selectionSet.has(index + 1)
+                    }
                     text={word.word}
                     index={index}
                     onMouseDown={onWordMouseDown(index)}

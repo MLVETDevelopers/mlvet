@@ -10,6 +10,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
 import { ChangeEvent, useState } from 'react';
+import useKeypress from 'renderer/utils/hooks';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
@@ -93,6 +94,12 @@ const CloudConfigView = ({
     "This is your first time using the cloud transcription method. To get started you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
 
   const text = textToDisplay ?? defaultText;
+
+  useKeypress(
+    saveCloudCredentials,
+    !(isAwaitingAPIKey || isAwaitingClientSecret),
+    ['Enter', 'NumpadEnter']
+  );
 
   return (
     <Container sx={{ height: { xs: 500 } }}>

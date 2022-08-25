@@ -89,7 +89,7 @@ const CloudConfigView = ({
   };
 
   const defaultText =
-    "This is your first time using the cloud transcription method. To get started you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
+    "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
 
   const text = textToDisplay ?? defaultText;
 

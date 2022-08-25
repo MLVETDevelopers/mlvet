@@ -51,13 +51,15 @@ const CloudConfigView = ({
   const [clientSecret, setClientSecret] = useState<string>('');
 
   const saveCloudCredentials: () => void = () => {
+    setAPIKey(APIKey.trim());
+    setClientSecret(clientSecret.trim());
     nextView();
   };
 
   const handleAPIKeyInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const key = event.target.value.trim();
+    const key = event.target.value;
     setAPIKey(key);
     setAwaitingAPIKey(key.length === 0);
   };
@@ -65,7 +67,7 @@ const CloudConfigView = ({
   const handleClientSecretInput = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const secret = event.target.value.trim();
+    const secret = event.target.value;
     setClientSecret(secret);
     setAwaitingClientSecret(secret.length === 0);
   };

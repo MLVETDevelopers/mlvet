@@ -58,7 +58,7 @@ interface Props {
   editText: string | null;
 }
 
-const Word = ({
+const WordComponent = ({
   index,
   seekToWord,
   isPlaying,
@@ -281,4 +281,4 @@ const Word = ({
   );
 };
 
-export default Word;
+export default WordComponent;

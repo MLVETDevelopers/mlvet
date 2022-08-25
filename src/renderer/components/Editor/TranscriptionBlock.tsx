@@ -8,10 +8,11 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
-import Word from './Word';
+import WordComponent from './WordComponent';
 import WordDragManager from './WordDragManager';
 import { selectionCleared } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
+import EditMarker from './EditMarker';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -101,12 +102,20 @@ const TranscriptionBlock = ({
         setDragSelectAnchor
       ) => (
         <TranscriptionBox
+          id="transcription-content"
           onMouseUp={() =>
             clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
           }
         >
           {transcription.words.map((word, index) =>
-            word.deleted ? null : (
+            word.deleted ? (
+              <EditMarker
+                key={word.originalIndex}
+                transcription={transcription}
+                word={word}
+                index={index}
+              />
+            ) : (
               <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
                 <WordSpace
                   key={`space-${word.originalIndex}-${word.pasteKey}`}
@@ -114,7 +123,7 @@ const TranscriptionBlock = ({
                     dragState !== null && dropBeforeIndex === index
                   }
                 />
-                <Word
+                <WordComponent
                   key={`word-${word.originalIndex}-${word.pasteKey}`}
                   seekToWord={() => seekToWord(index)}
                   isPlaying={index === nowPlayingWordIndex}

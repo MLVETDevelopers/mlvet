@@ -17,7 +17,7 @@ interface Props {
   closeModal: () => void;
   nextView: () => void;
   projectName: string;
-  textToDisplay: string;
+  textToDisplay: string | null;
 }
 
 const CustomStack = styled(Stack)({ width: '100%' });

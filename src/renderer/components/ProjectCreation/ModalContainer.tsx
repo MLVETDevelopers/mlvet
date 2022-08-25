@@ -101,6 +101,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
             closeModal={showCancelProject}
             nextView={nextView}
             projectName={projectName}
+            textToDisplay={null}
           />
         );
       case ImportMediaView:

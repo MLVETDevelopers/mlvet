@@ -19,6 +19,7 @@ import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
 import loadThumbnail from './handlers/media/thumbnailLoad';
+import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
 import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
@@ -91,6 +92,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('load-thumbnail', async (_event, projectId) =>
     loadThumbnail(projectId)
+  );
+
+  ipcMain.handle('transcribe', async (_event, project, transcriptionEngine) =>
+    transcribe(project, transcriptionEngine)
   );
 
   ipcMain.handle('request-transcription', async (_event, project) =>

@@ -17,7 +17,7 @@ const voskAdaptor: MapCallback<VoskWord, PartialWord> = (result) => ({
 const voskTranscribeFunction: TranscriptionFunction = async (project) => {
   const rawTranscript = fs
     .readFileSync(
-      path.join(__dirname, '../../../../../assets/SampleTranscriptVosk.json')
+      path.join(__dirname, '../../../../../../assets/SampleTranscriptVosk.json')
     )
     .toString();
   const jsonTranscript = JSON.parse(rawTranscript).alternatives[0];

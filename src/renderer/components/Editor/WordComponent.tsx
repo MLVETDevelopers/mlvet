@@ -16,7 +16,7 @@ import {
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
-import { getCanvasFont, getTextWidth, INPUT_FONT } from 'renderer/utils/ui';
+import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -265,7 +265,7 @@ const WordComponent = ({
               height: '1em',
               width: getTextWidth(
                 editText ?? '',
-                getCanvasFont(inputRef?.current) || INPUT_FONT
+                getCanvasFont(inputRef?.current)
               ),
             },
           }}

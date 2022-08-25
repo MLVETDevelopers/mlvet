@@ -75,18 +75,15 @@ const getCssStyle: (element: HTMLElement, prop: string) => string = (
   return window.getComputedStyle(element, null).getPropertyValue(prop);
 };
 
-export const getCanvasFont: (element: HTMLElement | null) => string | null = (
-  element
-) => {
-  if (element === null) {
-    return null;
-  }
+export const getCanvasFont: (
+  element: HTMLElement | null,
+  defaultFontWeight?: string,
+  defaultFontSize?: string,
+  defaultFontFamily?: string
+) => string | null = (element, ...defaults) => {
+  const props = ['font-weight', 'font-size', 'font-family'];
 
-  const fontWeight = getCssStyle(element, 'font-weight') || 'normal';
-  const fontSize = getCssStyle(element, 'font-size') || '16px';
-  const fontFamily = getCssStyle(element, 'font-family') || 'Times New Roman';
-
-  return `${fontWeight} ${fontSize} ${fontFamily}`;
+  return props
+    .map((prop, i) => (element && getCssStyle(element, prop)) || defaults[i])
+    .join(' ');
 };
-
-export const INPUT_FONT = 'bold Rubik 16px';

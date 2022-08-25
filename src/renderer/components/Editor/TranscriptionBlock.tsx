@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useMemo } from 'react';
+import { Fragment, useContext, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -8,6 +8,7 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
+import { ContainerRefContext } from 'renderer/RootContainerContext';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';
@@ -50,6 +51,8 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const containerRef = useContext(ContainerRefContext);
+
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
   );
@@ -94,10 +97,9 @@ const TranscriptionBlock = ({
     dragSelectAnchor: number | null,
     clearAnchor: () => void
   ) => void = (dragSelectAnchor, clearAnchor) => {
-    // If there is an edit in progress, save and close it
     if (editWord !== null) {
       submitWordEdit();
-    } else if (dragSelectAnchor == null) {
+    } else if (dragSelectAnchor === null) {
       dispatch(selectionCleared());
     } else {
       clearAnchor();
@@ -105,7 +107,7 @@ const TranscriptionBlock = ({
   };
 
   return (
-    <WordDragManager>
+    <WordDragManager clearSelection={clearSelection}>
       {(
         onWordMouseDown,
         onWordMouseMove,
@@ -128,7 +130,7 @@ const TranscriptionBlock = ({
           {transcription.words.map((word, index) =>
             word.deleted ? (
               <EditMarker
-                key={word.originalIndex}
+                key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
                 transcription={transcription}
                 word={word}
                 index={index}

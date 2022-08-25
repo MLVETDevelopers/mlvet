@@ -53,10 +53,14 @@ export type DragState = null | {
 };
 
 interface Props {
+  clearSelection: (
+    dragSelectAnchor: number | null,
+    clearAnchor: () => void
+  ) => void;
   children: RenderTranscription;
 }
 
-const WordDragManager = ({ children }: Props) => {
+const WordDragManager = ({ clearSelection, children }: Props) => {
   const containerRef = useContext(ContainerRefContext);
 
   const dispatch = useDispatch();
@@ -74,6 +78,14 @@ const WordDragManager = ({ children }: Props) => {
 
   // Index of the word that is currently marked as the 'drop' receiver for the word being dragged
   const [dropBeforeIndex, setDropBeforeIndex] = useState<number | null>(null);
+
+  // Handle mouse-up events on the overall page using the container ref
+  useEffect(() => {
+    if (containerRef !== null && containerRef.current !== null) {
+      containerRef.current.onmouseup = () =>
+        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
+    }
+  }, [containerRef, clearSelection, dragSelectAnchor, setDragSelectAnchor]);
 
   const mouse = useMouse(containerRef);
 

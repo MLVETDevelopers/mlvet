@@ -45,7 +45,9 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     deleteProject(project)
   );
 
-  ipcMain.handle('open-external-link', async () => openExternalLink());
+  ipcMain.handle('open-external-link', async (_event, url) =>
+    openExternalLink(url)
+  );
 
   ipcMain.handle('open-project', async (_event, filePath) =>
     openProject(ipcContext, filePath)

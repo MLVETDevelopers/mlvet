@@ -349,6 +349,13 @@ export default class MenuBuilder {
       label: 'Help',
       submenu: [
         {
+          label: 'Keyboard Shortcuts',
+          click: () => {
+            this.mainWindow.webContents.send('open-shortcuts');
+          },
+        },
+        { type: 'separator' },
+        {
           label: 'Learn More',
           click: () => {
             shell.openExternal('https://electronjs.org');

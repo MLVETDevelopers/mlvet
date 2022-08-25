@@ -15,6 +15,7 @@ export interface ApplicationStore {
   clipboard: Word[];
   // Array of numbers corresponding to indexes of words within the transcription
   selection: number[];
+  shortcutsOpened: boolean;
 }
 
 /**
@@ -29,4 +30,5 @@ export const initialStore: ApplicationStore = {
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
   selection: [],
+  shortcutsOpened: false,
 };

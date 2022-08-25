@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/currentPage/actions';
 import { ApplicationPage } from '../../store/currentPage/helpers';
 import NewProjectView from './NewProjectView';
+import CloudConfigView from './CloudConfigView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
@@ -59,6 +60,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   const viewComponents = [
     NewProjectView,
+    CloudConfigView,
     ImportMediaView,
     RunTranscriptionView,
   ];

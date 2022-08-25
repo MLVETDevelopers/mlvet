@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useCallback, useContext, useEffect, useMemo } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -8,7 +8,6 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
-import { ContainerRefContext } from 'renderer/RootContainerContext';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';

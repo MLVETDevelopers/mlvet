@@ -94,6 +94,15 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
             setProjectName={setProjectName}
           />
         );
+      case CloudConfigView:
+        return (
+          <CloudConfigView
+            prevView={prevView}
+            closeModal={showCancelProject}
+            nextView={nextView}
+            projectName={projectName}
+          />
+        );
       case ImportMediaView:
         return (
           <ImportMediaView

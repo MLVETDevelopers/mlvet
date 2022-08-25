@@ -83,7 +83,9 @@ const CloudConfigView = ({
   );
 
   const handleHelpClick: () => void = () => {
-    openExternalLink('https://mlvet.app');
+    openExternalLink(
+      'http://nerdvittles.com/creating-an-api-key-for-google-speech-recognition/'
+    );
   };
 
   const defaultText =

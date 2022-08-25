@@ -97,6 +97,7 @@ const TranscriptionBlock = ({
   ) => void = useCallback(
     (dragSelectAnchor, clearAnchor) => {
       if (editWord !== null) {
+        clearAnchor();
         submitWordEdit();
       } else if (dragSelectAnchor === null) {
         dispatch(selectionCleared());

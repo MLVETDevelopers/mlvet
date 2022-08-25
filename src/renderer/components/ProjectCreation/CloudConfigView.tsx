@@ -44,21 +44,21 @@ const CloudConfigView = ({
   projectName,
   textToDisplay,
 }: Props) => {
-  const [isAwaitingAPIKey, setAwaitingAPIKey] = useState<boolean>(true);
+  const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
   const [isAwaitingClientSecret, setAwaitingClientSecret] =
     useState<boolean>(true);
-  const [APIKey, setAPIKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>('');
   const [clientSecret, setClientSecret] = useState<string>('');
 
   const saveCloudCredentials: () => void = () => {
-    setAPIKey(APIKey.trim());
+    setApiKey(apiKey.trim());
     setClientSecret(clientSecret.trim());
     nextView();
   };
 
-  const handleAPIKeyInput = (value: string) => {
-    setAPIKey(value);
-    setAwaitingAPIKey(value.length === 0);
+  const handleApiKeyInput = (value: string) => {
+    setApiKey(value);
+    setAwaitingApiKey(value.length === 0);
   };
 
   const handleClientSecretInput = (value: string) => {
@@ -69,7 +69,7 @@ const CloudConfigView = ({
   const saveButton = (
     <PrimaryButton
       onClick={saveCloudCredentials}
-      disabled={isAwaitingAPIKey || isAwaitingClientSecret}
+      disabled={isAwaitingApiKey || isAwaitingClientSecret}
       fullWidth
     >
       Save
@@ -93,7 +93,7 @@ const CloudConfigView = ({
 
   useKeypress(
     saveCloudCredentials,
-    !(isAwaitingAPIKey || isAwaitingClientSecret),
+    !(isAwaitingApiKey || isAwaitingClientSecret),
     ['Enter', 'NumpadEnter']
   );
 
@@ -136,8 +136,8 @@ const CloudConfigView = ({
           <CustomStack>
             <TextField
               label="API Key"
-              value={APIKey}
-              onChange={(event) => handleAPIKeyInput(event.target.value)}
+              value={apiKey}
+              onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
             />
           </CustomStack>

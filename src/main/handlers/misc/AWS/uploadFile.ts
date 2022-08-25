@@ -14,11 +14,11 @@ const s3Client = new S3Client({
 
 // Upload file to specified bucket.
 // eslint-disable-next-line consistent-return
-const run = async (file: string) => {
+const uploadFile = async (bucket: string, file: string) => {
   const fileStream = fs.createReadStream(file);
   // Set the parameters
   const uploadParams = {
-    Bucket: 'fit3170',
+    Bucket: bucket,
     // Add the required 'Key' parameter using the 'path' module.
     Key: path.basename(file),
     // Add the required 'Body' parameter
@@ -38,4 +38,4 @@ const run = async (file: string) => {
   }
 };
 
-export default run;
+export default uploadFile;

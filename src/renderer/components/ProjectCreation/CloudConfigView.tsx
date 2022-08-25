@@ -123,7 +123,7 @@ const CloudConfigView = ({
       >
         <CustomStack justifyContent="space-between">
           <CustomStack>
-            <Typography variant="h3">
+            <Typography variant="p-300">
               Cloud transcription configuration required
             </Typography>
             <Typography variant="p-400">{text}</Typography>

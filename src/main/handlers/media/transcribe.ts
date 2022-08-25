@@ -1,8 +1,12 @@
 import { RuntimeProject } from 'sharedTypes';
-import voskTranscribeFunction from './transcriptionEngines/voskTranscribeFunction';
-import { TranscriptionEngine, TranscriptionFunction } from './transcribeTypes';
-import deepspeechTranscribeFunction from './transcriptionEngines/deepspeechTranscribeFunction';
-import dummyTranscribeFunction from './transcriptionEngines/dummyTranscribeFunction';
+import { JSONTranscription } from 'main/types';
+import voskTranscribeFunction from '../helpers/transcriptionEngines/voskTranscribeFunction';
+import {
+  TranscriptionEngine,
+  TranscriptionFunction,
+} from '../helpers/transcribeTypes';
+import deepspeechTranscribeFunction from '../helpers/transcriptionEngines/deepspeechTranscribeFunction';
+import dummyTranscribeFunction from '../helpers/transcriptionEngines/dummyTranscribeFunction';
 
 const getTranscriptionFunction: Record<
   TranscriptionEngine,
@@ -14,6 +18,11 @@ const getTranscriptionFunction: Record<
   [TranscriptionEngine.DEEPSPEECH]: deepspeechTranscribeFunction,
 };
 
+type Transcribe = (
+  project: RuntimeProject,
+  transcriptionEngine: TranscriptionEngine
+) => Promise<JSONTranscription>;
+
 /**
  * Runs the transcription using the selected transcription engine
  * @param project the file to transcribe
@@ -21,12 +30,10 @@ const getTranscriptionFunction: Record<
  * @returns a promise returning the JSONTranscription object of the transcription data
  *
  */
-const transcribe = async (
-  project: RuntimeProject,
-  transcriptionEngine: TranscriptionEngine
-) => {
+const transcribe: Transcribe = async (project, transcriptionEngine) => {
   const transcriptionFunction =
     getTranscriptionFunction[transcriptionEngine] ?? dummyTranscribeFunction;
+
   return transcriptionFunction(project);
 };
 

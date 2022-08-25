@@ -1,7 +1,13 @@
 {
-  "name": "mlvet",
+  "name": "MLVET",
   "description": "Machine Learning Video Editor Toolkit",
+  "main": "./dist/main/main.js",
+  "author": {
+    "name": "MLVET Legends",
+    "url": "https://github.com/chloebrett/mlvet"
+  },
   "version": "0.0.1",
+
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -39,6 +45,7 @@
   },
   "build": {
     "productName": "MLVET",
+    "copyright": "Copyright © 2022 ${author}",
     "extraMetadata": {
       "//": "--- Prop 'version' will be automatically set by electron-builder ---",
       "version": "0.0.2"

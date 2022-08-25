@@ -21,6 +21,8 @@ declare global {
       // START GENERATED CODE
       deleteProject: (project: ProjectIdAndFilePath) => Promise<void>;
 
+      openExternalLink: () => Promise<void>;
+
       openProject: (
         filePath: string | null
       ) => Promise<{ project: RuntimeProject | null; filePath: string }>;

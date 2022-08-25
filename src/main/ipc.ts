@@ -7,6 +7,7 @@ import { IpcContext } from './types';
 
 // START GENERATED CODE PART 1
 import deleteProject from './handlers/file/deleteProject';
+import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
 import readRecentProjects from './handlers/file/readRecentProjects';
@@ -43,6 +44,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   ipcMain.handle('delete-project', async (_event, project) =>
     deleteProject(project)
   );
+
+  ipcMain.handle('open-external-link', async () => openExternalLink());
 
   ipcMain.handle('open-project', async (_event, filePath) =>
     openProject(ipcContext, filePath)

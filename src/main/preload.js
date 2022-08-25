@@ -6,6 +6,8 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
 
+  openExternalLink: () => ipcRenderer.invoke('open-external-link'),
+
   openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   retrieveProjectMetadata: (project) =>

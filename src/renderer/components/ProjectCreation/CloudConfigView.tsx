@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';

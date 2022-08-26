@@ -1,5 +1,5 @@
 import { Modal, styled, Box } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/currentPage/actions';
 import { ApplicationPage } from '../../store/currentPage/helpers';
@@ -9,6 +9,9 @@ import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 import CancelProjectModal from './CancelProjectModal';
+import ipc from '../../ipc';
+
+const { requireCloudConfig } = ipc;
 
 const CustomModal = styled(Modal)({
   display: 'flex',
@@ -58,12 +61,28 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     }
   };
 
-  const viewComponents = [
-    NewProjectView,
-    CloudConfigView,
-    ImportMediaView,
-    RunTranscriptionView,
-  ];
+  const viewComponents: any = useMemo(() => {
+    return [NewProjectView, ImportMediaView, RunTranscriptionView];
+  }, []);
+
+  useEffect(() => {
+    const fetchIfCloudConfigRequired = async () => {
+      const result = await requireCloudConfig();
+      return result;
+    };
+
+    fetchIfCloudConfigRequired()
+      .then((isConfigRequired) => {
+        if (isConfigRequired) {
+          viewComponents.plice(1, 0, CloudConfigView);
+        }
+        // for linter
+        return isConfigRequired;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [viewComponents]);
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {

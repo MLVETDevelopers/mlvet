@@ -21,6 +21,8 @@ import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
 
+const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
+
 const makeWordInner = (isDragActive: boolean) =>
   styled('div')({
     display: 'inline-block',
@@ -32,6 +34,7 @@ const makeWordInner = (isDragActive: boolean) =>
     '&:hover': {
       color: colors.grey['000'],
       background: isDragActive ? 'none' : `${colors.blue[500]}66`,
+      borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
 
@@ -193,15 +196,13 @@ const WordComponent = ({
       return {};
     }
     if (isSelected || isBeingDragged) {
-      const borderRadiusAmount = '6px';
-
       return {
         background: `${colors.blue[500]}cc`,
         color: colors.white,
-        borderTopLeftRadius: isSelectedLeftCap ? borderRadiusAmount : 0,
-        borderBottomLeftRadius: isSelectedLeftCap ? borderRadiusAmount : 0,
-        borderTopRightRadius: isSelectedRightCap ? borderRadiusAmount : 0,
-        borderBottomRightRadius: isSelectedRightCap ? borderRadiusAmount : 0,
+        borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
       };
     }
     if (isPlaying) {
@@ -209,6 +210,7 @@ const WordComponent = ({
         background: `${colors.yellow[500]}cc`,
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
+        borderRadius: BORDER_RADIUS_AMOUNT,
       };
     }
     return {};

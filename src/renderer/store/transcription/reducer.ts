@@ -14,6 +14,8 @@ import {
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
+import { SELECT_TAKE } from '../takeDetection/actions';
+import transcriptionTakesReducer from '../transcriptionTakes/reducer';
 
 /**
  *  Nested reducer for handling transcriptions
@@ -49,6 +51,14 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       ...updateOutputTimes(
         transcriptionWordsReducer(transcription.words, action)
       ),
+    };
+  }
+
+  // Delegate take-related actions to takes reducer
+  if ([SELECT_TAKE].includes(action.type)) {
+    return {
+      ...transcription,
+      ...transcriptionTakesReducer(transcription.words, action),
     };
   }
 

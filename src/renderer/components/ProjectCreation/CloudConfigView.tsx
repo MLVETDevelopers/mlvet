@@ -148,6 +148,7 @@ const CloudConfigView = ({
               value={apiKey}
               onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
+              sx={{ paddingBottom: '9px' }}
             />
           </CustomStack>
           <CustomStack>
@@ -156,6 +157,7 @@ const CloudConfigView = ({
               value={clientSecret}
               onChange={(event) => handleClientSecretInput(event.target.value)}
               autoFocus
+              sx={{ paddingTop: '9px' }}
             />
           </CustomStack>
         </CustomColumnStack>

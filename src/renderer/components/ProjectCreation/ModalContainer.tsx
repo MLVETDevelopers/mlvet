@@ -74,7 +74,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     fetchIfCloudConfigRequired()
       .then((isConfigRequired) => {
         if (isConfigRequired) {
-          viewComponents.plice(1, 0, CloudConfigView);
+          viewComponents.splice(1, 0, CloudConfigView);
         }
         // for linter
         return isConfigRequired;

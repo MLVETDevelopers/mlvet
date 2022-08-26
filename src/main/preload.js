@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
+  saveChangesDialog: (mainWindow, projectFileName) =>
+    ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
+
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
   writeRecentProjects: (recentProjects) =>
@@ -26,11 +29,19 @@ contextBridge.exposeInMainWorld('electron', {
 
   exportProject: (project) => ipcRenderer.invoke('export-project', project),
 
-  extractThumbnail: (absolutePathToMediaFile) =>
-    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+  extractThumbnail: (absolutePathToMediaFile, project) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
+
+  loadThumbnail: (projectId) => ipcRenderer.invoke('load-thumbnail', projectId),
+
+  transcribe: (project, transcriptionEngine) =>
+    ipcRenderer.invoke('transcribe', project, transcriptionEngine),
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
+
+  setExportEnabled: (exportEnabled) =>
+    ipcRenderer.invoke('set-export-enabled', exportEnabled),
 
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(
@@ -41,6 +52,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setHomeEnabled: (homeEnabled) =>
     ipcRenderer.invoke('set-home-enabled', homeEnabled),
+
+  setMergeSplitEnabled: (mergeEnabled, splitEnabled) =>
+    ipcRenderer.invoke('set-merge-split-enabled', mergeEnabled, splitEnabled),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
@@ -53,7 +67,18 @@ contextBridge.exposeInMainWorld('electron', {
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
   closeWindow: () => ipcRenderer.invoke('close-window'),
+
+  promptSave: () => ipcRenderer.invoke('prompt-save'),
 
   returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
 

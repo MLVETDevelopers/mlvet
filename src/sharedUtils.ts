@@ -1,15 +1,30 @@
-import { Project, ProjectMetadata, RecentProject } from './sharedTypes';
+import {
+  RuntimeProject,
+  ProjectMetadata,
+  RecentProject,
+  Word,
+} from './sharedTypes';
 
-const makeRecentProject: (
-  project: Pick<Project, keyof (Project | RecentProject)>,
+// Round a number in seconds to milliseconds - solves a lot of floating point errors
+export const roundToMs: (input: number) => number = (input) =>
+  Math.round(input * 1000) / 1000;
+
+/**
+ * Returns the percentage rounded to two dp
+ */
+export const getPercentage = (value: number, total: number) => {
+  return Math.round((value / total) * 10000) / 100;
+};
+
+export const makeRecentProject: (
+  project: Pick<RuntimeProject, keyof (RuntimeProject | RecentProject)>,
   metadata: ProjectMetadata,
   filePath: string
 ) => RecentProject = (project, metadata, filePath) => {
-  const projectFields: (keyof (RecentProject | Project))[] = [
+  const projectFields: (keyof (RecentProject | RuntimeProject))[] = [
     'id',
     'name',
     'mediaFilePath',
-    'thumbnailFilePath',
   ];
 
   const recentProject: Partial<RecentProject> = {
@@ -25,4 +40,5 @@ const makeRecentProject: (
   return recentProject as RecentProject;
 };
 
-export default makeRecentProject;
+export const bufferedWordDuration: (word: Word) => number = (word) =>
+  word.bufferDurationBefore + word.duration + word.bufferDurationAfter;

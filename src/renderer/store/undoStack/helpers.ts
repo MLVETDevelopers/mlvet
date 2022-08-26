@@ -1,13 +1,19 @@
+import { IndexRange } from 'sharedTypes';
 import { DoPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
+
+// Selection payloads can be applied to any op do or undo
+export type SelectionPayload = IndexRange | null;
 
 /**
  * An Op is a representation of an action that can be both done and undone.
  * These are passed around the undo stack in the store to allow for undoing and redoing actions.
+ * The list of 'do' actions is represented in the order the actions are done.
+ * The list of 'undo' actions is represented in the order the actions are undone.
  */
 export interface Op<T extends DoPayload, U extends UndoPayload> {
-  do: Action<T>;
-  undo: Action<U>;
+  do: Action<T | SelectionPayload>[];
+  undo: Action<U | SelectionPayload>[];
 }
 
 /**

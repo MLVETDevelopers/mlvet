@@ -214,14 +214,14 @@ const WordComponent = ({
     if (isShowingConfidenceUnderlines) {
       if (confidence < CONFIDENCE_THRESHOLD_LOW) {
         return {
-          borderBottom: `1px solid rgba(255, 0, 0, 0.6)`,
-          marginBottom: '1px',
+          borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
+          marginBottom: 0,
         };
       }
       if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
         return {
-          borderBottom: `1px solid ${colors.yellow[500]}88`,
-          marginBottom: '1px',
+          borderBottom: `2px solid ${colors.yellow[500]}88`,
+          marginBottom: 0,
         };
       }
     }

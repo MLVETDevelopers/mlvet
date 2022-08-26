@@ -24,11 +24,7 @@ const WordSpace = ({
       style={{
         display: 'inline-block',
         background,
-        padding: 0,
         height: '24px',
-        width: '2px',
-        position: 'relative',
-        margin: '2px 0',
       }}
     />
   );

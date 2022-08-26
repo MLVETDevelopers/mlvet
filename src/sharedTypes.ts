@@ -41,6 +41,19 @@ export interface Transcription {
 
 export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
+export interface TakeGroup {
+  // each time a new take group is created we find the highest take group ID in use and add one
+  id: number;
+  activeTakeIndex: number;
+  takeCount: number; // maybe not necessary
+}
+
+export interface TakeInfo {
+  takeGroupId: number;
+  takeIndex: number;
+  isSelected: boolean;
+}
+
 export interface Word {
   // Text content of the word
   word: string;
@@ -66,6 +79,8 @@ export interface Word {
   // TODO(chloe) this should be replaced with project ID or transcript ID
   // in order to support multiple projects without relying on a filename (which can change)
   fileName: string;
+  // Stores information related to take detection and manipulation
+  takeInfo: TakeInfo | null;
 }
 
 export interface Cut {

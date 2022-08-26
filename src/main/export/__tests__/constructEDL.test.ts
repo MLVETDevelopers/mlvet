@@ -22,6 +22,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'abc',
@@ -34,6 +35,7 @@ describe('Test exporting', () => {
           bufferDurationAfter: 0,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
       ],
     };
@@ -73,6 +75,7 @@ describe('Test exporting', () => {
           bufferDurationAfter: 0,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'def',
@@ -85,6 +88,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
       ],
     };

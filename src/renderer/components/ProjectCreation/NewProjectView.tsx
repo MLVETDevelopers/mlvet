@@ -1,7 +1,7 @@
 import { styled, Stack, Box, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import { ChangeEvent, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import useKeypress from 'renderer/utils/hooks';
 import { makeProjectWithoutMedia } from '../../utils/project';

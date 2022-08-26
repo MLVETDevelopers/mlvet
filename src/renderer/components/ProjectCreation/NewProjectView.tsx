@@ -55,23 +55,22 @@ const NewProjectView = ({
   );
 
   const handleContinue = useCallback(async () => {
+    setProjectName(projectName.trim());
     const project = await makeProjectWithoutMedia(projectName);
     if (project === null) {
       return;
     }
     setProjectInStore(project);
     nextView();
-  }, [nextView, projectName, setProjectInStore]);
+  }, [nextView, projectName, setProjectInStore, setProjectName]);
 
   useKeypress(handleContinue, projectName.trim() !== '', [
     'Enter',
     'NumpadEnter',
   ]);
 
-  const handleProjectNameInput = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setProjectName(event.target.value.trim());
+  const handleProjectNameInput = (value: string) => {
+    setProjectName(value);
   };
 
   const continueButton = (
@@ -108,7 +107,7 @@ const NewProjectView = ({
           <TextField
             label="Project Name"
             value={projectName}
-            onChange={(event) => handleProjectNameInput(event)}
+            onChange={(event) => handleProjectNameInput(event.target.value)}
             autoFocus
           />
         </CustomStack>

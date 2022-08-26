@@ -1,0 +1,15 @@
+.take::before {
+  content: '';
+  background-color: #ffb355;
+  display: block;
+  height: 2px;
+  width: 8px;
+}
+
+.take::after {
+  content: '';
+  background-color: #ffb355;
+  display: block;
+  height: 2px;
+  width: 8px;
+}

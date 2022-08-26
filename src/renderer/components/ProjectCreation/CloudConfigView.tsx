@@ -45,10 +45,7 @@ const CloudConfigView = ({
   textToDisplay,
 }: Props) => {
   const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
-  const [isAwaitingClientSecret, setAwaitingClientSecret] =
-    useState<boolean>(true);
   const [apiKey, setApiKey] = useState<string>('');
-  const [clientSecret, setClientSecret] = useState<string>('');
 
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
@@ -61,15 +58,10 @@ const CloudConfigView = ({
     setAwaitingApiKey(value.length === 0);
   };
 
-  const handleClientSecretInput = (value: string) => {
-    setClientSecret(value);
-    setAwaitingClientSecret(value.length === 0);
-  };
-
   const saveButton = (
     <PrimaryButton
       onClick={saveCloudCredentials}
-      disabled={isAwaitingApiKey || isAwaitingClientSecret}
+      disabled={isAwaitingApiKey}
       fullWidth
     >
       Save
@@ -93,11 +85,10 @@ const CloudConfigView = ({
 
   const text = textToDisplay ?? defaultText;
 
-  useKeypress(
-    saveCloudCredentials,
-    !(isAwaitingApiKey || isAwaitingClientSecret),
-    ['Enter', 'NumpadEnter']
-  );
+  useKeypress(saveCloudCredentials, !isAwaitingApiKey, [
+    'Enter',
+    'NumpadEnter',
+  ]);
 
   return (
     <Container sx={{ height: { xs: 500 } }}>
@@ -140,7 +131,7 @@ const CloudConfigView = ({
               }}
             >
               {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
-              How can I get an API key and client secret? &gt;
+              How can I get an API key? &gt;
             </Link>
           </CustomStack>
         </CustomStack>
@@ -152,15 +143,6 @@ const CloudConfigView = ({
               onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
               sx={{ marginBottom: '9px' }}
-            />
-          </CustomStack>
-          <CustomStack>
-            <TextField
-              label="Client Secret"
-              value={clientSecret}
-              onChange={(event) => handleClientSecretInput(event.target.value)}
-              autoFocus
-              sx={{ marginTop: '9px' }}
             />
           </CustomStack>
         </CustomColumnStack>

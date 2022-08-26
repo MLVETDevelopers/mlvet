@@ -41,11 +41,16 @@ export interface Transcription {
 
 export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
 
+export interface Take {
+  words: Word[];
+}
+
 export interface TakeGroup {
   // each time a new take group is created we find the highest take group ID in use and add one
   id: number;
   activeTakeIndex: number;
   takeCount: number; // maybe not necessary
+  takes: Take[] | null;
 }
 
 export interface ProcessedTranscription {

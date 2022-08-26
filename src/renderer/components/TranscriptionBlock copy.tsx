@@ -10,131 +10,6 @@ import { selectionCleared } from '../store/selection/actions';
 import DragManager, { RenderTranscription } from './WordDragManager';
 import './TranscriptionBlock.css';
 
-interface Transcription {
-  confidence: number;
-  // words: Array<Word|Take|TakeGroup>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  words: Array<any>;
-  duration: number;
-}
-
-// Renamed to IWord so it doesn't clash with the imported 'Word' component
-interface IWord {
-  word: string;
-  startTime: number;
-  duration: number;
-  outputStartTime: number;
-  bufferDurationBefore: number;
-  bufferDurationAfter: number;
-  deleted: boolean;
-  originalIndex: number;
-  pasteKey: number;
-  fileName: string;
-}
-
-interface Take {
-  words: IWord[];
-}
-
-interface TakeGroup {
-  takes: Take[];
-  activeTakes: number[];
-}
-
-const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra eleifend lorem, et fermentum turpis eleifend non.
-Vestibulum varius mi sed massa feugiat mattis non condimentum ante. Morbi et leo suscipit tellus aliquet ultricies. 
-Proin at velit eget mauris maximus pellentesque ac eu velit. Morbi tincidunt bibendum ipsum et ullamcorper.`;
-
-const textWords = text.split(' ').map((word, index) => {
-  return {
-    word,
-    startTime: index * 0.5,
-    duration: 0.5,
-    outputStartTime: index * 0.5,
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    deleted: false,
-    originalIndex: index,
-    pasteKey: 0,
-    fileName: 'test',
-  } as IWord;
-});
-
-// console.log(textWords);
-const take1 =
-  'This is the first take in this take group and the quick brown fox jumps over the lazy dog.';
-const take2 =
-  'This is the second take in this take group and the fast brown fox jumped over the lazy dog.';
-
-const take1Words = take1.split(' ').map((word, index) => {
-  return {
-    word,
-    startTime: index * 0.5,
-    duration: 0.5,
-    outputStartTime: index * 0.5,
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    deleted: false,
-    originalIndex: index,
-    pasteKey: 0,
-    fileName: 'test',
-  } as IWord;
-});
-
-const take2Words = take2.split(' ').map((word, index) => {
-  return {
-    word,
-    startTime: index * 0.5,
-    duration: 0.5,
-    outputStartTime: index * 0.5,
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    deleted: false,
-    originalIndex: index,
-    pasteKey: 0,
-    fileName: 'test',
-  } as IWord;
-});
-
-const take1Take: Take = {
-  words: take1Words,
-};
-
-const take2Take: Take = {
-  words: take2Words,
-};
-
-const takeGroup: TakeGroup = {
-  takes: [take1Take, take2Take],
-  activeTakes: [0, 1],
-};
-
-const singleTake =
-  'This is a single take on its own outside of any take groups.';
-const singleTakeWords = singleTake.split(' ').map((word, index) => {
-  return {
-    word,
-    startTime: index * 0.5 + 110,
-    duration: 0.5,
-    outputStartTime: index * 0.5 + 110,
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    deleted: false,
-    originalIndex: index,
-    pasteKey: 0,
-    fileName: 'test',
-  } as IWord;
-});
-
-const mockTranscription: Transcription = {
-  confidence: 0.5,
-  words: [],
-  duration: 70,
-};
-
-textWords.forEach((e) => mockTranscription.words.push(e));
-mockTranscription.words.push(takeGroup);
-
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
   borderRadius: '5px',
@@ -172,19 +47,7 @@ const TranscriptionBlock = ({
     (store: ApplicationStore) => store.selection
   );
 
-  const [takeGroupOpened, setTakeGroupOpened] = useState(false);
-
-  function instanceofIWord(object: any): object is IWord {
-    return 'word' in object;
-  }
-
-  function instanceofTake(object: any): object is Take {
-    return 'words' in object;
-  }
-
-  function instanceofTakeGroup(object: any): object is TakeGroup {
-    return 'takes' in object;
-  }
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
 
   const testAvatarClick = (index: number, takeIndex: number) => {
     console.log(mockTranscription.words[index].activeTakes);
@@ -193,71 +56,22 @@ const TranscriptionBlock = ({
     mockTranscription.words[index].activeTakes = [takeIndex];
     console.log(mockTranscription.words[index].activeTakes);
     console.log('Avatar button clicked.');
-    setTakeGroupOpened(false);
+    setIsTakeGroupOpened(false);
   };
 
   const openTakeGroup = () => {
-    setTakeGroupOpened(true);
+    setIsTakeGroupOpened(true);
     console.log('Opened Take Group');
   };
 
-  const selectionSet = useMemo(() => new Set(selectionArray), [selectionArray]);
-
-  const dispatch = useDispatch();
-
-  const clearSelection: (
-    dragSelectAnchor: number | null,
-    clearAnchor: () => void
-  ) => void = (dragSelectAnchor, clearAnchor) => {
-    if (dragSelectAnchor == null) {
-      dispatch(selectionCleared());
-    } else {
-      clearAnchor();
-    }
-  };
-
-  const space: (key: string, isDropMarkerActive: boolean) => JSX.Element =
-    useMemo(
-      () => (key, isDropMarkerActive) =>
-        (
-          <span
-            key={key}
-            style={{
-              background: isDropMarkerActive ? 'white' : 'none',
-              transition: 'background 0.2s',
-              width: '2px',
-              paddingLeft: '1px',
-              paddingRight: '1px',
-            }}
-          />
-        ),
-      []
-    );
-
-  const renderTranscription: RenderTranscription = (
-    onWordMouseDown,
-    onWordMouseMove,
-    dragState,
-    isWordBeingDragged,
-    mouse,
-    mouseThrottled,
-    dropBeforeIndex,
-    setDropBeforeIndex,
-    cancelDrag,
-    dragSelectAnchor,
-    setDragSelectAnchor
-  ) => (
-    <TranscriptionBox
-      onMouseUp={() =>
-        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
-      }
-    >
+  return (
+    <>
       {mockTranscription.words.map((word, index) => {
         if (instanceofTakeGroup(word)) {
           return word.takes.map((take, takeIndex) => {
             return (
               <>
-                {takeGroupOpened ? (
+                {isTakeGroupOpened ? (
                   <Avatar
                     onClick={() => testAvatarClick(index, takeIndex)}
                     sx={{
@@ -295,7 +109,7 @@ const TranscriptionBlock = ({
                     borderColor: '#FFB355',
                   }}
                 >
-                  {word.activeTakes.includes(takeIndex) || takeGroupOpened
+                  {word.activeTakes.includes(takeIndex) || isTakeGroupOpened
                     ? word.takes[takeIndex].words.map((wordA, indexA) => {
                         return wordA.deleted ? null : (
                           <Fragment
@@ -373,14 +187,7 @@ const TranscriptionBlock = ({
           </Fragment>
         );
       })}
-    </TranscriptionBox>
-  );
-
-  return (
-    <DragManager
-      renderTranscription={renderTranscription}
-      containerRef={containerRef}
-    />
+    </>
   );
 };
 

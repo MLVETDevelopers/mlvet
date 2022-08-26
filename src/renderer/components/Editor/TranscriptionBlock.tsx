@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription } from 'sharedTypes';
+import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
@@ -18,6 +18,11 @@ import {
 } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 import EditMarker from './EditMarker';
+import {
+  generateTranscriptionChunks,
+  RendererTakeGroup,
+} from 'renderer/utils/takeDetection';
+import TranscriptionChunk from './TranscriptionChunk';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -51,6 +56,14 @@ const TranscriptionBlock = ({
   nowPlayingWordIndex,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
+  const takeGroups = useSelector(
+    (store: ApplicationStore) => store.takeDetection
+  );
+
+  const transcriptionChunks = useMemo(() => {
+    return generateTranscriptionChunks(transcription.words, takeGroups);
+  }, [transcription, takeGroups]);
 
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
@@ -121,54 +134,9 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
-          {transcription.words.map((word, index) =>
-            word.deleted ? (
-              <EditMarker
-                key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
-                transcription={transcription}
-                word={word}
-                index={index}
-              />
-            ) : (
-              <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
-                <WordSpace
-                  key={`space-${word.originalIndex}-${word.pasteKey}`}
-                  isDropMarkerActive={
-                    dragState !== null && dropBeforeIndex === index
-                  }
-                />
-                <WordComponent
-                  key={`word-${word.originalIndex}-${word.pasteKey}`}
-                  seekToWord={() => seekToWord(index)}
-                  isPlaying={index === nowPlayingWordIndex}
-                  isSelected={selectionSet.has(index)}
-                  text={word.word}
-                  index={index}
-                  onMouseDown={onWordMouseDown(index)}
-                  onMouseMove={() => onWordMouseMove(index)}
-                  dragState={dragState}
-                  isBeingDragged={isWordBeingDragged(index)}
-                  mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
-                  isDropBeforeActive={dropBeforeIndex === index}
-                  isDropAfterActive={dropBeforeIndex === index + 1}
-                  setDropBeforeIndex={setDropBeforeIndex}
-                  cancelDrag={cancelDrag}
-                  submitWordEdit={submitWordEdit}
-                  isBeingEdited={editWord?.index === index}
-                  editText={editWord?.text ?? null}
-                />
-                {index === transcription.words.length - 1 && (
-                  <WordSpace
-                    key="space-end"
-                    isDropMarkerActive={
-                      dragState !== null &&
-                      dropBeforeIndex === transcription.words.length
-                    }
-                  />
-                )}
-              </Fragment>
-            )
-          )}
+          {transcriptionChunks.map((chunk) => (
+            <TranscriptionChunk chunk={chunk} />
+          ))}
         </TranscriptionBox>
       )}
     </WordDragManager>
@@ -176,3 +144,9 @@ const TranscriptionBlock = ({
 };
 
 export default TranscriptionBlock;
+
+{
+  /* {transcription.words.map((word, index) =>
+            
+          )} */
+}

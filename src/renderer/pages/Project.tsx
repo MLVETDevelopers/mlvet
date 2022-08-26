@@ -1,5 +1,5 @@
-import { Box, Stack } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, styled, Modal, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -11,7 +11,10 @@ import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
+import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/updateTranscriptionAPIKey/actions';
+import CloudConfigView from 'renderer/components/ProjectCreation/CloudConfigView';
 import { ApplicationStore } from '../store/sharedHelpers';
+import colors from '../colors';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -19,13 +22,38 @@ It will be primarily composed of the transcription area, an editable text box wh
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
+
+const CustomModal = styled(Modal)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+const CustomModalInner = styled(Box)({
+  background: colors.grey[700],
+  padding: '15px 30px 30px 30px',
+  borderRadius: '5px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+});
+
 const ProjectPage = () => {
+  const dispatch = useDispatch();
+  const dummyPrevView: () => void = () => {};
+  const dummyNextView: () => void = () => {};
+
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+
+  const hasOpenedUpdateTranscriptionAPIKey = useSelector(
+    (store: ApplicationStore) => store.updateTranscriptionAPIKeyOpened
+  );
+
+  const closeUpdateTranscriptionAPIKey = () =>
+    dispatch(toggleUpdateTranscriptionAPIKey(false));
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +87,14 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
+              <CloudConfigView
+                prevView={dummyPrevView}
+                closeModal={closeUpdateTranscriptionAPIKey}
+                nextView={dummyNextView}
+                projectName=""
+                textToDisplay={null}
+                open={hasOpenedUpdateTranscriptionAPIKey}
+              />
               <VideoController
                 time={time}
                 isPlaying={isPlaying}

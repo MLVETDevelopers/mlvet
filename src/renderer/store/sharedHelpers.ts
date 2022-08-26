@@ -16,6 +16,7 @@ export interface ApplicationStore {
   // Array of numbers corresponding to indices of words within the transcription
   selection: number[];
   shortcutsOpened: boolean;
+  updateTranscriptionAPIKeyOpened: boolean;
   // Index of word currently being edited, otherwise null
   editWord: { index: number; text: string } | null;
   // whether confidence underlines are currently visible
@@ -35,6 +36,7 @@ export const initialStore: ApplicationStore = {
   clipboard: [],
   selection: [],
   shortcutsOpened: false,
+  updateTranscriptionAPIKeyOpened: false,
   editWord: null,
   isShowingConfidenceUnderlines: false,
 };

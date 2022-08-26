@@ -11,6 +11,7 @@ import returnToHome from './navigation/returnToHome';
 import { performUndo, performRedo } from './editor/undoRedo';
 import { mergeWords, splitWord } from './editor/mergeSplit';
 import openShortcuts from './navigation/openShortcuts';
+import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionAPIKey';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 
@@ -22,6 +23,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
   'initiate-export-project': exportProject,
+  'open-update-transcription-API-key': openUpdateTranscriptionAPIKey,
 
   // Editor actions
   'initiate-cut-text': cutText,

@@ -120,6 +120,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
             nextView={nextView}
             projectName={projectName}
             textToDisplay={null}
+            open
           />
         );
       case ImportMediaView:

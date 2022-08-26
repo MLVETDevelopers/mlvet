@@ -1,5 +1,6 @@
 import {
   Box,
+  Dialog,
   IconButton,
   Link,
   Stack,
@@ -15,13 +16,18 @@ import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
 const { openExternalLink, storeCloudCredentials } = ipc;
-
+const CustomModal = styled(Dialog)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 interface Props {
   prevView: () => void;
   closeModal: () => void;
   nextView: () => void;
   projectName: string;
   textToDisplay: string | null;
+  open: boolean;
 }
 
 const CustomStack = styled(Stack)({ width: '100%' });
@@ -43,6 +49,7 @@ const CloudConfigView = ({
   nextView,
   projectName,
   textToDisplay,
+  open,
 }: Props) => {
   const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
   const [apiKey, setApiKey] = useState<string>('');
@@ -91,63 +98,70 @@ const CloudConfigView = ({
   ]);
 
   return (
-    <Container sx={{ height: { xs: 500 } }}>
-      <CustomRowStack justifyContent="space-between">
-        <Typography
-          overflow="hidden"
-          textOverflow="ellipsis"
-          variant="h1"
-          sx={{ color: colors.grey[400] }}
-        >
-          {projectName}
-        </Typography>
-        <IconButton
-          sx={{ color: colors.yellow[500], fontSize: 20 }}
-          onClick={closeModal}
-        >
-          <CloseIcon />
-        </IconButton>
-      </CustomRowStack>
-      <CustomColumnStack justifyContent="space-between" sx={{ height: '83%' }}>
-        <CustomStack justifyContent="space-between">
-          <CustomStack>
-            <Typography
-              variant="p-300"
-              sx={{ marginTop: '16px', marginBottom: '35px' }}
-            >
-              Cloud transcription configuration required
-            </Typography>
-            <Typography variant="p-400">{text}</Typography>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <Link
-              onClick={handleHelpClick}
-              sx={{
-                cursor: 'pointer',
-                color: colors.yellow[500],
-                fontSize: '12px',
-                marginTop: '5px',
-                marginBottom: '30px',
-              }}
-            >
-              {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
-              How can I get an API key? &gt;
-            </Link>
-          </CustomStack>
-          <TextField
-            label="API Key"
-            value={apiKey}
-            onChange={(event) => handleApiKeyInput(event.target.value)}
-            autoFocus
-          />
-        </CustomStack>
-      </CustomColumnStack>
-      <CustomColumnStack>
-        <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
-          {cancelButton}
-          {saveButton}
+    <CustomModal open={open} onClose={closeModal}>
+      <Container sx={{ height: { xs: 500 } }}>
+        <CustomRowStack justifyContent="space-between">
+          <Typography
+            overflow="hidden"
+            textOverflow="ellipsis"
+            variant="h1"
+            sx={{ color: colors.grey[400] }}
+          >
+            {projectName}
+          </Typography>
+          <IconButton
+            sx={{ color: colors.yellow[500], fontSize: 20 }}
+            onClick={closeModal}
+          >
+            <CloseIcon />
+          </IconButton>
         </CustomRowStack>
-      </CustomColumnStack>
-    </Container>
+        <CustomColumnStack
+          justifyContent="space-between"
+          sx={{ height: '83%' }}
+        >
+          <CustomStack justifyContent="space-between">
+            <CustomStack>
+              <Typography
+                variant="p-300"
+                sx={{ marginTop: '16px', marginBottom: '35px' }}
+              >
+                Cloud transcription configuration required
+              </Typography>
+              <Typography variant="p-400">{text}</Typography>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <Link
+                onClick={handleHelpClick}
+                sx={{
+                  cursor: 'pointer',
+                  color: colors.yellow[500],
+                  marginTop: '5px',
+                  marginBottom: '30px',
+                }}
+              >
+                {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
+                How can I get an API key? &gt;
+              </Link>
+            </CustomStack>
+          </CustomStack>
+          <CustomColumnStack>
+            <CustomStack>
+              <TextField
+                label="API Key"
+                value={apiKey}
+                onChange={(event) => handleApiKeyInput(event.target.value)}
+                autoFocus
+                sx={{ marginBottom: '9px' }}
+              />
+            </CustomStack>
+          </CustomColumnStack>
+          <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
+            {cancelButton}
+            {saveButton}
+          </CustomRowStack>
+        </CustomColumnStack>
+      </Container>
+    </CustomModal>
   );
 };
 

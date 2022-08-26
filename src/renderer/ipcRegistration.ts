@@ -10,6 +10,7 @@ import exportProject from './file/exportProject';
 import returnToHome from './navigation/returnToHome';
 import { performUndo, performRedo } from './editor/undoRedo';
 import { mergeWords, splitWord } from './editor/mergeSplit';
+import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -55,3 +56,6 @@ const registerIpcHandler: (
 Object.keys(IPC_RECEIVERS).forEach((key) =>
   registerIpcHandler(key, IPC_RECEIVERS[key])
 );
+
+// Also register the manual keyboard handlers for windows/linux
+registerKeyboardHandlers();

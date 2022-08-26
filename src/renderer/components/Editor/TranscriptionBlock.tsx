@@ -137,6 +137,7 @@ const TranscriptionBlock = ({
                   transcription={transcription}
                   word={word}
                   index={index}
+                  isSelected={selectionSet.has(index)}
                 />
               ) : (
                 <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

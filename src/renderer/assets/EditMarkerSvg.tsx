@@ -6,13 +6,6 @@ const EditMarkerSvg = (): JSX.Element => {
       viewBox="0 0 5 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{
-        // a bit gross but a seemingly unavoidable consequence of
-        // using a centre-aligned flexbox for the word and space items -
-        // tried everything else in the book and this is the best I could
-        // come up with
-        transform: 'translateY(-7px)',
-      }}
     >
       <line
         x1="2.5"

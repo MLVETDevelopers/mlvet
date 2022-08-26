@@ -72,18 +72,14 @@ const pollTranscriptionResult = async (transcriptionId: string) => {
   const POLL_FREQUENCY = 2; // every N seconds
   let data = await pollTranscriptionResultInner(transcriptionId);
 
-  while (true) {
-    if (['processing', 'queued'].includes(data.status)) {
-      console.log(`Polled for transcription status - ${data.status}`);
+  while (['processing', 'queued'].includes(data.status)) {
+    console.log(`Polled for transcription status - ${data.status}`);
 
-      // eslint-disable-next-line no-await-in-loop
-      await sleep(POLL_FREQUENCY);
+    // eslint-disable-next-line no-await-in-loop
+    await sleep(POLL_FREQUENCY);
 
-      // eslint-disable-next-line no-await-in-loop
-      data = await pollTranscriptionResultInner(transcriptionId);
-    } else {
-      break;
-    }
+    // eslint-disable-next-line no-await-in-loop
+    data = await pollTranscriptionResultInner(transcriptionId);
   }
 
   return data;

@@ -2,6 +2,8 @@ import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes'
 import {
   MapCallback,
   PartialWord,
+  ProcessedTranscription,
+  TakeGroup,
   Transcription,
   Word,
 } from '../../sharedTypes';
@@ -15,6 +17,7 @@ import { roundToMs } from '../../sharedUtils';
 const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
   (fileName: string) => (word, index) => ({
     ...word,
+    // eslint-disable-next-line react/destructuring-assignment
     outputStartTime: word.startTime,
     originalIndex: index,
     pasteKey: 0,
@@ -23,6 +26,7 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     // Buffers are calculated later
     bufferDurationBefore: 0,
     bufferDurationAfter: 0,
+    takeInfo: null,
   });
 
 const calculateAverageSilenceDuration = (
@@ -110,21 +114,35 @@ const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
   duration: number,
   fileName: string
-): Transcription => {
+): ProcessedTranscription => {
+  // Note: This calculation should be inside punctuation
   const averageSilenceDuration: number = calculateAverageSilenceDuration(
     jsonTranscript,
     duration
   );
 
+  // TODO(Kate): Take Detection function should be called here
+  // Mock take groups
+  const takeGroups: TakeGroup[] = [
+    {
+      id: 1,
+      activeTakeIndex: 0,
+      takeCount: 2,
+    },
+  ];
+
   return {
-    confidence: jsonTranscript.confidence,
-    duration,
-    ...updateOutputTimes(
-      jsonTranscript.words
-        .map(punctuate(duration, averageSilenceDuration))
-        .flatMap(injectAttributes(fileName))
-        .map(calculateBuffers(duration))
-    ),
+    transcription: {
+      confidence: jsonTranscript.confidence,
+      duration,
+      ...updateOutputTimes(
+        jsonTranscript.words
+          .map(punctuate(duration, averageSilenceDuration))
+          .flatMap(injectAttributes(fileName))
+          .map(calculateBuffers(duration))
+      ),
+    },
+    takeGroups,
   };
 };
 

@@ -11,6 +11,7 @@ import {
   RecentProject,
   Transcription,
   ProjectIdAndFilePath,
+  ProcessedTranscription,
 } from '../sharedTypes';
 
 declare global {
@@ -62,7 +63,7 @@ declare global {
 
       requestTranscription: (
         project: RuntimeProject
-      ) => Promise<Transcription | null>;
+      ) => Promise<ProcessedTranscription | null>;
 
       setExportEnabled: (exportEnabled: boolean) => void;
 

@@ -3,8 +3,8 @@ import path from 'path';
 import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
   PartialWord,
+  ProcessedTranscription,
   RuntimeProject,
-  Transcription,
 } from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
@@ -54,7 +54,7 @@ const getAudioDurationInSeconds: GetAudioDurationInSeconds = async (
 
 type RequestTranscription = (
   project: RuntimeProject
-) => Promise<Transcription | null>;
+) => Promise<ProcessedTranscription | null>;
 
 const requestTranscription: RequestTranscription = async (project) => {
   if (project.mediaFilePath == null) {
@@ -77,6 +77,7 @@ const requestTranscription: RequestTranscription = async (project) => {
     duration,
     fileName
   );
+
   return processedTranscript;
 };
 

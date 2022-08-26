@@ -24,23 +24,23 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     bufferDurationAfter: 0,
   });
 
-const calculateAverageSilenceDuration = (
-  jsonTranscription: JSONTranscription,
-  totalDuration: number
-): number => {
-  let silenceSum = 0;
-  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-    const endTime = jsonTranscription.words[i + 1].startTime;
-    const silenceDuration =
-      endTime -
-      jsonTranscription.words[i].startTime -
-      jsonTranscription.words[i].duration;
-    silenceSum += silenceDuration;
-  }
-  return jsonTranscription.words.length !== 0
-    ? silenceSum / jsonTranscription.words.length
-    : totalDuration;
-};
+// const calculateAverageSilenceDuration = (
+//   jsonTranscription: JSONTranscription,
+//   totalDuration: number
+// ): number => {
+//   let silenceSum = 0;
+//   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
+//     const endTime = jsonTranscription.words[i + 1].startTime;
+//     const silenceDuration =
+//       endTime -
+//       jsonTranscription.words[i].startTime -
+//       jsonTranscription.words[i].duration;
+//     silenceSum += silenceDuration;
+//   }
+//   return jsonTranscription.words.length !== 0
+//     ? silenceSum / jsonTranscription.words.length
+//     : totalDuration;
+// };
 
 const calculateBufferDurationBefore: (
   word: Word,

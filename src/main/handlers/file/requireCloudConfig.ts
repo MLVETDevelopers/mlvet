@@ -1,4 +1,4 @@
-import { appCloudConfigPath, fileOrDirExists } from 'main/util';
+import { appCloudConfigPath, fileOrDirExists } from '../../util';
 
 type RequireCloudConfig = () => Promise<boolean>;
 

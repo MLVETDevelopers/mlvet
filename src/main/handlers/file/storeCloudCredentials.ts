@@ -1,5 +1,5 @@
-import { appCloudConfigPath, fileOrDirExists } from 'main/util';
 import { unlinkSync, writeFileSync } from 'fs';
+import { appCloudConfigPath, fileOrDirExists } from '../../util';
 
 type StoreCloudCredentials = (data: string) => Promise<void>;
 

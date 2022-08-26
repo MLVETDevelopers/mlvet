@@ -123,7 +123,10 @@ const CloudConfigView = ({
       >
         <CustomStack justifyContent="space-between">
           <CustomStack>
-            <Typography variant="p-300">
+            <Typography
+              variant="p-300"
+              sx={{ marginTop: '12px', marginBottom: '12px' }}
+            >
               Cloud transcription configuration required
             </Typography>
             <Typography variant="p-400">{text}</Typography>
@@ -133,7 +136,7 @@ const CloudConfigView = ({
               sx={{
                 cursor: 'pointer',
                 color: colors.yellow[500],
-                fontSize: '10px',
+                fontSize: '12px',
               }}
             >
               {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
@@ -148,7 +151,7 @@ const CloudConfigView = ({
               value={apiKey}
               onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
-              sx={{ paddingBottom: '9px' }}
+              sx={{ marginBottom: '9px' }}
             />
           </CustomStack>
           <CustomStack>
@@ -157,7 +160,7 @@ const CloudConfigView = ({
               value={clientSecret}
               onChange={(event) => handleClientSecretInput(event.target.value)}
               autoFocus
-              sx={{ paddingTop: '9px' }}
+              sx={{ marginTop: '9px' }}
             />
           </CustomStack>
         </CustomColumnStack>

@@ -11,6 +11,7 @@ import returnToHome from './navigation/returnToHome';
 import { performUndo, performRedo } from './editor/undoRedo';
 import { mergeWords, splitWord } from './editor/mergeSplit';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
+import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -31,6 +32,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-split-word': splitWord,
   'initiate-undo': performUndo,
   'initiate-redo': performRedo,
+  'toggle-confidence-underlines': toggleConfidenceUnderlines,
 
   // Navigation actions
   'initiate-return-to-home': returnToHome,

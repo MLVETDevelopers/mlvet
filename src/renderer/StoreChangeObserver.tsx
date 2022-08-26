@@ -31,6 +31,10 @@ export default function StoreChangeObserver() {
     (store: ApplicationStore) => store.currentPage
   );
 
+  const isShowingConfidenceUnderlines = useSelector(
+    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
+  );
+
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selection = useSelector((store: ApplicationStore) => store.selection);
@@ -147,6 +151,15 @@ export default function StoreChangeObserver() {
 
     ipc.setUndoRedoEnabled(undoEnabled, redoEnabled);
   }, [undoStack]);
+
+  // Update whether 'show/hide confidence underlines' is enabled, and also its label
+  useEffect(() => {
+    if (words === null) {
+      ipc.setConfidenceLinesEnabled(false, false);
+    } else {
+      ipc.setConfidenceLinesEnabled(true, isShowingConfidenceUnderlines);
+    }
+  }, [isShowingConfidenceUnderlines, words]);
 
   // Component doesn't render anything
   return null;

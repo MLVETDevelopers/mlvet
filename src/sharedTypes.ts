@@ -39,7 +39,10 @@ export interface Transcription {
   outputDuration: number;
 }
 
-export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+export type PartialWord = Pick<
+  Word,
+  'word' | 'startTime' | 'duration' | 'confidence'
+>;
 
 export interface Word {
   // Text content of the word
@@ -66,6 +69,10 @@ export interface Word {
   // TODO(chloe) this should be replaced with project ID or transcript ID
   // in order to support multiple projects without relying on a filename (which can change)
   fileName: string;
+  // Now that we have assemblyAI, we can do this - individual confidence for each word.
+  // Ranges from 0 - 1.
+  // if using another platform that doesn't support this, just set to null.
+  confidence: number | null | undefined;
 }
 
 export interface Cut {

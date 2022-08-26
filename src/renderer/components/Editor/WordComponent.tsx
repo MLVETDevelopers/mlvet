@@ -36,11 +36,16 @@ const makeWordInner = (isDragActive: boolean) =>
     },
   });
 
+// thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
+const CONFIDENCE_THRESHOLD_MEDIUM = 0.6;
+const CONFIDENCE_THRESHOLD_LOW = 0.4;
+
 interface Props {
   index: number;
   seekToWord: () => void;
   isPlaying: boolean;
   isSelected: boolean;
+  confidence: number;
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -56,6 +61,7 @@ interface Props {
   submitWordEdit: () => void;
   isBeingEdited: boolean;
   editText: string | null;
+  isShowingConfidenceUnderlines: boolean;
 }
 
 const WordComponent = ({
@@ -63,6 +69,7 @@ const WordComponent = ({
   seekToWord,
   isPlaying,
   isSelected,
+  confidence,
   text,
   onMouseDown,
   onMouseMove,
@@ -76,6 +83,7 @@ const WordComponent = ({
   submitWordEdit,
   isBeingEdited,
   editText,
+  isShowingConfidenceUnderlines,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -202,6 +210,20 @@ const WordComponent = ({
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
       };
+    }
+    if (isShowingConfidenceUnderlines) {
+      if (confidence < CONFIDENCE_THRESHOLD_LOW) {
+        return {
+          borderBottom: `1px solid rgba(255, 0, 0, 0.6)`,
+          marginBottom: '1px',
+        };
+      }
+      if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
+        return {
+          borderBottom: `1px solid ${colors.yellow[500]}88`,
+          marginBottom: '1px',
+        };
+      }
     }
     return {};
   })();

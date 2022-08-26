@@ -22,6 +22,7 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     // Buffers are calculated later
     bufferDurationBefore: 0,
     bufferDurationAfter: 0,
+    confidence: word.confidence,
   });
 
 // const calculateAverageSilenceDuration = (

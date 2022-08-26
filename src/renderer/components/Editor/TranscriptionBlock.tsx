@@ -50,6 +50,10 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const isShowingConfidenceUnderlines = useSelector(
+    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
+  );
+
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const selectionArray = useSelector(
@@ -76,10 +80,6 @@ const TranscriptionBlock = ({
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
       dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
-    } else if (editWord.text === transcription.words[index].word) {
-      // If the user edits a word but leaves it unchanged, just select it without
-      // dispatching an update to the word itself
-      dispatch(selectionRangeAdded(rangeLengthOne(index)));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
@@ -142,6 +142,7 @@ const TranscriptionBlock = ({
                   seekToWord={() => seekToWord(index)}
                   isPlaying={index === nowPlayingWordIndex}
                   isSelected={selectionSet.has(index)}
+                  confidence={word.confidence ?? 1}
                   text={word.word}
                   index={index}
                   onMouseDown={onWordMouseDown(index)}
@@ -156,6 +157,7 @@ const TranscriptionBlock = ({
                   submitWordEdit={submitWordEdit}
                   isBeingEdited={editWord?.index === index}
                   editText={editWord?.text ?? null}
+                  isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
                 />
                 {index === transcription.words.length - 1 && (
                   <WordSpace

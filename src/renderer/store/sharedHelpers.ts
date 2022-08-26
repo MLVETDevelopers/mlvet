@@ -17,6 +17,8 @@ export interface ApplicationStore {
   selection: number[];
   // Index of word currently being edited, otherwise null
   editWord: { index: number; text: string } | null;
+  // whether confidence underlines are currently visible
+  isShowingConfidenceUnderlines: boolean;
 }
 
 /**
@@ -32,4 +34,5 @@ export const initialStore: ApplicationStore = {
   clipboard: [],
   selection: [],
   editWord: null,
+  isShowingConfidenceUnderlines: false,
 };

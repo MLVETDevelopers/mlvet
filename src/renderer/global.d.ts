@@ -4,6 +4,8 @@
 
 import { BrowserWindow, IpcRendererEvent } from 'electron';
 import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
+import { TranscriptionEngine } from 'main/handlers/helpers/transcribeTypes';
+import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
   RuntimeProject,
@@ -63,6 +65,11 @@ declare global {
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<Transcription | null>;
+
+      setConfidenceLinesEnabled: (
+        menuItemEnabled: boolean,
+        confidenceLinesShown: boolean
+      ) => void;
 
       setExportEnabled: (exportEnabled: boolean) => void;
 

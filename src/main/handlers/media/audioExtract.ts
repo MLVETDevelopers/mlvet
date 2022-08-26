@@ -23,7 +23,7 @@ const extractAudio: ExtractAudio = (project) => {
 
   const command = ffmpeg(project.mediaFilePath)
     .audioChannels(1)
-    .outputOptions('-ar 16000') // Sample rate of 16kHz
+    .outputOptions('-ar 8000') // Sample rate of 16kHz
     .noVideo()
     .saveToFile(pathToSaveMedia);
 

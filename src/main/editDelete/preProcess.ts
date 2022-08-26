@@ -6,7 +6,6 @@ import {
   Word,
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
-import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
 
 /**
@@ -111,17 +110,17 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): Transcription => {
-  const averageSilenceDuration: number = calculateAverageSilenceDuration(
-    jsonTranscript,
-    duration
-  );
+  // const averageSilenceDuration: number = calculateAverageSilenceDuration(
+  //   jsonTranscript,
+  //   duration
+  // );
 
   return {
     confidence: jsonTranscript.confidence,
     duration,
     ...updateOutputTimes(
       jsonTranscript.words
-        .map(punctuate(duration, averageSilenceDuration))
+        // .map(punctuate(duration, averageSilenceDuration))
         .flatMap(injectAttributes(fileName))
         .map(calculateBuffers(duration))
     ),

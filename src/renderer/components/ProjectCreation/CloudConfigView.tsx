@@ -135,6 +135,7 @@ const CloudConfigView = ({
                 sx={{
                   cursor: 'pointer',
                   color: colors.yellow[500],
+                  fontSize: '12px',
                   marginTop: '5px',
                   marginBottom: '30px',
                 }}
@@ -151,7 +152,6 @@ const CloudConfigView = ({
                 value={apiKey}
                 onChange={(event) => handleApiKeyInput(event.target.value)}
                 autoFocus
-                sx={{ marginBottom: '9px' }}
               />
             </CustomStack>
           </CustomColumnStack>

@@ -35,6 +35,8 @@ declare global {
 
       requestMediaDialog: () => Promise<string | null>;
 
+      requireCloudConfig: () => Promise<boolean>;
+
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
       saveChangesDialog: (
@@ -43,6 +45,8 @@ declare global {
       ) => SaveDialogSelections;
 
       saveProject: (project: RuntimeProject) => Promise<string>;
+
+      storeCloudCredentials: (data: string) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 

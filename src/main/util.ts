@@ -54,5 +54,8 @@ export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>
   path.join(getProjectDataDir(projectId), 'thumbnail.png');
 
+export const appCloudConfigPath: () => string = () =>
+  path.join(appDataStoragePath(), 'cloudConfig.txt');
+
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

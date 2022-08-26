@@ -17,12 +17,17 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
+  requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
+
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveChangesDialog: (mainWindow, projectFileName) =>
     ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
+
+  storeCloudCredentials: (data) =>
+    ipcRenderer.invoke('store-cloud-credentials', data),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),

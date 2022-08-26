@@ -14,7 +14,7 @@ import useKeypress from 'renderer/utils/hooks';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
-const { openExternalLink } = ipc;
+const { openExternalLink, storeCloudCredentials } = ipc;
 
 interface Props {
   prevView: () => void;
@@ -49,7 +49,7 @@ const CloudConfigView = ({
 
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
-    setClientSecret(clientSecret.trim());
+    storeCloudCredentials(apiKey);
     nextView();
   };
 

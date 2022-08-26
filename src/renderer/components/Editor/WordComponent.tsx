@@ -1,16 +1,25 @@
 import styled from '@emotion/styled';
-import {
+import React, {
   MouseEventHandler,
   useEffect,
   useRef,
   useMemo,
   RefObject,
+  useState,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
-import colors from '../../colors';
-import { handleSelectWord } from '../../editor/selection';
+import { useDispatch } from 'react-redux';
+import {
+  editWordFinished,
+  editWordStarted,
+  editWordUpdated,
+} from 'renderer/store/editWord/actions';
+import { TextField } from '@mui/material';
+import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
+import { handleSelectWord } from '../../editor/selection';
+import colors from '../../colors';
 
 const makeWordInner = (isDragActive: boolean) =>
   styled('div')({
@@ -44,6 +53,9 @@ interface Props {
   isDropAfterActive: boolean;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
+  submitWordEdit: () => void;
+  isBeingEdited: boolean;
+  editText: string | null;
 }
 
 const WordComponent = ({
@@ -61,7 +73,24 @@ const WordComponent = ({
   isDropAfterActive,
   setDropBeforeIndex,
   cancelDrag,
+  submitWordEdit,
+  isBeingEdited,
+  editText,
 }: Props) => {
+  const dispatch = useDispatch();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isBeingEdited && inputRef?.current !== null) {
+      inputRef.current.select();
+    }
+  }, [isBeingEdited, inputRef]);
+
+  // For handling receiving double-clicks on a word
+  const [awaitingSecondClick, setAwaitingSecondClick] =
+    useState<boolean>(false);
+
   const ref = useRef<HTMLDivElement>(null);
 
   const xPosition = ref.current?.offsetLeft ?? 0;
@@ -128,7 +157,22 @@ const WordComponent = ({
     index,
   ]);
 
+  const startEditing = () => {
+    dispatch(editWordStarted(index, text));
+  };
+
   const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (awaitingSecondClick) {
+      startEditing();
+      return;
+    }
+
+    setAwaitingSecondClick(true);
+    const DOUBLE_CLICK_THRESHOLD = 500; // ms
+    setTimeout(() => {
+      setAwaitingSecondClick(false);
+    }, DOUBLE_CLICK_THRESHOLD);
+
     seekToWord();
     handleSelectWord(event, index);
 
@@ -142,6 +186,9 @@ const WordComponent = ({
   };
 
   const highlightStyles: React.CSSProperties = (() => {
+    if (isBeingEdited) {
+      return {};
+    }
     if (isSelected || isBeingDragged) {
       return {
         background: `${colors.yellow[500]}cc`,
@@ -174,20 +221,67 @@ const WordComponent = ({
     ...dragStyles,
   };
 
+  const submitIfEnter = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      // Save and close edit
+      submitWordEdit();
+    } else if (event.key === 'Escape') {
+      // Close edit without saving
+      dispatch(editWordFinished());
+    }
+  };
+
   const WordInner = useMemo(
     () => makeWordInner(dragState !== null),
     [dragState]
   );
 
+  const setEditText = (value: string) => {
+    dispatch(editWordUpdated(value));
+  };
+
+  const onMouseUp: (event: React.MouseEvent) => void = (event) => {
+    // Prevent edit from being cancelled if clicking the word
+    if (isBeingEdited) {
+      event.stopPropagation();
+    }
+  };
+
+  const MIN_EDIT_WIDTH = 10;
+
   return (
     <WordInner
       ref={ref}
       onClick={onClick}
+      onMouseUp={onMouseUp}
       onMouseDown={onMouseDown(ref)}
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >
-      {text}
+      {isBeingEdited ? (
+        <TextField
+          variant="standard"
+          inputRef={inputRef}
+          inputProps={{
+            sx: {
+              height: '1em',
+              width: Math.max(
+                MIN_EDIT_WIDTH,
+                getTextWidth(
+                  editText ?? '',
+                  getCanvasFont(inputRef?.current)
+                ) ?? 0
+              ),
+            },
+          }}
+          type="text"
+          value={editText ?? text}
+          onChange={(e) => setEditText(e.target.value)}
+          onKeyDown={submitIfEnter}
+        />
+      ) : (
+        text
+      )}
     </WordInner>
   );
 };

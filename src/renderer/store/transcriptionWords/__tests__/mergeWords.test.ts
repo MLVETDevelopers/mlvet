@@ -1,5 +1,5 @@
 import { IndexRange, Word } from 'sharedTypes';
-import { mergeWords } from '../mergeWords';
+import { mergeWords } from '../helpers/mergeWordsHelper';
 
 const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   word: 'test',

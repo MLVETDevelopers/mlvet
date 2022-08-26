@@ -11,9 +11,11 @@ import {
 import transcriptionReducer from '../transcription/reducer';
 import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 import {
+  CORRECT_WORD,
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
+  UNDO_CORRECT_WORD,
   SPLIT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
@@ -91,6 +93,8 @@ const currentProjectReducer: Reducer<
       UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
       MERGE_WORDS,
       UNDO_MERGE_WORDS,
       SPLIT_WORD,

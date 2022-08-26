@@ -6,6 +6,7 @@ import recentProjectsReducer from './recentProjects/reducer';
 import undoStackReducer from './undoStack/reducer';
 import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
+import editWordReducer from './editWord/reducer';
 import takeDetectionReducer from './takeDetection/reducer';
 
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   exportIo: exportIoReducer,
   clipboard: clipboardReducer,
   selection: selectionReducer,
+  editWord: editWordReducer,
   takeDetection: takeDetectionReducer,
 });
 

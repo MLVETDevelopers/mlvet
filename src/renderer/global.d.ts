@@ -56,6 +56,11 @@ declare global {
 
       loadThumbnail: (projectId: string) => Promise<string>;
 
+      transcribe: (
+        project: RuntimeProject,
+        transcriptionEngine: TranscriptionEngine
+      ) => Promise<JSONTranscription>;
+
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<ProcessedTranscription | null>;

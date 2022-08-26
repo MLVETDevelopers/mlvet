@@ -30,3 +30,13 @@ export interface UndoMergeWordsPayload {
 }
 
 export type UndoSplitWordPayload = MergeWordsPayload;
+
+export interface CorrectWordPayload {
+  index: number;
+  text: string;
+}
+
+export interface UndoCorrectWordPayload {
+  index: number;
+  prevText: string;
+}

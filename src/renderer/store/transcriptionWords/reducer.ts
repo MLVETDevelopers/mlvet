@@ -1,24 +1,29 @@
 import { Reducer } from 'react';
 import { mapInRanges } from 'renderer/utils/list';
 import { Word } from 'sharedTypes';
+import { rangeLengthOne } from 'renderer/utils/range';
 import { Action } from '../action';
-import { mergeWords } from './mergeWords';
-import { splitWord } from './splitWord';
+import { mergeWords } from './helpers/mergeWordsHelper';
+import { splitWord } from './helpers/splitWordHelper';
 import {
+  CORRECT_WORD,
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
   SPLIT_WORD,
+  UNDO_CORRECT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
 } from './actions';
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
   SplitWordPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
@@ -103,9 +108,23 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === SPLIT_WORD) {
     const { index } = action.payload as SplitWordPayload;
 
-    const split = splitWord(words, index);
+    return splitWord(words, index);
+  }
 
-    return split;
+  if (action.type === CORRECT_WORD) {
+    const { index, text } = action.payload as CorrectWordPayload;
+
+    return mapInRanges(words, (word) => ({ ...word, word: text }), [
+      rangeLengthOne(index),
+    ]);
+  }
+
+  if (action.type === UNDO_CORRECT_WORD) {
+    const { index, prevText } = action.payload as UndoCorrectWordPayload;
+
+    return mapInRanges(words, (word) => ({ ...word, word: prevText }), [
+      rangeLengthOne(index),
+    ]);
   }
 
   return words;

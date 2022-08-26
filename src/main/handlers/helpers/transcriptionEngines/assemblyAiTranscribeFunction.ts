@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import queryString from 'query-string';
 import { JSONTranscription } from 'main/types';
 
@@ -13,7 +13,11 @@ const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 // TODO: put in config
-const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
+const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f__';
+
+const AUTH_ERROR_STRING = 'Authentication error, API token missing/invalid';
+
+class ApiTokenError extends Error {}
 
 const uploadAudio = async (audioPath: string) => {
   const data = await fs.readFile(audioPath);
@@ -37,7 +41,9 @@ const uploadAudio = async (audioPath: string) => {
   return uploadUrl;
 };
 
-const initTranscription = async (audioUrl: string) => {
+const initTranscription: (audioUrl: string) => Promise<string> = async (
+  audioUrl
+) => {
   const endpoint = 'https://api.assemblyai.com/v2/transcript';
 
   const jsonData = {
@@ -49,11 +55,21 @@ const initTranscription = async (audioUrl: string) => {
     'content-type': 'application/json',
   };
 
-  const { data } = await axios.post(endpoint, jsonData, { headers });
+  try {
+    const { data } = await axios.post(endpoint, jsonData, { headers });
 
-  const { id } = data;
+    return data.id;
+  } catch (err) {
+    if (
+      err instanceof AxiosError &&
+      err.response?.data.error === AUTH_ERROR_STRING
+    ) {
+      throw new ApiTokenError(AUTH_ERROR_STRING);
+    }
+  }
 
-  return id;
+  // for linter
+  return '';
 };
 
 const pollTranscriptionResultInner = async (transcriptionId: string) => {

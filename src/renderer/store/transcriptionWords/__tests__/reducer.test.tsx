@@ -23,6 +23,7 @@ const makeBasicWord: (
   originalIndex,
   pasteKey,
   fileName: 'PLACEHOLDER FILENAME',
+  confidence: 1,
 });
 
 describe('Transcription words reducer', () => {

@@ -1,4 +1,4 @@
-import { Box, styled, Modal, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
@@ -14,7 +14,6 @@ import Scrubber from 'renderer/components/Scrubber';
 import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/updateTranscriptionAPIKey/actions';
 import CloudConfigView from 'renderer/components/ProjectCreation/CloudConfigView';
 import { ApplicationStore } from '../store/sharedHelpers';
-import colors from '../colors';
 
 /*
 This is the page that gets displayed while you are editing a video.

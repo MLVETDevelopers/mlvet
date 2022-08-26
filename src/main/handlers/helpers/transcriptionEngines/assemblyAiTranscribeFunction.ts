@@ -13,7 +13,7 @@ const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 // TODO: put in config
-const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f__';
+const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
 
 const AUTH_ERROR_STRING = 'Authentication error, API token missing/invalid';
 

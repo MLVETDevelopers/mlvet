@@ -7,6 +7,7 @@ import undoStackReducer from './undoStack/reducer';
 import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
+import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reducer';
 import editWordReducer from './editWord/reducer';
 
 const rootReducer = combineReducers({
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   selection: selectionReducer,
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
+  updateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
 });
 
 export default rootReducer;

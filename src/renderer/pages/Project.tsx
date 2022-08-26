@@ -23,19 +23,6 @@ changes get reflected in the video. In addition to that, there is a video previe
 section to the side among other things.
 */
 
-const CustomModal = styled(Modal)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const CustomModalInner = styled(Box)({
-  background: colors.grey[700],
-  padding: '15px 30px 30px 30px',
-  borderRadius: '5px',
-  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-});
-
 const ProjectPage = () => {
   const dispatch = useDispatch();
   const dummyPrevView: () => void = () => {};

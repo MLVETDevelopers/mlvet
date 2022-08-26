@@ -65,6 +65,8 @@ const initTranscription: (audioUrl: string) => Promise<string> = async (
       err.response?.data.error === AUTH_ERROR_STRING
     ) {
       throw new ApiTokenError(AUTH_ERROR_STRING);
+    } else {
+      throw err;
     }
   }
 

@@ -14,7 +14,7 @@ import {
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
-import { SELECT_TAKE } from '../takeDetection/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeDetection/actions';
 import transcriptionTakesReducer from '../transcriptionTakes/reducer';
 
 /**
@@ -55,7 +55,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   }
 
   // Delegate take-related actions to takes reducer
-  if ([SELECT_TAKE].includes(action.type)) {
+  if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
     return {
       ...transcription,
       ...transcriptionTakesReducer(transcription.words, action),

@@ -1,10 +1,12 @@
 import { IndexRange, Word } from '../../../sharedTypes';
 import { Action } from '../action';
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
   SplitWordPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
@@ -22,6 +24,9 @@ export const UNDO_MERGE_WORDS = 'UNDO_MERGE_WORDS';
 
 export const SPLIT_WORD = 'SPLIT_WORD';
 export const UNDO_SPLIT_WORD = 'UNDO_SPLIT_WORD';
+
+export const CORRECT_WORD = 'CORRECT_WORD';
+export const UNDO_CORRECT_WORD = 'UNDO_CORRECT_WORD';
 
 export const selectionDeleted: (
   ranges: IndexRange[]
@@ -80,4 +85,20 @@ export const undoWordSplit: (
 ) => Action<UndoSplitWordPayload> = (range) => ({
   type: UNDO_SPLIT_WORD,
   payload: { range },
+});
+
+export const wordCorrected: (
+  index: number,
+  newText: string
+) => Action<CorrectWordPayload> = (index, newText) => ({
+  type: CORRECT_WORD,
+  payload: { index, text: newText },
+});
+
+export const undoWordCorrected: (
+  index: number,
+  prevText: string
+) => Action<UndoCorrectWordPayload> = (index, prevText) => ({
+  type: UNDO_CORRECT_WORD,
+  payload: { index, prevText },
 });

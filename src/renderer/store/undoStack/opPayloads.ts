@@ -1,8 +1,10 @@
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
   SplitWordPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
@@ -12,11 +14,13 @@ import {
 export type DoPayload =
   | DeleteSelectionPayload
   | PasteWordsPayload
+  | CorrectWordPayload
   | MergeWordsPayload
   | SplitWordPayload;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
   | UndoPasteWordsPayload
+  | UndoCorrectWordPayload
   | UndoMergeWordsPayload
   | UndoSplitWordPayload;

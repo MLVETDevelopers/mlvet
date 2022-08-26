@@ -13,8 +13,10 @@ export interface ApplicationStore {
   undoStack: UndoStack;
   exportIo: ExportIo;
   clipboard: Word[];
-  // Array of numbers corresponding to indexes of words within the transcription
+  // Array of numbers corresponding to indices of words within the transcription
   selection: number[];
+  // Index of word currently being edited, otherwise null
+  editWord: { index: number; text: string } | null;
 }
 
 /**
@@ -29,4 +31,5 @@ export const initialStore: ApplicationStore = {
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
   selection: [],
+  editWord: null,
 };

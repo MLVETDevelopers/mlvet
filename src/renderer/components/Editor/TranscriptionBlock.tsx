@@ -1,13 +1,21 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useMemo } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Transcription } from 'sharedTypes';
+import dispatchOp from 'renderer/store/dispatchOp';
+import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
+import { editWordFinished } from 'renderer/store/editWord/actions';
+import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { rangeLengthOne } from 'renderer/utils/range';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';
 import WordDragManager from './WordDragManager';
-import { selectionCleared } from '../../store/selection/actions';
+import {
+  selectionCleared,
+  selectionRangeAdded,
+} from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 import EditMarker from './EditMarker';
 
@@ -48,27 +56,65 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
   );
 
-  const selectionSet = useMemo(() => new Set(selectionArray), [selectionArray]);
+  const selectionSet = useMemo(
+    () => (editWord === null ? new Set(selectionArray) : new Set()),
+    [selectionArray, editWord]
+  );
 
   const dispatch = useDispatch();
+
+  const submitWordEdit: () => void = useCallback(() => {
+    if (editWord === null) {
+      return;
+    }
+
+    const { index } = editWord;
+
+    // Clear the selection to start with - the word might be re-selected later
+    dispatch(selectionCleared());
+
+    if (editWord.text === '') {
+      // If the user edits a word to be empty, treat this as a delete action
+      dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
+    } else if (editWord.text === transcription.words[index].word) {
+      // If the user edits a word but leaves it unchanged, just select it without
+      // dispatching an update to the word itself
+      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+    } else {
+      // If the user edits a word, update the word then select it
+      dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
+      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+    }
+
+    // Mark the edit as over
+    dispatch(editWordFinished());
+  }, [editWord, dispatch, transcription]);
 
   const clearSelection: (
     dragSelectAnchor: number | null,
     clearAnchor: () => void
-  ) => void = (dragSelectAnchor, clearAnchor) => {
-    if (dragSelectAnchor == null) {
-      dispatch(selectionCleared());
-    } else {
-      clearAnchor();
-    }
-  };
+  ) => void = useCallback(
+    (dragSelectAnchor, clearAnchor) => {
+      if (editWord !== null) {
+        clearAnchor();
+        submitWordEdit();
+      } else if (dragSelectAnchor === null) {
+        dispatch(selectionCleared());
+      } else {
+        clearAnchor();
+      }
+    },
+    [editWord, submitWordEdit, dispatch]
+  );
 
   return (
-    <WordDragManager>
+    <WordDragManager clearSelection={clearSelection}>
       {(
         onWordMouseDown,
         onWordMouseMove,
@@ -78,23 +124,16 @@ const TranscriptionBlock = ({
         mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex,
-        cancelDrag,
-        dragSelectAnchor,
-        setDragSelectAnchor
+        cancelDrag
       ) => (
-        <TranscriptionBox
-          id="transcription-content"
-          onMouseUp={() =>
-            clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null))
-          }
-        >
+        <TranscriptionBox id="transcription-content">
           {transcription.words.map((word, index) => (
             <WordAndSpaceContainer
               key={`container-${word.originalIndex}-${word.pasteKey}`}
             >
               {word.deleted ? (
                 <EditMarker
-                  key={word.originalIndex}
+                  key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
                   transcription={transcription}
                   word={word}
                   index={index}
@@ -132,6 +171,9 @@ const TranscriptionBlock = ({
                     isDropAfterActive={dropBeforeIndex === index + 1}
                     setDropBeforeIndex={setDropBeforeIndex}
                     cancelDrag={cancelDrag}
+                    submitWordEdit={submitWordEdit}
+                    isBeingEdited={editWord?.index === index}
+                    editText={editWord?.text ?? null}
                   />
                   {index === transcription.words.length - 1 && (
                     <WordSpace

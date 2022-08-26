@@ -12,6 +12,8 @@ import {
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
+  CORRECT_WORD,
+  UNDO_CORRECT_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
 
@@ -42,6 +44,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       UNDO_MERGE_WORDS,
       SPLIT_WORD,
       UNDO_SPLIT_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
     ].includes(action.type)
   ) {
     return {

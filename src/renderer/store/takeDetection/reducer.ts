@@ -8,9 +8,9 @@ import { DELETE_TAKE_GROUP, SELECT_TAKE, SET_TAKE_GROUPS } from './actions';
  * Stores the take groups for the current transcription
  */
 const takeDetectionReducer: Reducer<
-  ApplicationStore['takeGroups'],
+  ApplicationStore['takeDetection'],
   Action<any>
-> = (takeGroups = initialStore.takeGroups, action) => {
+> = (takeGroups = initialStore.takeDetection, action) => {
   if (action.type === SET_TAKE_GROUPS) {
     return action.payload;
   }

@@ -48,6 +48,11 @@ export interface TakeGroup {
   takeCount: number; // maybe not necessary
 }
 
+export interface ProcessedTranscription {
+  transcription: Transcription;
+  takeGroups: TakeGroup[];
+}
+
 export interface TakeInfo {
   takeGroupId: number;
   takeIndex: number;

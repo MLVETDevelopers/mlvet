@@ -10,6 +10,7 @@ import {
   updateProjectWithExtractedAudio,
   updateProjectWithMedia,
 } from 'renderer/utils/project';
+import { setTakeGroups } from 'renderer/store/takeDetection/actions';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import {
@@ -100,12 +101,16 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       await updateProjectWithMedia(currentProject, mediaFilePath);
       await extractProjectAudio();
       try {
-        const transcription = await processTranscription(currentProject);
-        if (transcription === null) {
+        const processedTranscription = await processTranscription(
+          currentProject
+        );
+        if (processedTranscription === null) {
           throw new Error();
         }
         setAsyncState(AsyncState.DONE);
+        const { transcription, takeGroups } = processedTranscription;
         setTranscription(transcription);
+        dispatch(setTakeGroups(takeGroups));
       } catch {
         setAsyncState(AsyncState.ERROR);
       }

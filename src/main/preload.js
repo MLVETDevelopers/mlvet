@@ -34,6 +34,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   loadThumbnail: (projectId) => ipcRenderer.invoke('load-thumbnail', projectId),
 
+  transcribe: (project, transcriptionEngine) =>
+    ipcRenderer.invoke('transcribe', project, transcriptionEngine),
+
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
 
@@ -49,6 +52,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setHomeEnabled: (homeEnabled) =>
     ipcRenderer.invoke('set-home-enabled', homeEnabled),
+
+  setMergeSplitEnabled: (mergeEnabled, splitEnabled) =>
+    ipcRenderer.invoke('set-merge-split-enabled', mergeEnabled, splitEnabled),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),

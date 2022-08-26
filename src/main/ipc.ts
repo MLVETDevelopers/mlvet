@@ -19,10 +19,12 @@ import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
 import loadThumbnail from './handlers/media/thumbnailLoad';
+import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
 import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
+import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
@@ -92,6 +94,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     loadThumbnail(projectId)
   );
 
+  ipcMain.handle('transcribe', async (_event, project, transcriptionEngine) =>
+    transcribe(project, transcriptionEngine)
+  );
+
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)
   );
@@ -108,6 +114,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('set-home-enabled', async (_event, homeEnabled) =>
     setHomeEnabled(ipcContext, homeEnabled)
+  );
+
+  ipcMain.handle(
+    'set-merge-split-enabled',
+    async (_event, mergeEnabled, splitEnabled) =>
+      setMergeSplitEnabled(ipcContext, mergeEnabled, splitEnabled)
   );
 
   ipcMain.handle(

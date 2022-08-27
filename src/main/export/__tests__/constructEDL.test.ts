@@ -20,6 +20,7 @@ describe('Test exporting', () => {
           pasteKey: 0,
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -32,6 +33,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],
@@ -70,6 +72,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -82,6 +85,7 @@ describe('Test exporting', () => {
           pasteKey: 0,
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],

@@ -48,8 +48,8 @@ export const generateTranscriptionChunks = (
     const newChunks = chunksSoFar.concat({
       id: numTakeGroups,
       activeTakeIndex:
-        takeGroups.find((takeGroup) => takeGroup.id === 0)?.activeTakeIndex ??
-        0,
+        takeGroups.find((takeGroup) => takeGroup.id === numTakeGroups)
+          ?.activeTakeIndex ?? 0,
     });
 
     numTakeGroups += 1;

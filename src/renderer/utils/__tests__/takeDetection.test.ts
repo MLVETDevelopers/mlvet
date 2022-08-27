@@ -10,7 +10,9 @@ describe('takeDetection', () => {
       makeBasicWord({}),
     ];
 
-    expect(generateTranscriptionChunks(inputWords)).toEqual([
+    const takeGroups: TakeGroup[] = [];
+
+    expect(generateTranscriptionChunks(inputWords, takeGroups)).toEqual([
       makeBasicWord({}),
       makeBasicWord({}),
       makeBasicWord({}),
@@ -25,7 +27,9 @@ describe('takeDetection', () => {
       makeBasicWord({}),
     ];
 
-    expect(generateTranscriptionChunks(inputWords)).toEqual([
+    const takeGroups: TakeGroup[] = [{ id: 0, activeTakeIndex: 0 }];
+
+    expect(generateTranscriptionChunks(inputWords, takeGroups)).toEqual([
       makeBasicWord({}),
       { activeTakeIndex: 0, id: 0 } as TakeGroup,
       makeBasicWord({}),
@@ -42,7 +46,9 @@ describe('takeDetection', () => {
       makeBasicWord({}),
     ];
 
-    expect(generateTranscriptionChunks(inputWords)).toEqual([
+    const takeGroups: TakeGroup[] = [{ id: 0, activeTakeIndex: 0 }];
+
+    expect(generateTranscriptionChunks(inputWords, takeGroups)).toEqual([
       makeBasicWord({}),
       { activeTakeIndex: 0, id: 0 } as TakeGroup,
       makeBasicWord({}),
@@ -63,10 +69,15 @@ describe('takeDetection', () => {
       makeBasicWord({}),
     ];
 
-    expect(generateTranscriptionChunks(inputWords)).toEqual([
+    const takeGroups: TakeGroup[] = [
+      { id: 0, activeTakeIndex: 0 },
+      { id: 1, activeTakeIndex: 1 },
+    ];
+
+    expect(generateTranscriptionChunks(inputWords, takeGroups)).toEqual([
       makeBasicWord({}),
       { activeTakeIndex: 0, id: 0 } as TakeGroup,
-      { activeTakeIndex: 0, id: 1 } as TakeGroup,
+      { activeTakeIndex: 1, id: 1 } as TakeGroup,
       makeBasicWord({}),
     ]);
   });

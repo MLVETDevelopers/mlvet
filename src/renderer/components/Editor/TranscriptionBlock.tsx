@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Profiler, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';

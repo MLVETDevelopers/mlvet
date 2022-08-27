@@ -103,7 +103,6 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
         const processedTranscription = await processTranscription(
           currentProject
         );
-        console.log('pt', processedTranscription);
         if (processedTranscription === null) {
           throw new Error();
         }

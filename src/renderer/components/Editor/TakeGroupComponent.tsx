@@ -75,8 +75,6 @@ const TakeGroupComponent = ({
     [wordsInTakeGroup]
   );
 
-  console.log(takeGroup);
-
   const takes = takeWordsPerTake.map((takeWords, takeIndex) => {
     // Index of the first word in the take, within the whole transcription
     const transcriptionIndex =

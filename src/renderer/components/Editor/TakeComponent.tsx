@@ -60,8 +60,6 @@ const TakeComponent = ({
     setIsTakeGroupOpened(false);
   };
 
-  console.log(takeIndex, isActive);
-
   return (
     <>
       {isTakeGroupOpened ? (

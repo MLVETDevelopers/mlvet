@@ -22,6 +22,8 @@ export const generateTranscriptionChunks = (
   let numTakeGroups = 0;
 
   const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
+    console.log(word, chunksSoFar, numTakeGroups);
+
     const { takeInfo } = word;
 
     if (takeInfo === null) {
@@ -29,6 +31,8 @@ export const generateTranscriptionChunks = (
     }
 
     if (chunksSoFar.length === 0) {
+      numTakeGroups += 1;
+
       return [
         {
           id: 0,
@@ -45,6 +49,7 @@ export const generateTranscriptionChunks = (
     if (isTakeGroup(lastChunk) && takeInfo.takeGroupId === lastChunk.id) {
       return chunksSoFar;
     }
+
     const newChunks = chunksSoFar.concat({
       id: numTakeGroups,
       activeTakeIndex:

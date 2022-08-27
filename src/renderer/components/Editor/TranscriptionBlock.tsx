@@ -63,6 +63,13 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
+  console.log(
+    'chunks',
+    JSON.stringify(transcription.words.slice(0, 40)),
+    JSON.stringify(transcription.takeGroups),
+    JSON.stringify(transcriptionChunks.slice(0, 30))
+  );
+
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
   );

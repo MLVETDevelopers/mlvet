@@ -58,6 +58,25 @@ interface Props {
   onClose: () => void;
 }
 
+interface ListProps {
+  listItems: string[];
+  color: string;
+}
+
+const CustomList = ({ listItems, color }: ListProps) => {
+  return (
+    <List>
+      {listItems.map((item: string) => (
+        <CustomListItem>
+          <Typography variant="p-400" paddingTop="0px" color={color}>
+            {item}
+          </Typography>
+        </CustomListItem>
+      ))}
+    </List>
+  );
+};
+
 const CustomRow = ({
   wordsLeft,
   shortcutsLeft,
@@ -66,60 +85,18 @@ const CustomRow = ({
 }: RowProps) => {
   return (
     <CustomColumnStack>
-      <List>
-        {wordsLeft.map((word: string) => (
-          <CustomListItem>
-            <Typography
-              variant="p-400"
-              paddingTop="0px"
-              color={colors.grey[300]}
-            >
-              {word}
-            </Typography>
-          </CustomListItem>
-        ))}
-      </List>
-      <List>
-        {shortcutsLeft.map((shortcut: string) => (
-          <CustomListItem>
-            <Typography
-              variant="p-400"
-              paddingTop="0px"
-              color={colors.yellow[500]}
-              width="125px"
-            >
-              {shortcut}
-            </Typography>
-          </CustomListItem>
-        ))}
-      </List>
-      <List>
-        {wordsRight.map((word: string) => (
-          <CustomListItem>
-            <Typography
-              variant="p-400"
-              paddingTop="0px"
-              color={colors.grey[300]}
-            >
-              {word}
-            </Typography>
-          </CustomListItem>
-        ))}
-      </List>
-      <List>
-        {shortcutsRight.map((shortcut: string) => (
-          <CustomListItem>
-            <Typography
-              variant="p-400"
-              paddingTop="0px"
-              color={colors.yellow[500]}
-              width="125px"
-            >
-              {shortcut}
-            </Typography>
-          </CustomListItem>
-        ))}
-      </List>
+      <CustomList key="col1" listItems={wordsLeft} color={colors.grey[300]} />
+      <CustomList
+        key="col2"
+        listItems={shortcutsLeft}
+        color={colors.yellow[500]}
+      />
+      <CustomList key="col3" listItems={wordsRight} color={colors.grey[300]} />
+      <CustomList
+        key="col4"
+        listItems={shortcutsRight}
+        color={colors.yellow[500]}
+      />
     </CustomColumnStack>
   );
 };

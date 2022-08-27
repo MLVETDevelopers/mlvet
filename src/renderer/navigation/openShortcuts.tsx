@@ -3,7 +3,7 @@ import store from 'renderer/store/store';
 
 const { dispatch } = store;
 
-const openShortcuts: () => any = async () => {
+const openShortcuts: () => void = async () => {
   dispatch(toggleShortcuts(true));
 };
 

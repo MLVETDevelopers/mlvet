@@ -15,6 +15,8 @@ import {
   CORRECT_WORD,
   UNDO_CORRECT_WORD,
   UNDO_SPLIT_WORD,
+  RESTORE_SECTION,
+  UNDO_RESTORE_SECTION,
 } from '../transcriptionWords/actions';
 
 /**
@@ -46,6 +48,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       UNDO_SPLIT_WORD,
       CORRECT_WORD,
       UNDO_CORRECT_WORD,
+      RESTORE_SECTION,
+      UNDO_RESTORE_SECTION,
     ].includes(action.type)
   ) {
     return {

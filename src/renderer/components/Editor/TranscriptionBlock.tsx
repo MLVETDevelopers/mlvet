@@ -2,11 +2,12 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { Fragment, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription } from 'sharedTypes';
+import { IndexRange, Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { makeRestoreSection } from 'renderer/store/transcriptionWords/ops/restoreSection';
 import { rangeLengthOne } from 'renderer/utils/range';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
@@ -113,6 +114,10 @@ const TranscriptionBlock = ({
     [editWord, submitWordEdit, dispatch]
   );
 
+  const restoreSection = (rangesToRestore: IndexRange): void => {
+    dispatchOp(makeRestoreSection([rangesToRestore]));
+  };
+
   return (
     <WordDragManager clearSelection={clearSelection}>
       {(
@@ -138,6 +143,7 @@ const TranscriptionBlock = ({
                   word={word}
                   index={index}
                   isSelected={selectionSet.has(index)}
+                  onMarkerClick={(restoreRange) => restoreSection(restoreRange)}
                 />
               ) : (
                 <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

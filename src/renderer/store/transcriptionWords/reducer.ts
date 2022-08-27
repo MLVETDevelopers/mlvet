@@ -10,23 +10,27 @@ import {
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
+  RESTORE_SECTION,
   SPLIT_WORD,
   UNDO_CORRECT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
+  UNDO_RESTORE_SECTION,
 } from './actions';
 import {
   CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
+  RestoreSectionPayload,
   SplitWordPayload,
   UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
+  UndoRestoreSectionPayload,
 } from './opPayloads';
 
 /**
@@ -125,6 +129,25 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
     return mapInRanges(words, (word) => ({ ...word, word: prevText }), [
       rangeLengthOne(index),
     ]);
+  }
+
+  if (action.type === RESTORE_SECTION) {
+    const { ranges } = action.payload as RestoreSectionPayload;
+
+    const markUndeleted = (word: Word) => ({
+      ...word,
+      deleted: false,
+    });
+
+    return mapInRanges(words, markUndeleted, ranges);
+  }
+
+  if (action.type === UNDO_RESTORE_SECTION) {
+    const { ranges } = action.payload as UndoRestoreSectionPayload;
+
+    const markDeleted = (word: Word) => ({ ...word, deleted: true });
+
+    return mapInRanges(words, markDeleted, ranges);
   }
 
   return words;

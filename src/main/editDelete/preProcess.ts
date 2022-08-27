@@ -24,24 +24,6 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     bufferDurationAfter: 0,
   });
 
-// const calculateAverageSilenceDuration = (
-//   jsonTranscription: JSONTranscription,
-//   totalDuration: number
-// ): number => {
-//   let silenceSum = 0;
-//   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-//     const endTime = jsonTranscription.words[i + 1].startTime;
-//     const silenceDuration =
-//       endTime -
-//       jsonTranscription.words[i].startTime -
-//       jsonTranscription.words[i].duration;
-//     silenceSum += silenceDuration;
-//   }
-//   return jsonTranscription.words.length !== 0
-//     ? silenceSum / jsonTranscription.words.length
-//     : totalDuration;
-// };
-
 const calculateBufferDurationBefore: (
   word: Word,
   prevWord: Word | null
@@ -100,7 +82,7 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
- * Pre processes a JSON transcript from python for use in the front end
+ * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file
  * @returns formatted Transcript object
@@ -109,22 +91,13 @@ const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
   duration: number,
   fileName: string
-): Transcription => {
-  // const averageSilenceDuration: number = calculateAverageSilenceDuration(
-  //   jsonTranscript,
-  //   duration
-  // );
-
-  return {
-    confidence: jsonTranscript.confidence,
-    duration,
-    ...updateOutputTimes(
-      jsonTranscript.words
-        // .map(punctuate(duration, averageSilenceDuration))
-        .flatMap(injectAttributes(fileName))
-        .map(calculateBuffers(duration))
-    ),
-  };
-};
+): Transcription => ({
+  duration,
+  ...updateOutputTimes(
+    jsonTranscript.words
+      .flatMap(injectAttributes(fileName))
+      .map(calculateBuffers(duration))
+  ),
+});
 
 export default preProcessTranscript;

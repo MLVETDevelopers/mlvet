@@ -33,7 +33,6 @@ export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
-  confidence: number;
   words: Word[];
   duration: number;
   outputDuration: number;

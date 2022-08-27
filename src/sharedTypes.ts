@@ -64,10 +64,6 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // Used to differentiate between different projects/media;
-  // TODO(chloe) this should be replaced with project ID or transcript ID
-  // in order to support multiple projects without relying on a filename (which can change)
-  fileName: string;
   // per-word confidence, 0-1
   confidence: number | null | undefined;
 }

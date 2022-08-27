@@ -39,7 +39,7 @@ const CustomColumnStack = styled(CustomStack)`
   justify-content: space-between;
 `;
 const CustomRowStack = styled(CustomStack)`
-  padding-top: 30px;
+  padding-top: 80px;
 `;
 
 const CustomListItem = styled(ListItem)`
@@ -154,6 +154,7 @@ const KeyboardShortcutsDialog = ({ open, onClose }: Props) => {
             Editing
           </Typography>
           <CustomRow
+            key="row1"
             wordsLeft={['Cut', 'Copy', 'Paste', 'Undo', 'Redo']}
             shortcutsLeft={[
               `${CTRL_OR_CMD} + X`,
@@ -179,6 +180,7 @@ const KeyboardShortcutsDialog = ({ open, onClose }: Props) => {
             Navigation
           </Typography>
           <CustomRow
+            key="row2"
             wordsLeft={['Open File', 'Save', 'Save As']}
             shortcutsLeft={[
               `${CTRL_OR_CMD} + O`,

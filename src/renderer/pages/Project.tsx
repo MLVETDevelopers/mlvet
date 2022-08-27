@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -11,8 +11,6 @@ import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
-import KeyboardShortcutsDialog from 'renderer/components/KeyboardShortcutsDialog';
-import { toggleShortcuts } from 'renderer/store/shortcuts/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -22,20 +20,12 @@ changes get reflected in the video. In addition to that, there is a video previe
 section to the side among other things.
 */
 const ProjectPage = () => {
-  const dispatch = useDispatch();
-
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
-
-  const hasOpenedShortcuts = useSelector(
-    (store: ApplicationStore) => store.shortcutsOpened
-  );
-
-  const closeShortcut = () => dispatch(toggleShortcuts(false));
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
@@ -69,10 +59,6 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <KeyboardShortcutsDialog
-                open={hasOpenedShortcuts}
-                onClose={closeShortcut}
-              />
               <VideoController
                 time={time}
                 isPlaying={isPlaying}

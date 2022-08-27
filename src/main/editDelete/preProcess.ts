@@ -27,24 +27,6 @@ const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
     takeInfo: null,
   });
 
-// const calculateAverageSilenceDuration = (
-//   jsonTranscription: JSONTranscription,
-//   totalDuration: number
-// ): number => {
-//   let silenceSum = 0;
-//   for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-//     const endTime = jsonTranscription.words[i + 1].startTime;
-//     const silenceDuration =
-//       endTime -
-//       jsonTranscription.words[i].startTime -
-//       jsonTranscription.words[i].duration;
-//     silenceSum += silenceDuration;
-//   }
-//   return jsonTranscription.words.length !== 0
-//     ? silenceSum / jsonTranscription.words.length
-//     : totalDuration;
-// };
-
 const calculateBufferDurationBefore: (
   word: Word,
   prevWord: Word | null
@@ -103,7 +85,7 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
- * Pre processes a JSON transcript from python for use in the front end
+ * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file
  * @returns formatted Transcript object
@@ -113,11 +95,6 @@ const preProcessTranscript = (
   duration: number,
   fileName: string
 ): ProcessedTranscription => {
-  // const averageSilenceDuration: number = calculateAverageSilenceDuration(
-  //   jsonTranscript,
-  //   duration
-  // );
-
   // TODO(Kate): Take Detection function should be called here
   // Mock take groups
   const takeGroups: TakeGroup[] = [
@@ -131,7 +108,6 @@ const preProcessTranscript = (
 
   return {
     transcription: {
-      confidence: jsonTranscript.confidence,
       duration,
       ...updateOutputTimes(
         jsonTranscript.words

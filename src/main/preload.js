@@ -34,6 +34,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   loadThumbnail: (projectId) => ipcRenderer.invoke('load-thumbnail', projectId),
 
+  transcribe: (project, transcriptionEngine) =>
+    ipcRenderer.invoke('transcribe', project, transcriptionEngine),
+
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
 

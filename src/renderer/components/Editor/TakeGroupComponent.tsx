@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
 
-import { Avatar } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';

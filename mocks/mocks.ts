@@ -25,6 +25,7 @@ export const mockProject: RuntimeProject = {
         bufferDurationAfter: 0,
         fileName: 'test-file-name',
         takeInfo: null,
+        confidence: 1,
       },
     ],
   },

@@ -1,8 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { PartialWord } from 'sharedTypes';
 import { TranscriptionFunction } from '../transcribeTypes';
-import camelCase from './shared/transcribeFunctionSharedUtils';
 
 /**
  * Function to generate a dummy transcription by reading a hardcoded transcription file.
@@ -19,12 +17,9 @@ const dummyTranscribeFunction: TranscriptionFunction = async () => {
       path.join(__dirname, '../../../../../assets/SampleTranscript.json')
     )
     .toString();
-  const jsonTranscript = JSON.parse(rawTranscript).transcripts[0];
-  jsonTranscript.words = jsonTranscript.words.map(camelCase);
-  jsonTranscript.words = jsonTranscript.words.map((word: PartialWord) => ({
-    ...word,
-    confidence: 1,
-  }));
+
+  const jsonTranscript = JSON.parse(rawTranscript);
+
   return jsonTranscript;
 };
 

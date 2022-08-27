@@ -13,6 +13,7 @@ const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   deleted: false,
   fileName: 'sample.mp4',
   takeInfo: null,
+  confidence: 1,
   ...override,
 });
 

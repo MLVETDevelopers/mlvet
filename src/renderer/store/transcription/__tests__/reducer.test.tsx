@@ -40,6 +40,7 @@ const makeBasicWord: (
   pasteKey,
   fileName: 'PLACEHOLDER FILENAME',
   takeInfo: null,
+  confidence: 1,
 });
 
 describe('Transcription reducer', () => {

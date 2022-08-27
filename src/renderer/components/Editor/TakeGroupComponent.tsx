@@ -1,6 +1,5 @@
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { selectTake } from 'renderer/store/takeDetection/actions';
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { getNumWordsInTake } from 'renderer/utils/takeDetection';
 import { Take, TakeGroup, Transcription } from 'sharedTypes';

@@ -1,33 +1,30 @@
 import { MousePosition } from '@react-hook/mouse-position';
-import { Fragment, MouseEventHandler, RefObject } from 'react';
+import { Fragment } from 'react';
 import { Word, Transcription } from 'sharedTypes';
 import EditMarker from './EditMarker';
 import WordComponent from './WordComponent';
-import { DragState } from './WordDragManager';
+import { DragState, WordMouseHandler } from './WordDragManager';
 import WordSpace from './WordSpace';
 
 interface WordOuterComponentProps {
   word: Word;
   index: number;
   transcription: Transcription;
-  seekToWord: () => void;
-  isPlaying: boolean;
-  isSelected: boolean;
+  seekToWord: (wordIndex: number) => void;
+  selectionSet: Set<any>;
   text: string;
-  onMouseDown: (
-    wordRef: RefObject<HTMLDivElement>
-  ) => MouseEventHandler<HTMLDivElement>;
-  onMouseMove: () => void;
+  onWordMouseDown: WordMouseHandler;
+  onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  isBeingDragged: boolean; // whether THIS word is currently being dragged
+  isWordBeingDragged: (wordIndex: number) => boolean;
   mouse: MousePosition;
-  isDropBeforeActive: boolean;
-  isDropAfterActive: boolean;
+  mouseThrottled: MousePosition;
+  dropBeforeIndex: number | null;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
   submitWordEdit: () => void;
-  isBeingEdited: boolean;
-  editText: string | null;
+  editWord: any;
+  nowPlayingWordIndex: number | null;
 }
 
 const WordOuterComponent = ({
@@ -35,21 +32,19 @@ const WordOuterComponent = ({
   index,
   transcription,
   seekToWord,
-  isPlaying,
-  isSelected,
-  text,
-  onMouseDown,
-  onMouseMove,
+  selectionSet,
+  onWordMouseDown,
+  onWordMouseMove,
   dragState,
-  isBeingDragged,
+  isWordBeingDragged,
   mouse,
-  isDropBeforeActive,
-  isDropAfterActive,
+  mouseThrottled,
+  dropBeforeIndex,
   setDropBeforeIndex,
   cancelDrag,
   submitWordEdit,
-  isBeingEdited,
-  editText,
+  editWord,
+  nowPlayingWordIndex,
 }: WordOuterComponentProps) => {
   return (
     <>

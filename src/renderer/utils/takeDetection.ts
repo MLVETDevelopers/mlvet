@@ -22,8 +22,6 @@ export const generateTranscriptionChunks = (
   let numTakeGroups = 0;
 
   const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
-    console.log(word, chunksSoFar, numTakeGroups);
-
     const { takeInfo } = word;
 
     if (takeInfo === null) {

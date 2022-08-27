@@ -8,7 +8,6 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import { ChildProcess } from 'child_process';
 import dotenv from 'dotenv';
 import { app, BrowserWindow } from 'electron';
 import AppState from './AppState';
@@ -16,12 +15,9 @@ import startExpressServer from './expressServer';
 import initialiseIpcHandlers from './ipc';
 import MenuBuilder from './menu';
 import promptToSaveWork from './promptToSaveWork';
-import { pingServer, startServer } from './pyServer';
 import { IpcContext } from './types';
 import { appDataStoragePath, isDevelopment, mkdir } from './util';
 import createWindow from './window';
-
-let pyServer: ChildProcess | null = null;
 
 dotenv.config();
 
@@ -44,10 +40,6 @@ if (isDevelopment) {
 app.on('window-all-closed', () => {
   // For simplicity, quit even on mac
   app.quit();
-
-  if (pyServer !== null) {
-    pyServer.kill(0);
-  }
 });
 
 app
@@ -78,19 +70,11 @@ app
         mainWindow.show();
       }
 
-      pyServer = startServer();
-
-      pingServer(pyServer);
-
       startExpressServer();
     });
 
     mainWindow.on('closed', () => {
       mainWindow = null;
-
-      if (pyServer !== null) {
-        pyServer.kill();
-      }
     });
 
     mainWindow.on('close', (event) => {

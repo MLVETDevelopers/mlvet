@@ -9,11 +9,13 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           word: 'abc',
           startTime: 0,
           duration: 1,
+          confidence: 1,
         },
         {
           word: 'def',
           startTime: 1,
           duration: 1,
+          confidence: 1,
         },
       ],
     };
@@ -39,6 +41,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -51,6 +54,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],
@@ -64,16 +68,19 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           word: 'heat',
           startTime: 5,
           duration: 2,
+          confidence: 1,
         },
         {
           word: 'from',
           startTime: 8,
           duration: 3,
+          confidence: 1,
         },
         {
           word: 'fire',
           startTime: 11.2,
           duration: 0.9,
+          confidence: 1,
         },
       ],
     };
@@ -99,6 +106,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 5,
           bufferDurationAfter: 0.5,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -111,6 +119,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0.5,
           bufferDurationAfter: 0.1,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
@@ -123,6 +132,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0.1,
           bufferDurationAfter: 3.67,
           deleted: false,
+          confidence: 1,
           fileName: 'PLACEHOLDER FILENAME',
         },
       ],

@@ -22,6 +22,7 @@ const makeBasicWord: (
   deleted: isDeleted,
   originalIndex,
   pasteKey,
+  confidence: 1,
   fileName: 'PLACEHOLDER FILENAME',
 });
 

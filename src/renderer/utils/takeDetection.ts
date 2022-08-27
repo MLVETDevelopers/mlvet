@@ -104,10 +104,13 @@ export const generateTranscriptionChunks = (
   }, chunksDataInit).chunks;
 };
 
+export const getNumWordsInTake = (take: Take): number =>
+  take?.words?.length ?? 0;
+
 export const getNumWordsInTakeGroup = (takeGroup: TakeGroup): number => {
   return (
     takeGroup.takes?.reduce(
-      (count: number, take: Take) => count + (take?.words?.length ?? 0),
+      (count: number, take: Take) => count + getNumWordsInTake(take),
       0
     ) ?? 0
   );

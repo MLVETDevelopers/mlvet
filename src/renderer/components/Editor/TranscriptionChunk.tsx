@@ -68,6 +68,9 @@ const TranscriptionChunk = ({
         />
       ) : (
         <WordOuterComponent
+          key={`word-outer-${(chunk as Word).originalIndex}-${
+            (chunk as Word).pasteKey
+          }`}
           word={chunk as Word}
           index={chunkIndex}
           transcription={transcription}

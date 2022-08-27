@@ -11,6 +11,7 @@ export const mockProject: RuntimeProject = {
   transcription: {
     duration: 100,
     outputDuration: 100,
+    takeGroups: [],
     words: [
       {
         word: 'test-word-1',

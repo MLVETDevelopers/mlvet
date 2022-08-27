@@ -53,6 +53,8 @@ const TakeComponent = ({
   editWord,
   transcriptionIndex,
 }: TakeComponentProps) => {
+  console.log(takeWords);
+
   const dispatch = useDispatch();
 
   const onSelectTake = () => {
@@ -102,6 +104,7 @@ const TakeComponent = ({
           <>
             {takeWords.map((word, index) => (
               <WordOuterComponent
+                key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
                 word={word}
                 index={transcriptionIndex + index}
                 transcription={transcription}

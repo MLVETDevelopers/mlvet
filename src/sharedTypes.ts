@@ -36,6 +36,7 @@ export interface Transcription {
   words: Word[];
   duration: number;
   outputDuration: number;
+  takeGroups: TakeGroup[];
 }
 
 export type PartialWord = Pick<

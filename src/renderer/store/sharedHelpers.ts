@@ -1,9 +1,4 @@
-import {
-  RuntimeProject,
-  RecentProject,
-  Word,
-  TakeGroup,
-} from '../../sharedTypes';
+import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -20,7 +15,6 @@ export interface ApplicationStore {
   clipboard: Word[];
   // Array of numbers corresponding to indices of words within the transcription
   selection: number[];
-  takeDetection: TakeGroup[];
   // Index of word currently being edited, otherwise null
   editWord: { index: number; text: string } | null;
 }
@@ -37,6 +31,5 @@ export const initialStore: ApplicationStore = {
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
   selection: [],
-  takeDetection: [],
   editWord: null,
 };

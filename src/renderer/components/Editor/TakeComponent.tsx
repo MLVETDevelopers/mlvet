@@ -21,6 +21,7 @@ interface TakeComponentProps {
   isWordBeingDragged: (wordIndex: number) => boolean;
   mouseThrottled: MousePosition;
   editWord: any;
+  transcriptionIndex: number;
 }
 
 const TakeComponent = ({
@@ -41,13 +42,14 @@ const TakeComponent = ({
   isWordBeingDragged,
   mouseThrottled,
   editWord,
+  transcriptionIndex,
 }: TakeComponentProps) => {
   return (
     <>
       {take.words.map((word, index) => (
         <WordOuterComponent
           word={word}
-          index={index}
+          index={transcriptionIndex + index}
           transcription={transcription}
           seekToWord={seekToWord}
           text={text}

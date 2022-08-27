@@ -20,7 +20,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 2;
 
-    const outputTranscript = preProcessTranscript(
+    const { transcription: outputTranscript } = preProcessTranscript(
       jsonTranscript,
       duration,
       'PLACEHOLDER FILENAME'
@@ -42,6 +42,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'Def.',
@@ -54,6 +55,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
       ],
     });
@@ -82,7 +84,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 15.77;
 
-    const outputTranscript = preProcessTranscript(
+    const { transcription: outputTranscript } = preProcessTranscript(
       jsonTranscript,
       duration,
       'PLACEHOLDER FILENAME'
@@ -104,6 +106,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.5,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'From',
@@ -116,6 +119,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.1,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'fire.',
@@ -128,6 +132,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 3.67,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
       ],
     });
@@ -156,7 +161,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 15.77;
 
-    const outputTranscript = preProcessTranscript(
+    const { transcription: outputTranscript } = preProcessTranscript(
       jsonTranscript,
       duration,
       'PLACEHOLDER FILENAME'
@@ -178,6 +183,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.25,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'From,',
@@ -190,6 +196,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.1,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
         {
           word: 'fire.',
@@ -202,6 +209,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 3.67,
           deleted: false,
           fileName: 'PLACEHOLDER FILENAME',
+          takeInfo: null,
         },
       ],
     });

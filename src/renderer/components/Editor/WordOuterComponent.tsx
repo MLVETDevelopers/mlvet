@@ -1,6 +1,9 @@
-import { Fragment } from 'react';
+import { MousePosition } from '@react-hook/mouse-position';
+import { Fragment, MouseEventHandler, RefObject } from 'react';
+import { Word, Transcription } from 'sharedTypes';
 import EditMarker from './EditMarker';
 import WordComponent from './WordComponent';
+import { DragState } from './WordDragManager';
 import WordSpace from './WordSpace';
 
 interface WordOuterComponentProps {

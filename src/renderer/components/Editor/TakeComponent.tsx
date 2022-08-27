@@ -1,7 +1,7 @@
 import { Avatar } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
-import { selectTake } from 'renderer/store/takeDetection/actions';
+import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';

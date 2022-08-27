@@ -26,6 +26,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     expect(outputTranscript).toEqual({
       duration,
       outputDuration: duration,
+      takeGroups: [],
       words: [
         {
           word: 'abc',
@@ -87,6 +88,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     expect(outputTranscript).toEqual({
       duration,
       outputDuration: duration,
+      takeGroups: [],
       words: [
         {
           word: 'heat',

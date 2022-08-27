@@ -22,10 +22,9 @@ const mockTakeGroups: InjectableTakeGroup[] = [
 const injectMockTakeInfo = (words: Word[]) => {
   let wordsCopy = [...words];
 
-  const takeGroups = mockTakeGroups.map((takeGroup, takeGroupIndex) => ({
+  const takeGroups = mockTakeGroups.map((_, takeGroupIndex) => ({
     id: takeGroupIndex,
     activeTakeIndex: 0,
-    takeCount: takeGroup.takes.length,
   }));
 
   mockTakeGroups.forEach((takeGroup, takeGroupIndex) => {

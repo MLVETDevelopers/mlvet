@@ -51,13 +51,9 @@ const TranscriptionBlock = ({
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
-  const takeGroups = useSelector(
-    (store: ApplicationStore) => store.takeDetection
-  );
-
   const transcriptionChunks = useMemo(() => {
-    return generateTranscriptionChunks(transcription.words, takeGroups);
-  }, [transcription, takeGroups]);
+    return generateTranscriptionChunks(transcription.words);
+  }, [transcription]);
 
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection

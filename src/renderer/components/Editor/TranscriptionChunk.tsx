@@ -1,6 +1,6 @@
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction } from 'react';
-import { instanceofTakeGroup } from 'renderer/utils/takeDetection';
+import { isTakeGroup } from 'renderer/utils/takeDetection';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeGroupComponent from './TakeGroupComponent';
 import { DragState, WordMouseHandler } from './WordDragManager';
@@ -47,7 +47,7 @@ const TranscriptionChunk = ({
 }: TranscriptionChunkProps) => {
   return (
     <>
-      {instanceofTakeGroup(chunk) ? (
+      {isTakeGroup(chunk) ? (
         <TakeGroupComponent
           takeGroup={chunk as TakeGroup}
           onWordMouseDown={onWordMouseDown}

@@ -9,6 +9,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: ' ',
@@ -61,6 +62,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: 'abc',

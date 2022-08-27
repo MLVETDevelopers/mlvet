@@ -8,7 +8,6 @@ import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
 import editWordReducer from './editWord/reducer';
-import takeGroupsReducer from './takeGroups/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,

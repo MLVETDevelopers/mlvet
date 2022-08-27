@@ -2,6 +2,7 @@ import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes'
 import {
   MapCallback,
   PartialWord,
+  TakeGroup,
   Transcription,
   Word,
 } from '../../sharedTypes';
@@ -94,20 +95,28 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number
+  duration: number,
+  shouldInjectTakeInfo = false
 ): Transcription => {
   // TODO(Kate): Take Detection function should be called here
 
+  let wordsProcessed = jsonTranscript.words
+    .flatMap(injectAttributes)
+    .map(calculateBuffers(duration));
+
+  let takeGroups: TakeGroup[] = [];
+
   // Mock take groups
-  const { words, takeGroups } = injectMockTakeInfo(
-    jsonTranscript.words
-      .flatMap(injectAttributes)
-      .map(calculateBuffers(duration))
-  );
+  if (shouldInjectTakeInfo) {
+    const withTakes = injectMockTakeInfo(wordsProcessed);
+
+    wordsProcessed = withTakes.words;
+    takeGroups = withTakes.takeGroups;
+  }
 
   return {
     duration,
-    ...updateOutputTimes(words),
+    ...updateOutputTimes(wordsProcessed),
     takeGroups,
   };
 };

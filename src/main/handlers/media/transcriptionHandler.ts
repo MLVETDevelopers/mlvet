@@ -69,7 +69,7 @@ const requestTranscription: RequestTranscription = async (project) => {
   const duration: number =
     (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;
 
-  const processedTranscript = preProcessTranscript(transcript, duration);
+  const processedTranscript = preProcessTranscript(transcript, duration, true);
 
   return processedTranscript;
 };

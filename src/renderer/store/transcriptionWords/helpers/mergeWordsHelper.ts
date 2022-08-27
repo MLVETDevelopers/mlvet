@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
-import { bufferedWordDuration } from '../../../sharedUtils';
-import { IndexRange, Word } from '../../../sharedTypes';
-import { isMergeSplitAllowed } from '../selection/helpers';
+import { bufferedWordDuration } from '../../../../sharedUtils';
+import { IndexRange, Word } from '../../../../sharedTypes';
+import { isMergeSplitAllowed } from '../../selection/helpers';
 
 /**
  * Merges words in a range into a single word

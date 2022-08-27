@@ -1,8 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
-import { rangeLengthOne } from '../../utils/range';
-import { Word } from '../../../sharedTypes';
-import { isMergeSplitAllowed } from '../selection/helpers';
+import { rangeLengthOne } from '../../../utils/range';
+import { Word } from '../../../../sharedTypes';
+import { isMergeSplitAllowed } from '../../selection/helpers';
 
 /**
  * Splits a word into multiple words, returning the new word list

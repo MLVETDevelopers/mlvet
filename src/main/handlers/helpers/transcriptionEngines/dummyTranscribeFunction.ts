@@ -15,7 +15,7 @@ const dummyTranscribeFunction: TranscriptionFunction = async () => {
   // Read in and translate a hardcoded deepspeech translation file
   const rawTranscript = fs
     .readFileSync(
-      path.join(__dirname, '../../../../assets/SampleTranscript.json')
+      path.join(__dirname, '../../../../../assets/SampleTranscript.json')
     )
     .toString();
   const jsonTranscript = JSON.parse(rawTranscript).transcripts[0];

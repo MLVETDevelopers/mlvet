@@ -1,21 +1,6 @@
 import { Word } from 'sharedTypes';
+import { makeBasicWord } from 'sharedUtils';
 import { splitWord } from '../helpers/splitWordHelper';
-
-const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
-  word: 'test',
-  duration: 0,
-  startTime: 0,
-  outputStartTime: 0,
-  bufferDurationBefore: 0,
-  bufferDurationAfter: 0,
-  originalIndex: 0,
-  pasteKey: 0,
-  deleted: false,
-  fileName: 'sample.mp4',
-  takeInfo: null,
-  confidence: 1,
-  ...override,
-});
 
 describe('splitWord', () => {
   it('should handle splitting a word into two', () => {

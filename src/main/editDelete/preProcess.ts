@@ -2,8 +2,7 @@ import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes'
 import {
   MapCallback,
   PartialWord,
-  ProcessedTranscription,
-  TakeGroup,
+  Transcription,
   Word,
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
@@ -13,20 +12,18 @@ import injectMockTakeInfo from './mockTakeInfo';
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
  */
-const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
-  (fileName: string) => (word, index) => ({
-    ...word,
-    // eslint-disable-next-line react/destructuring-assignment
-    outputStartTime: word.startTime,
-    originalIndex: index,
-    pasteKey: 0,
-    deleted: false,
-    fileName,
-    // Buffers are calculated later
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    takeInfo: null,
-  });
+const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
+  ...word,
+  // eslint-disable-next-line react/destructuring-assignment
+  outputStartTime: word.startTime,
+  originalIndex: index,
+  pasteKey: 0,
+  deleted: false,
+  // Buffers are calculated later
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+  takeInfo: null,
+});
 
 const calculateBufferDurationBefore: (
   word: Word,
@@ -97,23 +94,20 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number,
-  fileName: string
-): ProcessedTranscription => {
+  duration: number
+): Transcription => {
   // TODO(Kate): Take Detection function should be called here
 
   // Mock take groups
   const { words, takeGroups } = injectMockTakeInfo(
     jsonTranscript.words
-      .flatMap(injectAttributes(fileName))
+      .flatMap(injectAttributes)
       .map(calculateBuffers(duration))
   );
 
   return {
-    transcription: {
-      duration,
-      ...updateOutputTimes(words),
-    },
+    duration,
+    ...updateOutputTimes(words),
     takeGroups,
   };
 };

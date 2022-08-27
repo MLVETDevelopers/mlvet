@@ -67,3 +67,23 @@ export const mapInRanges: <T>(
 
   return listNew;
 };
+
+/**
+ * For testing - makes a word with any desired fields overridden
+ * @param override - any fields to override
+ * @returns
+ */
+export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
+  word: 'test',
+  duration: 0,
+  startTime: 0,
+  outputStartTime: 0,
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+  originalIndex: 0,
+  pasteKey: 0,
+  deleted: false,
+  confidence: 1,
+  takeInfo: null,
+  ...override,
+});

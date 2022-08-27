@@ -10,7 +10,6 @@ import {
   updateProjectWithExtractedAudio,
   updateProjectWithMedia,
 } from 'renderer/utils/project';
-import { setTakeGroups } from 'renderer/store/takeDetection/actions';
 import { transcriptionCreated } from '../../store/transcription/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import {
@@ -108,9 +107,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
           throw new Error();
         }
         setAsyncState(AsyncState.DONE);
-        const { transcription, takeGroups } = processedTranscription;
-        setTranscription(transcription);
-        dispatch(setTakeGroups(takeGroups));
+        setTranscription(processedTranscription);
       } catch {
         setAsyncState(AsyncState.ERROR);
       }

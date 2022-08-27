@@ -51,11 +51,6 @@ export interface TakeGroup {
   takeCount: number; // maybe not necessary
 }
 
-export interface ProcessedTranscription {
-  transcription: Transcription;
-  takeGroups: TakeGroup[];
-}
-
 export interface TakeInfo {
   takeGroupId: number;
   takeIndex: number;
@@ -82,10 +77,6 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // Used to differentiate between different projects/media;
-  // TODO(chloe) this should be replaced with project ID or transcript ID
-  // in order to support multiple projects without relying on a filename (which can change)
-  fileName: string;
   // Stores information related to take detection and manipulation
   takeInfo: TakeInfo | null;
   // per-word confidence, 0-1

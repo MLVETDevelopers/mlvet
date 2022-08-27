@@ -1,16 +1,15 @@
 import { Reducer } from 'react';
-import { TakeInfo } from 'sharedTypes';
+import { TakeGroup, TakeInfo } from 'sharedTypes';
 import { Action } from '../action';
-import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { DELETE_TAKE_GROUP, SELECT_TAKE, SET_TAKE_GROUPS } from './actions';
 
 /**
  * Stores the take groups for the current transcription
  */
-const takeDetectionReducer: Reducer<
-  ApplicationStore['takeDetection'],
-  Action<any>
-> = (takeGroups = initialStore.takeDetection, action) => {
+const takeGroupsReducer: Reducer<TakeGroup[], Action<any>> = (
+  takeGroups = [],
+  action
+) => {
   if (action.type === SET_TAKE_GROUPS) {
     return action.payload;
   }
@@ -38,4 +37,4 @@ const takeDetectionReducer: Reducer<
   return takeGroups;
 };
 
-export default takeDetectionReducer;
+export default takeGroupsReducer;

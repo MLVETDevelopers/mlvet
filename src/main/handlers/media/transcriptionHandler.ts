@@ -1,10 +1,9 @@
 import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
 import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
   PartialWord,
-  ProcessedTranscription,
   RuntimeProject,
+  Transcription,
 } from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
@@ -54,7 +53,7 @@ const getAudioDurationInSeconds: GetAudioDurationInSeconds = async (
 
 type RequestTranscription = (
   project: RuntimeProject
-) => Promise<ProcessedTranscription | null>;
+) => Promise<Transcription | null>;
 
 const requestTranscription: RequestTranscription = async (project) => {
   if (project.mediaFilePath == null) {
@@ -70,13 +69,7 @@ const requestTranscription: RequestTranscription = async (project) => {
   const duration: number =
     (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;
 
-  const fileName = path.basename(project.mediaFilePath);
-
-  const processedTranscript = preProcessTranscript(
-    transcript,
-    duration,
-    fileName
-  );
+  const processedTranscript = preProcessTranscript(transcript, duration);
 
   return processedTranscript;
 };

@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { TakeInfo, Word } from 'sharedTypes';
 import { Action } from '../action';
-import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeDetection/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
 
 /**
  * Nested reducer for handling transcription takes

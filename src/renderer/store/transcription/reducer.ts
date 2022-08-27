@@ -16,7 +16,11 @@ import {
   UNDO_CORRECT_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
-import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeDetection/actions';
+import {
+  DELETE_TAKE_GROUP,
+  SELECT_TAKE,
+  SET_TAKE_GROUPS,
+} from '../takeGroups/actions';
 import transcriptionTakesReducer from '../transcriptionTakes/reducer';
 
 /**
@@ -63,6 +67,13 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       ...transcriptionTakesReducer(transcription.words, action),
+    };
+  }
+
+  // Delegate take-group-related actions to takeGroupsReducer
+  if ([SET_TAKE_GROUPS, SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
+    return {
+      ...transcription,
     };
   }
 

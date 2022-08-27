@@ -4,6 +4,8 @@
 
 import { BrowserWindow, IpcRendererEvent } from 'electron';
 import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
+import { TranscriptionEngine } from 'main/handlers/helpers/transcribeTypes';
+import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
   RuntimeProject,
@@ -11,7 +13,6 @@ import {
   RecentProject,
   Transcription,
   ProjectIdAndFilePath,
-  ProcessedTranscription,
 } from '../sharedTypes';
 
 declare global {
@@ -63,7 +64,7 @@ declare global {
 
       requestTranscription: (
         project: RuntimeProject
-      ) => Promise<ProcessedTranscription | null>;
+      ) => Promise<Transcription | null>;
 
       setExportEnabled: (exportEnabled: boolean) => void;
 

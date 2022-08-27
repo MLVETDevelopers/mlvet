@@ -22,7 +22,6 @@ export const mockProject: RuntimeProject = {
         pasteKey: 0,
         bufferDurationBefore: 0,
         bufferDurationAfter: 0,
-        fileName: 'test-file-name',
         confidence: 1,
       },
     ],

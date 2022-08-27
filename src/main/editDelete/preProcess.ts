@@ -11,18 +11,16 @@ import { roundToMs } from '../../sharedUtils';
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
  */
-const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
-  (fileName: string) => (word, index) => ({
-    ...word,
-    outputStartTime: word.startTime,
-    originalIndex: index,
-    pasteKey: 0,
-    deleted: false,
-    fileName,
-    // Buffers are calculated later
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-  });
+const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
+  ...word,
+  outputStartTime: word.startTime,
+  originalIndex: index,
+  pasteKey: 0,
+  deleted: false,
+  // Buffers are calculated later
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+});
 
 const calculateBufferDurationBefore: (
   word: Word,
@@ -89,13 +87,12 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number,
-  fileName: string
+  duration: number
 ): Transcription => ({
   duration,
   ...updateOutputTimes(
     jsonTranscript.words
-      .flatMap(injectAttributes(fileName))
+      .flatMap(injectAttributes)
       .map(calculateBuffers(duration))
   ),
 });

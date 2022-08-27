@@ -21,11 +21,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 2;
 
-    const outputTranscript = preProcessTranscript(
-      jsonTranscript,
-      duration,
-      'PLACEHOLDER FILENAME'
-    );
+    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
 
     expect(outputTranscript).toEqual({
       duration,
@@ -42,7 +38,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
-          fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'def',
@@ -55,7 +50,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
-          fileName: 'PLACEHOLDER FILENAME',
         },
       ],
     });
@@ -86,11 +80,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 15.77;
 
-    const outputTranscript = preProcessTranscript(
-      jsonTranscript,
-      duration,
-      'PLACEHOLDER FILENAME'
-    );
+    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
 
     expect(outputTranscript).toEqual({
       duration,
@@ -107,7 +97,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.5,
           deleted: false,
           confidence: 1,
-          fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'from',
@@ -120,7 +109,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.1,
           deleted: false,
           confidence: 1,
-          fileName: 'PLACEHOLDER FILENAME',
         },
         {
           word: 'fire',
@@ -133,7 +121,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 3.67,
           deleted: false,
           confidence: 1,
-          fileName: 'PLACEHOLDER FILENAME',
         },
       ],
     });

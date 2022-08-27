@@ -12,6 +12,7 @@ export enum TranscriptionEngine {
   DUMMY,
   VOSK,
   DEEPSPEECH,
+  ASSEMBLYAI,
 }
 
 // Then add associate the new transcription function with the enum in the

@@ -32,7 +32,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       outputDuration: duration,
       words: [
         {
-          word: 'Abc.',
+          word: 'abc',
           duration: 1,
           startTime: 0,
           outputStartTime: 0,
@@ -44,7 +44,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'Def.',
+          word: 'def',
           duration: 1,
           startTime: 1,
           outputStartTime: 1,
@@ -94,7 +94,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       outputDuration: duration,
       words: [
         {
-          word: 'Heat.',
+          word: 'heat',
           duration: 2,
           startTime: 5,
           outputStartTime: 0,
@@ -106,7 +106,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'From',
+          word: 'from',
           duration: 3,
           startTime: 8,
           outputStartTime: 7.5,
@@ -118,7 +118,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'fire.',
+          word: 'fire',
           duration: 0.9,
           startTime: 11.2,
           outputStartTime: 11.1,
@@ -168,7 +168,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       outputDuration: duration,
       words: [
         {
-          word: 'Heat.',
+          word: 'heat',
           duration: 2.5,
           startTime: 5,
           outputStartTime: 0,
@@ -180,7 +180,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'From,',
+          word: 'from',
           duration: 3,
           startTime: 8,
           outputStartTime: 7.75,
@@ -192,7 +192,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           fileName: 'PLACEHOLDER FILENAME',
         },
         {
-          word: 'fire.',
+          word: 'fire',
           duration: 0.9,
           startTime: 11.2,
           outputStartTime: 11.1,

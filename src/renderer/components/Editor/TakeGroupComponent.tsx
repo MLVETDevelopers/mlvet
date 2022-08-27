@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable react/no-array-index-key */
 
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
@@ -69,14 +69,14 @@ const TakeGroupComponent = ({
       wordsInTakeGroup.reduce((acc, curr) => {
         if (curr.takeInfo?.takeIndex === acc.length) {
           return acc.concat([[curr]]);
-        } else if (acc.length === 0) {
-          return [[curr]];
-        } else {
-          return [
-            ...acc.slice(0, acc.length - 1),
-            acc[acc.length - 1].concat(curr),
-          ];
         }
+        if (acc.length === 0) {
+          return [[curr]];
+        }
+        return [
+          ...acc.slice(0, acc.length - 1),
+          acc[acc.length - 1].concat(curr),
+        ];
       }, [] as Word[][]),
     [wordsInTakeGroup]
   );

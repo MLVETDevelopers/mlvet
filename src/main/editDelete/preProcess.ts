@@ -84,10 +84,6 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
- * Inject mock take info
- */
-
-/**
  * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file

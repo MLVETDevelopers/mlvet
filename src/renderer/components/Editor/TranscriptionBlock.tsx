@@ -8,7 +8,10 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
-import { generateTranscriptionChunks } from 'renderer/utils/takeDetection';
+import {
+  generateTranscriptionChunks,
+  isTakeGroup,
+} from 'renderer/utils/takeDetection';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -127,6 +130,13 @@ const TranscriptionBlock = ({
           {transcriptionChunks.map((chunk: Word | TakeGroup, index) => {
             return (
               <TranscriptionChunk
+                key={
+                  isTakeGroup(chunk)
+                    ? `take-group-chunk-${(chunk as TakeGroup).id}`
+                    : `word-chunk-${(chunk as Word).originalIndex}-${
+                        (chunk as Word).pasteKey
+                      }`
+                }
                 chunk={chunk}
                 chunkIndex={index}
                 onWordMouseDown={onWordMouseDown}

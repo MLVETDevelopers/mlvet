@@ -38,7 +38,10 @@ export interface Transcription {
   outputDuration: number;
 }
 
-export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+export type PartialWord = Pick<
+  Word,
+  'word' | 'startTime' | 'duration' | 'confidence'
+>;
 
 export interface Word {
   // Text content of the word
@@ -65,6 +68,8 @@ export interface Word {
   // TODO(chloe) this should be replaced with project ID or transcript ID
   // in order to support multiple projects without relying on a filename (which can change)
   fileName: string;
+  // per-word confidence, 0-1
+  confidence: number | null | undefined;
 }
 
 export interface Cut {

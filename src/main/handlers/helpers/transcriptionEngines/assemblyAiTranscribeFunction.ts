@@ -118,6 +118,7 @@ const transcriptionAdaptor: (
     word: val.text,
     startTime: roundToMs(val.start / 1000),
     duration: roundToMs((val.end - val.start) / 1000),
+    confidence: val.confidence,
   })),
 });
 

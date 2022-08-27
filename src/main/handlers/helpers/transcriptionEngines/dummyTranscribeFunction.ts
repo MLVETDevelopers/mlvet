@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { PartialWord } from 'sharedTypes';
 import { TranscriptionFunction } from '../transcribeTypes';
 import camelCase from './shared/transcribeFunctionSharedUtils';
 
@@ -20,6 +21,10 @@ const dummyTranscribeFunction: TranscriptionFunction = async () => {
     .toString();
   const jsonTranscript = JSON.parse(rawTranscript).transcripts[0];
   jsonTranscript.words = jsonTranscript.words.map(camelCase);
+  jsonTranscript.words = jsonTranscript.words.map((word: PartialWord) => ({
+    ...word,
+    confidence: 1,
+  }));
   return jsonTranscript;
 };
 

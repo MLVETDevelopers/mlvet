@@ -10,6 +10,7 @@ import exportProject from './file/exportProject';
 import returnToHome from './navigation/returnToHome';
 import { performUndo, performRedo } from './editor/undoRedo';
 import { mergeWords, splitWord } from './editor/mergeSplit';
+import openShortcuts from './navigation/openShortcuts';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
@@ -34,6 +35,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
 
   // Navigation actions
   'initiate-return-to-home': returnToHome,
+  'open-shortcuts': openShortcuts,
 };
 
 /**

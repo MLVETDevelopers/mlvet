@@ -1,51 +1,46 @@
 import { MousePosition } from '@react-hook/mouse-position';
-import { MouseEventHandler, RefObject } from 'react';
 import { Take, Transcription } from 'sharedTypes';
-import { DragState } from './WordDragManager';
+import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
 interface TakeComponentProps {
   take: Take;
   transcription: Transcription;
   seekToWord: () => void;
-  isPlaying: boolean;
-  isSelected: boolean;
   text: string;
-  onMouseDown: (
-    wordRef: RefObject<HTMLDivElement>
-  ) => MouseEventHandler<HTMLDivElement>;
-  onMouseMove: () => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  isBeingDragged: boolean; // whether THIS word is currently being dragged
   mouse: MousePosition;
-  isDropBeforeActive: boolean;
-  isDropAfterActive: boolean;
+  dropBeforeIndex: number | null;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
   submitWordEdit: () => void;
-  isBeingEdited: boolean;
-  editText: string | null;
+  nowPlayingWordIndex: number | null;
+  selectionSet: Set<any>;
+  onWordMouseDown: WordMouseHandler;
+  onWordMouseMove: any;
+  isWordBeingDragged: (wordIndex: number) => boolean;
+  mouseThrottled: MousePosition;
+  editWord: any;
 }
 
 const TakeComponent = ({
   take,
   transcription,
   seekToWord,
-  isPlaying,
-  isSelected,
   text,
-  onMouseDown,
-  onMouseMove,
   dragState,
-  isBeingDragged,
   mouse,
-  isDropBeforeActive,
-  isDropAfterActive,
+  dropBeforeIndex,
   setDropBeforeIndex,
   cancelDrag,
   submitWordEdit,
-  isBeingEdited,
-  editText,
+  nowPlayingWordIndex,
+  selectionSet,
+  onWordMouseDown,
+  onWordMouseMove,
+  isWordBeingDragged,
+  mouseThrottled,
+  editWord,
 }: TakeComponentProps) => {
   return (
     <>
@@ -55,21 +50,20 @@ const TakeComponent = ({
           index={index}
           transcription={transcription}
           seekToWord={seekToWord}
-          isPlaying={isPlaying}
-          isSelected={isSelected}
           text={text}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
           dragState={dragState}
-          isBeingDragged={isBeingDragged}
           mouse={mouse}
-          isDropBeforeActive={isDropBeforeActive}
-          isDropAfterActive={isDropAfterActive}
+          dropBeforeIndex={dropBeforeIndex}
           setDropBeforeIndex={setDropBeforeIndex}
           cancelDrag={cancelDrag}
           submitWordEdit={submitWordEdit}
-          isBeingEdited={isBeingEdited}
-          editText={editText}
+          nowPlayingWordIndex={nowPlayingWordIndex}
+          selectionSet={selectionSet}
+          onWordMouseDown={onWordMouseDown}
+          onWordMouseMove={onWordMouseMove}
+          isWordBeingDragged={isWordBeingDragged}
+          mouseThrottled={mouseThrottled}
+          editWord={editWord}
         />
       ))}
     </>

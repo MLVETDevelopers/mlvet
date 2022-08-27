@@ -1,43 +1,19 @@
-import path from 'path';
-import fs from 'fs';
-import { io } from 'socket.io-client';
 import ffmpeg from 'fluent-ffmpeg';
-import { RuntimeProject, Transcription } from '../../../sharedTypes';
-import { ffmpegPath, ffprobePath } from '../../ffUtils';
+import path from 'path';
+import { TRANSCRIPTION_ENGINE } from '../../config';
+import {
+  PartialWord,
+  RuntimeProject,
+  Transcription,
+} from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
-import { JSONTranscription, SnakeCaseWord } from '../../types';
-import { USE_DUMMY } from '../../config';
+import { ffmpegPath, ffprobePath } from '../../ffUtils';
+import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
+import transcribe from './transcribe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
-
-interface JSONTranscriptionContainer {
-  transcripts: JSONTranscription[];
-}
-
-const dummyTranscribeRequest: () => string = () => {
-  return fs
-    .readFileSync(
-      path.join(__dirname, '../../../../assets/SampleTranscript.json')
-    )
-    .toString();
-};
-
-const transcribeRequest: (project: RuntimeProject) => Promise<string> = async (
-  project
-) => {
-  const socket = io(`http://localhost:${process.env.FLASK_PORT}`);
-  return new Promise((resolve) => {
-    socket.emit(
-      'transcribe',
-      getAudioExtractPath(project.id),
-      (transcription: string) => {
-        resolve(transcription);
-      }
-    );
-  });
-};
 
 /**
  * This is an easy (but kind of annoying) approach to validating incoming JSON.
@@ -48,26 +24,19 @@ const transcribeRequest: (project: RuntimeProject) => Promise<string> = async (
  * (e.g. https://github.com/YousefED/typescript-json-schema)
  */
 
-const validateWord = <(word: any) => word is SnakeCaseWord>(
+const validateWord = <(word: any) => word is PartialWord>(
   ((word) =>
     typeof word.word === 'string' &&
     typeof word.duration === 'number' &&
-    typeof word.start_time === 'number')
+    typeof word.confidence === 'number' &&
+    typeof word.startTime === 'number')
 );
 
 const validateJsonTranscription = <
   (transcription: any) => transcription is JSONTranscription
 >((transcription) =>
-  typeof transcription.confidence === 'number' &&
   Array.isArray(transcription.words) &&
   transcription.words.every(validateWord));
-
-const validateJsonTranscriptionContainer = <
-  (transcription: any) => transcription is JSONTranscriptionContainer
->((transcription) =>
-  Array.isArray(transcription.transcripts) &&
-  transcription.transcripts.length === 1 &&
-  validateJsonTranscription(transcription.transcripts[0]));
 
 type GetAudioDurationInSeconds = (
   audioFilePath: string
@@ -92,13 +61,9 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = USE_DUMMY
-    ? dummyTranscribeRequest()
-    : await transcribeRequest(project);
+  const transcript = await transcribe(project, TRANSCRIPTION_ENGINE);
 
-  const jsonTranscript = JSON.parse(transcript);
-
-  if (!validateJsonTranscriptionContainer(jsonTranscript)) {
+  if (!validateJsonTranscription(transcript)) {
     throw new Error('JSON transcript is invalid');
   }
 
@@ -108,11 +73,10 @@ const requestTranscription: RequestTranscription = async (project) => {
   const fileName = path.basename(project.mediaFilePath);
 
   const processedTranscript = preProcessTranscript(
-    jsonTranscript.transcripts[0],
+    transcript,
     duration,
     fileName
   );
-
   return processedTranscript;
 };
 

@@ -1,10 +1,8 @@
 import { BrowserWindow, dialog } from 'electron';
 import { writeFile } from 'fs/promises';
-import {
-  saveChangesDialog,
-  SaveDialogSelections,
-} from '../file/saveChangesDialog';
+import saveChangesDialog from '../file/saveChangesDialog';
 import { PersistedProject, RuntimeProject } from '../../../sharedTypes';
+import { SaveDialogSelections } from './saveDialog';
 
 export const getSaveFilePath: (
   mainWindow: BrowserWindow | null,

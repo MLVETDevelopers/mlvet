@@ -2,7 +2,8 @@
 // IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
 // If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
-import { IpcRendererEvent } from 'electron';
+import { BrowserWindow, IpcRendererEvent } from 'electron';
+import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
 import {
   OperatingSystems,
   RuntimeProject,
@@ -34,6 +35,11 @@ declare global {
 
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
+      saveChangesDialog: (
+        mainWindow: BrowserWindow,
+        projectFileName?: string
+      ) => SaveDialogSelections;
+
       saveProject: (project: RuntimeProject) => Promise<string>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
@@ -49,9 +55,16 @@ declare global {
 
       loadThumbnail: (projectId: string) => Promise<string>;
 
+      transcribe: (
+        project: RuntimeProject,
+        transcriptionEngine: TranscriptionEngine
+      ) => Promise<JSONTranscription>;
+
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<Transcription | null>;
+
+      setExportEnabled: (exportEnabled: boolean) => void;
 
       setFileRepresentation: (
         representedFilePath: string | null,
@@ -60,11 +73,14 @@ declare global {
 
       setHomeEnabled: (homeEnabled: boolean) => void;
 
+      setMergeSplitEnabled: (
+        mergeEnabled: boolean,
+        splitEnabled: boolean
+      ) => void;
+
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
-
-      setExportEnabled: (exportEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 

@@ -1,4 +1,4 @@
-import { updateOutputStartTimes } from './updateOutputStartTimes';
+import { updateOutputTimes } from './updateOutputTimes';
 import { Transcription, Cut } from '../sharedTypes';
 import { bufferedWordDuration, roundToMs } from '../sharedUtils';
 
@@ -8,7 +8,7 @@ const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
     return [];
   }
 
-  const words = updateOutputStartTimes(wordsNotYetUpdated);
+  const { words } = updateOutputTimes(wordsNotYetUpdated);
 
   let currentStartWord = words[0];
   let currentDuration = bufferedWordDuration(currentStartWord);

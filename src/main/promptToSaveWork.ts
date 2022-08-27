@@ -1,10 +1,8 @@
 import { BrowserWindow } from 'electron';
 import path from 'path';
 import AppState from './AppState';
-import {
-  saveChangesDialog,
-  SaveDialogSelections,
-} from './handlers/file/saveChangesDialog';
+import saveChangesDialog from './handlers/file/saveChangesDialog';
+import { SaveDialogSelections } from './handlers/helpers/saveDialog';
 
 /**
  * Prompts the user to save their work when they close the app

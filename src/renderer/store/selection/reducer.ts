@@ -1,10 +1,12 @@
 import { Reducer } from 'redux';
+import { rangeToIndices } from 'renderer/utils/range';
 import { IndexRange } from '../../../sharedTypes';
 import {
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
   SELECTION_CLEARED,
   SELECTION_RANGE_TOGGLED,
+  SELECTION_RANGE_SET_TO,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
@@ -59,6 +61,13 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
     }
 
     return Array.from(selectionSet);
+  }
+
+  if (action.type === SELECTION_RANGE_SET_TO) {
+    const range = action.payload as IndexRange;
+
+    // Build the selection from scratch out of the single range that was given
+    return rangeToIndices(range);
   }
 
   if (action.type === SELECTION_CLEARED) {

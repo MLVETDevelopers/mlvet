@@ -12,15 +12,19 @@ import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
 import saveAsProject from './handlers/file/saveAsProjectHandler';
+import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
 import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
 import loadThumbnail from './handlers/media/thumbnailLoad';
+import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
+import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
+import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
@@ -30,7 +34,6 @@ import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
-import setExportEnabled from './handlers/menu/setExportEnabled';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -59,6 +62,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     saveAsProject(ipcContext, project)
   );
 
+  ipcMain.handle(
+    'save-changes-dialog',
+    async (_event, mainWindow, projectFileName) =>
+      saveChangesDialog(mainWindow, projectFileName)
+  );
+
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
   );
@@ -85,8 +94,16 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     loadThumbnail(projectId)
   );
 
+  ipcMain.handle('transcribe', async (_event, project, transcriptionEngine) =>
+    transcribe(project, transcriptionEngine)
+  );
+
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)
+  );
+
+  ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
+    setExportEnabled(ipcContext, exportEnabled)
   );
 
   ipcMain.handle(
@@ -100,13 +117,15 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle(
+    'set-merge-split-enabled',
+    async (_event, mergeEnabled, splitEnabled) =>
+      setMergeSplitEnabled(ipcContext, mergeEnabled, splitEnabled)
+  );
+
+  ipcMain.handle(
     'set-save-enabled',
     async (_event, saveEnabled, saveAsEnabled) =>
       setSaveEnabled(ipcContext, saveEnabled, saveAsEnabled)
-  );
-
-  ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
-    setExportEnabled(ipcContext, exportEnabled)
   );
 
   ipcMain.handle(

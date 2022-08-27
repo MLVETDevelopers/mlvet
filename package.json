@@ -1,21 +1,31 @@
 {
-  "name": "mlvet",
+  "name": "MLVET",
   "description": "Machine Learning Video Editor Toolkit",
+  "main": "./dist/main/main.js",
+  "author": {
+    "name": "MLVET Legends",
+    "url": "https://github.com/chloebrett/mlvet"
+  },
+  "version": "0.0.1",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
-    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
-    "package": "ts-node ./.erb/scripts/clean.js dist && yarn build && electron-builder build --publish never",
+    "pre:package": "node ./tools/prepackage.js",
+    "package": "yarn pre:package && ts-node ./.erb/scripts/clean.js dist && yarn build && electron-builder build --publish never",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
     "prepare": "husky install",
-    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write"
+    "gen": "ts-node ./tools/gencode.ts && prettier ./src/**/*.ts --write && prettier ./src/**/*.js --write",
+    "install:slow": "yarn config set network-timeout 100000 && yarn",
+    "publish:linux": "yarn pre:package && yarn run build && electron-builder -l --publish always",
+    "publish:mac": "yarn pre:package && yarn run build && electron-builder -m  --x64 --arm64 --publish always",
+    "publish:windows": "yarn pre:package && yarn run build && electron-builder -w --x64 --ia32 --publish always"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -33,7 +43,12 @@
     ]
   },
   "build": {
-    "productName": "MachineLearningVideoEditingToolkit",
+    "productName": "MLVET",
+    "copyright": "Copyright © 2022 ${author}",
+    "extraMetadata": {
+      "//": "--- Prop 'version' will be automatically set by electron-builder ---",
+      "version": "0.0.2"
+    },
     "appId": "edu.monash.mlvet",
     "asar": true,
     "asarUnpack": [
@@ -98,7 +113,9 @@
     "publish": {
       "provider": "github",
       "owner": "chloebrett",
-      "repo": "mlvet"
+      "repo": "mlvet",
+      "releaseType": "release",
+      "vPrefixedTagName": false
     }
   },
   "repository": {
@@ -140,6 +157,7 @@
     "@types/fluent-ffmpeg": "^2.1.20",
     "@types/jest": "^27.0.3",
     "@types/node": "17.0.5",
+    "@types/node-fetch": "^2.6.2",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
@@ -161,7 +179,6 @@
     "electron-builder": "^23.3.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.1.1",
-    "electron-rebuild": "^3.2.5",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-erb": "^4.0.3",
@@ -218,6 +235,9 @@
     "@tensorflow/tfjs-node": "^3.19.0",
     "@tensorflow/tfjs-node-gpu": "^3.19.0",
     "aws-sdk": "^2.1194.0",
+    "@react-hook/mouse-position": "^4.1.3",
+    "@react-hook/throttle": "^2.2.0",
+    "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "child_process": "^1.0.2",
     "dotenv": "^16.0.0",
@@ -232,6 +252,8 @@
     "mock-aws-s3": "^4.0.2",
     "nock": "^13.2.9",
     "node-pre-gyp": "^0.17.0",
+    "node-fetch": "2.6.6",
+    "query-string": "^7.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",

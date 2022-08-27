@@ -132,6 +132,40 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-delete-text');
         },
       },
+      {
+        id: 'selectAll',
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-all');
+        },
+      },
+    ];
+  }
+
+  buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'mergeWords',
+        label: 'Merge Words',
+        accelerator: 'CommandOrControl+L', // 'M' already taken by window 'minimize'
+        click: () => {
+          // Tell the renderer to initiate a merge-words operation
+          this.mainWindow.webContents.send('initiate-merge-words');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
+      {
+        id: 'splitWord',
+        label: 'Split Word',
+        accelerator: 'Shift+CommandOrControl+L',
+        click: () => {
+          // Tell the renderer to initiate a split-words operation
+          this.mainWindow.webContents.send('initiate-split-word');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
     ];
   }
 
@@ -189,6 +223,8 @@ export default class MenuBuilder {
         ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         ...this.buildClipboardOptions(),
+        { type: 'separator' },
+        ...this.buildEditorAdditionalOptions(),
       ],
     };
   }
@@ -203,6 +239,17 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-return-to-home');
         },
         enabled: false,
+      },
+    ];
+  }
+
+  buildHelpOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        label: 'Keyboard Shortcuts',
+        click: () => {
+          this.mainWindow.webContents.send('open-shortcuts');
+        },
       },
     ];
   }
@@ -308,6 +355,12 @@ export default class MenuBuilder {
       ],
     };
 
+    const subMenuHelp: DarwinMenuItemConstructorOptions = {
+      id: 'help',
+      label: 'Help',
+      submenu: this.buildHelpOptions(),
+    };
+
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
@@ -321,6 +374,7 @@ export default class MenuBuilder {
       subMenuView,
       subMenuHistory,
       subMenuWindow,
+      subMenuHelp,
     ];
   }
 
@@ -337,6 +391,7 @@ export default class MenuBuilder {
         submenu: [
           ...this.buildUndoRedoOptions(),
           ...this.buildClipboardOptions(),
+          ...this.buildEditorAdditionalOptions(),
         ],
       },
       {
@@ -390,34 +445,7 @@ export default class MenuBuilder {
       {
         id: 'help',
         label: 'Help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
-            },
-          },
-          {
-            label: 'Documentation',
-            click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
-              );
-            },
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
-            },
-          },
-        ],
+        submenu: this.buildHelpOptions(),
       },
     ];
 

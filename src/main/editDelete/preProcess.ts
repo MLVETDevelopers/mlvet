@@ -1,57 +1,26 @@
-import { updateOutputStartTimes } from '../../transcriptProcessing/updateOutputStartTimes';
-import { MapCallback, Transcription, Word } from '../../sharedTypes';
-import { JSONTranscription, SnakeCaseWord } from '../types';
-import punctuate from './punctuate';
+import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes';
+import {
+  MapCallback,
+  PartialWord,
+  Transcription,
+  Word,
+} from '../../sharedTypes';
+import { JSONTranscription } from '../types';
 import { roundToMs } from '../../sharedUtils';
-
-type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
-
-/**
- * Replace the start_time attribute with startTime (can be generalised further but shouldn't
- * need this once python outputs camelcase anyway)
- * @param word snake cased partial word
- * @returns camel cased partial word
- *
- */
-const camelCase: MapCallback<SnakeCaseWord, PartialWord> = (word) => ({
-  word: word.word,
-  duration: word.duration,
-  startTime: word.start_time,
-});
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
  */
-const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
-  (fileName: string) => (word, index) => ({
-    ...word,
-    outputStartTime: word.startTime,
-    originalIndex: index,
-    pasteKey: 0,
-    deleted: false,
-    fileName,
-    // Buffers are calculated later
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-  });
-
-const calculateAverageSilenceDuration = (
-  jsonTranscription: JSONTranscription,
-  totalDuration: number
-): number => {
-  let silenceSum = 0;
-  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-    const endTime = jsonTranscription.words[i + 1].start_time;
-    const silenceDuration =
-      endTime -
-      jsonTranscription.words[i].start_time -
-      jsonTranscription.words[i].duration;
-    silenceSum += silenceDuration;
-  }
-  return jsonTranscription.words.length !== 0
-    ? silenceSum / jsonTranscription.words.length
-    : totalDuration;
-};
+const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
+  ...word,
+  outputStartTime: word.startTime,
+  originalIndex: index,
+  pasteKey: 0,
+  deleted: false,
+  // Buffers are calculated later
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+});
 
 const calculateBufferDurationBefore: (
   word: Word,
@@ -111,32 +80,21 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
- * Pre processes a JSON transcript from python for use in the front end
+ * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file
  * @returns formatted Transcript object
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number,
-  fileName: string
-): Transcription => {
-  const averageSilenceDuration: number = calculateAverageSilenceDuration(
-    jsonTranscript,
-    duration
-  );
-
-  return {
-    confidence: jsonTranscript.confidence,
-    words: updateOutputStartTimes(
-      jsonTranscript.words
-        .map(camelCase)
-        .map(punctuate(duration, averageSilenceDuration))
-        .flatMap(injectAttributes(fileName))
-        .map(calculateBuffers(duration))
-    ),
-    duration,
-  };
-};
+  duration: number
+): Transcription => ({
+  duration,
+  ...updateOutputTimes(
+    jsonTranscript.words
+      .flatMap(injectAttributes)
+      .map(calculateBuffers(duration))
+  ),
+});
 
 export default preProcessTranscript;

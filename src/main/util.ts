@@ -1,4 +1,5 @@
-/* eslint import/prefer-default-export: off, import/no-mutable-exports: off */
+/* eslint import/no-mutable-exports: off */
+
 import { URL } from 'url';
 import path from 'path';
 import { existsSync, mkdirSync, statSync } from 'fs';
@@ -47,7 +48,7 @@ export const getProjectDataDir: (projectId: string) => string = (projectId) =>
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
-  path.join(getProjectDataDir(projectId), 'extractedAudio.wav');
+  path.join(getProjectDataDir(projectId), 'extractedAudio.mp3');
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>
@@ -55,9 +56,3 @@ export const getThumbnailPath: (projectId: string) => string = (projectId) =>
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;
-
-/** Utility types */
-
-// Callback to be passed into a map function.
-// First type argument is the input type, second is the output type
-export type MapCallback<T, U> = (val: T, index: number, arr: T[]) => U;

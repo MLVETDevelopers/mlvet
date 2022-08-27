@@ -243,6 +243,17 @@ export default class MenuBuilder {
     ];
   }
 
+  buildHelpOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        label: 'Keyboard Shortcuts',
+        click: () => {
+          this.mainWindow.webContents.send('open-shortcuts');
+        },
+      },
+    ];
+  }
+
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
       label: 'MLVET',
@@ -344,6 +355,12 @@ export default class MenuBuilder {
       ],
     };
 
+    const subMenuHelp: DarwinMenuItemConstructorOptions = {
+      id: 'help',
+      label: 'Help',
+      submenu: this.buildHelpOptions(),
+    };
+
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
@@ -357,6 +374,7 @@ export default class MenuBuilder {
       subMenuView,
       subMenuHistory,
       subMenuWindow,
+      subMenuHelp,
     ];
   }
 
@@ -427,34 +445,7 @@ export default class MenuBuilder {
       {
         id: 'help',
         label: 'Help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
-            },
-          },
-          {
-            label: 'Documentation',
-            click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
-              );
-            },
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
-            },
-          },
-        ],
+        submenu: this.buildHelpOptions(),
       },
     ];
 

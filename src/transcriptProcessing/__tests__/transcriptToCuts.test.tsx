@@ -13,13 +13,13 @@ const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   pasteKey: 0,
   deleted: false,
   fileName: 'sample.mp4',
+  confidence: 1,
   ...override,
 });
 
 describe('transcript To Cuts', () => {
   it('Should produce a single cut from an unedited transcript', async () => {
     const cuts = convertTranscriptToCuts({
-      confidence: 0,
       duration: 6,
       outputDuration: 6,
       words: [
@@ -64,7 +64,6 @@ describe('transcript To Cuts', () => {
 
   it('Should produce two cuts when a word in the middle is deleted', async () => {
     const cuts = convertTranscriptToCuts({
-      confidence: 0,
       duration: 6,
       outputDuration: 6,
       words: [
@@ -107,7 +106,6 @@ describe('transcript To Cuts', () => {
 
   it('Should handle first word of transcript moved to middle', async () => {
     const cuts = convertTranscriptToCuts({
-      confidence: 0,
       duration: 6,
       outputDuration: 6,
       words: [

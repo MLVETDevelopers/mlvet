@@ -39,6 +39,7 @@ const makeBasicWord: (
   originalIndex,
   pasteKey,
   fileName: 'PLACEHOLDER FILENAME',
+  confidence: 1,
 });
 
 describe('Transcription reducer', () => {
@@ -47,13 +48,11 @@ describe('Transcription reducer', () => {
       transcriptionReducer(null, {
         type: TRANSCRIPTION_CREATED,
         payload: {
-          confidence: 1,
           duration: 100,
           words: [makeBasicWord(0, 'a')],
         },
       })
     ).toEqual({
-      confidence: 1,
       duration: 100,
       words: [makeBasicWord(0, 'a')],
     });
@@ -62,7 +61,6 @@ describe('Transcription reducer', () => {
 
 it('output duration should be updated after deleting words', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
@@ -99,7 +97,6 @@ it('output duration should be updated after deleting words', () => {
 
 it('output duration should be the same as original when deleting and straight after undoing delete', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
@@ -141,7 +138,6 @@ it('output duration should be the same as original when deleting and straight af
 
 it('output duration should be 0 after deleting all words', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
@@ -177,7 +173,6 @@ it('output duration should be 0 after deleting all words', () => {
 
 it('output duration should calculated from last non deleted word (not always last word)', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
@@ -213,7 +208,6 @@ it('output duration should calculated from last non deleted word (not always las
 
 it('output duration should updated after copying and pasting new text', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
@@ -250,7 +244,6 @@ it('output duration should updated after copying and pasting new text', () => {
 
 it('output duration should stay the same after copying and straight away undoing', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [

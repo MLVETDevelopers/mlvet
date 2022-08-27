@@ -21,19 +21,21 @@ import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
 
+const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
+
 const makeWordInner = (isDragActive: boolean) =>
   styled('div')({
     display: 'inline-block',
-    cursor: 'pointer',
+    cursor: 'text',
     color: colors.white,
-    transition: 'padding 0.1s, background 0.1s',
     padding: '0 2px',
     margin: '2px 0',
     borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],
-      background: isDragActive ? 'none' : `${colors.yellow[500]}50`,
+      background: isDragActive ? 'none' : `${colors.blue[500]}66`,
+      borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
 
@@ -42,6 +44,8 @@ interface Props {
   seekToWord: () => void;
   isPlaying: boolean;
   isSelected: boolean;
+  isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
+  isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -64,6 +68,8 @@ const WordComponent = ({
   seekToWord,
   isPlaying,
   isSelected,
+  isSelectedLeftCap,
+  isSelectedRightCap,
   text,
   onMouseDown,
   onMouseMove,
@@ -192,16 +198,20 @@ const WordComponent = ({
     }
     if (isSelected || isBeingDragged) {
       return {
-        background: `${colors.yellow[500]}cc`,
+        background: `${colors.blue[500]}cc`,
         color: colors.white,
-        fontWeight: 'bold',
+        borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
       };
     }
     if (isPlaying) {
       return {
-        background: colors.blue[500],
+        background: `${colors.yellow[500]}cc`,
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
+        borderRadius: BORDER_RADIUS_AMOUNT,
       };
     }
     return {};

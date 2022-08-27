@@ -6,6 +6,7 @@ import React, {
   useMemo,
   RefObject,
   useState,
+  useCallback,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
@@ -23,17 +24,18 @@ import colors from '../../colors';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
-const makeWordInner = (isDragActive: boolean) =>
+const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
   styled('div')({
     display: 'inline-block',
-    cursor: 'text',
+    cursor: isInInactiveTake ? 'pointer' : 'text',
     color: colors.white,
     padding: '0 2px',
     margin: '2px 0',
 
     '&:hover': {
       color: colors.grey['000'],
-      background: isDragActive ? 'none' : `${colors.blue[500]}66`,
+      background:
+        isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
@@ -60,6 +62,7 @@ interface Props {
   submitWordEdit: () => void;
   isBeingEdited: boolean;
   editText: string | null;
+  isInInactiveTake: boolean;
 }
 
 const WordComponent = ({
@@ -82,6 +85,7 @@ const WordComponent = ({
   submitWordEdit,
   isBeingEdited,
   editText,
+  isInInactiveTake,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -171,6 +175,12 @@ const WordComponent = ({
   };
 
   const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (isInInactiveTake) {
+      return;
+    }
+
+    console.log('click');
+
     if (awaitingSecondClick) {
       startEditing();
       return;
@@ -245,8 +255,8 @@ const WordComponent = ({
   };
 
   const WordInner = useMemo(
-    () => makeWordInner(dragState !== null),
-    [dragState]
+    () => makeWordInner(dragState !== null, isInInactiveTake),
+    [dragState, isInInactiveTake]
   );
 
   const setEditText = (value: string) => {
@@ -262,12 +272,23 @@ const WordComponent = ({
 
   const MIN_EDIT_WIDTH = 10;
 
+  const onMouseDownWrapped = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (isInInactiveTake) {
+        return null;
+      }
+
+      return onMouseDown(ref)(event);
+    },
+    [isInInactiveTake, onMouseDown, ref]
+  );
+
   return (
     <WordInner
       ref={ref}
       onClick={onClick}
       onMouseUp={onMouseUp}
-      onMouseDown={onMouseDown(ref)}
+      onMouseDown={onMouseDownWrapped}
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >

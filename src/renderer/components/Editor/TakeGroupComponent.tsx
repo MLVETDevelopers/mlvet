@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 
+import { Avatar } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
@@ -112,7 +113,16 @@ const TakeGroupComponent = ({
     );
   });
 
-  return <>{takes}</>;
+  return (
+    <div
+      style={{
+        marginTop: '10px',
+        marginBottom: '10px',
+      }}
+    >
+      {takes}
+    </div>
+  );
 };
 
 export default TakeGroupComponent;

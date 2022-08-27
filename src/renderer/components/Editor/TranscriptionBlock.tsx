@@ -24,6 +24,7 @@ import {
 import TranscriptionChunk from './TranscriptionChunk';
 
 const TranscriptionBox = styled(Box)({
+  position: 'relative',
   background: colors.grey[700],
   borderRadius: '5px',
   color: colors.grey[300],

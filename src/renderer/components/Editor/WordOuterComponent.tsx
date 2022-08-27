@@ -25,6 +25,7 @@ interface WordOuterComponentProps {
   submitWordEdit: () => void;
   editWord: any;
   nowPlayingWordIndex: number | null;
+  isInInactiveTake: boolean;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -51,6 +52,7 @@ const WordOuterComponent = ({
   submitWordEdit,
   editWord,
   nowPlayingWordIndex,
+  isInInactiveTake,
 }: WordOuterComponentProps) => {
   return (
     <WordAndSpaceContainer
@@ -98,6 +100,7 @@ const WordOuterComponent = ({
             submitWordEdit={submitWordEdit}
             isBeingEdited={editWord?.index === index}
             editText={editWord?.text ?? null}
+            isInInactiveTake={isInInactiveTake}
           />
           {index === transcription.words.length - 1 && (
             <WordSpace

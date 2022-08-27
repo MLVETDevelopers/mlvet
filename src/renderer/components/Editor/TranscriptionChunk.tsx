@@ -84,6 +84,7 @@ const TranscriptionChunk = ({
       submitWordEdit={submitWordEdit}
       editWord={editWord}
       nowPlayingWordIndex={nowPlayingWordIndex}
+      isInInactiveTake={false}
     />
   );
 };

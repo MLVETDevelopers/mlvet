@@ -20,7 +20,7 @@ const mockTakeGroups: InjectableTakeGroup[] = [
   {
     takes: [
       { wordRange: { startIndex: 20, endIndex: 24 } },
-      { wordRange: { startIndex: 24, endIndex: 30 } },
+      { wordRange: { startIndex: 24, endIndex: 100 } },
     ],
   },
 ];

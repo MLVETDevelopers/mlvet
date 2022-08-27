@@ -1,3 +1,4 @@
+import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { Fragment } from 'react';
 import { Word, Transcription } from 'sharedTypes';
@@ -26,6 +27,12 @@ interface WordOuterComponentProps {
   nowPlayingWordIndex: number | null;
 }
 
+const WordAndSpaceContainer = styled(Box)({
+  display: 'inline-flex',
+  alignItems: 'center',
+  height: '24px',
+});
+
 const WordOuterComponent = ({
   word,
   index,
@@ -46,25 +53,37 @@ const WordOuterComponent = ({
   nowPlayingWordIndex,
 }: WordOuterComponentProps) => {
   return (
-    <>
+    <WordAndSpaceContainer
+      key={`container-${word.originalIndex}-${word.pasteKey}`}
+    >
       {word.deleted ? (
         <EditMarker
           key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
           transcription={transcription}
           word={word}
           index={index}
+          isSelected={selectionSet.has(index)}
         />
       ) : (
         <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
           <WordSpace
             key={`space-${word.originalIndex}-${word.pasteKey}`}
             isDropMarkerActive={dragState !== null && dropBeforeIndex === index}
+            isBetweenHighlightedWords={
+              selectionSet.has(index - 1) && selectionSet.has(index)
+            }
           />
           <WordComponent
             key={`word-${word.originalIndex}-${word.pasteKey}`}
             seekToWord={() => seekToWord(index)}
             isPlaying={index === nowPlayingWordIndex}
             isSelected={selectionSet.has(index)}
+            isSelectedLeftCap={
+              selectionSet.has(index) && !selectionSet.has(index - 1)
+            }
+            isSelectedRightCap={
+              selectionSet.has(index) && !selectionSet.has(index + 1)
+            }
             text={word.word}
             index={index}
             onMouseDown={onWordMouseDown(index)}
@@ -87,11 +106,12 @@ const WordOuterComponent = ({
                 dragState !== null &&
                 dropBeforeIndex === transcription.words.length
               }
+              isBetweenHighlightedWords={false}
             />
           )}
         </Fragment>
       )}
-    </>
+    </WordAndSpaceContainer>
   );
 };
 

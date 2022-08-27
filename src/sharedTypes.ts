@@ -38,7 +38,10 @@ export interface Transcription {
   outputDuration: number;
 }
 
-export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+export type PartialWord = Pick<
+  Word,
+  'word' | 'startTime' | 'duration' | 'confidence'
+>;
 
 export interface Take {
   words: Word[];
@@ -90,6 +93,8 @@ export interface Word {
   fileName: string;
   // Stores information related to take detection and manipulation
   takeInfo: TakeInfo | null;
+  // per-word confidence, 0-1
+  confidence: number | null | undefined;
 }
 
 export interface Cut {

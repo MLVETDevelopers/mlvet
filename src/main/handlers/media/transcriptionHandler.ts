@@ -28,13 +28,13 @@ const validateWord = <(word: any) => word is PartialWord>(
   ((word) =>
     typeof word.word === 'string' &&
     typeof word.duration === 'number' &&
+    typeof word.confidence === 'number' &&
     typeof word.startTime === 'number')
 );
 
 const validateJsonTranscription = <
   (transcription: any) => transcription is JSONTranscription
 >((transcription) =>
-  typeof transcription.confidence === 'number' &&
   Array.isArray(transcription.words) &&
   transcription.words.every(validateWord));
 

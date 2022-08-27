@@ -50,7 +50,6 @@ const TranscriptionChunk = ({
       {instanceofTakeGroup(chunk) ? (
         <TakeGroupComponent
           takeGroup={chunk as TakeGroup}
-          chunkIndex={chunkIndex}
           onWordMouseDown={onWordMouseDown}
           onWordMouseMove={onWordMouseMove}
           dragState={dragState}

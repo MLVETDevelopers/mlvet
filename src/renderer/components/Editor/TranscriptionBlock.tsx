@@ -133,39 +133,31 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
-          {mapWithAccumulator(
-            transcriptionChunks,
-            (chunk: Word | TakeGroup, index: number, acc) => {
-              let newAcc = acc + 1;
-              if (instanceofTakeGroup(chunk))
-                newAcc = acc + getNumWordsInTakeGroup(chunk);
-              return {
-                item: (
-                  <TranscriptionChunk
-                    chunk={chunk}
-                    chunkIndex={index}
-                    onWordMouseDown={onWordMouseDown}
-                    onWordMouseMove={onWordMouseMove}
-                    dragState={dragState}
-                    isWordBeingDragged={isWordBeingDragged}
-                    mousePosition={mouse}
-                    mouseThrottled={mouseThrottled}
-                    dropBeforeIndex={dropBeforeIndex}
-                    setDropBeforeIndex={setDropBeforeIndex}
-                    cancelDrag={cancelDrag}
-                    editWord={editWord}
-                    nowPlayingWordIndex={nowPlayingWordIndex}
-                    transcription={transcription}
-                    seekToWord={seekToWord}
-                    submitWordEdit={submitWordEdit}
-                    selectionSet={selectionSet}
-                  />
-                ),
-                acc: newAcc,
-              };
-            },
-            0
-          )}
+          {transcriptionChunks.map((chunk: Word | TakeGroup, index) => {
+            return {
+              item: (
+                <TranscriptionChunk
+                  chunk={chunk}
+                  chunkIndex={index}
+                  onWordMouseDown={onWordMouseDown}
+                  onWordMouseMove={onWordMouseMove}
+                  dragState={dragState}
+                  isWordBeingDragged={isWordBeingDragged}
+                  mousePosition={mouse}
+                  mouseThrottled={mouseThrottled}
+                  dropBeforeIndex={dropBeforeIndex}
+                  setDropBeforeIndex={setDropBeforeIndex}
+                  cancelDrag={cancelDrag}
+                  editWord={editWord}
+                  nowPlayingWordIndex={nowPlayingWordIndex}
+                  transcription={transcription}
+                  seekToWord={seekToWord}
+                  submitWordEdit={submitWordEdit}
+                  selectionSet={selectionSet}
+                />
+              ),
+            };
+          }, 0)}
         </TranscriptionBox>
       )}
     </WordDragManager>

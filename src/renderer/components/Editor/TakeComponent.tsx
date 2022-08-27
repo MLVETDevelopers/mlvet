@@ -2,12 +2,12 @@ import { Avatar } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeDetection/actions';
-import { Take, TakeInfo, Transcription } from 'sharedTypes';
+import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
 interface TakeComponentProps {
-  take: Take;
+  takeWords: Word[];
   takeIndex: number;
   isActive: boolean;
   isTakeGroupOpened: boolean;
@@ -31,7 +31,7 @@ interface TakeComponentProps {
 }
 
 const TakeComponent = ({
-  take,
+  takeWords,
   takeIndex,
   isActive,
   isTakeGroupOpened,
@@ -56,7 +56,7 @@ const TakeComponent = ({
   const dispatch = useDispatch();
 
   const onSelectTake = () => {
-    dispatch(selectTake(take.words[0].takeInfo as TakeInfo));
+    dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
     setIsTakeGroupOpened(false);
   };
 
@@ -100,7 +100,7 @@ const TakeComponent = ({
       >
         {isTakeGroupOpened || isActive ? (
           <>
-            {take.words.map((word, index) => (
+            {takeWords.map((word, index) => (
               <WordOuterComponent
                 word={word}
                 index={transcriptionIndex + index}

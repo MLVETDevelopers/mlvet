@@ -43,16 +43,11 @@ export type PartialWord = Pick<
   'word' | 'startTime' | 'duration' | 'confidence'
 >;
 
-export interface Take {
-  words: Word[];
-}
-
 export interface TakeGroup {
   // each time a new take group is created we find the highest take group ID in use and add one
   id: number;
   activeTakeIndex: number;
   takeCount: number; // maybe not necessary
-  takes: Take[] | null;
 }
 
 export interface ProcessedTranscription {
@@ -63,7 +58,6 @@ export interface ProcessedTranscription {
 export interface TakeInfo {
   takeGroupId: number;
   takeIndex: number;
-  isSelected: boolean;
 }
 
 export interface Word {

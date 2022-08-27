@@ -8,6 +8,7 @@ import {
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
 import { roundToMs } from '../../sharedUtils';
+import injectMockTakeInfo from './mockTakeInfo';
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
@@ -85,6 +86,10 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
+ * Inject mock take info
+ */
+
+/**
  * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file
@@ -96,24 +101,18 @@ const preProcessTranscript = (
   fileName: string
 ): ProcessedTranscription => {
   // TODO(Kate): Take Detection function should be called here
+
   // Mock take groups
-  const takeGroups: TakeGroup[] = [
-    {
-      id: 1,
-      activeTakeIndex: 0,
-      takeCount: 3,
-      takes: [],
-    },
-  ];
+  const { words, takeGroups } = injectMockTakeInfo(
+    jsonTranscript.words
+      .flatMap(injectAttributes(fileName))
+      .map(calculateBuffers(duration))
+  );
 
   return {
     transcription: {
       duration,
-      ...updateOutputTimes(
-        jsonTranscript.words
-          .flatMap(injectAttributes(fileName))
-          .map(calculateBuffers(duration))
-      ),
+      ...updateOutputTimes(words),
     },
     takeGroups,
   };

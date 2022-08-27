@@ -1,27 +1,21 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TakeInfo, Transcription, Word } from 'sharedTypes';
+import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
+import { generateTranscriptionChunks } from 'renderer/utils/takeDetection';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
-import WordComponent from './WordComponent';
 import WordDragManager from './WordDragManager';
 import {
   selectionCleared,
   selectionRangeAdded,
 } from '../../store/selection/actions';
-import WordSpace from './WordSpace';
-import EditMarker from './EditMarker';
-import {
-  generateTranscriptionChunks,
-  RendererTakeGroup,
-} from 'renderer/utils/takeDetection';
 import TranscriptionChunk from './TranscriptionChunk';
 
 const TranscriptionBox = styled(Box)({
@@ -134,8 +128,22 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
-          {transcriptionChunks.map((chunk) => (
-            <TranscriptionChunk chunk={chunk} />
+          {transcriptionChunks.map((chunk, chunkIndex) => (
+            <TranscriptionChunk
+              chunk={chunk}
+              chunkIndex={chunkIndex}
+              onWordMouseDown={onWordMouseDown}
+              onWordMouseMove={onWordMouseMove}
+              dragState={dragState}
+              isWordBeingDragged={isWordBeingDragged}
+              mousePosition={mouse}
+              mouseThrottled={mouseThrottled}
+              dropBeforeIndex={dropBeforeIndex}
+              setDropBeforeIndex={setDropBeforeIndex}
+              cancelDrag={cancelDrag}
+              editWord={editWord}
+              nowPlayingWordIndex={nowPlayingWordIndex}
+            />
           ))}
         </TranscriptionBox>
       )}
@@ -144,9 +152,3 @@ const TranscriptionBlock = ({
 };
 
 export default TranscriptionBlock;
-
-{
-  /* {transcription.words.map((word, index) =>
-            
-          )} */
-}

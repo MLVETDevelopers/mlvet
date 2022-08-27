@@ -8,12 +8,7 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
-import {
-  generateTranscriptionChunks,
-  getNumWordsInTakeGroup,
-  instanceofTakeGroup,
-} from 'renderer/utils/takeDetection';
-import { mapWithAccumulator } from 'renderer/utils/list';
+import { generateTranscriptionChunks } from 'renderer/utils/takeDetection';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -134,30 +129,28 @@ const TranscriptionBlock = ({
       ) => (
         <TranscriptionBox id="transcription-content">
           {transcriptionChunks.map((chunk: Word | TakeGroup, index) => {
-            return {
-              item: (
-                <TranscriptionChunk
-                  chunk={chunk}
-                  chunkIndex={index}
-                  onWordMouseDown={onWordMouseDown}
-                  onWordMouseMove={onWordMouseMove}
-                  dragState={dragState}
-                  isWordBeingDragged={isWordBeingDragged}
-                  mousePosition={mouse}
-                  mouseThrottled={mouseThrottled}
-                  dropBeforeIndex={dropBeforeIndex}
-                  setDropBeforeIndex={setDropBeforeIndex}
-                  cancelDrag={cancelDrag}
-                  editWord={editWord}
-                  nowPlayingWordIndex={nowPlayingWordIndex}
-                  transcription={transcription}
-                  seekToWord={seekToWord}
-                  submitWordEdit={submitWordEdit}
-                  selectionSet={selectionSet}
-                />
-              ),
-            };
-          }, 0)}
+            return (
+              <TranscriptionChunk
+                chunk={chunk}
+                chunkIndex={index}
+                onWordMouseDown={onWordMouseDown}
+                onWordMouseMove={onWordMouseMove}
+                dragState={dragState}
+                isWordBeingDragged={isWordBeingDragged}
+                mousePosition={mouse}
+                mouseThrottled={mouseThrottled}
+                dropBeforeIndex={dropBeforeIndex}
+                setDropBeforeIndex={setDropBeforeIndex}
+                cancelDrag={cancelDrag}
+                editWord={editWord}
+                nowPlayingWordIndex={nowPlayingWordIndex}
+                transcription={transcription}
+                seekToWord={seekToWord}
+                submitWordEdit={submitWordEdit}
+                selectionSet={selectionSet}
+              />
+            );
+          })}
         </TranscriptionBox>
       )}
     </WordDragManager>

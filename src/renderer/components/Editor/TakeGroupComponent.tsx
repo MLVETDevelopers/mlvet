@@ -68,7 +68,9 @@ const TakeGroupComponent = ({
     () =>
       wordsInTakeGroup.reduce((acc, curr) => {
         if (curr.takeInfo?.takeIndex === acc.length) {
-          return acc.concat([curr]);
+          return acc.concat([[curr]]);
+        } else if (acc.length === 0) {
+          return [[curr]];
         } else {
           return [
             ...acc.slice(0, acc.length - 1),

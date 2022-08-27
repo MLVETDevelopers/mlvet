@@ -1,21 +1,18 @@
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction } from 'react';
+import { instanceofTakeGroup } from 'renderer/utils/takeDetection';
 import { TakeGroup, Word } from 'sharedTypes';
 import TakeGroupComponent from './TakeGroupComponent';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
-function instanceofTakeGroup(object: any): object is TakeGroup {
-  return 'takes' in object;
-}
-
 interface TranscriptionChunkProps {
   chunk: Word | TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: WordMouseHandler;
+  onWordMouseMove: any;
   dragState: DragState;
-  isWordBeingDragged: boolean;
+  isWordBeingDragged: (wordIndex: number) => boolean;
   mousePosition: MousePosition;
   mouseThrottled: MousePosition;
   dropBeforeIndex: number | null;

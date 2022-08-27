@@ -2,13 +2,18 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription } from 'sharedTypes';
+import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
-import { generateTranscriptionChunks } from 'renderer/utils/takeDetection';
+import {
+  generateTranscriptionChunks,
+  getNumWordsInTakeGroup,
+  instanceofTakeGroup,
+} from 'renderer/utils/takeDetection';
+import { mapWithAccumulator } from 'renderer/utils/list';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -128,23 +133,35 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
-          {transcriptionChunks.map((chunk, chunkIndex) => (
-            <TranscriptionChunk
-              chunk={chunk}
-              chunkIndex={chunkIndex}
-              onWordMouseDown={onWordMouseDown}
-              onWordMouseMove={onWordMouseMove}
-              dragState={dragState}
-              isWordBeingDragged={isWordBeingDragged}
-              mousePosition={mouse}
-              mouseThrottled={mouseThrottled}
-              dropBeforeIndex={dropBeforeIndex}
-              setDropBeforeIndex={setDropBeforeIndex}
-              cancelDrag={cancelDrag}
-              editWord={editWord}
-              nowPlayingWordIndex={nowPlayingWordIndex}
-            />
-          ))}
+          {mapWithAccumulator(
+            transcriptionChunks,
+            (chunk: Word | TakeGroup, index: number, acc) => {
+              let newAcc = acc + 1;
+              if (instanceofTakeGroup(chunk))
+                newAcc = acc + getNumWordsInTakeGroup(chunk);
+              return {
+                item: (
+                  <TranscriptionChunk
+                    chunk={chunk}
+                    chunkIndex={index}
+                    onWordMouseDown={onWordMouseDown}
+                    onWordMouseMove={onWordMouseMove}
+                    dragState={dragState}
+                    isWordBeingDragged={isWordBeingDragged}
+                    mousePosition={mouse}
+                    mouseThrottled={mouseThrottled}
+                    dropBeforeIndex={dropBeforeIndex}
+                    setDropBeforeIndex={setDropBeforeIndex}
+                    cancelDrag={cancelDrag}
+                    editWord={editWord}
+                    nowPlayingWordIndex={nowPlayingWordIndex}
+                  />
+                ),
+                acc: newAcc,
+              };
+            },
+            0
+          )}
         </TranscriptionBox>
       )}
     </WordDragManager>

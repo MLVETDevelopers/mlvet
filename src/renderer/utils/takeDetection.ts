@@ -103,3 +103,16 @@ export const generateTranscriptionChunks = (
     return addWord(chunksData, word);
   }, chunksDataInit).chunks;
 };
+
+export const getNumWordsInTakeGroup = (takeGroup: TakeGroup): number => {
+  return (
+    takeGroup.takes?.reduce(
+      (count: number, take: Take) => count + (take?.words?.length ?? 0),
+      0
+    ) ?? 0
+  );
+};
+
+export function instanceofTakeGroup(object: any): object is TakeGroup {
+  return 'takes' in object;
+}

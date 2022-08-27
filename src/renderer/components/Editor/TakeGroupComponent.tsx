@@ -8,12 +8,13 @@ import { WordMouseHandler, DragState } from './WordDragManager';
 
 interface TakeGroupComponentProps {
   takeGroup: TakeGroup;
+  chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   dragState: DragState;
   isWordBeingDragged: (wordIndex: number) => boolean;
-  mousePosition: MousePosition;
-  mouseThrottled: MousePosition;
+  mousePosition: MousePosition | null;
+  mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
   cancelDrag: () => void;
@@ -27,6 +28,7 @@ interface TakeGroupComponentProps {
 
 const TakeGroupComponent = ({
   takeGroup,
+  chunkIndex,
   onWordMouseDown,
   onWordMouseMove,
   dragState,
@@ -44,14 +46,6 @@ const TakeGroupComponent = ({
   selectionSet,
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
-
-  const indexOfFirstWordInTakeGroup = useMemo(
-    () =>
-      transcription.words.findIndex(
-        (word) => word.takeInfo?.takeGroupId === takeGroup.id
-      ),
-    [transcription, takeGroup]
-  );
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -81,7 +75,17 @@ const TakeGroupComponent = ({
     [wordsInTakeGroup]
   );
 
+  console.log(takeGroup);
+
   const takes = takeWordsPerTake.map((takeWords, takeIndex) => {
+    // Index of the first word in the take, within the whole transcription
+    const transcriptionIndex =
+      chunkIndex +
+      takeWordsPerTake
+        .slice(0, takeIndex)
+        .map((take) => take.length)
+        .reduce((acc, curr) => acc + curr, 0);
+
     return (
       <TakeComponent
         key={`take-${takeGroup.id}-${takeIndex}`}
@@ -105,7 +109,7 @@ const TakeGroupComponent = ({
         seekToWord={seekToWord}
         submitWordEdit={submitWordEdit}
         selectionSet={selectionSet}
-        transcriptionIndex={indexOfFirstWordInTakeGroup}
+        transcriptionIndex={transcriptionIndex}
       />
     );
   });

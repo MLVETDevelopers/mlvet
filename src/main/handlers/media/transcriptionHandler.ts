@@ -71,6 +71,8 @@ const requestTranscription: RequestTranscription = async (project) => {
 
   const processedTranscript = preProcessTranscript(transcript, duration, true);
 
+  console.log(processedTranscript);
+
   return processedTranscript;
 };
 

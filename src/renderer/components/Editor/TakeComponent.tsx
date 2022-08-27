@@ -15,7 +15,8 @@ interface TakeComponentProps {
   transcription: Transcription;
   seekToWord: (wordIndex: number) => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  mousePosition: MousePosition;
+  mousePosition: MousePosition | null;
+  mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
@@ -25,7 +26,6 @@ interface TakeComponentProps {
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition;
   editWord: any;
   transcriptionIndex: number;
 }
@@ -53,14 +53,14 @@ const TakeComponent = ({
   editWord,
   transcriptionIndex,
 }: TakeComponentProps) => {
-  console.log(takeWords);
-
   const dispatch = useDispatch();
 
   const onSelectTake = () => {
     dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
     setIsTakeGroupOpened(false);
   };
+
+  console.log(takeIndex, isActive);
 
   return (
     <>
@@ -111,6 +111,7 @@ const TakeComponent = ({
                 seekToWord={seekToWord}
                 dragState={dragState}
                 mouse={mousePosition}
+                mouseThrottled={mouseThrottled}
                 dropBeforeIndex={dropBeforeIndex}
                 setDropBeforeIndex={setDropBeforeIndex}
                 cancelDrag={cancelDrag}
@@ -120,7 +121,6 @@ const TakeComponent = ({
                 onWordMouseDown={onWordMouseDown}
                 onWordMouseMove={onWordMouseMove}
                 isWordBeingDragged={isWordBeingDragged}
-                mouseThrottled={mouseThrottled}
                 editWord={editWord}
               />
             ))}

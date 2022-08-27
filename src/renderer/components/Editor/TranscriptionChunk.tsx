@@ -13,8 +13,8 @@ interface TranscriptionChunkProps {
   onWordMouseMove: any;
   dragState: DragState;
   isWordBeingDragged: (wordIndex: number) => boolean;
-  mousePosition: MousePosition;
-  mouseThrottled: MousePosition;
+  mousePosition: MousePosition | null;
+  mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
   cancelDrag: () => void;
@@ -45,52 +45,46 @@ const TranscriptionChunk = ({
   submitWordEdit,
   selectionSet,
 }: TranscriptionChunkProps) => {
-  return (
-    <>
-      {isTakeGroup(chunk) ? (
-        <TakeGroupComponent
-          takeGroup={chunk as TakeGroup}
-          onWordMouseDown={onWordMouseDown}
-          onWordMouseMove={onWordMouseMove}
-          dragState={dragState}
-          isWordBeingDragged={isWordBeingDragged}
-          mousePosition={mousePosition}
-          mouseThrottled={mouseThrottled}
-          dropBeforeIndex={dropBeforeIndex}
-          setDropBeforeIndex={setDropBeforeIndex}
-          cancelDrag={cancelDrag}
-          editWord={editWord}
-          nowPlayingWordIndex={nowPlayingWordIndex}
-          transcription={transcription}
-          seekToWord={seekToWord}
-          submitWordEdit={submitWordEdit}
-          selectionSet={selectionSet}
-        />
-      ) : (
-        <WordOuterComponent
-          key={`word-outer-${(chunk as Word).originalIndex}-${
-            (chunk as Word).pasteKey
-          }`}
-          word={chunk as Word}
-          index={chunkIndex}
-          transcription={transcription}
-          seekToWord={seekToWord}
-          selectionSet={selectionSet}
-          onWordMouseDown={onWordMouseDown}
-          onWordMouseMove={onWordMouseMove}
-          dragState={dragState}
-          isWordBeingDragged={isWordBeingDragged}
-          mouse={mousePosition}
-          mouseThrottled={mouseThrottled}
-          dropBeforeIndex={dropBeforeIndex}
-          setDropBeforeIndex={setDropBeforeIndex}
-          cancelDrag={cancelDrag}
-          submitWordEdit={submitWordEdit}
-          editWord={editWord}
-          nowPlayingWordIndex={nowPlayingWordIndex}
-        />
-      )}
-    </>
+  return isTakeGroup(chunk) ? (
+    <TakeGroupComponent
+      takeGroup={chunk as TakeGroup}
+      chunkIndex={chunkIndex}
+      onWordMouseDown={onWordMouseDown}
+      onWordMouseMove={onWordMouseMove}
+      dragState={dragState}
+      isWordBeingDragged={isWordBeingDragged}
+      mousePosition={mousePosition}
+      mouseThrottled={mouseThrottled}
+      dropBeforeIndex={dropBeforeIndex}
+      setDropBeforeIndex={setDropBeforeIndex}
+      cancelDrag={cancelDrag}
+      editWord={editWord}
+      nowPlayingWordIndex={nowPlayingWordIndex}
+      transcription={transcription}
+      seekToWord={seekToWord}
+      submitWordEdit={submitWordEdit}
+      selectionSet={selectionSet}
+    />
+  ) : (
+    <WordOuterComponent
+      word={chunk as Word}
+      index={chunkIndex}
+      transcription={transcription}
+      seekToWord={seekToWord}
+      selectionSet={selectionSet}
+      onWordMouseDown={onWordMouseDown}
+      onWordMouseMove={onWordMouseMove}
+      dragState={dragState}
+      isWordBeingDragged={isWordBeingDragged}
+      mouse={mousePosition}
+      mouseThrottled={mouseThrottled}
+      dropBeforeIndex={dropBeforeIndex}
+      setDropBeforeIndex={setDropBeforeIndex}
+      cancelDrag={cancelDrag}
+      submitWordEdit={submitWordEdit}
+      editWord={editWord}
+      nowPlayingWordIndex={nowPlayingWordIndex}
+    />
   );
 };
 

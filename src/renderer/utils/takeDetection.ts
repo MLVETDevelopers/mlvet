@@ -7,7 +7,18 @@ export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
   return 'activeTakeIndex' in chunk;
 }
 
-export const generateTranscriptionChunks = (words: Word[]) => {
+export const getTakeGroupLength: (
+  takeGroup: TakeGroup,
+  transcriptionWords: Word[]
+) => number = (takeGroup, transcriptionWords) =>
+  transcriptionWords.filter(
+    (word) => word.takeInfo?.takeGroupId === takeGroup.id
+  ).length;
+
+export const generateTranscriptionChunks = (
+  words: Word[],
+  takeGroups: TakeGroup[]
+) => {
   let numTakeGroups = 0;
 
   const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
@@ -18,7 +29,14 @@ export const generateTranscriptionChunks = (words: Word[]) => {
     }
 
     if (chunksSoFar.length === 0) {
-      return [{ id: 0, activeTakeIndex: 0 }];
+      return [
+        {
+          id: 0,
+          activeTakeIndex:
+            takeGroups.find((takeGroup) => takeGroup.id === 0)
+              ?.activeTakeIndex ?? 0,
+        },
+      ];
     }
 
     const numChunks = chunksSoFar.length;
@@ -29,7 +47,9 @@ export const generateTranscriptionChunks = (words: Word[]) => {
     }
     const newChunks = chunksSoFar.concat({
       id: numTakeGroups,
-      activeTakeIndex: 0,
+      activeTakeIndex:
+        takeGroups.find((takeGroup) => takeGroup.id === 0)?.activeTakeIndex ??
+        0,
     });
 
     numTakeGroups += 1;

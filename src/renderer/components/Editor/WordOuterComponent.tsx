@@ -17,8 +17,8 @@ interface WordOuterComponentProps {
   onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isWordBeingDragged: (wordIndex: number) => boolean;
-  mouse: MousePosition;
-  mouseThrottled: MousePosition;
+  mouse: MousePosition | null;
+  mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;

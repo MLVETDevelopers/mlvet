@@ -52,7 +52,7 @@ interface Props {
   onMouseMove: () => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isBeingDragged: boolean; // whether THIS word is currently being dragged
-  mouse: MousePosition;
+  mouse: MousePosition | null;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
   setDropBeforeIndex: (index: number) => void;
@@ -103,11 +103,14 @@ const WordComponent = ({
   const yPosition = ref.current?.offsetTop ?? 0;
   const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
   const height = ref.current?.offsetHeight ?? 0;
-  const mouseX = mouse.clientX ?? 0;
-  const mouseY = mouse.clientY ?? 0;
+  const mouseX = mouse?.clientX ?? 0;
+  const mouseY = mouse?.clientY ?? 0;
 
   useEffect(() => {
-    if (isBeingDragged && (mouse.clientX === null || mouse.clientY === null)) {
+    if (
+      isBeingDragged &&
+      ((mouse?.clientX ?? null) === null || (mouse?.clientY ?? null) === null)
+    ) {
       cancelDrag();
     }
   }, [isBeingDragged, mouse, cancelDrag]);

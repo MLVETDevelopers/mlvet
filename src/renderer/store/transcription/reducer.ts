@@ -63,7 +63,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
     return {
       ...transcription,
-      ...transcriptionTakesReducer(transcription.words, action),
+      words: transcriptionTakesReducer(transcription.words, action),
       takeGroups: takeGroupsReducer(transcription.takeGroups, action),
     };
   }

@@ -4,7 +4,6 @@ import {
   PartialWord,
   ProcessedTranscription,
   TakeGroup,
-  Transcription,
   Word,
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
@@ -127,7 +126,7 @@ const preProcessTranscript = (
     {
       id: 1,
       activeTakeIndex: 0,
-      takeCount: 2,
+      takeCount: 3,
     },
   ];
 

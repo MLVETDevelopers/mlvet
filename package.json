@@ -7,7 +7,6 @@
     "url": "https://github.com/chloebrett/mlvet"
   },
   "version": "0.0.1",
-
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -48,7 +47,7 @@
     "copyright": "Copyright © 2022 ${author}",
     "extraMetadata": {
       "//": "--- Prop 'version' will be automatically set by electron-builder ---",
-      "version": "0.0.2"
+      "version": "0.0.1"
     },
     "appId": "edu.monash.mlvet",
     "asar": true,

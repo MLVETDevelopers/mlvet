@@ -1,9 +1,10 @@
-import { Avatar } from '@mui/material';
-import { useState } from 'react';
+import { MousePosition } from '@react-hook/mouse-position';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { getNumWordsInTake } from 'renderer/utils/takeDetection';
 import { Take, TakeGroup } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
+import { WordMouseHandler, DragState } from './WordDragManager';
 
 interface TakeGroupComponentProps {
   takeGroup: TakeGroup;
@@ -46,83 +47,38 @@ const TakeGroupComponent = ({
   return (
     <>
       {Array.isArray(takeGroup?.takes) &&
-        takeGroup.takes.map((take: Take, index: number) => (
-          <>
-            {isTakeGroupOpened ? (
-              <Avatar
-                onClick={() => console.log(take, index)}
-                sx={{
-                  height: 22,
-                  width: 22,
-                  fontSize: 12,
-                  color: '#1D201F',
-                  bgcolor:
-                    takeGroup.activeTakeIndex === index ? '#FFB355' : '#ABA9A9',
-                }}
-              >
-                {index + 1}
-              </Avatar>
-            ) : null}
-
-            <Avatar
-              onClick={openTakeGroup}
-              style={{
-                width: '10px',
-                height: '10px',
-                borderWidth: '0px',
-                borderLeftWidth: '2px',
-                backgroundColor: 'green',
-                display: 'block',
-              }}
-            />
-            <div
-              className="take"
-              style={{
-                border: 'true',
-                borderStyle: 'solid',
-                borderWidth: '0px',
-                borderLeftWidth: '2px',
-                borderColor: '#FFB355',
-              }}
-            >
-              {takeGroup.activeTakeIndex === index || isTakeGroupOpened ? (
-                <TakeComponent take={takeGroup?.takes?.[index] as Take} />
-              ) : null}
-            </div>
-          </>
-        ))}
+        mapWithAccumulator(
+          takeGroup.takes,
+          (take: Take, index: number, acc) => {
+            return {
+              item: (
+                <TakeComponent
+                  take={take}
+                  takeIndex={index}
+                  isActive={index === takeGroup.activeTakeIndex}
+                  isTakeGroupOpened={isTakeGroupOpened}
+                  openTakeGroup={openTakeGroup}
+                  transcriptionIndex={acc}
+                  onWordMouseDown={onWordMouseDown}
+                  onWordMouseMove={onWordMouseMove}
+                  dragState={dragState}
+                  isWordBeingDragged={isWordBeingDragged}
+                  mousePosition={mousePosition}
+                  mouseThrottled={mouseThrottled}
+                  dropBeforeIndex={dropBeforeIndex}
+                  setDropBeforeIndex={setDropBeforeIndex}
+                  cancelDrag={cancelDrag}
+                  editWord={editWord}
+                  nowPlayingWordIndex={nowPlayingWordIndex}
+                />
+              ),
+              acc: acc + getNumWordsInTake(take),
+            };
+          },
+          chunkIndex
+        )}
     </>
   );
 };
 
 export default TakeGroupComponent;
-
-// {
-//   Array.isArray(takeGroup?.takes) &&
-//     mapWithAccumulator(
-//       takeGroup.takes,
-//       (take: Take, index: number, acc) => {
-//         return {
-//           item: (
-//             <TakeComponent
-//               take={take}
-//               transcriptionIndex={acc}
-//               onWordMouseDown={onWordMouseDown}
-//               onWordMouseMove={onWordMouseMove}
-//               dragState={dragState}
-//               isWordBeingDragged={isWordBeingDragged}
-//               mousePosition={mousePosition}
-//               mouseThrottled={mouseThrottled}
-//               dropBeforeIndex={dropBeforeIndex}
-//               setDropBeforeIndex={setDropBeforeIndex}
-//               cancelDrag={cancelDrag}
-//               editWord={editWord}
-//               nowPlayingWordIndex={nowPlayingWordIndex}
-//             />
-//           ),
-//           acc: acc + getNumWordsInTake(take),
-//         };
-//       },
-//       0
-//     );
-// }

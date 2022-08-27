@@ -1,6 +1,8 @@
 import { Avatar } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
-import { Take, Transcription } from 'sharedTypes';
+import { useDispatch } from 'react-redux';
+import { selectTake } from 'renderer/store/takeDetection/actions';
+import { Take, TakeInfo, Transcription } from 'sharedTypes';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
@@ -9,12 +11,11 @@ interface TakeComponentProps {
   takeIndex: number;
   isActive: boolean;
   isTakeGroupOpened: boolean;
-  openTakeGroup: () => void;
+  setIsTakeGroupOpened: (isOpen: boolean) => void;
   transcription: Transcription;
-  seekToWord: () => void;
-  text: string;
+  seekToWord: (wordIndex: number) => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  mouse: MousePosition;
+  mousePosition: MousePosition;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: (index: number) => void;
   cancelDrag: () => void;
@@ -26,6 +27,7 @@ interface TakeComponentProps {
   isWordBeingDragged: (wordIndex: number) => boolean;
   mouseThrottled: MousePosition;
   editWord: any;
+  transcriptionIndex: number;
 }
 
 const TakeComponent = ({
@@ -33,12 +35,11 @@ const TakeComponent = ({
   takeIndex,
   isActive,
   isTakeGroupOpened,
-  openTakeGroup,
+  setIsTakeGroupOpened,
   transcription,
   seekToWord,
-  text,
   dragState,
-  mouse,
+  mousePosition,
   dropBeforeIndex,
   setDropBeforeIndex,
   cancelDrag,
@@ -50,12 +51,20 @@ const TakeComponent = ({
   isWordBeingDragged,
   mouseThrottled,
   editWord,
+  transcriptionIndex,
 }: TakeComponentProps) => {
+  const dispatch = useDispatch();
+
+  const onSelectTake = () => {
+    dispatch(selectTake(take.words[0].takeInfo as TakeInfo));
+    setIsTakeGroupOpened(false);
+  };
+
   return (
     <>
       {isTakeGroupOpened ? (
         <Avatar
-          onClick={() => console.log(take, takeIndex)}
+          onClick={onSelectTake}
           sx={{
             height: 22,
             width: 22,
@@ -69,7 +78,7 @@ const TakeComponent = ({
       ) : null}
 
       <Avatar
-        onClick={openTakeGroup}
+        onClick={() => setIsTakeGroupOpened(true)}
         style={{
           width: '10px',
           height: '10px',
@@ -94,12 +103,11 @@ const TakeComponent = ({
             {take.words.map((word, index) => (
               <WordOuterComponent
                 word={word}
-                index={index}
+                index={transcriptionIndex + index}
                 transcription={transcription}
                 seekToWord={seekToWord}
-                text={text}
                 dragState={dragState}
-                mouse={mouse}
+                mouse={mousePosition}
                 dropBeforeIndex={dropBeforeIndex}
                 setDropBeforeIndex={setDropBeforeIndex}
                 cancelDrag={cancelDrag}

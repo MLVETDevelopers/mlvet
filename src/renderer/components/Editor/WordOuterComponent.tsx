@@ -12,7 +12,6 @@ interface WordOuterComponentProps {
   transcription: Transcription;
   seekToWord: (wordIndex: number) => void;
   selectionSet: Set<any>;
-  text: string;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)

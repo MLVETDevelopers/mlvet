@@ -1,8 +1,9 @@
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { selectTake } from 'renderer/store/takeDetection/actions';
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { getNumWordsInTake } from 'renderer/utils/takeDetection';
-import { Take, TakeGroup } from 'sharedTypes';
+import { Take, TakeGroup, Transcription } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import { WordMouseHandler, DragState } from './WordDragManager';
 
@@ -20,6 +21,10 @@ interface TakeGroupComponentProps {
   cancelDrag: () => void;
   editWord: any;
   nowPlayingWordIndex: number | null;
+  transcription: Transcription;
+  seekToWord: (wordIndex: number) => void;
+  submitWordEdit: () => void;
+  selectionSet: Set<any>;
 }
 
 const TakeGroupComponent = ({
@@ -36,13 +41,12 @@ const TakeGroupComponent = ({
   cancelDrag,
   editWord,
   nowPlayingWordIndex,
+  transcription,
+  seekToWord,
+  submitWordEdit,
+  selectionSet,
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
-
-  const openTakeGroup = () => {
-    setIsTakeGroupOpened(true);
-    console.log('Opened Take Group');
-  };
 
   return (
     <>
@@ -57,7 +61,7 @@ const TakeGroupComponent = ({
                   takeIndex={index}
                   isActive={index === takeGroup.activeTakeIndex}
                   isTakeGroupOpened={isTakeGroupOpened}
-                  openTakeGroup={openTakeGroup}
+                  setIsTakeGroupOpened={setIsTakeGroupOpened}
                   transcriptionIndex={acc}
                   onWordMouseDown={onWordMouseDown}
                   onWordMouseMove={onWordMouseMove}
@@ -70,6 +74,10 @@ const TakeGroupComponent = ({
                   cancelDrag={cancelDrag}
                   editWord={editWord}
                   nowPlayingWordIndex={nowPlayingWordIndex}
+                  transcription={transcription}
+                  seekToWord={seekToWord}
+                  submitWordEdit={submitWordEdit}
+                  selectionSet={selectionSet}
                 />
               ),
               acc: acc + getNumWordsInTake(take),

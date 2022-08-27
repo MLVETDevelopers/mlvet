@@ -1,7 +1,7 @@
 import { MousePosition } from '@react-hook/mouse-position';
 import { Dispatch, SetStateAction } from 'react';
 import { instanceofTakeGroup } from 'renderer/utils/takeDetection';
-import { TakeGroup, Word } from 'sharedTypes';
+import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeGroupComponent from './TakeGroupComponent';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
@@ -20,6 +20,10 @@ interface TranscriptionChunkProps {
   cancelDrag: () => void;
   editWord: any;
   nowPlayingWordIndex: number | null;
+  transcription: Transcription;
+  seekToWord: (wordIndex: number) => void;
+  submitWordEdit: () => void;
+  selectionSet: Set<any>;
 }
 
 const TranscriptionChunk = ({
@@ -36,6 +40,10 @@ const TranscriptionChunk = ({
   cancelDrag,
   editWord,
   nowPlayingWordIndex,
+  transcription,
+  seekToWord,
+  submitWordEdit,
+  selectionSet,
 }: TranscriptionChunkProps) => {
   return (
     <>
@@ -54,9 +62,31 @@ const TranscriptionChunk = ({
           cancelDrag={cancelDrag}
           editWord={editWord}
           nowPlayingWordIndex={nowPlayingWordIndex}
+          transcription={transcription}
+          seekToWord={seekToWord}
+          submitWordEdit={submitWordEdit}
+          selectionSet={selectionSet}
         />
       ) : (
-        <WordOuterComponent />
+        <WordOuterComponent
+          word={chunk as Word}
+          index={chunkIndex}
+          transcription={transcription}
+          seekToWord={seekToWord}
+          selectionSet={selectionSet}
+          onWordMouseDown={onWordMouseDown}
+          onWordMouseMove={onWordMouseMove}
+          dragState={dragState}
+          isWordBeingDragged={isWordBeingDragged}
+          mouse={mousePosition}
+          mouseThrottled={mouseThrottled}
+          dropBeforeIndex={dropBeforeIndex}
+          setDropBeforeIndex={setDropBeforeIndex}
+          cancelDrag={cancelDrag}
+          submitWordEdit={submitWordEdit}
+          editWord={editWord}
+          nowPlayingWordIndex={nowPlayingWordIndex}
+        />
       )}
     </>
   );

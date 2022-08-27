@@ -155,6 +155,10 @@ const TranscriptionBlock = ({
                     cancelDrag={cancelDrag}
                     editWord={editWord}
                     nowPlayingWordIndex={nowPlayingWordIndex}
+                    transcription={transcription}
+                    seekToWord={seekToWord}
+                    submitWordEdit={submitWordEdit}
+                    selectionSet={selectionSet}
                   />
                 ),
                 acc: newAcc,

@@ -5,6 +5,7 @@ import {
   Word,
   MapCallback,
   IndexRange,
+  TakeGroup,
 } from './sharedTypes';
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
@@ -87,3 +88,22 @@ export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   takeInfo: null,
   ...override,
 });
+
+export const isInInactiveTake: (
+  word: Word,
+  takeGroups: TakeGroup[]
+) => boolean = (word, takeGroups) => {
+  if (word.takeInfo === null) {
+    return false;
+  }
+
+  const { takeGroupId, takeIndex } = word.takeInfo;
+
+  const takeGroup = takeGroups.find((group) => group.id === takeGroupId);
+
+  if (takeGroup?.activeTakeIndex === takeIndex) {
+    return false;
+  }
+
+  return true;
+};

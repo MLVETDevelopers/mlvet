@@ -112,7 +112,7 @@ const preProcessTranscript = (
 
   return {
     duration,
-    ...updateOutputTimes(wordsProcessed),
+    ...updateOutputTimes(wordsProcessed, takeGroups),
     takeGroups,
   };
 };

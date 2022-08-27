@@ -54,7 +54,8 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       ...updateOutputTimes(
-        transcriptionWordsReducer(transcription.words, action)
+        transcriptionWordsReducer(transcription.words, action),
+        transcription.takeGroups
       ),
     };
   }

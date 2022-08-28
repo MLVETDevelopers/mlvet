@@ -1,16 +1,17 @@
-import { IndexRange, Word } from 'sharedTypes';
+import { Word, IndexRange } from 'sharedTypes';
 import {
-  InjectableTakeGroup,
   InjectableTake,
-} from '../editDelete/mockTakeInfo';
+  InjectableTakeGroup,
+} from 'main/editDelete/mockTakeInfo';
+import getSimilarityScore from './sentenceSimilarity';
 
-type Sentence = {
+export type Sentence = {
   startIndex: number | null;
   endIndex: number | null;
   sentenceString: string;
 };
 
-function findSentences(words: Word[]): Sentence[] {
+export function findSentences(words: Word[]): Sentence[] {
   let currentSentence: Sentence = {
     startIndex: 0,
     endIndex: null,
@@ -18,14 +19,20 @@ function findSentences(words: Word[]): Sentence[] {
   };
   const sentences: Sentence[] = [];
   words.forEach((word, idx) => {
-    currentSentence.sentenceString = currentSentence.sentenceString.concat(
-      ' ',
-      word.word.toString()
-    );
+    if (currentSentence.sentenceString === '') {
+      currentSentence.sentenceString = word.word;
+    } else {
+      currentSentence.sentenceString = currentSentence.sentenceString.concat(
+        ' ',
+        word.word.toString()
+      );
+    }
+
     if (
       word.word.includes('.') ||
       word.word.includes('?') ||
-      word.word.includes('!')
+      word.word.includes('!') ||
+      idx === words.length - 1
     ) {
       currentSentence.endIndex = idx + 1;
       sentences.push(currentSentence);
@@ -36,26 +43,39 @@ function findSentences(words: Word[]): Sentence[] {
       };
     }
   });
-  sentences[sentences.length - 1].endIndex = words.length - 1;
+  sentences[sentences.length - 1].endIndex = words.length;
   return sentences;
 }
 
-function getSimilarityScore(sentenceOne: string, sentenceTwo: string): number {
-  sentenceOne.concat(sentenceTwo);
-  return 0.5;
+function newTakeGroup(
+  sentenceOne: Sentence,
+  sentenceTwo: Sentence
+): InjectableTakeGroup {
+  const newGroup: InjectableTakeGroup = { takes: [] };
+  let nextTakeRange: IndexRange = {
+    startIndex: sentenceOne.startIndex as number,
+    endIndex: sentenceOne.endIndex as number,
+  };
+  let nextTake: InjectableTake = { wordRange: nextTakeRange };
+  newGroup.takes.push(nextTake);
+  nextTakeRange = {
+    startIndex: sentenceTwo.startIndex as number,
+    endIndex: sentenceTwo.endIndex as number,
+  };
+  nextTake = { wordRange: nextTakeRange };
+  newGroup.takes.push(nextTake);
+  return newGroup;
 }
 
-function findTakes(words: Word[]): InjectableTakeGroup[] {
-  // const updatedWords = [...words];
+export function findTakes(words: Word[]): InjectableTakeGroup[] {
   const takeGroups: InjectableTakeGroup[] = [];
-  // let nextTakeGroupNo: number = 1;
   const sentences: Sentence[] = findSentences(words);
-  for (let i = 0; i < sentences.length; i += 1) {
+  for (let i = 0; i < sentences.length - 1; i += 1) {
     const similarity: number = getSimilarityScore(
       sentences[i].sentenceString,
       sentences[i + 1].sentenceString
     );
-    const threshold = 0.6;
+    const threshold = 0.65;
     if (similarity > threshold) {
       if (takeGroups.length !== 0) {
         const lastTake: IndexRange = takeGroups.at(-1)?.takes.at(-1)
@@ -64,28 +84,21 @@ function findTakes(words: Word[]): InjectableTakeGroup[] {
           lastTake.startIndex === sentences[i].startIndex &&
           lastTake.endIndex === sentences[i].endIndex
         ) {
-          const nextTake: IndexRange = {
+          const nextTakeRange: IndexRange = {
             startIndex: sentences[i + 1].startIndex as number,
             endIndex: sentences[i + 1].endIndex as number,
           };
-          takeGroups.at(-1).takes.push(nextTake);
+          const nextTake: InjectableTake = { wordRange: nextTakeRange };
+          takeGroups.at(-1)?.takes.push(nextTake);
+        } else {
+          takeGroups.push(newTakeGroup(sentences[i], sentences[i + 1]));
         }
       } else {
-        const newGroup: InjectableTakeGroup = { takes: [] };
-        let nextTakeRange: IndexRange = {
-          startIndex: sentences[i].startIndex as number,
-          endIndex: sentences[i].endIndex as number,
-        };
-        let nextTake: InjectableTake = { wordRange: nextTakeRange };
-        newGroup.takes.push(nextTake);
-        nextTakeRange = {
-          startIndex: sentences[i + 1].startIndex as number,
-          endIndex: sentences[i + 1].endIndex as number,
-        };
-        nextTake = { wordRange: nextTakeRange };
-        newGroup.takes.push(nextTake);
+        takeGroups.push(newTakeGroup(sentences[i], sentences[i + 1]));
       }
     }
   }
   return takeGroups;
 }
+
+export default { getSimilarityScore };

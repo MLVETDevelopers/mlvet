@@ -50,17 +50,28 @@
       "version": "0.0.1"
     },
     "appId": "edu.monash.mlvet",
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+      "**/node_modules/ffmpeg-static/*",
+      "**/node_modules/ffprobe-static/*"
+    ],
     "files": [
       "dist",
       "node_modules",
       "package.json",
-      "node_modules/ffmpeg-static-electron/bin/${os}/${arch}/ffmpeg",
-      "node_modules/ffmpeg-static-electron/index.js",
-      "node_modules/ffmpeg-static-electron/package.json",
-      "node_modules/ffprobe-static-electron/bin/${os}/${arch}/ffprobe",
-      "node_modules/ffprobe-static-electron/index.js",
-      "node_modules/ffprobe-static-electron/package.json"
+      "node_modules/ffprobe-static/index.js",
+      "node_modules/ffprobe-static/package.json"
+    ],
+    "extraResources": [
+      "./assets/**",
+      {
+        "from": "node_modules/ffmpeg-static/",
+        "to": "ffmpeg-static/"
+      },
+      {
+        "from": "node_modules/ffprobe-static/",
+        "to": "ffprobe-static/"
+      }
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
@@ -96,12 +107,10 @@
         "nsis"
       ],
       "files": [
-        "node_modules/ffmpeg-static-electron/bin/win/${arch}/ffmpeg",
-        "!node_modules/ffmpeg-static-electron/bin/linux${/*}",
-        "!node_modules/ffmpeg-static-electron/bin/mac${/*}",
-        "node_modules/ffprobe-static-electron/bin/win/${arch}/ffprobe",
-        "!node_modules/ffprobe-static-electron/bin/linux${/*}",
-        "!node_modules/ffprobe-static-electron/bin/mac${/*}"
+        "!node_modules/ffmpeg-static/bin/linux${/*}",
+        "!node_modules/ffmpeg-static/bin/mac${/*}",
+        "!node_modules/ffprobe-static/bin/linux${/*}",
+        "!node_modules/ffprobe-static/bin/mac${/*}"
       ]
     },
     "linux": {
@@ -115,9 +124,6 @@
       "buildResources": "assets",
       "output": "release/build"
     },
-    "extraResources": [
-      "./assets/**"
-    ],
     "publish": {
       "provider": "github",
       "owner": "chloebrett",

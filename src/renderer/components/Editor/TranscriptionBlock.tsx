@@ -114,10 +114,6 @@ const TranscriptionBlock = ({
     [editWord, submitWordEdit, dispatch]
   );
 
-  const restoreSection = (rangesToRestore: IndexRange): void => {
-    dispatchOp(makeRestoreSection([rangesToRestore]));
-  };
-
   return (
     <WordDragManager clearSelection={clearSelection}>
       {(
@@ -143,7 +139,9 @@ const TranscriptionBlock = ({
                   word={word}
                   index={index}
                   isSelected={selectionSet.has(index)}
-                  onMarkerClick={(restoreRange) => restoreSection(restoreRange)}
+                  onMarkerClick={(restoreRange) =>
+                    dispatchOp(makeRestoreSection([restoreRange]))
+                  }
                 />
               ) : (
                 <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

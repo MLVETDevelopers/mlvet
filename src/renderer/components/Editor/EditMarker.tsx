@@ -33,21 +33,36 @@ const EditMarker = ({
   const notPasted = word.pasteKey === 0;
 
   const getRestoreIndexRange = (): IndexRange => {
-    let sectionEndIndex = index;
-    for (let i = index; i < transcription.words.length - 1; i += 1) {
-      const currWord = transcription.words[i];
-      const nextWord = transcription.words[i + 1];
-      if (
-        !currWord.deleted ||
-        !nextWord.deleted ||
-        currWord.originalIndex + 1 !== nextWord.originalIndex
-      )
-        break;
+    const sectionToRestore = [...transcription.words].splice(index);
 
-      sectionEndIndex += 1;
+    // This returns the index of first word in the section to restore that is either
+    // not deleted or does not fit within the original sequence. Since we are using a
+    // spliced array with the first word being the start of the section we are restoring,
+    // we can assume this value to be equal to the number of words we are restoring.
+    const lastWordInSequenceIndex = sectionToRestore.findIndex(
+      (currWord, i, array) => {
+        // Condition if we hit the last word in the array
+        if (i >= array.length - 1) return !currWord.deleted;
+
+        const nextWord = array[i + 1];
+
+        return (
+          !currWord.deleted ||
+          !nextWord.deleted ||
+          currWord.originalIndex + 1 !== nextWord.originalIndex
+        );
+      }
+    );
+
+    console.log(index, lastWordInSequenceIndex + 1);
+
+    // If the number of words to restore is -1, then we are restoring
+    // from index until the end of the entire transcription.
+    if (lastWordInSequenceIndex === -1) {
+      return { startIndex: index, endIndex: transcription.words.length };
     }
 
-    return { startIndex: index, endIndex: sectionEndIndex + 1 };
+    return { startIndex: index, endIndex: index + lastWordInSequenceIndex + 1 };
   };
 
   return (isInOriginalPos || hasNotMoved) &&
@@ -59,7 +74,7 @@ const EditMarker = ({
         transform: 'translateY(-6.5px)',
         cursor: 'pointer',
       }}
-      onClick={() => onMarkerClick(getRestoreIndexRange())}
+      onClick={() => onMarkerClick(getRestoreIndexRange(index))}
     >
       <EditMarkerSvg />
     </Box>

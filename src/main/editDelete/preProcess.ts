@@ -100,8 +100,6 @@ const preProcessTranscript = (
 
   const injectableTakeGroups = findTakes(wordsWithoutTakes);
 
-  console.log(injectableTakeGroups);
-
   const { words, takeGroups } = injectTakeInfo(
     wordsWithoutTakes,
     injectableTakeGroups

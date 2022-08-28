@@ -66,10 +66,7 @@ declare global {
         project: RuntimeProject
       ) => Promise<Transcription | null>;
 
-      setConfidenceLinesEnabled: (
-        menuItemEnabled: boolean,
-        confidenceLinesShown: boolean
-      ) => void;
+      setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
 
       setExportEnabled: (exportEnabled: boolean) => void;
 

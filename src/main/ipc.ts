@@ -105,12 +105,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle(
     'set-confidence-lines-enabled',
-    async (_event, menuItemEnabled, confidenceLinesShown) =>
-      setConfidenceLinesEnabled(
-        ipcContext,
-        menuItemEnabled,
-        confidenceLinesShown
-      )
+    async (_event, menuItemEnabled) =>
+      setConfidenceLinesEnabled(ipcContext, menuItemEnabled)
   );
 
   ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>

@@ -40,11 +40,16 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     },
   });
 
+// thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
+const CONFIDENCE_THRESHOLD_MEDIUM = 0.6;
+const CONFIDENCE_THRESHOLD_LOW = 0.4;
+
 interface Props {
   index: number;
   seekToWord: () => void;
   isPlaying: boolean;
   isSelected: boolean;
+  confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
   text: string;
@@ -63,6 +68,7 @@ interface Props {
   isBeingEdited: boolean;
   editText: string | null;
   isInInactiveTake: boolean;
+  isShowingConfidenceUnderlines: boolean;
 }
 
 const WordComponent = ({
@@ -70,6 +76,7 @@ const WordComponent = ({
   seekToWord,
   isPlaying,
   isSelected,
+  confidence,
   isSelectedLeftCap,
   isSelectedRightCap,
   text,
@@ -86,6 +93,7 @@ const WordComponent = ({
   isBeingEdited,
   editText,
   isInInactiveTake,
+  isShowingConfidenceUnderlines,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -225,6 +233,20 @@ const WordComponent = ({
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
         borderRadius: BORDER_RADIUS_AMOUNT,
       };
+    }
+    if (isShowingConfidenceUnderlines) {
+      if (confidence < CONFIDENCE_THRESHOLD_LOW) {
+        return {
+          borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
+          marginBottom: 0,
+        };
+      }
+      if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
+        return {
+          borderBottom: `2px solid ${colors.yellow[500]}88`,
+          marginBottom: 0,
+        };
+      }
     }
     return {};
   })();

@@ -1,6 +1,8 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { Word, Transcription } from 'sharedTypes';
 import EditMarker from './EditMarker';
 import WordComponent from './WordComponent';
@@ -54,6 +56,10 @@ const WordOuterComponent = ({
   nowPlayingWordIndex,
   isInInactiveTake,
 }: WordOuterComponentProps) => {
+  const isShowingConfidenceUnderlines = useSelector(
+    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
+  );
+
   return (
     <WordAndSpaceContainer
       key={`container-${word.originalIndex}-${word.pasteKey}`}
@@ -87,6 +93,7 @@ const WordOuterComponent = ({
               selectionSet.has(index) && !selectionSet.has(index + 1)
             }
             text={word.word}
+            confidence={word.confidence ?? 1}
             index={index}
             onMouseDown={onWordMouseDown(index)}
             onMouseMove={() => onWordMouseMove(index)}
@@ -101,6 +108,7 @@ const WordOuterComponent = ({
             isBeingEdited={editWord?.index === index}
             editText={editWord?.text ?? null}
             isInInactiveTake={isInInactiveTake}
+            isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
           />
           {index === transcription.words.length - 1 && (
             <WordSpace

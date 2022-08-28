@@ -20,6 +20,7 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
   originalIndex: index,
   pasteKey: 0,
   deleted: false,
+  confidence: word.confidence,
   // Buffers are calculated later
   bufferDurationBefore: 0,
   bufferDurationAfter: 0,

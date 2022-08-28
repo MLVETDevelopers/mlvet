@@ -2,7 +2,7 @@ import { Word, IndexRange } from 'sharedTypes';
 import {
   InjectableTake,
   InjectableTakeGroup,
-} from 'main/editDelete/mockTakeInfo';
+} from 'main/editDelete/injectTakeInfo';
 import getSimilarityScore from './sentenceSimilarity';
 
 export type Sentence = {

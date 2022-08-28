@@ -8,6 +8,7 @@ import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
 import editWordReducer from './editWord/reducer';
+import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   selection: selectionReducer,
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
+  isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
 });
 
 export default rootReducer;

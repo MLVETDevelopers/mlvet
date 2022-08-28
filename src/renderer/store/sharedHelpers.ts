@@ -18,6 +18,8 @@ export interface ApplicationStore {
   shortcutsOpened: boolean;
   // Index of word currently being edited, otherwise null
   editWord: { index: number; text: string } | null;
+  // whether confidence underlines are currently visible
+  isShowingConfidenceUnderlines: boolean;
 }
 
 /**
@@ -34,4 +36,5 @@ export const initialStore: ApplicationStore = {
   selection: [],
   shortcutsOpened: false,
   editWord: null,
+  isShowingConfidenceUnderlines: false,
 };

@@ -1,14 +1,25 @@
 import { updateOutputTimes } from './updateOutputTimes';
 import { Transcription, Cut } from '../sharedTypes';
-import { bufferedWordDuration, roundToMs } from '../sharedUtils';
+import {
+  bufferedWordDuration,
+  roundToMs,
+  isInInactiveTake,
+} from '../sharedUtils';
 
 const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
-  const wordsNotYetUpdated = transcript.words.filter((word) => !word.deleted);
+  // filter out deleted words as well as words in inactive takes
+  const wordsNotYetUpdated = transcript.words.filter(
+    (word) => !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
+  );
+
   if (wordsNotYetUpdated.length === 0) {
     return [];
   }
 
-  const { words } = updateOutputTimes(wordsNotYetUpdated);
+  const { words } = updateOutputTimes(
+    wordsNotYetUpdated,
+    transcript.takeGroups
+  );
 
   let currentStartWord = words[0];
   let currentDuration = bufferedWordDuration(currentStartWord);

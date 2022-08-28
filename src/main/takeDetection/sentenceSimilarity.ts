@@ -3,16 +3,12 @@
  * Calculate similarity between two strings
  * @param {string} str1 First string to match
  * @param {string} str2 Second string to match
- * @param {number} [substringLength=2] Optional. Length of substring to be used in calculating similarity. Default 2.
  * @returns Number between 0 and 1, with 0 being a low match score.
  */
-export const getSimilarityScore = (
-  str1: string,
-  str2: string,
-  substringLength = 2
-): number => {
+export const getSimilarityScore = (str1: string, str2: string): number => {
   const str1LowerCase = str1.toLowerCase();
   const str2LowerCase = str2.toLowerCase();
+  const substringLength = 2;
 
   if (
     str1LowerCase.length < substringLength ||

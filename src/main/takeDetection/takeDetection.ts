@@ -48,10 +48,21 @@ const similarityScore = async (
 // eslint-disable-next-line import/prefer-default-export
 export const findSimilarities = async (threshold = 0.65) => {
   console.log('Instantiating Model...');
+  console.log('Model Embedding');
   console.time('Model Embedding');
-  const model = await use.load();
-  const embeddings = await model.embed(sentences);
-  console.timeEnd('Model Embedding');
+  try {
+    const model = await use.load();
+    console.log('=======================================================');
+    console.log(JSON.stringify(model));
+    console.log('=======================================================');
+    const embeddings = await model.embed(sentences);
+    console.timeEnd('Model Embedding');
+    console.log('Model Embedding -- Done');
+  } catch (e) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    console.log(e);
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+  }
   /*
    Expect ~9s on cpu
    Expect ~7.6s on gpu

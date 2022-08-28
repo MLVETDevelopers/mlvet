@@ -42,6 +42,7 @@ export interface CorrectWordPayload {
 export interface UndoCorrectWordPayload {
   index: number;
   prevText: string;
+  prevConfidence: number;
 }
 
 export type UndoRestoreSectionPayload = RestoreSectionPayload;

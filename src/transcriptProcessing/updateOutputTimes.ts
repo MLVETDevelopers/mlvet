@@ -1,5 +1,9 @@
-import { bufferedWordDuration, roundToMs } from '../sharedUtils';
-import { Word } from '../sharedTypes';
+import {
+  bufferedWordDuration,
+  roundToMs,
+  isInInactiveTake,
+} from '../sharedUtils';
+import { TakeGroup, Word } from '../sharedTypes';
 
 /**
  * calculates the outputStartTimes of a word based on the
@@ -12,10 +16,11 @@ import { Word } from '../sharedTypes';
 export const calculateTime: (
   word: Word,
   i: number,
-  newWords: Word[]
-) => number = (word, i, newWords) => {
+  newWords: Word[],
+  takeGroups: TakeGroup[]
+) => number = (word, i, newWords, takeGroups) => {
   // if the word is deleted, this never gets read, so it doesn't matter what it's set to
-  if (word.deleted) {
+  if (word.deleted || isInInactiveTake(word, takeGroups)) {
     return 0;
   }
 
@@ -29,7 +34,11 @@ export const calculateTime: (
   let nextNotDeleted = i - 1;
 
   // keeping going back until there are no more words or an un-deleted word is found
-  while (nextNotDeleted > -1 && newWords[nextNotDeleted].deleted) {
+  while (
+    nextNotDeleted > -1 &&
+    (newWords[nextNotDeleted].deleted ||
+      isInInactiveTake(newWords[nextNotDeleted], takeGroups))
+  ) {
     nextNotDeleted -= 1;
   }
 
@@ -43,8 +52,13 @@ export const calculateTime: (
   return roundToMs(prevWord.outputStartTime + bufferedWordDuration(prevWord));
 };
 
-const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
-  const currentTranscriptWords = words.filter((word) => word.deleted === false);
+const updateOutputVideoDuration: (
+  words: Word[],
+  takeGroups: TakeGroup[]
+) => number = (words, takeGroups) => {
+  const currentTranscriptWords = words.filter(
+    (word) => !word.deleted && !isInInactiveTake(word, takeGroups)
+  );
   const lastWord = currentTranscriptWords.pop();
 
   if (lastWord) {
@@ -58,10 +72,13 @@ const updateOutputVideoDuration: (words: Word[]) => number = (words) => {
 /**
  * Updates the output start times for each of the words in the transcript
  */
-export const updateOutputTimes: (words: Word[]) => {
+export const updateOutputTimes: (
+  words: Word[],
+  takeGroups: TakeGroup[]
+) => {
   words: Word[];
   outputDuration: number;
-} = (words) => {
+} = (words, takeGroups) => {
   const newWords: Word[] = [];
 
   // Using this instead of map because the calculateTime function needs the
@@ -70,12 +87,14 @@ export const updateOutputTimes: (words: Word[]) => {
   words.forEach((word, i) => {
     newWords.push({
       ...word,
-      outputStartTime: calculateTime(word, i, newWords),
+      outputStartTime: calculateTime(word, i, newWords, takeGroups),
     });
   });
 
+  const outputDuration = updateOutputVideoDuration(newWords, takeGroups);
+
   return {
     words: newWords,
-    outputDuration: updateOutputVideoDuration(newWords),
+    outputDuration,
   };
 };

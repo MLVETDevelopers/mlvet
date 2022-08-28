@@ -102,10 +102,11 @@ export const wordCorrected: (
 
 export const undoWordCorrected: (
   index: number,
-  prevText: string
-) => Action<UndoCorrectWordPayload> = (index, prevText) => ({
+  prevText: string,
+  prevConfidence: number
+) => Action<UndoCorrectWordPayload> = (index, prevText, prevConfidence) => ({
   type: UNDO_CORRECT_WORD,
-  payload: { index, prevText },
+  payload: { index, prevText, prevConfidence },
 });
 
 export const sectionRestored: (

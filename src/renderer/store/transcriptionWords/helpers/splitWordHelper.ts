@@ -47,6 +47,7 @@ export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
       startTime,
       word: text,
       pasteKey: highestExistingPasteKey + index + 1,
+      confidence: wordToSplit.confidence,
     };
   });
 

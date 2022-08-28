@@ -26,6 +26,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     expect(outputTranscript).toEqual({
       duration,
       outputDuration: duration,
+      takeGroups: [],
       words: [
         {
           word: 'abc',
@@ -38,6 +39,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'def',
@@ -50,6 +52,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
       ],
     });
@@ -85,6 +88,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     expect(outputTranscript).toEqual({
       duration,
       outputDuration: duration,
+      takeGroups: [],
       words: [
         {
           word: 'heat',
@@ -97,6 +101,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.5,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'from',
@@ -109,6 +114,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 0.1,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'fire',
@@ -121,6 +127,7 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationAfter: 3.67,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
       ],
     });

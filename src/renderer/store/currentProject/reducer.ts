@@ -29,6 +29,7 @@ import {
   FINISH_EXPORT,
   START_EXPORT,
 } from '../exportIo/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -101,6 +102,8 @@ const currentProjectReducer: Reducer<
       UNDO_MERGE_WORDS,
       SPLIT_WORD,
       UNDO_SPLIT_WORD,
+      SELECT_TAKE,
+      DELETE_TAKE_GROUP,
       RESTORE_SECTION,
       UNDO_RESTORE_SECTION,
     ].includes(action.type) &&

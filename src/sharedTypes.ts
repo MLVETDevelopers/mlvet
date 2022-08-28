@@ -33,13 +33,15 @@ export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
-  confidence: number;
   words: Word[];
   duration: number;
   outputDuration: number;
 }
 
-export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+export type PartialWord = Pick<
+  Word,
+  'word' | 'startTime' | 'duration' | 'confidence'
+>;
 
 export interface Word {
   // Text content of the word
@@ -62,10 +64,8 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // Used to differentiate between different projects/media;
-  // TODO(chloe) this should be replaced with project ID or transcript ID
-  // in order to support multiple projects without relying on a filename (which can change)
-  fileName: string;
+  // per-word confidence, 0-1
+  confidence: number | null | undefined;
 }
 
 export interface Cut {

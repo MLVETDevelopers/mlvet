@@ -1,13 +1,15 @@
 import { Box, CssBaseline, styled, ThemeProvider } from '@mui/material';
 import { ReactElement, useContext } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import colors from './colors';
+import KeyboardShortcutsDialog from './components/KeyboardShortcutsDialog';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import { ContainerRefContext, ContextStore } from './RootContainerContext';
 import { ApplicationPage } from './store/currentPage/helpers';
 import { ApplicationStore } from './store/sharedHelpers';
+import { toggleShortcuts } from './store/shortcuts/actions';
 import applicationStore from './store/store';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
@@ -38,10 +40,21 @@ function AppContents() {
   // Ref of the overall page container used for handling mouse events
   const containerRefContext = useContext(ContainerRefContext);
 
+  const dispatch = useDispatch();
+  const hasOpenedShortcuts = useSelector(
+    (store: ApplicationStore) => store.shortcutsOpened
+  );
+
+  const closeShortcut = () => dispatch(toggleShortcuts(false));
+
   return (
     <CssBaseline>
       <RootContainer ref={containerRefContext}>
         <Router />
+        <KeyboardShortcutsDialog
+          open={hasOpenedShortcuts}
+          onClose={closeShortcut}
+        />
       </RootContainer>
     </CssBaseline>
   );
@@ -50,7 +63,6 @@ function AppContents() {
 interface Props {
   hasStoreChangeObserver: boolean; // used for testing
 }
-
 export default function App({ hasStoreChangeObserver }: Props) {
   return (
     <Provider store={applicationStore}>

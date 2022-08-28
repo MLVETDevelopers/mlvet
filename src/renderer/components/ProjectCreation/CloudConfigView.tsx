@@ -98,70 +98,65 @@ const CloudConfigView = ({
   ]);
 
   return (
-    <CustomModal open={open} onClose={closeModal}>
-      <Container sx={{ height: { xs: 500 } }}>
-        <CustomRowStack justifyContent="space-between">
-          <Typography
-            overflow="hidden"
-            textOverflow="ellipsis"
-            variant="h1"
-            sx={{ color: colors.grey[400] }}
-          >
-            {projectName}
-          </Typography>
-          <IconButton
-            sx={{ color: colors.yellow[500], fontSize: 20 }}
-            onClick={closeModal}
-          >
-            <CloseIcon />
-          </IconButton>
-        </CustomRowStack>
-        <CustomColumnStack
-          justifyContent="space-between"
-          sx={{ height: '83%' }}
+    <Container sx={{ height: { xs: 500 } }}>
+      <CustomRowStack justifyContent="space-between">
+        <Typography
+          overflow="hidden"
+          textOverflow="ellipsis"
+          variant="h1"
+          sx={{ color: colors.grey[400] }}
         >
-          <CustomStack justifyContent="space-between">
-            <CustomStack>
-              <Typography
-                variant="p-300"
-                sx={{ marginTop: '16px', marginBottom: '35px' }}
-              >
-                Cloud transcription configuration required
-              </Typography>
-              <Typography variant="p-400">{text}</Typography>
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <Link
-                onClick={handleHelpClick}
-                sx={{
-                  cursor: 'pointer',
-                  color: colors.yellow[500],
-                  fontSize: '12px',
-                  marginTop: '5px',
-                  marginBottom: '30px',
-                }}
-              >
-                {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
-                How can I get an API key? &gt;
-              </Link>
-            </CustomStack>
+          {projectName}
+        </Typography>
+        <IconButton
+          sx={{ color: colors.yellow[500], fontSize: 20 }}
+          onClick={closeModal}
+        >
+          <CloseIcon />
+        </IconButton>
+      </CustomRowStack>
+      <CustomColumnStack justifyContent="space-between" sx={{ height: '83%' }}>
+        <CustomStack justifyContent="space-between">
+          <CustomStack>
+            <Typography
+              variant="p-300"
+              sx={{ marginTop: '16px', marginBottom: '35px' }}
+            >
+              Cloud transcription configuration required
+            </Typography>
+            <Typography variant="p-400">{text}</Typography>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <Link
+              onClick={handleHelpClick}
+              sx={{
+                cursor: 'pointer',
+                color: colors.yellow[500],
+                fontSize: '12px',
+                marginTop: '5px',
+                marginBottom: '30px',
+              }}
+            >
+              {/* Using the href prop of this component will break hence we have to open the URL in an external browser window */}
+              How can I get an API key? &gt;
+            </Link>
           </CustomStack>
-          <CustomColumnStack>
-            <CustomStack>
-              <TextField
-                label="API Key"
-                value={apiKey}
-                onChange={(event) => handleApiKeyInput(event.target.value)}
-                autoFocus
-              />
-            </CustomStack>
-          </CustomColumnStack>
-          <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
-            {cancelButton}
-            {saveButton}
-          </CustomRowStack>
+        </CustomStack>
+        <CustomColumnStack>
+          <CustomStack>
+            <TextField
+              label="API Key"
+              value={apiKey}
+              onChange={(event) => handleApiKeyInput(event.target.value)}
+              autoFocus
+            />
+          </CustomStack>
         </CustomColumnStack>
-      </Container>
-    </CustomModal>
+        <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
+          {cancelButton}
+          {saveButton}
+        </CustomRowStack>
+      </CustomColumnStack>
+    </Container>
   );
 };
 

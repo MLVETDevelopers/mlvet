@@ -1,12 +1,13 @@
 import ffmpegStaticPath from 'ffmpeg-static';
 import ffprobeStatic from 'ffprobe-static';
+import path from 'path';
 
 export const ffmpegPath = ffmpegStaticPath.replace(
-  'app.asar\\dist\\main\\',
-  'ffmpeg-static\\'
+  path.join('app.asar', 'dist', 'main'),
+  path.join('ffmpeg-static')
 );
 
 export const ffprobePath = ffprobeStatic.path.replace(
-  'app.asar\\dist\\main\\',
-  'ffprobe-static\\'
+  path.join('app.asar', 'dist', 'main'),
+  path.join('ffprobe-static')
 );

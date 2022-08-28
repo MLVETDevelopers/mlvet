@@ -2,7 +2,7 @@
 import app from '../expressServer/server';
 
 export default function startExpressServer() {
-  const port = process.env.EXPRESS_PORT;
+  const port = process.env.EXPRESS_PORT ?? 5556;
 
   if (port !== undefined) {
     app.listen(port, () => {

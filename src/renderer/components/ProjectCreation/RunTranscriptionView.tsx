@@ -100,12 +100,14 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
       await updateProjectWithMedia(currentProject, mediaFilePath);
       await extractProjectAudio();
       try {
-        const transcription = await processTranscription(currentProject);
-        if (transcription === null) {
+        const processedTranscription = await processTranscription(
+          currentProject
+        );
+        if (processedTranscription === null) {
           throw new Error();
         }
         setAsyncState(AsyncState.DONE);
-        setTranscription(transcription);
+        setTranscription(processedTranscription);
       } catch {
         setAsyncState(AsyncState.ERROR);
       }

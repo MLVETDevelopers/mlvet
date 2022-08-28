@@ -38,8 +38,8 @@ export type RenderTranscription = (
   onWordMouseMove: (wordIndex: number) => void,
   dragState: DragState,
   isWordBeingDragged: CurriedByWordIndex<boolean>,
-  mouse: MousePosition,
-  mouseThrottled: MousePosition,
+  mouse: MousePosition | null,
+  mouseThrottled: MousePosition | null,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>,
   cancelDrag: () => void
@@ -195,8 +195,8 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
         onWordMouseMoveDebounced,
         dragState,
         isWordBeingDragged,
-        mouse,
-        mouseThrottled,
+        dragState === null ? null : mouse,
+        dragState === null ? null : mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex,
         cancelDrag

@@ -22,8 +22,6 @@ const CustomModalInner = styled(Box)({
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const dummyPrevView: () => void = () => {};
-  const dummyNextView: () => void = () => {};
 
   const hasRecentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects.length > 0
@@ -46,9 +44,9 @@ const HomePage = () => {
       >
         <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
           <CloudConfigView
-            prevView={dummyPrevView}
+            prevView={null}
             closeModal={closeUpdateTranscriptionAPIKey}
-            nextView={dummyNextView}
+            nextView={null}
             projectName=""
             textToDisplay={null}
             open={hasOpenedUpdateTranscriptionAPIKey}

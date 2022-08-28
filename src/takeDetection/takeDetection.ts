@@ -4,9 +4,11 @@ import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl';
 
 import * as use from '@tensorflow-models/universal-sentence-encoder';
-import * as tf from '@tensorflow/tfjs-node-gpu'; // <-- GPU
-// import * as tf from '@tensorflow/tfjs-node'; // <-- CPU
-import { Tensor2D } from '@tensorflow/tfjs-node';
+// import * as tf from '@tensorflow/tfjs-node-gpu'; // <-- GPU
+import * as tf from '@tensorflow/tfjs'; // <-- CPU
+import { Tensor2D } from '@tensorflow/tfjs';
+
+console.log = require('electron-log').info;
 
 const sentences = [
   'What is up guys',

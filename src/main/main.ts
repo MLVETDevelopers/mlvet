@@ -10,6 +10,7 @@
  */
 import dotenv from 'dotenv';
 import { app, BrowserWindow } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import AppState from './AppState';
 import startExpressServer from './expressServer';
 import initialiseIpcHandlers from './ipc';
@@ -43,6 +44,10 @@ app.on('window-all-closed', () => {
   app.quit();
 });
 
+app.on('ready', () => {
+  autoUpdater.checkForUpdates();
+});
+
 app
   .whenReady()
   .then(async () => {
@@ -50,6 +55,7 @@ app
 
     const menuBuilder = new MenuBuilder(mainWindow);
     const menu = menuBuilder.buildMenu();
+    require('electron-log').info('Start Logs');
 
     const appState = new AppState(mainWindow);
 
@@ -60,6 +66,8 @@ app
     };
 
     initialiseIpcHandlers(ipcContext);
+
+    require('electron-debug')({ isEnabled: true });
 
     mainWindow.on('ready-to-show', async () => {
       if (!mainWindow) {

@@ -154,11 +154,7 @@ export default function StoreChangeObserver() {
 
   // Update whether 'show/hide confidence underlines' is enabled, and also its label
   useEffect(() => {
-    if (words === null) {
-      ipc.setConfidenceLinesEnabled(false, false);
-    } else {
-      ipc.setConfidenceLinesEnabled(true, isShowingConfidenceUnderlines);
-    }
+    ipc.setConfidenceLinesEnabled(words !== null);
   }, [isShowingConfidenceUnderlines, words]);
 
   // Component doesn't render anything

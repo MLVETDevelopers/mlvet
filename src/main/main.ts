@@ -15,6 +15,7 @@ import startExpressServer from './expressServer';
 import initialiseIpcHandlers from './ipc';
 import MenuBuilder from './menu';
 import promptToSaveWork from './promptToSaveWork';
+import { findSimilarities } from './takeDetection/takeDetection';
 import { IpcContext } from './types';
 import { appDataStoragePath, isDevelopment, mkdir } from './util';
 import createWindow from './window';
@@ -71,6 +72,7 @@ app
       }
 
       startExpressServer();
+      findSimilarities();
     });
 
     mainWindow.on('closed', () => {

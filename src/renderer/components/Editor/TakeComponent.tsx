@@ -5,6 +5,7 @@ import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
+import './TakeBars.css';
 
 interface TakeComponentProps {
   takeWords: Word[];

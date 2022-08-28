@@ -24,8 +24,6 @@ section to the side among other things.
 
 const ProjectPage = () => {
   const dispatch = useDispatch();
-  const dummyPrevView: () => void = () => {};
-  const dummyNextView: () => void = () => {};
 
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
@@ -74,9 +72,9 @@ const ProjectPage = () => {
           ) => (
             <>
               <CloudConfigView
-                prevView={dummyPrevView}
+                prevView={null}
                 closeModal={closeUpdateTranscriptionAPIKey}
-                nextView={dummyNextView}
+                nextView={null}
                 projectName=""
                 textToDisplay={null}
                 open={hasOpenedUpdateTranscriptionAPIKey}

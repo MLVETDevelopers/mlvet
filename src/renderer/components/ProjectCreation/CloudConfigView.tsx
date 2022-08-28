@@ -22,9 +22,9 @@ const CustomModal = styled(Dialog)`
   justify-content: center;
 `;
 interface Props {
-  prevView: () => void;
+  prevView: (() => void) | null;
   closeModal: () => void;
-  nextView: () => void;
+  nextView: (() => void) | null;
   projectName: string;
   textToDisplay: string | null;
   open: boolean;
@@ -57,7 +57,19 @@ const CloudConfigView = ({
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
     storeCloudCredentials(apiKey);
-    nextView();
+    if (nextView == null) {
+      closeModal();
+    } else {
+      nextView();
+    }
+  };
+
+  const cancelCloudCredentials: () => void = () => {
+    if (prevView == null) {
+      closeModal();
+    } else {
+      prevView();
+    }
   };
 
   const handleApiKeyInput = (value: string) => {
@@ -76,7 +88,7 @@ const CloudConfigView = ({
   );
 
   const cancelButton = (
-    <SecondaryButton onClick={prevView} fullWidth>
+    <SecondaryButton onClick={cancelCloudCredentials} fullWidth>
       Back
     </SecondaryButton>
   );

@@ -27,6 +27,7 @@ interface WordOuterComponentProps {
   submitWordEdit: () => void;
   editWord: any;
   nowPlayingWordIndex: number | null;
+  isInInactiveTake: boolean;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -53,6 +54,7 @@ const WordOuterComponent = ({
   submitWordEdit,
   editWord,
   nowPlayingWordIndex,
+  isInInactiveTake,
 }: WordOuterComponentProps) => {
   const isShowingConfidenceUnderlines = useSelector(
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
@@ -105,6 +107,7 @@ const WordOuterComponent = ({
             submitWordEdit={submitWordEdit}
             isBeingEdited={editWord?.index === index}
             editText={editWord?.text ?? null}
+            isInInactiveTake={isInInactiveTake}
             isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
           />
           {index === transcription.words.length - 1 && (

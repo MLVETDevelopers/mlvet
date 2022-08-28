@@ -112,7 +112,16 @@ const TakeGroupComponent = ({
     );
   });
 
-  return <>{takes}</>;
+  return (
+    <div
+      style={{
+        marginTop: '10px',
+        marginBottom: '10px',
+      }}
+    >
+      {takes}
+    </div>
+  );
 };
 
 export default TakeGroupComponent;

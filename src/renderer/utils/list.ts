@@ -31,3 +31,6 @@ export const mapInRanges: <T>(
 export const sortNumerical: (list: number[]) => void = (list) => {
   list.sort((first, second) => first - second);
 };
+
+export const mean: (list: number[]) => number = (list) =>
+  list.reduce((acc, curr) => acc + curr, 0) / list.length;

@@ -114,17 +114,22 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === CORRECT_WORD) {
     const { index, text } = action.payload as CorrectWordPayload;
 
-    return mapInRanges(words, (word) => ({ ...word, word: text }), [
-      rangeLengthOne(index),
-    ]);
+    return mapInRanges(
+      words,
+      (word) => ({ ...word, word: text, confidence: 1 }),
+      [rangeLengthOne(index)]
+    );
   }
 
   if (action.type === UNDO_CORRECT_WORD) {
-    const { index, prevText } = action.payload as UndoCorrectWordPayload;
+    const { index, prevText, prevConfidence } =
+      action.payload as UndoCorrectWordPayload;
 
-    return mapInRanges(words, (word) => ({ ...word, word: prevText }), [
-      rangeLengthOne(index),
-    ]);
+    return mapInRanges(
+      words,
+      (word) => ({ ...word, word: prevText, prevConfidence }),
+      [rangeLengthOne(index)]
+    );
   }
 
   return words;

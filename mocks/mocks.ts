@@ -9,7 +9,6 @@ export const mockProject: RuntimeProject = {
   mediaFilePath: 'test-media-file-path',
   isEdited: false,
   transcription: {
-    confidence: 123456789,
     duration: 100,
     outputDuration: 100,
     words: [
@@ -23,7 +22,6 @@ export const mockProject: RuntimeProject = {
         pasteKey: 0,
         bufferDurationBefore: 0,
         bufferDurationAfter: 0,
-        fileName: 'test-file-name',
         confidence: 1,
       },
     ],

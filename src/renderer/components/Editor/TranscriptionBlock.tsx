@@ -17,7 +17,6 @@ import {
   selectionRangeAdded,
 } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
-import EditMarker from './EditMarker';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -37,6 +36,12 @@ const TranscriptionBox = styled(Box)({
     borderRadius: '10px',
     background: colors.yellow[500],
   },
+});
+
+const WordAndSpaceContainer = styled(Box)({
+  display: 'inline-flex',
+  alignItems: 'center',
+  height: '24px',
 });
 
 interface Props {
@@ -121,20 +126,18 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
-          {transcription.words.map((word, index) =>
-            word.deleted ? (
-              <EditMarker
-                key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
-                transcription={transcription}
-                word={word}
-                index={index}
-              />
-            ) : (
+          {transcription.words.map((word, index) => (
+            <WordAndSpaceContainer
+              key={`container-${word.originalIndex}-${word.pasteKey}`}
+            >
               <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
                 <WordSpace
                   key={`space-${word.originalIndex}-${word.pasteKey}`}
                   isDropMarkerActive={
                     dragState !== null && dropBeforeIndex === index
+                  }
+                  isBetweenHighlightedWords={
+                    selectionSet.has(index - 1) && selectionSet.has(index)
                   }
                 />
                 <WordComponent
@@ -142,8 +145,14 @@ const TranscriptionBlock = ({
                   seekToWord={() => seekToWord(index)}
                   isPlaying={index === nowPlayingWordIndex}
                   isSelected={selectionSet.has(index)}
-                  confidence={word.confidence ?? 1}
+                  isSelectedLeftCap={
+                    selectionSet.has(index) && !selectionSet.has(index - 1)
+                  }
+                  isSelectedRightCap={
+                    selectionSet.has(index) && !selectionSet.has(index + 1)
+                  }
                   text={word.word}
+                  confidence={word.confidence ?? 1}
                   index={index}
                   onMouseDown={onWordMouseDown(index)}
                   onMouseMove={() => onWordMouseMove(index)}
@@ -166,11 +175,12 @@ const TranscriptionBlock = ({
                       dragState !== null &&
                       dropBeforeIndex === transcription.words.length
                     }
+                    isBetweenHighlightedWords={false}
                   />
                 )}
               </Fragment>
-            )
-          )}
+            </WordAndSpaceContainer>
+          ))}
         </TranscriptionBox>
       )}
     </WordDragManager>

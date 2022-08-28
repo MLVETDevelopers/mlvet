@@ -33,7 +33,6 @@ export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
-  confidence: number;
   words: Word[];
   duration: number;
   outputDuration: number;
@@ -65,10 +64,6 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // Used to differentiate between different projects/media;
-  // TODO(chloe) this should be replaced with project ID or transcript ID
-  // in order to support multiple projects without relying on a filename (which can change)
-  fileName: string;
   // Now that we have assemblyAI, we can do this - individual confidence for each word.
   // Ranges from 0 - 1.
   // if using another platform that doesn't support this, just set to null.

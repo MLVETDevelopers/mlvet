@@ -6,9 +6,11 @@ import {
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
 } from 'renderer/store/transcriptionWords/actions';
+import { makeBasicWord } from 'sharedUtils';
 import transcriptionReducer from '../reducer';
 
-const makeBasicWord: (
+// TODO: refactor this out to use the more generic makeBasicWord util - a lot of grunt work
+const makeBasicWordSequential: (
   originalIndex: number,
   text: string,
   isDeleted?: boolean,
@@ -38,7 +40,6 @@ const makeBasicWord: (
   deleted: isDeleted,
   originalIndex,
   pasteKey,
-  fileName: 'PLACEHOLDER FILENAME',
   confidence: 1,
 });
 
@@ -48,29 +49,55 @@ describe('Transcription reducer', () => {
       transcriptionReducer(null, {
         type: TRANSCRIPTION_CREATED,
         payload: {
-          confidence: 1,
           duration: 100,
-          words: [makeBasicWord(0, 'a')],
+          words: [makeBasicWord({ originalIndex: 0, word: 'a' })],
         },
       })
     ).toEqual({
-      confidence: 1,
       duration: 100,
-      words: [makeBasicWord(0, 'a')],
+      words: [makeBasicWord({ originalIndex: 0, word: 'a' })],
     });
   });
 });
 
 it('output duration should be updated after deleting words', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWord({
+        originalIndex: 0,
+        word: 'a',
+        duration: 1,
+        bufferDurationAfter: 0.5,
+      }),
+      makeBasicWord({
+        originalIndex: 1,
+        word: 'a',
+        startTime: 1.5,
+        outputStartTime: 1.5,
+        duration: 0.7,
+        bufferDurationBefore: 0.5,
+        bufferDurationAfter: 0.2,
+      }),
+      makeBasicWord({
+        originalIndex: 2,
+        word: 'a',
+        startTime: 2.9,
+        outputStartTime: 2.9,
+        duration: 1.3,
+        bufferDurationBefore: 0.5,
+        bufferDurationAfter: 0.9,
+      }),
+      makeBasicWord({
+        originalIndex: 3,
+        word: 'a',
+        startTime: 5.6,
+        outputStartTime: 5.6,
+        duration: 0.24,
+        bufferDurationBefore: 0.2,
+        bufferDurationAfter: 3,
+      }),
     ],
   };
 
@@ -91,23 +118,73 @@ it('output duration should be updated after deleting words', () => {
   expect(deleteOutput?.outputDuration).toEqual(4.94);
 
   expect(deleteOutput?.words).toEqual([
-    makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-    makeBasicWord(1, 'a', true, undefined, 1.5, 0, 0.7, 0.5, 0.2),
-    makeBasicWord(2, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
-    makeBasicWord(3, 'a', false, undefined, 5.6, 1.5, 0.24, 0.2, 3),
+    makeBasicWord({
+      originalIndex: 0,
+      word: 'a',
+      duration: 1,
+      bufferDurationAfter: 0.5,
+    }),
+    makeBasicWord({
+      originalIndex: 1,
+      word: 'a',
+      deleted: true,
+      startTime: 1.5,
+      outputStartTime: 0,
+      duration: 0.7,
+      bufferDurationBefore: 0.5,
+      bufferDurationAfter: 0.2,
+    }),
+    makeBasicWord({
+      originalIndex: 2,
+      word: 'a',
+      deleted: true,
+      startTime: 2.9,
+      outputStartTime: 0,
+      duration: 1.3,
+      bufferDurationBefore: 0.5,
+      bufferDurationAfter: 0.9,
+    }),
+    makeBasicWord({
+      originalIndex: 3,
+      word: 'a',
+      startTime: 5.6,
+      outputStartTime: 1.5,
+      duration: 0.24,
+      bufferDurationBefore: 0.2,
+      bufferDurationAfter: 3,
+    }),
   ]);
 });
 
 it('output duration should be the same as original when deleting and straight after undoing delete', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWordSequential(
+        1,
+        'a',
+        false,
+        undefined,
+        1.5,
+        1.5,
+        0.7,
+        0.5,
+        0.2
+      ),
+      makeBasicWordSequential(
+        2,
+        'a',
+        false,
+        undefined,
+        2.9,
+        2.9,
+        1.3,
+        0.5,
+        0.9
+      ),
+      makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
     ],
   };
 
@@ -142,14 +219,33 @@ it('output duration should be the same as original when deleting and straight af
 
 it('output duration should be 0 after deleting all words', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWordSequential(
+        1,
+        'a',
+        false,
+        undefined,
+        1.5,
+        1.5,
+        0.7,
+        0.5,
+        0.2
+      ),
+      makeBasicWordSequential(
+        2,
+        'a',
+        false,
+        undefined,
+        2.9,
+        2.9,
+        1.3,
+        0.5,
+        0.9
+      ),
+      makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
     ],
   };
 
@@ -169,23 +265,42 @@ it('output duration should be 0 after deleting all words', () => {
   expect(deleteOutput?.outputDuration).toEqual(0);
 
   expect(deleteOutput?.words).toEqual([
-    makeBasicWord(0, 'a', true, undefined, 0, 0, 1, 0, 0.5),
-    makeBasicWord(1, 'a', true, undefined, 1.5, 0, 0.7, 0.5, 0.2),
-    makeBasicWord(2, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
-    makeBasicWord(3, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
+    makeBasicWordSequential(0, 'a', true, undefined, 0, 0, 1, 0, 0.5),
+    makeBasicWordSequential(1, 'a', true, undefined, 1.5, 0, 0.7, 0.5, 0.2),
+    makeBasicWordSequential(2, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
+    makeBasicWordSequential(3, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
   ]);
 });
 
 it('output duration should calculated from last non deleted word (not always last word)', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWordSequential(
+        1,
+        'a',
+        false,
+        undefined,
+        1.5,
+        1.5,
+        0.7,
+        0.5,
+        0.2
+      ),
+      makeBasicWordSequential(
+        2,
+        'a',
+        false,
+        undefined,
+        2.9,
+        2.9,
+        1.3,
+        0.5,
+        0.9
+      ),
+      makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
     ],
   };
 
@@ -205,23 +320,42 @@ it('output duration should calculated from last non deleted word (not always las
   expect(deleteOutput?.outputDuration).toEqual(2.9);
 
   expect(deleteOutput?.words).toEqual([
-    makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-    makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-    makeBasicWord(2, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
-    makeBasicWord(3, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
+    makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+    makeBasicWordSequential(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+    makeBasicWordSequential(2, 'a', true, undefined, 2.9, 0, 1.3, 0.5, 0.9),
+    makeBasicWordSequential(3, 'a', true, undefined, 5.6, 0, 0.24, 0.2, 3),
   ]);
 });
 
 it('output duration should updated after copying and pasting new text', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWordSequential(
+        1,
+        'a',
+        false,
+        undefined,
+        1.5,
+        1.5,
+        0.7,
+        0.5,
+        0.2
+      ),
+      makeBasicWordSequential(
+        2,
+        'a',
+        false,
+        undefined,
+        2.9,
+        2.9,
+        1.3,
+        0.5,
+        0.9
+      ),
+      makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
     ],
   };
 
@@ -230,8 +364,18 @@ it('output duration should updated after copying and pasting new text', () => {
     payload: {
       startIndex: 3,
       clipboard: [
-        makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-        makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWordSequential(
+          1,
+          'a',
+          false,
+          undefined,
+          1.5,
+          1.5,
+          0.7,
+          0.5,
+          0.2
+        ),
       ],
     },
   });
@@ -240,25 +384,44 @@ it('output duration should updated after copying and pasting new text', () => {
   expect(output?.outputDuration).toEqual(11.94);
 
   expect(output?.words).toEqual([
-    makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-    makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-    makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-    makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
-    makeBasicWord(0, 'a', false, 1, 0, 9.04, 1, 0, 0.5),
-    makeBasicWord(1, 'a', false, 2, 1.5, 10.54, 0.7, 0.5, 0.2),
+    makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+    makeBasicWordSequential(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+    makeBasicWordSequential(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+    makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+    makeBasicWordSequential(0, 'a', false, 1, 0, 9.04, 1, 0, 0.5),
+    makeBasicWordSequential(1, 'a', false, 2, 1.5, 10.54, 0.7, 0.5, 0.2),
   ]);
 });
 
 it('output duration should stay the same after copying and straight away undoing', () => {
   const transcript = {
-    confidence: 1,
     duration: 9.04,
     outputDuration: 9.04,
     words: [
-      makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-      makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-      makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-      makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+      makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+      makeBasicWordSequential(
+        1,
+        'a',
+        false,
+        undefined,
+        1.5,
+        1.5,
+        0.7,
+        0.5,
+        0.2
+      ),
+      makeBasicWordSequential(
+        2,
+        'a',
+        false,
+        undefined,
+        2.9,
+        2.9,
+        1.3,
+        0.5,
+        0.9
+      ),
+      makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
     ],
   };
 
@@ -267,8 +430,18 @@ it('output duration should stay the same after copying and straight away undoing
     payload: {
       startIndex: 3,
       clipboard: [
-        makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-        makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+        makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+        makeBasicWordSequential(
+          1,
+          'a',
+          false,
+          undefined,
+          1.5,
+          1.5,
+          0.7,
+          0.5,
+          0.2
+        ),
       ],
     },
   });
@@ -284,9 +457,9 @@ it('output duration should stay the same after copying and straight away undoing
   expect(output?.outputDuration).toEqual(transcript.duration);
 
   expect(output?.words).toEqual([
-    makeBasicWord(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
-    makeBasicWord(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
-    makeBasicWord(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
-    makeBasicWord(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
+    makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
+    makeBasicWordSequential(1, 'a', false, undefined, 1.5, 1.5, 0.7, 0.5, 0.2),
+    makeBasicWordSequential(2, 'a', false, undefined, 2.9, 2.9, 1.3, 0.5, 0.9),
+    makeBasicWordSequential(3, 'a', false, undefined, 5.6, 5.6, 0.24, 0.2, 3),
   ]);
 });

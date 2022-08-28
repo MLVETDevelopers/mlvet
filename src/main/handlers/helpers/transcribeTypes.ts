@@ -10,8 +10,6 @@ export type TranscriptionFunction = (
 // Then add the new engine to this enum
 export enum TranscriptionEngine {
   DUMMY,
-  VOSK,
-  DEEPSPEECH,
   ASSEMBLYAI,
 }
 

@@ -114,7 +114,6 @@ interface AssemblyAiWord {
 const transcriptionAdaptor: (
   wordList: AssemblyAiWord[]
 ) => JSONTranscription = (wordList) => ({
-  confidence: 0,
   words: wordList.map((val) => ({
     word: val.text,
     startTime: roundToMs(val.start / 1000),

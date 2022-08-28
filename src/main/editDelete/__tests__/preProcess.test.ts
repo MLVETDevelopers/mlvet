@@ -4,7 +4,6 @@ import preProcessTranscript from '../preProcess';
 describe('Test pre-processing JSON transcript into regular transcript', () => {
   it('should produce expected transcript when given a JSON transcript', () => {
     const jsonTranscript: JSONTranscription = {
-      confidence: 1,
       words: [
         {
           word: 'abc',
@@ -22,14 +21,9 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 2;
 
-    const outputTranscript = preProcessTranscript(
-      jsonTranscript,
-      duration,
-      'PLACEHOLDER FILENAME'
-    );
+    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
 
     expect(outputTranscript).toEqual({
-      confidence: 1,
       duration,
       outputDuration: duration,
       words: [
@@ -43,7 +37,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
           confidence: 1,
         },
         {
@@ -56,7 +49,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
           confidence: 1,
         },
       ],
@@ -65,7 +57,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
 
   it('should fill blank spaces between words, and between first/last words and start/end', () => {
     const jsonTranscript: JSONTranscription = {
-      confidence: -7,
       words: [
         {
           word: 'heat',
@@ -89,14 +80,9 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
     };
     const duration = 15.77;
 
-    const outputTranscript = preProcessTranscript(
-      jsonTranscript,
-      duration,
-      'PLACEHOLDER FILENAME'
-    );
+    const outputTranscript = preProcessTranscript(jsonTranscript, duration);
 
     expect(outputTranscript).toEqual({
-      confidence: -7,
       duration,
       outputDuration: duration,
       words: [
@@ -110,7 +96,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 5,
           bufferDurationAfter: 0.5,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
           confidence: 1,
         },
         {
@@ -123,7 +108,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0.5,
           bufferDurationAfter: 0.1,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
           confidence: 1,
         },
         {
@@ -136,7 +120,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           bufferDurationBefore: 0.1,
           bufferDurationAfter: 3.67,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
           confidence: 1,
         },
       ],

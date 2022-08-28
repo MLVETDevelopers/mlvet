@@ -3,7 +3,6 @@ import { PartialWord, RuntimeProject } from 'sharedTypes';
 import AppState from './AppState';
 
 export interface JSONTranscription {
-  confidence: number;
   words: PartialWord[];
 }
 

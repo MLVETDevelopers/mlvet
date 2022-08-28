@@ -3,7 +3,7 @@ import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/updateTranscript
 
 const { dispatch } = store;
 
-const openUpdateTranscriptionAPIKey: () => any = async () => {
+const openUpdateTranscriptionAPIKey: () => void = async () => {
   dispatch(toggleUpdateTranscriptionAPIKey(true));
 };
 

@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -11,8 +11,6 @@ import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
-import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/updateTranscriptionAPIKey/actions';
-import CloudConfigView from 'renderer/components/ProjectCreation/CloudConfigView';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -23,21 +21,12 @@ section to the side among other things.
 */
 
 const ProjectPage = () => {
-  const dispatch = useDispatch();
-
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
-
-  const hasOpenedUpdateTranscriptionAPIKey = useSelector(
-    (store: ApplicationStore) => store.updateTranscriptionAPIKeyOpened
-  );
-
-  const closeUpdateTranscriptionAPIKey = () =>
-    dispatch(toggleUpdateTranscriptionAPIKey(false));
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
@@ -71,14 +60,6 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <CloudConfigView
-                prevView={null}
-                closeModal={closeUpdateTranscriptionAPIKey}
-                nextView={null}
-                projectName=""
-                textToDisplay={null}
-                open={hasOpenedUpdateTranscriptionAPIKey}
-              />
               <VideoController
                 time={time}
                 isPlaying={isPlaying}

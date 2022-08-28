@@ -1,28 +1,23 @@
-import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import colors from 'renderer/colors';
-import { Transcription, Word } from 'sharedTypes';
+import { IndexRange, Transcription, Word } from 'sharedTypes';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
-
-const makeEditMarkerContainer = (isSelected: boolean) =>
-  styled(Box)({
-    background: isSelected ? `${colors.blue[500]}cc` : 'none',
-
-    // a bit gross but a seemingly unavoidable consequence of
-    // using a centre-aligned flexbox for the word and space items -
-    // tried everything else in the book and this is the best I could
-    // come up with
-    transform: 'translateY(-6.5px)',
-  });
 
 interface Props {
   transcription: Transcription;
   word: Word;
   index: number;
   isSelected: boolean;
+  onMarkerClick: (restoreIndexRange: IndexRange, element: HTMLElement) => void;
 }
 
-const EditMarker = ({ transcription, word, index, isSelected }: Props) => {
+const EditMarker = ({
+  transcription,
+  word,
+  index,
+  isSelected,
+  onMarkerClick,
+}: Props) => {
   const isInOriginalPos = word.originalIndex === index;
 
   // word index has changed but still in the same relative position
@@ -37,14 +32,42 @@ const EditMarker = ({ transcription, word, index, isSelected }: Props) => {
 
   const notPasted = word.pasteKey === 0;
 
-  const EditMarkerContainer = makeEditMarkerContainer(isSelected);
+  const getRestoreIndexRange = (): IndexRange => {
+    let sectionEndIndex = index;
+    for (let i = index; i < transcription.words.length - 1; i += 1) {
+      const currWord = transcription.words[i];
+      const nextWord = transcription.words[i + 1];
+      if (
+        !currWord.deleted ||
+        !nextWord.deleted ||
+        currWord.originalIndex + 1 !== nextWord.originalIndex
+      )
+        break;
+
+      sectionEndIndex += 1;
+    }
+
+    return { startIndex: index, endIndex: sectionEndIndex + 1 };
+  };
 
   return (isInOriginalPos || hasNotMoved) &&
     hasNoNeighbourMarker &&
     notPasted ? (
-    <EditMarkerContainer>
+    <Box
+      sx={{
+        background: isSelected ? `${colors.blue[500]}cc` : 'none',
+        transform: 'translateY(-6.5px)',
+        cursor: 'pointer',
+      }}
+      onClick={(event: React.MouseEvent) =>
+        onMarkerClick(
+          getRestoreIndexRange(),
+          event.currentTarget as HTMLElement
+        )
+      }
+    >
       <EditMarkerSvg />
-    </EditMarkerContainer>
+    </Box>
   ) : null;
 };
 

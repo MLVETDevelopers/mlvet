@@ -1,13 +1,18 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Transcription } from 'sharedTypes';
+import { IndexRange, Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
+import { useFloating } from '@floating-ui/react-dom';
+import {
+  FloatingFocusManager,
+  useFloating as useFloatingInteraction,
+} from '@floating-ui/react-dom-interactions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';
@@ -18,6 +23,7 @@ import {
 } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 import EditMarker from './EditMarker';
+import RestorePopover from './RestorePopover';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -56,6 +62,12 @@ const TranscriptionBlock = ({
   transcription,
   nowPlayingWordIndex,
 }: Props) => {
+  const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(
+    null
+  );
+  const { context } = useFloatingInteraction();
+  const [popperText, setPopperText] = useState<string | null>(null);
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const selectionArray = useSelector(
@@ -113,6 +125,18 @@ const TranscriptionBlock = ({
     [editWord, submitWordEdit, dispatch]
   );
 
+  const onMarkerClick = (
+    restoreIndexRange: IndexRange,
+    element: HTMLElement
+  ) => {
+    setPopperToggled(true);
+    console.log('setting popper');
+    setPopperText(
+      'Today is a recap on what we`ve done so far on all the groups - this is an opportunity if there are any roadblocks, and we will have a retrospective, and any questions for research proposal/presentation'
+    );
+    setTriggerElement(element);
+  };
+
   return (
     <WordDragManager clearSelection={clearSelection}>
       {(
@@ -127,10 +151,12 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => (
         <TranscriptionBox id="transcription-content">
+          <RestorePopover />
           {transcription.words.map((word, index) => (
             <WordAndSpaceContainer
               key={`container-${word.originalIndex}-${word.pasteKey}`}
             >
+              {/* {popperToggled && <RestorePopover text={popperText || ''} />} */}
               {word.deleted ? (
                 <EditMarker
                   key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
@@ -138,6 +164,7 @@ const TranscriptionBlock = ({
                   word={word}
                   index={index}
                   isSelected={selectionSet.has(index)}
+                  onMarkerClick={onMarkerClick}
                 />
               ) : (
                 <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

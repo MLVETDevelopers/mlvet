@@ -1,78 +1,108 @@
-import { Box, Popover, Typography } from '@mui/material';
-import { useState } from 'react';
-import colors from '../../colors';
+/* eslint-disable promise/always-return */
+/* eslint-disable promise/catch-or-return */
+import {
+  arrow,
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+  useFloating,
+} from '@floating-ui/react-dom';
+import { Box, Button, styled } from '@mui/material';
+import { bold } from 'chalk';
+import { useRef, useState } from 'react';
+import colors from 'renderer/colors';
 
-interface RestorePopoverProps {
-  text: string;
-}
+const RestorePopover = () => {
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const arrowRef = useRef<HTMLElement>(null);
 
-const RestorePopover = ({ text }: RestorePopoverProps) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { x, y, reference, floating, strategy, refs } = useFloating({
+    whileElementsMounted: autoUpdate,
+    placement: 'top',
+    strategy: 'fixed',
+    middleware: [
+      offset(6),
+      shift(),
+      arrow({
+        element: () => {
+          return arrowRef;
+        },
+      }),
+    ],
+  });
 
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const Arrow = styled(Box)({
+    position: 'absolute',
+    background: colors.grey[600],
+    width: '8px',
+    height: '8px',
+    transform: 'rotate(45deg)',
+  });
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
+  function update() {
+    computePosition(refs.reference.current!, refs.floating.current!, {
+      placement: 'top',
+      middleware: [
+        offset(6),
+        flip(),
+        shift({ padding: 5 }),
+        arrow({
+          element: () => {
+            return arrowRef.current;
+          },
+        }),
+      ],
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+    }).then(({ x, y, middlewareData }) => {
+      Object.assign(refs.floating.current!.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      });
 
-  const open = Boolean(anchorEl);
+      // Accessing the data
+      const { x: arrowX } = middlewareData.arrow as any;
+
+      Object.assign(arrowRef.current!.style, {
+        left: arrowX != null ? `${arrowX}px` : '',
+        bottom: '-4px',
+      });
+    });
+  }
+
+  function handleButtonClick() {
+    setPopoverVisible(!popoverVisible);
+    update();
+  }
 
   return (
-    <Popover
-      id="restore-popover"
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handlePopoverClose}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
-      transformOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
-      }}
-      PaperProps={{
-        style: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
-          borderRadius: 0,
-        },
-      }}
-    >
-      <Typography
-        sx={{
-          p: 2,
-          backgroundColor: colors.grey[600],
-          border: 0.5,
-          color: colors.yellow[500],
-        }}
-        noWrap
-      >
-        {text}
-      </Typography>
+    <>
+      <Button id="button" aria-describedby="tooltip" ref={reference}>
+        My button
+      </Button>
       <Box
+        id="tooltip"
+        role="tooltip"
+        ref={floating}
+        onClick={handleButtonClick}
         sx={{
-          position: 'relative',
-          mt: '10px',
-          '&::before': {
-            backgroundColor: colors.grey[600],
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            width: 9.5,
-            height: 9.5,
-            top: -15,
-            transform: 'rotate(45deg)',
-            left: 'calc(50% - 6px)',
-            borderBottom: 0.5,
-            borderRight: 0.5,
-            borderColor: colors.yellow[500],
-          },
+          background: colors.grey[600],
+          fontWeight: bold,
+          padding: '5px',
+          borderRadius: '4px',
+          fontSize: '90%',
+          pointerEvents: 'none',
+          position: strategy,
+          top: y ?? 0,
+          left: x ?? 0,
+          display: popoverVisible ? 'block' : '',
         }}
-      />
-    </Popover>
+      >
+        My tooltip
+        <Arrow id="arrow" ref={arrowRef} />
+      </Box>
+    </>
   );
 };
 

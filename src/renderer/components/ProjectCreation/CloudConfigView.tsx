@@ -1,6 +1,5 @@
 import {
   Box,
-  Dialog,
   IconButton,
   Link,
   Stack,
@@ -16,18 +15,12 @@ import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
 const { openExternalLink, storeCloudCredentials } = ipc;
-const CustomModal = styled(Dialog)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 interface Props {
   prevView: (() => void) | null;
   closeModal: () => void;
   nextView: (() => void) | null;
   projectName: string;
   textToDisplay: string | null;
-  open: boolean;
 }
 
 const CustomStack = styled(Stack)({ width: '100%' });
@@ -49,7 +42,6 @@ const CloudConfigView = ({
   nextView,
   projectName,
   textToDisplay,
-  open,
 }: Props) => {
   const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
   const [apiKey, setApiKey] = useState<string>('');
@@ -57,7 +49,7 @@ const CloudConfigView = ({
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
     storeCloudCredentials(apiKey);
-    if (nextView == null) {
+    if (nextView === null) {
       closeModal();
     } else {
       nextView();
@@ -65,7 +57,7 @@ const CloudConfigView = ({
   };
 
   const cancelCloudCredentials: () => void = () => {
-    if (prevView == null) {
+    if (prevView === null) {
       closeModal();
     } else {
       prevView();

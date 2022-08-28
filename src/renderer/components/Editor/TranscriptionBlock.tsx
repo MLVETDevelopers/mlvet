@@ -7,7 +7,6 @@ import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
-import { makeRestoreSection } from 'renderer/store/transcriptionWords/ops/restoreSection';
 import { rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,

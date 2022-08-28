@@ -1,5 +1,7 @@
 import { Box } from '@mui/material';
 import colors from 'renderer/colors';
+import dispatchOp from 'renderer/store/dispatchOp';
+import { makeRestoreSection } from 'renderer/store/transcriptionWords/ops/restoreSection';
 import { IndexRange, Transcription, Word } from 'sharedTypes';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
@@ -8,16 +10,9 @@ interface Props {
   word: Word;
   index: number;
   isSelected: boolean;
-  onMarkerClick: (restoreRange: IndexRange) => void;
 }
 
-const EditMarker = ({
-  transcription,
-  word,
-  index,
-  isSelected,
-  onMarkerClick,
-}: Props) => {
+const EditMarker = ({ transcription, word, index, isSelected }: Props) => {
   const isInOriginalPos = word.originalIndex === index;
 
   // word index has changed but still in the same relative position
@@ -74,7 +69,7 @@ const EditMarker = ({
         transform: 'translateY(-6.5px)',
         cursor: 'pointer',
       }}
-      onClick={() => onMarkerClick(getRestoreIndexRange(index))}
+      onClick={() => dispatchOp(makeRestoreSection([getRestoreIndexRange()]))}
     >
       <EditMarkerSvg />
     </Box>

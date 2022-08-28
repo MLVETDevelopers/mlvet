@@ -166,6 +166,16 @@ export default class MenuBuilder {
         },
         enabled: false, // by default, gets updated when selection changes
       },
+      {
+        id: 'confidence',
+        label: 'Toggle Confidence Underlines',
+        accelerator: 'CommandOrControl+U',
+        click: () => {
+          // Tell the renderer to toggle the confidence underlines
+          this.mainWindow.webContents.send('toggle-confidence-underlines');
+        },
+        enabled: false, // by default, gets updated when a project is entered
+      },
     ];
   }
 

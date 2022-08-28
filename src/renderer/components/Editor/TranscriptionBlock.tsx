@@ -87,10 +87,6 @@ const TranscriptionBlock = ({
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
       dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
-    } else if (editWord.text === transcription.words[index].word) {
-      // If the user edits a word but leaves it unchanged, just select it without
-      // dispatching an update to the word itself
-      dispatch(selectionRangeAdded(rangeLengthOne(index)));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));

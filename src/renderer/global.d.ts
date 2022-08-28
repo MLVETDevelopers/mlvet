@@ -66,6 +66,8 @@ declare global {
         project: RuntimeProject
       ) => Promise<Transcription | null>;
 
+      setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
+
       setExportEnabled: (exportEnabled: boolean) => void;
 
       setFileRepresentation: (

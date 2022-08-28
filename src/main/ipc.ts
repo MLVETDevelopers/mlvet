@@ -21,6 +21,7 @@ import extractThumbnail from './handlers/media/thumbnailExtract';
 import loadThumbnail from './handlers/media/thumbnailLoad';
 import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
+import setConfidenceLinesEnabled from './handlers/menu/setConfidenceLinesEnabled';
 import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
@@ -100,6 +101,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)
+  );
+
+  ipcMain.handle(
+    'set-confidence-lines-enabled',
+    async (_event, menuItemEnabled) =>
+      setConfidenceLinesEnabled(ipcContext, menuItemEnabled)
   );
 
   ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>

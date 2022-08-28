@@ -78,7 +78,9 @@ export interface Word {
   pasteKey: number;
   // Stores information related to take detection and manipulation
   takeInfo: TakeInfo | null;
-  // per-word confidence, 0-1
+  // Now that we have assemblyAI, we can do this - individual confidence for each word.
+  // Ranges from 0 - 1.
+  // if using another platform that doesn't support this, just set to null.
   confidence: number | null | undefined;
 }
 

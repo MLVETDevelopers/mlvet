@@ -26,9 +26,7 @@ const RestorePopover = () => {
       offset(6),
       shift(),
       arrow({
-        element: () => {
-          return arrowRef;
-        },
+        element: arrowRef,
       }),
     ],
   });
@@ -49,9 +47,7 @@ const RestorePopover = () => {
         flip(),
         shift({ padding: 5 }),
         arrow({
-          element: () => {
-            return arrowRef.current;
-          },
+          element: arrowRef,
         }),
       ],
       // eslint-disable-next-line @typescript-eslint/no-shadow

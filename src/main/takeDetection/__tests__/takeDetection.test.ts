@@ -1,6 +1,6 @@
 import { AssertionError } from 'assert';
 import { Word } from 'sharedTypes';
-import { InjectableTakeGroup } from 'main/editDelete/mockTakeInfo';
+import { InjectableTakeGroup } from 'main/editDelete/injectTakeInfo';
 import { findSentences, Sentence, findTakes } from '../takeDetection';
 import getSimilarityScore from '../sentenceSimilarity';
 

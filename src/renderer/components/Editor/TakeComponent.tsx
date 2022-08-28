@@ -7,7 +7,6 @@ import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import { useMemo } from 'react';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
-import './TakeBars.css';
 
 const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
   styled(Box)({

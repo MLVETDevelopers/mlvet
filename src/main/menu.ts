@@ -217,7 +217,7 @@ export default class MenuBuilder {
         label: 'Update Transcription API Key',
         accelerator: 'CommandOrControl+K',
         click: () => {
-          this.mainWindow.webContents.send('open-update-transcription-API-key');
+          this.mainWindow.webContents.send('open-update-transcription-api-key');
         },
       },
     ];

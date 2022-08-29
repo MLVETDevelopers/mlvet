@@ -22,7 +22,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
   'initiate-export-project': exportProject,
-  'open-update-transcription-API-key': openUpdateTranscriptionAPIKey,
+  'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
 
   // Editor actions
   'initiate-cut-text': cutText,

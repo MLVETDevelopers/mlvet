@@ -20,7 +20,7 @@ const rootReducer = combineReducers({
   selection: selectionReducer,
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
-  updateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
+  isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
 });
 
 export default rootReducer;

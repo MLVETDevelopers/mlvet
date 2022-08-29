@@ -2,13 +2,13 @@ import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes'
 import {
   MapCallback,
   PartialWord,
-  TakeGroup,
   Transcription,
   Word,
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
 import { roundToMs } from '../../sharedUtils';
-import injectMockTakeInfo from './mockTakeInfo';
+import injectTakeInfo from './injectTakeInfo';
+import { findTakes } from '../takeDetection/takeDetection';
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
@@ -92,28 +92,22 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number,
-  shouldInjectTakeInfo = false
+  duration: number
 ): Transcription => {
-  // TODO(Kate): Take Detection function should be called here
-
-  let wordsProcessed = jsonTranscript.words
+  const wordsWithoutTakes = jsonTranscript.words
     .flatMap(injectAttributes)
     .map(calculateBuffers(duration));
 
-  let takeGroups: TakeGroup[] = [];
+  const injectableTakeGroups = findTakes(wordsWithoutTakes);
 
-  // Mock take groups
-  if (shouldInjectTakeInfo) {
-    const withTakes = injectMockTakeInfo(wordsProcessed);
-
-    wordsProcessed = withTakes.words;
-    takeGroups = withTakes.takeGroups;
-  }
+  const { words, takeGroups } = injectTakeInfo(
+    wordsWithoutTakes,
+    injectableTakeGroups
+  );
 
   return {
     duration,
-    ...updateOutputTimes(wordsProcessed, takeGroups),
+    ...updateOutputTimes(words, takeGroups),
     takeGroups,
   };
 };

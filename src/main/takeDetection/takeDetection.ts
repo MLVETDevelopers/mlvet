@@ -4,6 +4,7 @@ import {
   InjectableTakeGroup,
 } from 'main/editDelete/injectTakeInfo';
 import getSimilarityScore from './sentenceSimilarity';
+import { THRESHOLD } from './constants';
 
 export type Sentence = {
   startIndex: number | null;
@@ -75,8 +76,7 @@ export function findTakes(words: Word[]): InjectableTakeGroup[] {
       sentences[i].sentenceString,
       sentences[i + 1].sentenceString
     );
-    const threshold = 0.65;
-    if (similarity > threshold) {
+    if (similarity > THRESHOLD) {
       if (takeGroups.length !== 0) {
         const lastTake: IndexRange = takeGroups.at(-1)?.takes.at(-1)
           ?.wordRange as IndexRange;

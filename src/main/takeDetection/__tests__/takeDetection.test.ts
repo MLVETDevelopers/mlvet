@@ -23,7 +23,7 @@ function mockGetSentenceSimilarity(
   if (sentenceOne === 'assessment.' && sentenceTwo === 'exam') {
     return 0.8;
   }
-  throw AssertionError;
+  throw new AssertionError();
 }
 
 jest.mock('../sentenceSimilarity');

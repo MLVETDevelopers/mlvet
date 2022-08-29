@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
-  updateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
+  isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
 });
 
 export default rootReducer;

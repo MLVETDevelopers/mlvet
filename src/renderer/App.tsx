@@ -63,7 +63,7 @@ function AppContents() {
   const closeShortcut = () => dispatch(toggleShortcuts(false));
 
   const hasOpenedUpdateTranscriptionAPIKey = useSelector(
-    (store: ApplicationStore) => store.updateTranscriptionAPIKeyOpened
+    (store: ApplicationStore) => store.isUpdateTranscriptionAPIKeyOpened
   );
 
   const closeUpdateTranscriptionAPIKey = () =>

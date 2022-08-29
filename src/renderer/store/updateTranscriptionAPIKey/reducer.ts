@@ -4,17 +4,17 @@ import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { UPDATE_TRANSCRIPTION_API_KEY_TOGGLED } from './actions';
 
 const updateTranscriptionAPIKeyReducer: Reducer<
-  ApplicationStore['updateTranscriptionAPIKeyOpened'],
+  ApplicationStore['isUpdateTranscriptionAPIKeyOpened'],
   Action<boolean>
 > = (
-  updateTranscriptionAPIKeyOpened = initialStore.updateTranscriptionAPIKeyOpened,
+  isUpdateTranscriptionAPIKeyOpened = initialStore.isUpdateTranscriptionAPIKeyOpened,
   action
 ) => {
   if (action.type === UPDATE_TRANSCRIPTION_API_KEY_TOGGLED) {
     return action.payload as boolean;
   }
 
-  return updateTranscriptionAPIKeyOpened;
+  return isUpdateTranscriptionAPIKeyOpened;
 };
 
 export default updateTranscriptionAPIKeyReducer;

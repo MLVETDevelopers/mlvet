@@ -6,6 +6,7 @@ import { JSONTranscription } from 'main/types';
 // Axios doesn't work for the file upload for some reason, so use node fetch instead.
 // Have to use a slightly older version (2.6.6) as well due to module issues
 import fetch from 'node-fetch';
+import { ASSEMBLYAI_API_KEY } from '../../../config';
 import { TranscriptionFunction } from '../transcribeTypes';
 import { getAudioExtractPath, roundToMs } from '../../../util';
 
@@ -13,7 +14,7 @@ const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 // TODO: put in config
-const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
+// const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
 
 const AUTH_ERROR_STRING = 'Authentication error, API token missing/invalid';
 

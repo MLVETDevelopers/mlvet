@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
 import { useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
+import { AssemblyAiConfig, TranscriptionEngine } from 'sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
@@ -48,7 +49,11 @@ const CloudConfigView = ({
 
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
-    storeCloudCredentials(apiKey);
+    // hard coded to be assembly ai
+    const assemblyAiConfig: AssemblyAiConfig = {
+      apiKey,
+    };
+    storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, assemblyAiConfig);
     if (nextView === null) {
       closeModal();
     } else {

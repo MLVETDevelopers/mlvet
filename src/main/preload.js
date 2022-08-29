@@ -26,8 +26,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
-  storeCloudCredentials: (data) =>
-    ipcRenderer.invoke('store-cloud-credentials', data),
+  storeCloudCredentials: (defaultEngine, engineConfigs) =>
+    ipcRenderer.invoke('store-cloud-credentials', defaultEngine, engineConfigs),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),

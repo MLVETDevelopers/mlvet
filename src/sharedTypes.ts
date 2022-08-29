@@ -43,6 +43,22 @@ export type PartialWord = Pick<
   'word' | 'startTime' | 'duration' | 'confidence'
 >;
 
+export enum TranscriptionEngine {
+  DUMMY,
+  ASSEMBLYAI,
+}
+
+export type EngineConfig = AssemblyAiConfig | null;
+
+export interface AssemblyAiConfig {
+  apiKey: string;
+}
+
+export interface CloudConfig {
+  defaultEngine: TranscriptionEngine;
+  engineConfigs: Map<string, EngineConfig>;
+}
+
 export interface Word {
   // Text content of the word
   word: string;

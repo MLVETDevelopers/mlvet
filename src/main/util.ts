@@ -55,7 +55,7 @@ export const getThumbnailPath: (projectId: string) => string = (projectId) =>
   path.join(getProjectDataDir(projectId), 'thumbnail.png');
 
 export const appCloudConfigPath: () => string = () =>
-  path.join(appDataStoragePath(), 'cloudConfig.txt');
+  path.join(appDataStoragePath(), 'cloudConfig.json');
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

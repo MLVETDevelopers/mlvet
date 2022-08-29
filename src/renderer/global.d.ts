@@ -11,6 +11,8 @@ import {
   RecentProject,
   Transcription,
   ProjectIdAndFilePath,
+  TranscriptionEngine,
+  EngineConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -46,7 +48,10 @@ declare global {
 
       saveProject: (project: RuntimeProject) => Promise<string>;
 
-      storeCloudCredentials: (data: string) => Promise<void>;
+      storeCloudCredentials: (
+        defaultEngine: TranscriptionEngine,
+        engineConfigs: EngineConfig
+      ) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 

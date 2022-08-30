@@ -34,6 +34,7 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
   const [projectName, setProjectName] = useState<string>('');
+  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -62,19 +63,25 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   };
 
   const viewComponents: any = useMemo(() => {
+    if (isCloudConfigRequired) {
+      return [
+        NewProjectView,
+        CloudConfigView,
+        ImportMediaView,
+        RunTranscriptionView,
+      ];
+    }
     return [NewProjectView, ImportMediaView, RunTranscriptionView];
-  }, []);
+  }, [isCloudConfigRequired]);
 
   useEffect(() => {
     const fetchIfCloudConfigRequired = async () => {
       const isConfigRequired = await requireCloudConfig();
-      if (isConfigRequired) {
-        viewComponents.splice(1, 0, CloudConfigView);
-      }
+      setIsCloudConfigRequired(isConfigRequired);
     };
 
     fetchIfCloudConfigRequired().catch(console.log);
-  }, [viewComponents]);
+  }, [setIsCloudConfigRequired]);
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {

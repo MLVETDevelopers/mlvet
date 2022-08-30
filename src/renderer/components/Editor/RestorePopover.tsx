@@ -5,7 +5,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { RefObject, useRef } from 'react';
+import { RefObject } from 'react';
 import colors from 'renderer/colors';
 
 interface RestorePopoverProps {
@@ -23,25 +23,6 @@ const RestorePopover = ({
   width,
   transcriptionBlockRef,
 }: RestorePopoverProps) => {
-  const arrowRef = useRef(null);
-
-  const styles = {
-    arrow: {
-      position: 'absolute',
-      fontSize: 7,
-      width: '3em',
-      height: '3em',
-      '&::before': {
-        content: '""',
-        margin: 'auto',
-        display: 'block',
-        width: 0,
-        height: 0,
-        borderStyle: 'solid',
-      },
-    },
-  };
-
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
     width: width || '40%',
@@ -52,14 +33,16 @@ const RestorePopover = ({
     borderRadius: '5px',
   }));
 
-  const open = Boolean(anchorEl);
+  // const open = Boolean(anchorEl);
+
+  console.log('popper');
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       <StyledPopper
         id="restore-popper"
         anchorEl={anchorEl}
-        open={open}
+        open
         placement="top"
         modifiers={[
           {

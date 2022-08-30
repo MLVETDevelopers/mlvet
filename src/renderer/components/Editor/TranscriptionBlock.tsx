@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IndexRange, Transcription } from 'sharedTypes';
+import { Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
@@ -18,7 +18,6 @@ import {
 } from '../../store/selection/actions';
 import WordSpace from './WordSpace';
 import EditMarker from './EditMarker';
-import RestorePopover from './RestorePopover';
 
 const TranscriptionBox = styled(Box)({
   background: colors.grey[700],
@@ -59,9 +58,6 @@ const TranscriptionBlock = ({
   nowPlayingWordIndex,
   blockWidth,
 }: Props) => {
-  const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [popperText, setPopperText] = useState<string | null>(null);
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const blockRef = useRef<HTMLElement>(null);
@@ -121,18 +117,6 @@ const TranscriptionBlock = ({
     [editWord, submitWordEdit, dispatch]
   );
 
-  const onMarkerClick = (
-    restoreIndexRange: IndexRange,
-    element: HTMLElement
-  ) => {
-    setPopperToggled(true);
-    console.log('setting popper');
-    setAnchorEl(element);
-    setPopperText(
-      'Today is a recap on what we`ve done so far on all the groups - this is an opportunity if there are any roadblocks, and we will have a retrospective, and any questions for research proposal/presentation'
-    );
-  };
-
   return (
     <WordDragManager clearSelection={clearSelection}>
       {(
@@ -151,17 +135,6 @@ const TranscriptionBlock = ({
             <WordAndSpaceContainer
               key={`container-${word.originalIndex}-${word.pasteKey}`}
             >
-              {popperToggled && (
-                <RestorePopover
-                  text={popperText || ''}
-                  anchorEl={anchorEl}
-                  onClickAway={() => {
-                    setPopperToggled(false);
-                  }}
-                  width={blockWidth - 200}
-                  transcriptionBlockRef={blockRef}
-                />
-              )}
               {word.deleted ? (
                 <EditMarker
                   key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
@@ -169,7 +142,8 @@ const TranscriptionBlock = ({
                   word={word}
                   index={index}
                   isSelected={selectionSet.has(index)}
-                  onMarkerClick={onMarkerClick}
+                  popoverWidth={blockWidth - 200}
+                  transcriptionBlockRef={blockRef}
                 />
               ) : (
                 <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

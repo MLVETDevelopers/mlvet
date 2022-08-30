@@ -79,9 +79,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
         // for linter
         return isConfigRequired;
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.log);
   }, [viewComponents]);
 
   const nextView: () => void = () => {

@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
-import { Fragment, useCallback, useMemo, useState } from 'react';
+import { Box, ClickAwayListener } from '@mui/material';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IndexRange, Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -8,11 +15,6 @@ import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWo
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { rangeLengthOne } from 'renderer/utils/range';
-import { useFloating } from '@floating-ui/react-dom';
-import {
-  FloatingFocusManager,
-  useFloating as useFloatingInteraction,
-} from '@floating-ui/react-dom-interactions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordComponent from './WordComponent';
@@ -63,12 +65,18 @@ const TranscriptionBlock = ({
   nowPlayingWordIndex,
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
-  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(
-    null
-  );
-  const { context } = useFloatingInteraction();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [popperText, setPopperText] = useState<string | null>(null);
+  const [width, setWidth] = useState<number | null>(null);
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
+  const blockRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    setWidth(
+      blockRef.current?.offsetWidth ? blockRef.current.offsetWidth : null
+    );
+  }, []);
 
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
@@ -131,10 +139,10 @@ const TranscriptionBlock = ({
   ) => {
     setPopperToggled(true);
     console.log('setting popper');
+    setAnchorEl(element);
     setPopperText(
       'Today is a recap on what we`ve done so far on all the groups - this is an opportunity if there are any roadblocks, and we will have a retrospective, and any questions for research proposal/presentation'
     );
-    setTriggerElement(element);
   };
 
   return (
@@ -150,13 +158,22 @@ const TranscriptionBlock = ({
         setDropBeforeIndex,
         cancelDrag
       ) => (
-        <TranscriptionBox id="transcription-content">
-          <RestorePopover />
+        <TranscriptionBox id="transcription-content" ref={blockRef}>
           {transcription.words.map((word, index) => (
             <WordAndSpaceContainer
               key={`container-${word.originalIndex}-${word.pasteKey}`}
             >
-              {/* {popperToggled && <RestorePopover text={popperText || ''} />} */}
+              {popperToggled && (
+                <RestorePopover
+                  text={popperText || ''}
+                  anchorEl={anchorEl}
+                  onClickAway={() => {
+                    setPopperToggled(false);
+                  }}
+                  width={width}
+                  transcriptionBlockRef={blockRef}
+                />
+              )}
               {word.deleted ? (
                 <EditMarker
                   key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}

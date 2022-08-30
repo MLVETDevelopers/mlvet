@@ -1,104 +1,88 @@
-/* eslint-disable promise/always-return */
-/* eslint-disable promise/catch-or-return */
 import {
-  arrow,
-  autoUpdate,
-  computePosition,
-  flip,
-  offset,
-  shift,
-  useFloating,
-} from '@floating-ui/react-dom';
-import { Box, Button, styled } from '@mui/material';
-import { bold } from 'chalk';
-import { useRef, useState } from 'react';
+  Box,
+  ClickAwayListener,
+  Popper,
+  styled,
+  Typography,
+} from '@mui/material';
+import { RefObject, useRef, useState } from 'react';
 import colors from 'renderer/colors';
 
-const RestorePopover = () => {
-  const [popoverVisible, setPopoverVisible] = useState(false);
-  const arrowRef = useRef<HTMLElement>(null);
+interface RestorePopoverProps {
+  text: string;
+  anchorEl: HTMLElement | null;
+  onClickAway: () => void;
+  width: number | null;
+  transcriptionBlockRef: RefObject<HTMLElement>;
+}
 
-  const { x, y, reference, floating, strategy, refs } = useFloating({
-    whileElementsMounted: autoUpdate,
-    placement: 'top',
-    strategy: 'fixed',
-    middleware: [
-      offset(6),
-      shift(),
-      arrow({
-        element: arrowRef,
-      }),
-    ],
-  });
+const RestorePopover = ({
+  text,
+  anchorEl,
+  onClickAway,
+  width,
+  transcriptionBlockRef,
+}: RestorePopoverProps) => {
+  const arrowRef = useRef(null);
 
-  const Arrow = styled(Box)({
-    position: 'absolute',
-    background: colors.grey[600],
-    width: '8px',
-    height: '8px',
-    transform: 'rotate(45deg)',
-  });
+  const styles = {
+    arrow: {
+      position: 'absolute',
+      fontSize: 7,
+      width: '3em',
+      height: '3em',
+      '&::before': {
+        content: '""',
+        margin: 'auto',
+        display: 'block',
+        width: 0,
+        height: 0,
+        borderStyle: 'solid',
+      },
+    },
+  };
 
-  function update() {
-    computePosition(refs.reference.current!, refs.floating.current!, {
-      placement: 'top',
-      middleware: [
-        offset(6),
-        flip(),
-        shift({ padding: 5 }),
-        arrow({
-          element: arrowRef,
-        }),
-      ],
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-    }).then(({ x, y, middlewareData }) => {
-      Object.assign(refs.floating.current!.style, {
-        left: `${x}px`,
-        top: `${y}px`,
-      });
+  const StyledPopper = styled(Popper)(() => ({
+    zIndex: 1,
+    width: width || '40%',
+    backgroundColor: colors.grey[600],
+    borderWidth: '0.5px',
+    borderColor: colors.yellow[500],
+    padding: '8px',
 
-      // Accessing the data
-      const { x: arrowX } = middlewareData.arrow as any;
+    borderRadius: '5px',
+  }));
 
-      Object.assign(arrowRef.current!.style, {
-        left: arrowX != null ? `${arrowX}px` : '',
-        bottom: '-4px',
-      });
-    });
-  }
-
-  function handleButtonClick() {
-    setPopoverVisible(!popoverVisible);
-    update();
-  }
+  const open = Boolean(anchorEl);
 
   return (
-    <>
-      <Button id="button" aria-describedby="tooltip" ref={reference}>
-        My button
-      </Button>
-      <Box
-        id="tooltip"
-        role="tooltip"
-        ref={floating}
-        onClick={handleButtonClick}
-        sx={{
-          background: colors.grey[600],
-          fontWeight: bold,
-          padding: '5px',
-          borderRadius: '4px',
-          fontSize: '90%',
-          pointerEvents: 'none',
-          position: strategy,
-          top: y ?? 0,
-          left: x ?? 0,
-          display: popoverVisible ? 'block' : '',
-        }}
+    <ClickAwayListener onClickAway={onClickAway}>
+      <StyledPopper
+        id="restore-popper"
+        anchorEl={anchorEl}
+        open={open}
+        placement="top"
+        modifiers={[
+          {
+            name: 'preventOverflow',
+            options: {
+              boundary: transcriptionBlockRef.current,
+            },
+          },
+        ]}
       >
-        My tooltip
-        <Arrow id="arrow" ref={arrowRef} />
-      </Box>
-    </>
+        <Box
+          sx={{
+            whiteSpace: 'normal',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            height: '20px',
+          }}
+        >
+          <Typography noWrap>{text}</Typography>
+        </Box>
+      </StyledPopper>
+    </ClickAwayListener>
   );
 };
 

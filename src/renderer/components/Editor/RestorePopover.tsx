@@ -5,7 +5,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { RefObject, useRef, useState } from 'react';
+import { RefObject, useRef } from 'react';
 import colors from 'renderer/colors';
 
 interface RestorePopoverProps {
@@ -76,6 +76,7 @@ const RestorePopover = ({
             textOverflow: 'ellipsis',
             overflow: 'hidden',
             height: 40,
+            width,
             padding: '8px',
           }}
         >

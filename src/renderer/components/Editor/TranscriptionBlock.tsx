@@ -1,13 +1,6 @@
 import styled from '@emotion/styled';
-import { Box, ClickAwayListener } from '@mui/material';
-import {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Box } from '@mui/material';
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IndexRange, Transcription } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -57,26 +50,21 @@ interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
   seekToWord: (wordIndex: number) => void;
+  blockWidth: number;
 }
 
 const TranscriptionBlock = ({
   seekToWord,
   transcription,
   nowPlayingWordIndex,
+  blockWidth,
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [popperText, setPopperText] = useState<string | null>(null);
-  const [width, setWidth] = useState<number | null>(null);
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
   const blockRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    setWidth(
-      blockRef.current?.offsetWidth ? blockRef.current.offsetWidth : null
-    );
-  }, []);
 
   const selectionArray = useSelector(
     (store: ApplicationStore) => store.selection
@@ -170,7 +158,7 @@ const TranscriptionBlock = ({
                   onClickAway={() => {
                     setPopperToggled(false);
                   }}
-                  width={width}
+                  width={blockWidth - 200}
                   transcriptionBlockRef={blockRef}
                 />
               )}

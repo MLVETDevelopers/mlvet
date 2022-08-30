@@ -89,6 +89,9 @@ const ProjectPage = () => {
                       transcription={currentProject.transcription}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       seekToWord={seekToWord}
+                      blockWidth={
+                        window.innerWidth - videoPreviewContainerWidth
+                      }
                     />
                   )}
                 </Stack>

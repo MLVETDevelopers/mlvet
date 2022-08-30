@@ -12,7 +12,7 @@ export const makeCorrectWord: (
   index: number,
   newText: string
 ) => CorrectWordOp = (words, index, newText) => {
-  const prevText = words[index].word;
+  const { word: prevText, confidence: prevConfidence } = words[index];
 
   return {
     do: [
@@ -21,7 +21,7 @@ export const makeCorrectWord: (
       selectionRangeAdded(rangeLengthOne(index)),
     ],
     undo: [
-      undoWordCorrected(index, prevText),
+      undoWordCorrected(index, prevText, prevConfidence ?? 1),
       selectionCleared(),
       selectionRangeAdded(rangeLengthOne(index)),
     ],

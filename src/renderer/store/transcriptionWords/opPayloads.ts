@@ -39,4 +39,5 @@ export interface CorrectWordPayload {
 export interface UndoCorrectWordPayload {
   index: number;
   prevText: string;
+  prevConfidence: number;
 }

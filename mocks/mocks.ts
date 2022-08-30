@@ -11,6 +11,7 @@ export const mockProject: RuntimeProject = {
   transcription: {
     duration: 100,
     outputDuration: 100,
+    takeGroups: [],
     words: [
       {
         word: 'test-word-1',
@@ -22,6 +23,7 @@ export const mockProject: RuntimeProject = {
         pasteKey: 0,
         bufferDurationBefore: 0,
         bufferDurationAfter: 0,
+        takeInfo: null,
         confidence: 1,
       },
     ],

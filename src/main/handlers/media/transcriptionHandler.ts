@@ -1,5 +1,4 @@
 import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
 import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
   PartialWord,
@@ -70,13 +69,8 @@ const requestTranscription: RequestTranscription = async (project) => {
   const duration: number =
     (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;
 
-  const fileName = path.basename(project.mediaFilePath);
+  const processedTranscript = preProcessTranscript(transcript, duration, true);
 
-  const processedTranscript = preProcessTranscript(
-    transcript,
-    duration,
-    fileName
-  );
   return processedTranscript;
 };
 

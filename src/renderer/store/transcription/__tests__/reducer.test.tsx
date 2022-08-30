@@ -40,6 +40,7 @@ const makeBasicWordSequential: (
   deleted: isDeleted,
   originalIndex,
   pasteKey,
+  takeInfo: null,
   confidence: 1,
 });
 
@@ -64,6 +65,7 @@ it('output duration should be updated after deleting words', () => {
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWord({
         originalIndex: 0,
@@ -160,6 +162,7 @@ it('output duration should be the same as original when deleting and straight af
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
       makeBasicWordSequential(
@@ -221,6 +224,7 @@ it('output duration should be 0 after deleting all words', () => {
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
       makeBasicWordSequential(
@@ -276,6 +280,7 @@ it('output duration should calculated from last non deleted word (not always las
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
       makeBasicWordSequential(
@@ -331,6 +336,7 @@ it('output duration should updated after copying and pasting new text', () => {
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
       makeBasicWordSequential(
@@ -397,6 +403,7 @@ it('output duration should stay the same after copying and straight away undoing
   const transcript = {
     duration: 9.04,
     outputDuration: 9.04,
+    takeGroups: [],
     words: [
       makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
       makeBasicWordSequential(

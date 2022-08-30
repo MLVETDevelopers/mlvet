@@ -47,6 +47,9 @@ contextBridge.exposeInMainWorld('electron', {
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
 
+  setConfidenceLinesEnabled: (menuItemEnabled) =>
+    ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
+
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),
 

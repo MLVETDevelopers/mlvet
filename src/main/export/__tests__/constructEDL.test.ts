@@ -9,6 +9,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: ' ',
@@ -21,6 +22,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'abc',
@@ -33,6 +35,7 @@ describe('Test exporting', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
       ],
     };
@@ -59,6 +62,7 @@ describe('Test exporting', () => {
     const transcription: Transcription = {
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: 'abc',
@@ -71,6 +75,7 @@ describe('Test exporting', () => {
           bufferDurationAfter: 0,
           deleted: false,
           confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'def',
@@ -83,6 +88,7 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           confidence: 1,
+          takeInfo: null,
         },
       ],
     };

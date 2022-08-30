@@ -91,6 +91,7 @@ const ProjectPage = () => {
                       seekToWord={seekToWord}
                     />
                   )}
+                  {console.log(videoPreviewContainerWidth)}
                 </Stack>
                 <ResizeSlider
                   targetWidth={videoPreviewContainerWidth}

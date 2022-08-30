@@ -67,19 +67,13 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   useEffect(() => {
     const fetchIfCloudConfigRequired = async () => {
-      const result = await requireCloudConfig();
-      return result;
+      const isConfigRequired = await requireCloudConfig();
+      if (isConfigRequired) {
+        viewComponents.splice(1, 0, CloudConfigView);
+      }
     };
 
-    fetchIfCloudConfigRequired()
-      .then((isConfigRequired) => {
-        if (isConfigRequired) {
-          viewComponents.splice(1, 0, CloudConfigView);
-        }
-        // for linter
-        return isConfigRequired;
-      })
-      .catch(console.log);
+    fetchIfCloudConfigRequired().catch(console.log);
   }, [viewComponents]);
 
   const nextView: () => void = () => {

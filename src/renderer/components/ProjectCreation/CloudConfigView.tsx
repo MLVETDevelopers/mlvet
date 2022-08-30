@@ -76,12 +76,12 @@ const CloudConfigView = ({
 
   const handleHelpClick: () => void = () => {
     openExternalLink(
-      'http://nerdvittles.com/creating-an-api-key-for-google-speech-recognition/'
+      'https://app.assemblyai.com/signup?_ga=2.64947567.1548607132.1661819143-2080070454.1661819143'
     );
   };
 
   const defaultText =
-    "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
+    'This is your first time using the cloud transcription method. To get started you’ll need to provide an API key and client secret for AssemblyAI';
 
   const text = textToDisplay ?? defaultText;
 

@@ -55,10 +55,10 @@ const RestorePopover = ({
       >
         <Box
           sx={{
-            whiteSpace: 'normal',
+            whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            height: 40,
+            height: 35,
             width,
             padding: '8px',
           }}

@@ -40,6 +40,20 @@ export const getRestoreIndexRange: (
   return { startIndex, endIndex: startIndex + lastWordInSequenceIndex + 1 };
 };
 
+export const getOriginalWords: (startIndex: number, words: Word[]) => Word[] = (
+  startIndex,
+  words
+) => {
+  const restoreIndexRange = getRestoreIndexRange(startIndex, words);
+
+  const originalWords = [...words].splice(
+    restoreIndexRange.startIndex,
+    restoreIndexRange.endIndex - restoreIndexRange.startIndex
+  );
+
+  return originalWords;
+};
+
 /* Takes a start index of a deleted section and restores the original transcription words that are
  * deleted and still in sequence
  */

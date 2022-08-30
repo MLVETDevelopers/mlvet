@@ -59,6 +59,8 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     '&.isBeingDragged': {
       position: 'fixed',
       zIndex: 100,
+      background: `${colors.blue[500]}cc`,
+      color: colors.white,
     },
   });
 

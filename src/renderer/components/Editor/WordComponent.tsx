@@ -31,6 +31,7 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     color: colors.white,
     padding: '0 2px',
     margin: '2px 0',
+    borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],

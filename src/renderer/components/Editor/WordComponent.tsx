@@ -26,6 +26,7 @@ const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
 const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
   styled('div')({
+    zIndex: 0,
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
     color: colors.white,
@@ -34,10 +35,30 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     borderRadius: '7px',
 
     '&:hover': {
+      transition: `background 0.25s ease-in-out`,
       color: colors.grey['000'],
       background:
         isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
+    },
+
+    '&.isSelected': {
+      transition: `background 0.15s ease-in-out`,
+      background: `${colors.blue[500]}cc`,
+      color: colors.white,
+    },
+
+    '&.isPlaying': {
+      transition: `background 0.1s ease-in`,
+      background: `${colors.yellow[500]}cc`,
+      color: colors.white,
+      boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
+      borderRadius: BORDER_RADIUS_AMOUNT,
+    },
+
+    '&.isBeingDragged': {
+      position: 'fixed',
+      zIndex: 100,
     },
   });
 
@@ -188,8 +209,6 @@ const WordComponent = ({
       return;
     }
 
-    console.log('click');
-
     if (awaitingSecondClick) {
       startEditing();
       return;
@@ -209,30 +228,13 @@ const WordComponent = ({
     event.stopPropagation();
   };
 
-  const defaultStyles: React.CSSProperties = {
-    zIndex: 0,
-  };
-
   const highlightStyles: React.CSSProperties = (() => {
-    if (isBeingEdited) {
-      return {};
-    }
     if (isSelected || isBeingDragged) {
       return {
-        background: `${colors.blue[500]}cc`,
-        color: colors.white,
         borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
         borderBottomLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
         borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
         borderBottomRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
-      };
-    }
-    if (isPlaying) {
-      return {
-        background: `${colors.yellow[500]}cc`,
-        color: colors.white,
-        boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
-        borderRadius: BORDER_RADIUS_AMOUNT,
       };
     }
     if (isShowingConfidenceUnderlines) {
@@ -254,15 +256,12 @@ const WordComponent = ({
 
   const dragStyles: React.CSSProperties = isBeingDragged
     ? {
-        position: 'fixed',
         left: mouseX + (dragState?.offset.x ?? 0),
         top: mouseY + (dragState?.offset.y ?? 0),
-        zIndex: 100,
       }
     : {};
 
   const style = {
-    ...defaultStyles,
     ...highlightStyles,
     ...dragStyles,
   };
@@ -306,6 +305,10 @@ const WordComponent = ({
     [isInInactiveTake, onMouseDown, ref]
   );
 
+  const wordClassName = `${isSelected ? 'isSelected' : ''} ${
+    isPlaying ? 'isPlaying' : ''
+  } ${isBeingDragged ? 'isBeingDragged' : ''}`;
+
   return (
     <WordInner
       ref={ref}
@@ -314,6 +317,7 @@ const WordComponent = ({
       onMouseDown={onMouseDownWrapped}
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
+      className={wordClassName}
     >
       {isBeingEdited ? (
         <TextField

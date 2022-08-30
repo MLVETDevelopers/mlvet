@@ -24,6 +24,7 @@ const makeBasicWordSequential: (
   originalIndex,
   pasteKey,
   confidence: 1,
+  takeInfo: null,
 });
 
 describe('Transcription words reducer', () => {

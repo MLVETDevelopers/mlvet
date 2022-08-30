@@ -16,6 +16,9 @@ import {
   UNDO_CORRECT_WORD,
   UNDO_SPLIT_WORD,
 } from '../transcriptionWords/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
+import transcriptionTakesReducer from '../transcriptionTakes/reducer';
+import takeGroupsReducer from '../takeGroups/reducer';
 
 /**
  *  Nested reducer for handling transcriptions
@@ -51,8 +54,18 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return {
       ...transcription,
       ...updateOutputTimes(
-        transcriptionWordsReducer(transcription.words, action)
+        transcriptionWordsReducer(transcription.words, action),
+        transcription.takeGroups
       ),
+    };
+  }
+
+  // Delegate take-related actions to takes reducer and take groups reducer
+  if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
+    return {
+      ...transcription,
+      words: transcriptionTakesReducer(transcription.words, action),
+      takeGroups: takeGroupsReducer(transcription.takeGroups, action),
     };
   }
 

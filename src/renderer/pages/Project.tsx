@@ -1,6 +1,5 @@
 import { Box, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
@@ -11,6 +10,7 @@ import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
+import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*

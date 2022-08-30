@@ -36,12 +36,24 @@ export interface Transcription {
   words: Word[];
   duration: number;
   outputDuration: number;
+  takeGroups: TakeGroup[];
 }
 
 export type PartialWord = Pick<
   Word,
   'word' | 'startTime' | 'duration' | 'confidence'
 >;
+
+export interface TakeGroup {
+  // each time a new take group is created we find the highest take group ID in use and add one
+  id: number;
+  activeTakeIndex: number;
+}
+
+export interface TakeInfo {
+  takeGroupId: number;
+  takeIndex: number;
+}
 
 export interface Word {
   // Text content of the word
@@ -64,7 +76,11 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // per-word confidence, 0-1
+  // Stores information related to take detection and manipulation
+  takeInfo: TakeInfo | null;
+  // Now that we have assemblyAI, we can do this - individual confidence for each word.
+  // Ranges from 0 - 1.
+  // if using another platform that doesn't support this, just set to null.
   confidence: number | null | undefined;
 }
 

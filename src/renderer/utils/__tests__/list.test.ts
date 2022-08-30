@@ -1,5 +1,6 @@
-import { mapInRanges } from '../list';
+import { mapInRanges } from '../../../sharedUtils';
 
+// TODO move this file
 describe('list utils', () => {
   it('should map values in specified ranges successfully while ignoring others', () => {
     expect(

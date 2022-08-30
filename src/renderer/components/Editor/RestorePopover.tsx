@@ -48,7 +48,6 @@ const RestorePopover = ({
     backgroundColor: colors.grey[600],
     borderWidth: '0.5px',
     borderColor: colors.yellow[500],
-    padding: '8px',
 
     borderRadius: '5px',
   }));
@@ -76,7 +75,8 @@ const RestorePopover = ({
             whiteSpace: 'normal',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            height: '20px',
+            height: 40,
+            padding: '8px',
           }}
         >
           <Typography noWrap>{text}</Typography>

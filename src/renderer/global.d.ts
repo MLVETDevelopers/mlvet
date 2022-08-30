@@ -4,6 +4,7 @@
 
 import { BrowserWindow, IpcRendererEvent } from 'electron';
 import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
+import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
   RuntimeProject,
@@ -13,6 +14,7 @@ import {
   ProjectIdAndFilePath,
   TranscriptionEngine,
   EngineConfig,
+  CloudConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -38,6 +40,8 @@ declare global {
       requestMediaDialog: () => Promise<string | null>;
 
       requireCloudConfig: () => Promise<boolean>;
+
+      readCloudConfig: () => Promise<CloudConfig>;
 
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 

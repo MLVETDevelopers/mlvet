@@ -7,4 +7,4 @@ import { TranscriptionEngine } from '../sharedTypes';
 
 export const TRANSCRIPTION_ENGINE = TranscriptionEngine.ASSEMBLYAI;
 
-export const ASSEMBLYAI_API_KEY = 'readCloudCredentials()';
+export const ASSEMBLYAI_API_KEY = '';

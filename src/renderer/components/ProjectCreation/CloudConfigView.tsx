@@ -9,11 +9,14 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
-import { AssemblyAiConfig, TranscriptionEngine } from 'sharedTypes';
+import { TranscriptionEngine } from '../../../sharedTypes';
+import { getDefaultEngineConfig } from '../../../sharedUtils';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
+
+const { requireCloudConfig, readCloudConfig } = ipc;
 
 const { openExternalLink, storeCloudCredentials } = ipc;
 interface Props {
@@ -37,6 +40,9 @@ const Container = styled(Box)({
   backgroundColor: colors.grey[700],
 });
 
+const defaultText =
+  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
+
 const CloudConfigView = ({
   prevView,
   closeModal,
@@ -46,14 +52,13 @@ const CloudConfigView = ({
 }: Props) => {
   const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
   const [apiKey, setApiKey] = useState<string>('');
+  const [text, setText] = useState<string>(defaultText);
 
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
+    console.log(apiKey);
     // hard coded to be assembly ai
-    const assemblyAiConfig: AssemblyAiConfig = {
-      apiKey,
-    };
-    storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, assemblyAiConfig);
+    storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, apiKey);
     if (nextView === null) {
       closeModal();
     } else {
@@ -96,10 +101,33 @@ const CloudConfigView = ({
     );
   };
 
-  const defaultText =
-    "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
-
-  const text = textToDisplay ?? defaultText;
+  useEffect(() => {
+    const updateText = async () => {
+      const configNull = await requireCloudConfig();
+      console.log(configNull);
+      if (configNull) {
+        console.log('hello');
+        const cloudConfig = await readCloudConfig();
+        if (cloudConfig !== null) {
+          const engineConfig = await getDefaultEngineConfig(cloudConfig);
+          if (engineConfig != null) {
+            setText('Update API Key');
+            setApiKey(engineConfig);
+          }
+        }
+      }
+    };
+    updateText()
+      // .then((apiKeyExists) => {
+      //   if (apiKeyExists) {
+      //     // setText('Update API Key');
+      //   }
+      //   return apiKeyExists;
+      // })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useKeypress(saveCloudCredentials, !isAwaitingApiKey, [
     'Enter',

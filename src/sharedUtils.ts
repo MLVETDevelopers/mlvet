@@ -3,6 +3,9 @@ import {
   ProjectMetadata,
   RecentProject,
   Word,
+  TranscriptionEngine,
+  EngineConfig,
+  CloudConfig,
 } from './sharedTypes';
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
@@ -42,6 +45,19 @@ export const makeRecentProject: (
 
 export const bufferedWordDuration: (word: Word) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;
+
+export const getDefaultEngineConfig = (
+  cloudConfig: CloudConfig
+): EngineConfig => {
+  switch (cloudConfig.defaultEngine) {
+    case TranscriptionEngine.ASSEMBLYAI: {
+      return cloudConfig.ASSEMBLYAI;
+    }
+    default: {
+      return cloudConfig.DUMMY;
+    }
+  }
+};
 
 /**
  * For testing - makes a word with any desired fields overridden

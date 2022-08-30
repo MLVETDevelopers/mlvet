@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
 
+  readCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
+
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
   saveChangesDialog: (mainWindow, projectFileName) =>

@@ -132,6 +132,7 @@ export default function StoreChangeObserver() {
   useEffect(() => {
     if (words.length === 0) {
       ipc.setMergeSplitEnabled(false, false);
+      return;
     }
 
     const { merge, split } = isMergeSplitAllowed(

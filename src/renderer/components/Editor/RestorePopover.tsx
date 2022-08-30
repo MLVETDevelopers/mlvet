@@ -29,7 +29,7 @@ const RestorePopover = ({
     backgroundColor: colors.grey[600],
     borderWidth: '0.5px',
     borderColor: colors.yellow[500],
-
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '5px',
   }));
 

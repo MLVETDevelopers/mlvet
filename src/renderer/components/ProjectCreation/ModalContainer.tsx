@@ -62,7 +62,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     }
   };
 
-  const viewComponents: any = useMemo(() => {
+  const viewComponents = useMemo(() => {
     if (isCloudConfigRequired) {
       return [
         NewProjectView,

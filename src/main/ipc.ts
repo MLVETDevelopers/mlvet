@@ -7,13 +7,16 @@ import { IpcContext } from './types';
 
 // START GENERATED CODE PART 1
 import deleteProject from './handlers/file/deleteProject';
+import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
+import requireCloudConfig from './handlers/file/requireCloudConfig';
 import saveAsProject from './handlers/file/saveAsProjectHandler';
 import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
+import storeCloudCredentials from './handlers/file/storeCloudCredentials';
 import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
@@ -45,6 +48,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     deleteProject(project)
   );
 
+  ipcMain.handle('open-external-link', async (_event, url) =>
+    openExternalLink(url)
+  );
+
   ipcMain.handle('open-project', async (_event, filePath) =>
     openProject(ipcContext, filePath)
   );
@@ -59,6 +66,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     requestMediaDialog(ipcContext)
   );
 
+  ipcMain.handle('require-cloud-config', async () => requireCloudConfig());
+
   ipcMain.handle('save-as-project', async (_event, project) =>
     saveAsProject(ipcContext, project)
   );
@@ -71,6 +80,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
+  );
+
+  ipcMain.handle('store-cloud-credentials', async (_event, data) =>
+    storeCloudCredentials(data)
   );
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>

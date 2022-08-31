@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 
 import { MousePosition } from '@react-hook/mouse-position';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { Dispatch, RefObject, SetStateAction, useMemo, useState } from 'react';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import { WordMouseHandler, DragState } from './WordDragManager';
@@ -24,6 +24,8 @@ interface TakeGroupComponentProps {
   seekToWord: (wordIndex: number) => void;
   submitWordEdit: () => void;
   selectionSet: Set<any>;
+  popoverWidth: number;
+  transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const TakeGroupComponent = ({
@@ -44,6 +46,8 @@ const TakeGroupComponent = ({
   seekToWord,
   submitWordEdit,
   selectionSet,
+  popoverWidth,
+  transcriptionBlockRef,
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
 
@@ -108,6 +112,8 @@ const TakeGroupComponent = ({
         submitWordEdit={submitWordEdit}
         selectionSet={selectionSet}
         transcriptionIndex={transcriptionIndex}
+        popoverWidth={popoverWidth}
+        transcriptionBlockRef={transcriptionBlockRef}
       />
     );
   });

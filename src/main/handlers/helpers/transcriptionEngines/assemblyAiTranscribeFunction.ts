@@ -6,7 +6,7 @@ import { JSONTranscription } from 'main/types';
 // Axios doesn't work for the file upload for some reason, so use node fetch instead.
 // Have to use a slightly older version (2.6.6) as well due to module issues
 import fetch from 'node-fetch';
-import { DEFAULT_ENGINE_CONFIG } from 'main/config';
+import { DEFAULT_ENGINE_CONFIG } from '../../../config';
 import { TranscriptionFunction } from '../transcribeTypes';
 import { getAudioExtractPath, roundToMs } from '../../../util';
 

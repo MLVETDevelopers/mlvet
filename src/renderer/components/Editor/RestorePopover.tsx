@@ -25,7 +25,7 @@ const RestorePopover = ({
 }: RestorePopoverProps) => {
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
-    width: width || '40%',
+    maxWidth: width || '40%',
     backgroundColor: colors.grey[600],
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     borderRadius: '5px',
@@ -53,7 +53,7 @@ const RestorePopover = ({
             textOverflow: 'ellipsis',
             overflow: 'hidden',
             height: 38,
-            width,
+            maxWidth: width,
             padding: '8px',
             borderRadius: '5px',
             color: colors.yellow[500],

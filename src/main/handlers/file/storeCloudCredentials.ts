@@ -58,10 +58,8 @@ const storeCloudCredentials: StoreCloudCredentials = async (
           cloudConfig
         );
 
-        console.log(`${JSON.stringify(updatedCloudConfig)}ready`);
-
         writeFileSync(cloudConfigPath, JSON.stringify(updatedCloudConfig));
-        console.log(`${readFileSync(cloudConfigPath)}read`);
+
         return updatedCloudConfig;
       })
       .catch((err) => {
@@ -74,9 +72,7 @@ const storeCloudCredentials: StoreCloudCredentials = async (
       initCloudConfig
     );
 
-    console.log(JSON.stringify(newCloudConfig));
     writeFileSync(cloudConfigPath, JSON.stringify(newCloudConfig));
-    console.log(`${readFileSync(cloudConfigPath)}read`);
   }
 };
 

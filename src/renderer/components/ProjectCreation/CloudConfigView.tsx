@@ -55,10 +55,10 @@ const CloudConfigView = ({
   useEffect(() => {
     const configInfo = async () => {
       const engineConfig = await readDefaultEngineConfig();
-      console.log(engineConfig);
       if (engineConfig !== null) {
         setText('Update API Key');
         setOriginalApiKey(engineConfig);
+        setAwaitingApiKey(false);
       }
     };
     configInfo().catch((err) => {
@@ -67,14 +67,11 @@ const CloudConfigView = ({
   }, []);
 
   const saveCloudCredentials: () => void = () => {
-    if (apiKey === null) {
-      return;
+    if (apiKey !== null) {
+      setApiKey(apiKey.trim());
+      // hard coded to be assembly ai
+      storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, apiKey);
     }
-
-    setApiKey(apiKey.trim());
-    console.log(apiKey);
-    // hard coded to be assembly ai
-    storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, apiKey);
     if (nextView === null) {
       closeModal();
     } else {

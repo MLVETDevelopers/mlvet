@@ -1,12 +1,17 @@
+import { findDefaultEngineConfig } from '../../../sharedUtils';
 import { appCloudConfigPath, fileOrDirExists } from '../../util';
+import readCloudConfig from './readCloudConfig';
 
 type RequireCloudConfig = () => Promise<boolean>;
 
 const requireCloudConfig: RequireCloudConfig = async () => {
   const cloudConfigPath = appCloudConfigPath();
-
-  // if not exists (false) we want to negate so the frontend can add the cloud config view.
-  return !fileOrDirExists(cloudConfigPath);
+  if (fileOrDirExists(cloudConfigPath)) {
+    const cloudConfig = await readCloudConfig();
+    const engineConfig = findDefaultEngineConfig(cloudConfig);
+    return engineConfig === null;
+  }
+  return true;
 };
 
 export default requireCloudConfig;

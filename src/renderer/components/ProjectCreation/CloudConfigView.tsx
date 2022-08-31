@@ -9,18 +9,20 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
+import { TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
-const { openExternalLink, storeCloudCredentials } = ipc;
+const { openExternalLink, storeCloudCredentials, readDefaultEngineConfig } =
+  ipc;
+
 interface Props {
   prevView: (() => void) | null;
   closeModal: () => void;
   nextView: (() => void) | null;
   projectName: string;
-  textToDisplay: string | null;
 }
 
 const CustomStack = styled(Stack)({ width: '100%' });
@@ -36,19 +38,40 @@ const Container = styled(Box)({
   backgroundColor: colors.grey[700],
 });
 
+const defaultText =
+  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for AssemblyAI";
+
 const CloudConfigView = ({
   prevView,
   closeModal,
   nextView,
   projectName,
-  textToDisplay,
 }: Props) => {
+  const [originalApiKey, setOriginalApiKey] = useState<string>('');
+  const [text, setText] = useState<string>(defaultText);
   const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
-  const [apiKey, setApiKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    const configInfo = async () => {
+      const engineConfig = await readDefaultEngineConfig();
+      if (engineConfig !== null) {
+        setText('Update API Key');
+        setOriginalApiKey(engineConfig);
+        setAwaitingApiKey(false);
+      }
+    };
+    configInfo().catch((err) => {
+      console.log(err);
+    });
+  }, []);
 
   const saveCloudCredentials: () => void = () => {
-    setApiKey(apiKey.trim());
-    storeCloudCredentials(apiKey);
+    if (apiKey !== null) {
+      setApiKey(apiKey.trim());
+      // hard coded to be assembly ai
+      storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, apiKey);
+    }
     if (nextView === null) {
       closeModal();
     } else {
@@ -91,18 +114,13 @@ const CloudConfigView = ({
     );
   };
 
-  const defaultText =
-    'This is your first time using the cloud transcription method. To get started you’ll need to provide an API key and client secret for AssemblyAI';
-
-  const text = textToDisplay ?? defaultText;
-
   useKeypress(saveCloudCredentials, !isAwaitingApiKey, [
     'Enter',
     'NumpadEnter',
   ]);
 
   return (
-    <Container sx={{ height: { xs: 500 } }}>
+    <Container position="relative" height="500px">
       <CustomRowStack justifyContent="space-between">
         <Typography
           overflow="hidden"
@@ -119,7 +137,7 @@ const CloudConfigView = ({
           <CloseIcon />
         </IconButton>
       </CustomRowStack>
-      <CustomColumnStack justifyContent="space-between" sx={{ height: '83%' }}>
+      <CustomColumnStack justifyContent="space-between" sx={{ height: '50%' }}>
         <CustomStack justifyContent="space-between">
           <CustomStack>
             <Typography
@@ -149,17 +167,22 @@ const CloudConfigView = ({
           <CustomStack>
             <TextField
               label="API Key"
-              value={apiKey}
+              value={apiKey ?? originalApiKey}
               onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
             />
           </CustomStack>
         </CustomColumnStack>
-        <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
-          {cancelButton}
-          {saveButton}
-        </CustomRowStack>
       </CustomColumnStack>
+      <CustomRowStack
+        position="absolute"
+        bottom="0px"
+        justifyContent="space-between"
+        sx={{ gap: '32px' }}
+      >
+        {cancelButton}
+        {saveButton}
+      </CustomRowStack>
     </Container>
   );
 };

@@ -4,7 +4,6 @@
 
 import { BrowserWindow, IpcRendererEvent } from 'electron';
 import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
-import { TranscriptionEngine } from 'main/handlers/helpers/transcribeTypes';
 import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
@@ -13,6 +12,9 @@ import {
   RecentProject,
   Transcription,
   ProjectIdAndFilePath,
+  TranscriptionEngine,
+  EngineConfig,
+  CloudConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -33,6 +35,10 @@ declare global {
         project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
 
+      readCloudConfig: () => Promise<CloudConfig>;
+
+      readDefaultEngineConfig: () => Promise<EngineConfig>;
+
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;
@@ -48,15 +54,16 @@ declare global {
 
       saveProject: (project: RuntimeProject) => Promise<string>;
 
-      storeCloudCredentials: (data: string) => Promise<void>;
+      storeCloudCredentials: (
+        defaultEngine: TranscriptionEngine,
+        engineConfigs: EngineConfig
+      ) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
       extractAudio: (project: RuntimeProject) => Promise<string>;
 
       exportProject: (project: RuntimeProject) => Promise<string>;
-
-      updateTranscriptionAPIKey: (project: RuntimeProject) => Promise<string>;
 
       extractThumbnail: (
         absolutePathToVideoFile: string,

@@ -87,7 +87,6 @@ function AppContents() {
               closeModal={closeUpdateTranscriptionAPIKey}
               nextView={null}
               projectName=""
-              textToDisplay={null}
             />
           </CustomModalInner>
         </CustomModal>

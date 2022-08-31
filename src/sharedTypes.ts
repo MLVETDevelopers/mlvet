@@ -55,6 +55,19 @@ export interface TakeInfo {
   takeIndex: number;
 }
 
+export enum TranscriptionEngine {
+  DUMMY = 'DUMMY',
+  ASSEMBLYAI = 'ASSEMBLYAI',
+}
+
+export type EngineConfig = string | null;
+
+export interface CloudConfig {
+  defaultEngine: TranscriptionEngine;
+  ASSEMBLYAI: EngineConfig;
+  DUMMY: EngineConfig;
+}
+
 export interface Word {
   // Text content of the word
   word: string;

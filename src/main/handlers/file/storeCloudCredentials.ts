@@ -1,16 +1,79 @@
-import { unlinkSync, writeFileSync } from 'fs';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
+import {
+  CloudConfig,
+  EngineConfig,
+  TranscriptionEngine,
+} from '../../../sharedTypes';
 import { appCloudConfigPath, fileOrDirExists } from '../../util';
+import readCloudConfig from './readCloudConfig';
 
-type StoreCloudCredentials = (data: string) => Promise<void>;
+type StoreCloudCredentials = (
+  defaultEngine: TranscriptionEngine,
+  engineConfigs: EngineConfig
+) => Promise<void>;
 
-const storeCloudCredentials: StoreCloudCredentials = async (data: string) => {
+const initCloudConfig: CloudConfig = {
+  defaultEngine: TranscriptionEngine.ASSEMBLYAI,
+  ASSEMBLYAI: null,
+  DUMMY: null,
+};
+
+const updateCloudConfig = (
+  defaultEngine: TranscriptionEngine,
+  engineConfigs: EngineConfig,
+  cloudConfig: CloudConfig
+): CloudConfig => {
+  switch (defaultEngine) {
+    case TranscriptionEngine.ASSEMBLYAI: {
+      return {
+        ...cloudConfig,
+        defaultEngine,
+        ASSEMBLYAI: engineConfigs,
+      };
+    }
+    default: {
+      return {
+        ...cloudConfig,
+        defaultEngine,
+        DUMMY: engineConfigs,
+      };
+    }
+  }
+};
+
+const storeCloudCredentials: StoreCloudCredentials = async (
+  defaultEngine: TranscriptionEngine,
+  engineConfigs: EngineConfig
+) => {
   const cloudConfigPath = appCloudConfigPath();
 
   if (fileOrDirExists(cloudConfigPath)) {
-    unlinkSync(cloudConfigPath);
-  }
+    readCloudConfig()
+      .then((cloudConfig) => {
+        unlinkSync(cloudConfigPath);
 
-  writeFileSync(cloudConfigPath, data);
+        const updatedCloudConfig = updateCloudConfig(
+          defaultEngine,
+          engineConfigs,
+          cloudConfig
+        );
+
+        writeFileSync(cloudConfigPath, JSON.stringify(updatedCloudConfig));
+
+        return updatedCloudConfig;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    const newCloudConfig = updateCloudConfig(
+      defaultEngine,
+      engineConfigs,
+      initCloudConfig
+    );
+
+    writeFileSync(cloudConfigPath, JSON.stringify(newCloudConfig));
+  }
 };
 
 export default storeCloudCredentials;

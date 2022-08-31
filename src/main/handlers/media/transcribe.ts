@@ -1,9 +1,6 @@
-import { RuntimeProject } from 'sharedTypes';
 import { JSONTranscription } from 'main/types';
-import {
-  TranscriptionEngine,
-  TranscriptionFunction,
-} from '../helpers/transcribeTypes';
+import { RuntimeProject, TranscriptionEngine } from '../../../sharedTypes';
+import { TranscriptionFunction } from '../helpers/transcribeTypes';
 import dummyTranscribeFunction from '../helpers/transcriptionEngines/dummyTranscribeFunction';
 import assemblyAiTranscribeFunction from '../helpers/transcriptionEngines/assemblyAiTranscribeFunction';
 

@@ -11,7 +11,7 @@ const WordSpace = ({
 }: Props) => {
   const background: string = (() => {
     if (isDropMarkerActive) {
-      return 'white';
+      return colors.yellow[500];
     }
     if (isBetweenHighlightedWords) {
       return `${colors.blue[500]}cc`;
@@ -25,6 +25,8 @@ const WordSpace = ({
         display: 'inline-block',
         background,
         height: '24px',
+        width: `${isDropMarkerActive ? '2.4px' : '1px'}`,
+        borderRadius: '1px',
       }}
     />
   );

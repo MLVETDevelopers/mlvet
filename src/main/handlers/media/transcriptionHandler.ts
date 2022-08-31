@@ -1,6 +1,5 @@
 import ffmpeg from 'fluent-ffmpeg';
 import path from 'path';
-import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
   PartialWord,
   RuntimeProject,
@@ -10,6 +9,7 @@ import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
+import readCloudConfig from '../file/readCloudConfig';
 import transcribe from './transcribe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -61,7 +61,12 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = await transcribe(project, TRANSCRIPTION_ENGINE);
+  const transcript = await transcribe(
+    project,
+    (
+      await readCloudConfig()
+    ).defaultEngine
+  );
 
   if (!validateJsonTranscription(transcript)) {
     throw new Error('JSON transcript is invalid');

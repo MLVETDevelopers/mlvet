@@ -222,6 +222,14 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-export-project');
         },
       },
+      {
+        id: 'updateTranscriptionAPIKey',
+        label: 'Update Transcription API Key',
+        accelerator: 'CommandOrControl+K',
+        click: () => {
+          this.mainWindow.webContents.send('open-update-transcription-api-key');
+        },
+      },
     ];
   }
 

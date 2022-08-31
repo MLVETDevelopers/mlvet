@@ -15,11 +15,10 @@ import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
 const { openExternalLink, storeCloudCredentials } = ipc;
-
 interface Props {
-  prevView: () => void;
+  prevView: (() => void) | null;
   closeModal: () => void;
-  nextView: () => void;
+  nextView: (() => void) | null;
   projectName: string;
   textToDisplay: string | null;
 }
@@ -50,7 +49,19 @@ const CloudConfigView = ({
   const saveCloudCredentials: () => void = () => {
     setApiKey(apiKey.trim());
     storeCloudCredentials(apiKey);
-    nextView();
+    if (nextView === null) {
+      closeModal();
+    } else {
+      nextView();
+    }
+  };
+
+  const cancelCloudCredentials: () => void = () => {
+    if (prevView === null) {
+      closeModal();
+    } else {
+      prevView();
+    }
   };
 
   const handleApiKeyInput = (value: string) => {
@@ -69,7 +80,7 @@ const CloudConfigView = ({
   );
 
   const cancelButton = (
-    <SecondaryButton onClick={prevView} fullWidth>
+    <SecondaryButton onClick={cancelCloudCredentials} fullWidth>
       Back
     </SecondaryButton>
   );
@@ -133,15 +144,17 @@ const CloudConfigView = ({
               How can I get an API key? &gt;
             </Link>
           </CustomStack>
-          <TextField
-            label="API Key"
-            value={apiKey}
-            onChange={(event) => handleApiKeyInput(event.target.value)}
-            autoFocus
-          />
         </CustomStack>
-      </CustomColumnStack>
-      <CustomColumnStack>
+        <CustomColumnStack>
+          <CustomStack>
+            <TextField
+              label="API Key"
+              value={apiKey}
+              onChange={(event) => handleApiKeyInput(event.target.value)}
+              autoFocus
+            />
+          </CustomStack>
+        </CustomColumnStack>
         <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
           {cancelButton}
           {saveButton}

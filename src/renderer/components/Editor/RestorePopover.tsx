@@ -31,10 +31,6 @@ const RestorePopover = ({
     borderRadius: '5px',
   }));
 
-  // const open = Boolean(anchorEl);
-
-  console.log('popper');
-
   return (
     <ClickAwayListener onClickAway={onClickAway}>
       <StyledPopper

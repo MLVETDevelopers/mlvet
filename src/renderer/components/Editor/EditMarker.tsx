@@ -68,6 +68,9 @@ const EditMarker = ({
           onClickAway={() => setPopperToggled(false)}
           width={popoverWidth}
           transcriptionBlockRef={transcriptionBlockRef}
+          restoreText={() => {
+            restoreOriginalSection(index);
+          }}
         />
       )}
       <Box

@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import { RefObject } from 'react';
 import colors from 'renderer/colors';
+import useKeypress from 'renderer/utils/hooks';
 
 interface RestorePopoverProps {
   text: string;
@@ -14,6 +15,7 @@ interface RestorePopoverProps {
   onClickAway: () => void;
   width: number | null;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  restoreText: () => void;
 }
 
 const RestorePopover = ({
@@ -22,7 +24,10 @@ const RestorePopover = ({
   onClickAway,
   width,
   transcriptionBlockRef,
+  restoreText,
 }: RestorePopoverProps) => {
+  useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
+
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
     maxWidth: width || '40%',
@@ -36,7 +41,7 @@ const RestorePopover = ({
       <StyledPopper
         id="restore-popper"
         anchorEl={anchorEl}
-        open
+        open={Boolean(anchorEl)}
         placement="top"
         modifiers={[
           {

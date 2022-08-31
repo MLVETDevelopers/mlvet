@@ -56,6 +56,8 @@ declare global {
 
       exportProject: (project: RuntimeProject) => Promise<string>;
 
+      updateTranscriptionAPIKey: (project: RuntimeProject) => Promise<string>;
+
       extractThumbnail: (
         absolutePathToVideoFile: string,
         project: RuntimeProject

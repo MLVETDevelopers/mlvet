@@ -19,6 +19,7 @@ It will be primarily composed of the transcription area, an editable text box wh
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
+
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject

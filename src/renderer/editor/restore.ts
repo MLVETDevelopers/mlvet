@@ -31,7 +31,7 @@ export const getRestoreIndexRange: (
     }
   );
 
-  // If the number of words to restore is -1, then we are restoring
+  // If no last index is found, then we are restoring
   // from index until the end of the entire transcription.
   if (lastWordInSequenceIndex === -1) {
     return { startIndex, endIndex: words.length };

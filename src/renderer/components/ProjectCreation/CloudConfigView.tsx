@@ -120,7 +120,7 @@ const CloudConfigView = ({
   ]);
 
   return (
-    <Container sx={{ height: { xs: 500 } }}>
+    <Container position="relative" height="500px">
       <CustomRowStack justifyContent="space-between">
         <Typography
           overflow="hidden"
@@ -137,7 +137,7 @@ const CloudConfigView = ({
           <CloseIcon />
         </IconButton>
       </CustomRowStack>
-      <CustomColumnStack justifyContent="space-between" sx={{ height: '83%' }}>
+      <CustomColumnStack justifyContent="space-between" sx={{ height: '50%' }}>
         <CustomStack justifyContent="space-between">
           <CustomStack>
             <Typography
@@ -173,11 +173,16 @@ const CloudConfigView = ({
             />
           </CustomStack>
         </CustomColumnStack>
-        <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
-          {cancelButton}
-          {saveButton}
-        </CustomRowStack>
       </CustomColumnStack>
+      <CustomRowStack
+        position="absolute"
+        bottom="0px"
+        justifyContent="space-between"
+        sx={{ gap: '32px' }}
+      >
+        {cancelButton}
+        {saveButton}
+      </CustomRowStack>
     </Container>
   );
 };

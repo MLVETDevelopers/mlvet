@@ -49,7 +49,7 @@ export const makeRecentProject: (
 export const bufferedWordDuration: (word: Word) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;
 
-export const getDefaultEngineConfig = (
+export const findDefaultEngineConfig = (
   cloudConfig: CloudConfig
 ): EngineConfig => {
   switch (cloudConfig.defaultEngine) {

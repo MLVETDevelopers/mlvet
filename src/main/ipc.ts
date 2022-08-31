@@ -11,6 +11,7 @@ import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
 import readCloudConfig from './handlers/file/readCloudConfig';
+import readDefaultEngineConfig from './handlers/file/readDefaultEngineConfig';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
 import requireCloudConfig from './handlers/file/requireCloudConfig';
@@ -62,6 +63,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('read-cloud-config', async () => readCloudConfig());
+
+  ipcMain.handle('read-default-engine-config', async () =>
+    readDefaultEngineConfig()
+  );
 
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 

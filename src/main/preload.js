@@ -15,6 +15,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
 
+  readDefaultEngineConfig: () =>
+    ipcRenderer.invoke('read-default-engine-config'),
+
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),

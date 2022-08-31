@@ -37,6 +37,8 @@ declare global {
 
       readCloudConfig: () => Promise<CloudConfig>;
 
+      readDefaultEngineConfig: () => Promise<EngineConfig>;
+
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;

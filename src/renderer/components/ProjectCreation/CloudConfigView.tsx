@@ -39,7 +39,7 @@ const Container = styled(Box)({
 });
 
 const defaultText =
-  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for Google Cloud Speech-to-Text";
+  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for AssemblyAI";
 
 const CloudConfigView = ({
   prevView,

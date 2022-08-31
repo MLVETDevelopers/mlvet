@@ -6,7 +6,7 @@ import readCloudConfig from './readCloudConfig';
 type ReadDefaultEngineConfig = () => Promise<EngineConfig>;
 
 const readDefaultEngineConfig: ReadDefaultEngineConfig = async () => {
-  if (!fileOrDirExists(appCloudConfigPath())) {
+  if (fileOrDirExists(appCloudConfigPath())) {
     const cloudConfig = await readCloudConfig();
     if (cloudConfig !== null) {
       const defaultEngineConfig = findDefaultEngineConfig(cloudConfig);

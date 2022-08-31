@@ -68,6 +68,8 @@ const TranscriptionChunk = ({
       seekToWord={seekToWord}
       submitWordEdit={submitWordEdit}
       selectionSet={selectionSet}
+      popoverWidth={popoverWidth}
+      transcriptionBlockRef={transcriptionBlockRef}
     />
   ) : (
     <WordOuterComponent

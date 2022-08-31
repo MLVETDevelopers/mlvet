@@ -13,6 +13,7 @@ const mockIpc = {
   setUndoRedoEnabled: async () => null,
   setConfidenceLinesEnabled: async () => null,
   handleOsQuery: async () => null,
+  requireCloudConfig: () => false,
 };
 
 const ipc = window.electron ?? mockIpc;

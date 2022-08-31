@@ -10,6 +10,7 @@ import deleteProject from './handlers/file/deleteProject';
 import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
+import readCloudCredentials from './handlers/file/readCloudCredentials';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
 import requireCloudConfig from './handlers/file/requireCloudConfig';
@@ -60,6 +61,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     retrieveProjectMetadata(project)
   );
 
+  ipcMain.handle('read-cloud-credentials', async () => readCloudCredentials());
+
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 
   ipcMain.handle('request-media-dialog', async () =>
@@ -82,8 +85,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     saveProject(ipcContext, project)
   );
 
-  ipcMain.handle('store-cloud-credentials', async (_event, data) =>
-    storeCloudCredentials(data)
+  ipcMain.handle(
+    'store-cloud-credentials',
+    async (_event, defaultEngine, engineConfigs) =>
+      storeCloudCredentials(defaultEngine, engineConfigs)
   );
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>

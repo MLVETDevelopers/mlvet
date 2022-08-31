@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
 import { RefObject, useRef, useState } from 'react';
 import colors from 'renderer/colors';
-import { IndexRange, Transcription, Word } from 'sharedTypes';
-import EditMarkerSvg from '../../assets/EditMarkerSvg';
 import RestorePopover from './RestorePopover';
+import EditMarkerSvg from '../../assets/EditMarkerSvg';
+import { Transcription, Word } from 'sharedTypes';
+import { restoreOriginalSection } from 'renderer/editor/restore';
 
 interface Props {
   transcription: Transcription;
@@ -41,25 +42,6 @@ const EditMarker = ({
 
   const notPasted = word.pasteKey === 0;
 
-  const getRestoreIndexRange = (): IndexRange => {
-    let sectionEndIndex = index;
-    for (let i = index; i < transcription.words.length - 1; i += 1) {
-      const currWord = transcription.words[i];
-      const nextWord = transcription.words[i + 1];
-      if (
-        !currWord.deleted ||
-        !nextWord.deleted ||
-        currWord.originalIndex + 1 !== nextWord.originalIndex
-      )
-        break;
-
-      sectionEndIndex += 1;
-    }
-
-    return { startIndex: index, endIndex: sectionEndIndex + 1 };
-  };
-
-  const onMarkerClick = () => {
     setPopperToggled(true);
     setPopperText(
       'Today is a recap on what we`ve done so far on all the groups - this is an opportunity if there are any roadblocks, and we will have a retrospective, and any questions for research proposal/presentation'
@@ -93,6 +75,7 @@ const EditMarker = ({
         <EditMarkerSvg />
       </Box>
     </>
+  const onMarkerClick = () => {
   ) : null;
 };
 

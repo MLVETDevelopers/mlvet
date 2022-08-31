@@ -4,7 +4,7 @@ import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
-import { useMemo } from 'react';
+import { RefObject, useMemo } from 'react';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
@@ -49,6 +49,8 @@ interface TakeComponentProps {
   isWordBeingDragged: (wordIndex: number) => boolean;
   editWord: any;
   transcriptionIndex: number;
+  popoverWidth: number;
+  transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const TakeComponent = ({
@@ -73,6 +75,8 @@ const TakeComponent = ({
   mouseThrottled,
   editWord,
   transcriptionIndex,
+  popoverWidth,
+  transcriptionBlockRef,
 }: TakeComponentProps) => {
   const dispatch = useDispatch();
 
@@ -160,6 +164,8 @@ const TakeComponent = ({
                 isWordBeingDragged={isWordBeingDragged}
                 editWord={editWord}
                 isInInactiveTake={!isActive || !isTakeGroupOpened}
+                popoverWidth={popoverWidth}
+                transcriptionBlockRef={transcriptionBlockRef}
               />
             ))}
           </>

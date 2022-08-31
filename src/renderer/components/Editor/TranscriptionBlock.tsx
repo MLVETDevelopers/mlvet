@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -48,14 +48,18 @@ interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
   seekToWord: (wordIndex: number) => void;
+  blockWidth: number;
 }
 
 const TranscriptionBlock = ({
   seekToWord,
   transcription,
   nowPlayingWordIndex,
+  blockWidth,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
+  const blockRef = useRef<HTMLElement>(null);
 
   const transcriptionChunks = useMemo(() => {
     return generateTranscriptionChunks(
@@ -129,7 +133,7 @@ const TranscriptionBlock = ({
         cancelDrag
       ) => {
         return (
-          <TranscriptionBox id="transcription-content">
+          <TranscriptionBox id="transcription-content" ref={blockRef}>
             {mapWithAccumulator(
               transcriptionChunks,
               (chunk, _, acc) => {
@@ -160,6 +164,8 @@ const TranscriptionBlock = ({
                       seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
                       selectionSet={selectionSet}
+                      popoverWidth={blockWidth - 194}
+                      transcriptionBlockRef={blockRef}
                     />
                   ),
                   acc: isTakeGroup(chunk)

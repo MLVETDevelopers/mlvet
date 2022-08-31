@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
-import { Fragment } from 'react';
+import { Fragment, RefObject } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { Word, Transcription } from 'sharedTypes';
@@ -28,6 +28,8 @@ interface WordOuterComponentProps {
   editWord: any;
   nowPlayingWordIndex: number | null;
   isInInactiveTake: boolean;
+  popoverWidth: number;
+  transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -55,6 +57,8 @@ const WordOuterComponent = ({
   editWord,
   nowPlayingWordIndex,
   isInInactiveTake,
+  popoverWidth,
+  transcriptionBlockRef,
 }: WordOuterComponentProps) => {
   const isShowingConfidenceUnderlines = useSelector(
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
@@ -71,6 +75,8 @@ const WordOuterComponent = ({
           word={word}
           index={index}
           isSelected={selectionSet.has(index)}
+          popoverWidth={popoverWidth}
+          transcriptionBlockRef={transcriptionBlockRef}
         />
       ) : (
         <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>

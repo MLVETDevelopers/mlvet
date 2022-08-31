@@ -112,8 +112,9 @@ const WordComponent = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const xPosition = ref.current?.offsetLeft ?? 0;
-  const yPosition = ref.current?.offsetTop ?? 0;
+  const refRect = ref.current?.getBoundingClientRect();
+  const xPosition = refRect?.left ?? 0;
+  const yPosition = refRect?.top ?? 0;
   const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
   const height = ref.current?.offsetHeight ?? 0;
   const mouseX = mouse?.clientX ?? 0;

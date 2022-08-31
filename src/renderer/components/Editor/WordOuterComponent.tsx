@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
-import { Fragment, RefObject } from 'react';
+import { Fragment, RefObject, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { Word, Transcription } from 'sharedTypes';

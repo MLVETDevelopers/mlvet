@@ -10,7 +10,7 @@ import deleteProject from './handlers/file/deleteProject';
 import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
-import readCloudCredentials from './handlers/file/readCloudCredentials';
+import readCloudConfig from './handlers/file/readCloudConfig';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
 import requireCloudConfig from './handlers/file/requireCloudConfig';
@@ -61,7 +61,7 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     retrieveProjectMetadata(project)
   );
 
-  ipcMain.handle('read-cloud-credentials', async () => readCloudCredentials());
+  ipcMain.handle('read-cloud-config', async () => readCloudConfig());
 
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 

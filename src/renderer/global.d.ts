@@ -14,6 +14,7 @@ import {
   ProjectIdAndFilePath,
   TranscriptionEngine,
   EngineConfig,
+  CloudConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -34,7 +35,7 @@ declare global {
         project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
 
-      readCloudCredentials: () => Promise<CloudConfig>;
+      readCloudConfig: () => Promise<CloudConfig>;
 
       readRecentProjects: () => Promise<RecentProject[]>;
 

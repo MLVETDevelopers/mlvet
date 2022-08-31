@@ -6,4 +6,4 @@ import { TranscriptionEngine } from '../sharedTypes';
 // This will eventually be replaced with a config file allowing the user to choose which engine they want
 export const TRANSCRIPTION_ENGINE = TranscriptionEngine.ASSEMBLYAI;
 
-export const ASSEMBLYAI_API_KEY = 'readCloudCredentials()';
+export const ASSEMBLYAI_API_KEY = '';

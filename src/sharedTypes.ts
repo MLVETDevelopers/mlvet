@@ -56,19 +56,16 @@ export interface TakeInfo {
 }
 
 export enum TranscriptionEngine {
-  DUMMY,
-  ASSEMBLYAI,
+  DUMMY = 'DUMMY',
+  ASSEMBLYAI = 'ASSEMBLYAI',
 }
 
-export type EngineConfig = AssemblyAiConfig | null;
-
-export interface AssemblyAiConfig {
-  apiKey: string;
-}
+export type EngineConfig = string | null;
 
 export interface CloudConfig {
   defaultEngine: TranscriptionEngine;
-  engineConfigs: Map<string, EngineConfig>;
+  ASSEMBLYAI: EngineConfig;
+  DUMMY: EngineConfig;
 }
 
 export interface Word {

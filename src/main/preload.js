@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld('electron', {
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
 
-  readCloudCredentials: () => ipcRenderer.invoke('read-cloud-credentials'),
+  readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
 
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 

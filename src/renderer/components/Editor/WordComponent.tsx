@@ -188,8 +188,6 @@ const WordComponent = ({
       return;
     }
 
-    console.log('click');
-
     if (awaitingSecondClick) {
       startEditing();
       return;

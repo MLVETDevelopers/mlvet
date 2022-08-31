@@ -21,6 +21,8 @@ import {
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
+  RESTORE_SECTION,
+  UNDO_RESTORE_SECTION,
 } from '../transcriptionWords/actions';
 import {
   EXPORT_PROGRESS_UPDATE,
@@ -102,6 +104,8 @@ const currentProjectReducer: Reducer<
       UNDO_SPLIT_WORD,
       SELECT_TAKE,
       DELETE_TAKE_GROUP,
+      RESTORE_SECTION,
+      UNDO_RESTORE_SECTION,
     ].includes(action.type) &&
     currentProject !== null
   ) {

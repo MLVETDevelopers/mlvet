@@ -8,6 +8,9 @@ export interface PasteWordsPayload {
   startIndex: number;
   clipboard: Word[];
 }
+export interface RestoreSectionPayload {
+  ranges: IndexRange[];
+}
 
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
 
@@ -41,3 +44,5 @@ export interface UndoCorrectWordPayload {
   prevText: string;
   prevConfidence: number;
 }
+
+export type UndoRestoreSectionPayload = RestoreSectionPayload;

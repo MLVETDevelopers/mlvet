@@ -26,3 +26,5 @@ export const isInOriginalOrder: (
     // word not in order
     return false;
   });
+
+export const markWordDeleted = (word: Word) => ({ ...word, deleted: true });

@@ -34,6 +34,7 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
   const [projectName, setProjectName] = useState<string>('');
+  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -61,28 +62,26 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     }
   };
 
-  const viewComponents: any = useMemo(() => {
+  const viewComponents = useMemo(() => {
+    if (isCloudConfigRequired) {
+      return [
+        NewProjectView,
+        CloudConfigView,
+        ImportMediaView,
+        RunTranscriptionView,
+      ];
+    }
     return [NewProjectView, ImportMediaView, RunTranscriptionView];
-  }, []);
+  }, [isCloudConfigRequired]);
 
   useEffect(() => {
     const fetchIfCloudConfigRequired = async () => {
-      const result = await requireCloudConfig();
-      return result;
+      const isConfigRequired = await requireCloudConfig();
+      setIsCloudConfigRequired(isConfigRequired);
     };
 
-    fetchIfCloudConfigRequired()
-      .then((isConfigRequired) => {
-        if (isConfigRequired) {
-          viewComponents.splice(1, 0, CloudConfigView);
-        }
-        // for linter
-        return isConfigRequired;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [viewComponents]);
+    fetchIfCloudConfigRequired().catch(console.log);
+  }, [setIsCloudConfigRequired]);
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {

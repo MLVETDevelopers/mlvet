@@ -11,6 +11,7 @@ const mockIpc = {
   setMergeSplitEnabled: async () => null,
   setHomeEnabled: async () => null,
   setUndoRedoEnabled: async () => null,
+  setConfidenceLinesEnabled: async () => null,
   handleOsQuery: async () => null,
 };
 

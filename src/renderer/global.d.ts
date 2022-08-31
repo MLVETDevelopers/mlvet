@@ -43,6 +43,8 @@ declare global {
 
       readCloudConfig: () => Promise<CloudConfig>;
 
+      readDefaultEngineConfig: () => Promise<EngineConfig>;
+
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
       saveChangesDialog: (
@@ -80,6 +82,8 @@ declare global {
       requestTranscription: (
         project: RuntimeProject
       ) => Promise<Transcription | null>;
+
+      setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
 
       setExportEnabled: (exportEnabled: boolean) => void;
 

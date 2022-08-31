@@ -19,7 +19,10 @@ contextBridge.exposeInMainWorld('electron', {
 
   requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
 
-  readCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
+  readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
+
+  readDefaultEngineConfig: () =>
+    ipcRenderer.invoke('read-default-engine-config'),
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
@@ -48,6 +51,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
+
+  setConfidenceLinesEnabled: (menuItemEnabled) =>
+    ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
 
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),

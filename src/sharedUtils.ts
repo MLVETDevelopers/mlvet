@@ -6,6 +6,9 @@ import {
   TranscriptionEngine,
   EngineConfig,
   CloudConfig,
+  MapCallback,
+  IndexRange,
+  TakeGroup,
 } from './sharedTypes';
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
@@ -46,7 +49,7 @@ export const makeRecentProject: (
 export const bufferedWordDuration: (word: Word) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;
 
-export const getDefaultEngineConfig = (
+export const findDefaultEngineConfig = (
   cloudConfig: CloudConfig
 ): EngineConfig => {
   switch (cloudConfig.defaultEngine) {
@@ -57,6 +60,29 @@ export const getDefaultEngineConfig = (
       return cloudConfig.DUMMY;
     }
   }
+};
+
+/**
+ * Maps the values of a list using a given map function,
+ * but only for those values within specified ranges.
+ * Values outside of the given indices will be unaltered.
+ * @returns the mapped list
+ */
+export const mapInRanges: <T>(
+  list: T[],
+  mapCallback: MapCallback<T, T>,
+  ranges: IndexRange[]
+) => T[] = (list, mapCallback, ranges) => {
+  const listNew = [...list];
+
+  ranges.forEach((range) => {
+    const { startIndex, endIndex } = range;
+    for (let i = startIndex; i < endIndex; i += 1) {
+      listNew[i] = mapCallback(list[i], i, list);
+    }
+  });
+
+  return listNew;
 };
 
 /**
@@ -75,5 +101,25 @@ export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   pasteKey: 0,
   deleted: false,
   confidence: 1,
+  takeInfo: null,
   ...override,
 });
+
+export const isInInactiveTake: (
+  word: Word,
+  takeGroups: TakeGroup[]
+) => boolean = (word, takeGroups) => {
+  if (word.takeInfo === null) {
+    return false;
+  }
+
+  const { takeGroupId, takeIndex } = word.takeInfo;
+
+  const takeGroup = takeGroups.find((group) => group.id === takeGroupId);
+
+  if (takeGroup?.activeTakeIndex === takeIndex) {
+    return false;
+  }
+
+  return true;
+};

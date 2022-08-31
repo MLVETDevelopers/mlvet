@@ -12,11 +12,10 @@ import colors from 'renderer/colors';
 import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
 import { TranscriptionEngine } from '../../../sharedTypes';
-import { getDefaultEngineConfig } from '../../../sharedUtils';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 
-const { requireCloudConfig, readCloudConfig } = ipc;
+const { readDefaultEngineConfig } = ipc;
 
 const { openExternalLink, storeCloudCredentials } = ipc;
 interface Props {
@@ -50,11 +49,29 @@ const CloudConfigView = ({
   projectName,
   textToDisplay,
 }: Props) => {
-  const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
-  const [apiKey, setApiKey] = useState<string>('');
+  const [originalApiKey, setOriginalApiKey] = useState<string>('');
   const [text, setText] = useState<string>(defaultText);
+  const [isAwaitingApiKey, setAwaitingApiKey] = useState<boolean>(true);
+  const [apiKey, setApiKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    const configInfo = async () => {
+      const engineConfig = await readDefaultEngineConfig();
+      console.log(engineConfig);
+      if (engineConfig !== null) {
+        setText('Update API Key');
+        setOriginalApiKey(engineConfig);
+      }
+    };
+    configInfo().catch((err) => {
+      console.log(err);
+    });
+  }, []);
 
   const saveCloudCredentials: () => void = () => {
+    if (apiKey === null) {
+      return;
+    }
     setApiKey(apiKey.trim());
     console.log(apiKey);
     // hard coded to be assembly ai
@@ -97,37 +114,9 @@ const CloudConfigView = ({
 
   const handleHelpClick: () => void = () => {
     openExternalLink(
-      'http://nerdvittles.com/creating-an-api-key-for-google-speech-recognition/'
+      'https://app.assemblyai.com/signup?_ga=2.64947567.1548607132.1661819143-2080070454.1661819143'
     );
   };
-
-  useEffect(() => {
-    const updateText = async () => {
-      const configNull = await requireCloudConfig();
-      console.log(configNull);
-      if (configNull) {
-        console.log('hello');
-        const cloudConfig = await readCloudConfig();
-        if (cloudConfig !== null) {
-          const engineConfig = await getDefaultEngineConfig(cloudConfig);
-          if (engineConfig != null) {
-            setText('Update API Key');
-            setApiKey(engineConfig);
-          }
-        }
-      }
-    };
-    updateText()
-      // .then((apiKeyExists) => {
-      //   if (apiKeyExists) {
-      //     // setText('Update API Key');
-      //   }
-      //   return apiKeyExists;
-      // })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   useKeypress(saveCloudCredentials, !isAwaitingApiKey, [
     'Enter',
@@ -182,7 +171,7 @@ const CloudConfigView = ({
           <CustomStack>
             <TextField
               label="API Key"
-              value={apiKey}
+              value={apiKey ?? originalApiKey}
               onChange={(event) => handleApiKeyInput(event.target.value)}
               autoFocus
             />

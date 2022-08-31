@@ -1,4 +1,4 @@
-import { getDefaultEngineConfig } from '../../../sharedUtils';
+import { findDefaultEngineConfig } from '../../../sharedUtils';
 import { appCloudConfigPath, fileOrDirExists } from '../../util';
 import readCloudConfig from './readCloudConfig';
 
@@ -8,7 +8,7 @@ const requireCloudConfig: RequireCloudConfig = async () => {
   const cloudConfigPath = appCloudConfigPath();
   if (fileOrDirExists(cloudConfigPath)) {
     const cloudConfig = await readCloudConfig();
-    const engineConfig = getDefaultEngineConfig(cloudConfig);
+    const engineConfig = findDefaultEngineConfig(cloudConfig);
     return engineConfig === null;
   }
   return true;

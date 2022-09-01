@@ -6,7 +6,7 @@
     "name": "MLVET Legends",
     "url": "https://github.com/chloebrett/mlvet"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",

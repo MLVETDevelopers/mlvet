@@ -311,7 +311,7 @@ describe('findSentences should return a list of Sentence objects based on punctu
     (mockedSentenceSim as jest.Mock).mockImplementation(
       mockGetSentenceSimilarity
     );
-    const takes: InjectableTakeGroup[] = findTakes(wordList);
+    const takes: InjectableTakeGroup[] = findTakes(wordList, 0.7);
     expect(takes).toEqual([
       {
         takes: [

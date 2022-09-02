@@ -66,10 +66,16 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
   // Delegate take-related actions to takes reducer and take groups reducer
   if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
+    // Update take groups first, so that updateOutputTimes uses the correct take groups
+    const takeGroups = takeGroupsReducer(transcription.takeGroups, action);
+
     return {
       ...transcription,
-      words: transcriptionTakesReducer(transcription.words, action),
-      takeGroups: takeGroupsReducer(transcription.takeGroups, action),
+      ...updateOutputTimes(
+        transcriptionTakesReducer(transcription.words, action),
+        takeGroups
+      ),
+      takeGroups,
     };
   }
 

@@ -68,7 +68,7 @@ function newTakeGroup(
   return newGroup;
 }
 
-export function findTakes(words: Word[]): InjectableTakeGroup[] {
+export function findTakes(words: Word[], threshold = THRESHOLD): InjectableTakeGroup[] {
   const takeGroups: InjectableTakeGroup[] = [];
   const sentences: Sentence[] = findSentences(words);
   for (let i = 0; i < sentences.length - 1; i += 1) {
@@ -76,7 +76,7 @@ export function findTakes(words: Word[]): InjectableTakeGroup[] {
       sentences[i].sentenceString,
       sentences[i + 1].sentenceString
     );
-    if (similarity > THRESHOLD) {
+    if (similarity > threshold) {
       if (takeGroups.length !== 0) {
         const lastTake: IndexRange = takeGroups.at(-1)?.takes.at(-1)
           ?.wordRange as IndexRange;

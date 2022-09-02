@@ -2,12 +2,15 @@ import { Word } from 'sharedTypes';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
+  RESTORE_SECTION,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
+  UNDO_RESTORE_SECTION,
 } from '../actions';
 import transcriptionWordsReducer from '../reducer';
 
-const makeBasicWord: (
+// TODO: refactor this out to use the more generic makeBasicWord util - a lot of grunt work
+const makeBasicWordSequential: (
   originalIndex: number,
   text: string,
   isDeleted?: boolean,
@@ -22,18 +25,19 @@ const makeBasicWord: (
   deleted: isDeleted,
   originalIndex,
   pasteKey,
-  fileName: 'PLACEHOLDER FILENAME',
+  confidence: 1,
+  takeInfo: null,
 });
 
 describe('Transcription words reducer', () => {
   it('should handle words being deleted', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e'),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
       ],
       {
         type: DELETE_SELECTION,
@@ -49,22 +53,22 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b', true),
-      makeBasicWord(2, 'c', true),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b', true),
+      makeBasicWordSequential(2, 'c', true),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle deletions being undone', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c', true),
-        makeBasicWord(3, 'd', true),
-        makeBasicWord(4, 'e', true),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c', true),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e', true),
       ],
       {
         type: UNDO_DELETE_SELECTION,
@@ -80,22 +84,22 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle deletions for non-contiguous ranges', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e'),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
       ],
       {
         type: DELETE_SELECTION,
@@ -115,22 +119,22 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a', true),
-      makeBasicWord(1, 'b', true),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd', true),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a', true),
+      makeBasicWordSequential(1, 'b', true),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle deletions being undone for non-contiguous ranges', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a', true),
-        makeBasicWord(1, 'b', true),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd', true),
-        makeBasicWord(4, 'e', true),
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b', true),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e', true),
       ],
       {
         type: UNDO_DELETE_SELECTION,
@@ -150,230 +154,230 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b', true),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b', true),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle words being pasted', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c', true),
-        makeBasicWord(3, 'd', true),
-        makeBasicWord(4, 'e', true),
-        makeBasicWord(5, 'f', true),
-        makeBasicWord(6, 'g', true),
-        makeBasicWord(7, 'h', true),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c', true),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e', true),
+        makeBasicWordSequential(5, 'f', true),
+        makeBasicWordSequential(6, 'g', true),
+        makeBasicWordSequential(7, 'h', true),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord(5, 'f'),
-            makeBasicWord(6, 'g'),
-            makeBasicWord(7, 'h'),
+            makeBasicWordSequential(5, 'f'),
+            makeBasicWordSequential(6, 'g'),
+            makeBasicWordSequential(7, 'h'),
           ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c', true),
-      makeBasicWord(5, 'f', false, 1),
-      makeBasicWord(6, 'g', false, 2),
-      makeBasicWord(7, 'h', false, 3),
-      makeBasicWord(3, 'd', true),
-      makeBasicWord(4, 'e', true),
-      makeBasicWord(5, 'f', true),
-      makeBasicWord(6, 'g', true),
-      makeBasicWord(7, 'h', true),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c', true),
+      makeBasicWordSequential(5, 'f', false, 1),
+      makeBasicWordSequential(6, 'g', false, 2),
+      makeBasicWordSequential(7, 'h', false, 3),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e', true),
+      makeBasicWordSequential(5, 'f', true),
+      makeBasicWordSequential(6, 'g', true),
+      makeBasicWordSequential(7, 'h', true),
     ]);
   });
 
   it('should handle words that were already pasted, being pasted again', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c', true),
-        makeBasicWord(3, 'd', true),
-        makeBasicWord(4, 'e', true),
-        makeBasicWord(5, 'f'),
-        makeBasicWord(6, 'g'),
-        makeBasicWord(7, 'h'),
-        makeBasicWord(5, 'f', false, 1),
-        makeBasicWord(6, 'g', false, 2),
-        makeBasicWord(7, 'h', false, 3),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c', true),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e', true),
+        makeBasicWordSequential(5, 'f'),
+        makeBasicWordSequential(6, 'g'),
+        makeBasicWordSequential(7, 'h'),
+        makeBasicWordSequential(5, 'f', false, 1),
+        makeBasicWordSequential(6, 'g', false, 2),
+        makeBasicWordSequential(7, 'h', false, 3),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord(5, 'f'),
-            makeBasicWord(6, 'g'),
-            makeBasicWord(7, 'h'),
+            makeBasicWordSequential(5, 'f'),
+            makeBasicWordSequential(6, 'g'),
+            makeBasicWordSequential(7, 'h'),
           ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c', true),
-      makeBasicWord(5, 'f', false, 4),
-      makeBasicWord(6, 'g', false, 5),
-      makeBasicWord(7, 'h', false, 6),
-      makeBasicWord(3, 'd', true),
-      makeBasicWord(4, 'e', true),
-      makeBasicWord(5, 'f'),
-      makeBasicWord(6, 'g'),
-      makeBasicWord(7, 'h'),
-      makeBasicWord(5, 'f', false, 1),
-      makeBasicWord(6, 'g', false, 2),
-      makeBasicWord(7, 'h', false, 3),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c', true),
+      makeBasicWordSequential(5, 'f', false, 4),
+      makeBasicWordSequential(6, 'g', false, 5),
+      makeBasicWordSequential(7, 'h', false, 6),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e', true),
+      makeBasicWordSequential(5, 'f'),
+      makeBasicWordSequential(6, 'g'),
+      makeBasicWordSequential(7, 'h'),
+      makeBasicWordSequential(5, 'f', false, 1),
+      makeBasicWordSequential(6, 'g', false, 2),
+      makeBasicWordSequential(7, 'h', false, 3),
     ]);
   });
 
   it('should handle words being pasted even when some of the words on the clipboard were deleted', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b', true),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e', true),
-        makeBasicWord(5, 'f', true),
-        makeBasicWord(6, 'g', true),
-        makeBasicWord(7, 'h', true),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b', true),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e', true),
+        makeBasicWordSequential(5, 'f', true),
+        makeBasicWordSequential(6, 'g', true),
+        makeBasicWordSequential(7, 'h', true),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 2,
           clipboard: [
-            makeBasicWord(5, 'f'),
-            makeBasicWord(6, 'g', true),
-            makeBasicWord(7, 'h'),
+            makeBasicWordSequential(5, 'f'),
+            makeBasicWordSequential(6, 'g', true),
+            makeBasicWordSequential(7, 'h'),
           ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b', true),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(5, 'f', false, 1),
-      makeBasicWord(6, 'g', true, 2),
-      makeBasicWord(7, 'h', false, 3),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e', true),
-      makeBasicWord(5, 'f', true),
-      makeBasicWord(6, 'g', true),
-      makeBasicWord(7, 'h', true),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b', true),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(5, 'f', false, 1),
+      makeBasicWordSequential(6, 'g', true, 2),
+      makeBasicWordSequential(7, 'h', false, 3),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e', true),
+      makeBasicWordSequential(5, 'f', true),
+      makeBasicWordSequential(6, 'g', true),
+      makeBasicWordSequential(7, 'h', true),
     ]);
   });
 
   it('should handle words being pasted just after the start of the transcription', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e'),
-        makeBasicWord(5, 'f', true),
-        makeBasicWord(6, 'g', true),
-        makeBasicWord(7, 'h', true),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
+        makeBasicWordSequential(5, 'f', true),
+        makeBasicWordSequential(6, 'g', true),
+        makeBasicWordSequential(7, 'h', true),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 0,
           clipboard: [
-            makeBasicWord(5, 'f'),
-            makeBasicWord(6, 'g'),
-            makeBasicWord(7, 'h'),
+            makeBasicWordSequential(5, 'f'),
+            makeBasicWordSequential(6, 'g'),
+            makeBasicWordSequential(7, 'h'),
           ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(5, 'f', false, 1),
-      makeBasicWord(6, 'g', false, 2),
-      makeBasicWord(7, 'h', false, 3),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
-      makeBasicWord(5, 'f', true),
-      makeBasicWord(6, 'g', true),
-      makeBasicWord(7, 'h', true),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(5, 'f', false, 1),
+      makeBasicWordSequential(6, 'g', false, 2),
+      makeBasicWordSequential(7, 'h', false, 3),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
+      makeBasicWordSequential(5, 'f', true),
+      makeBasicWordSequential(6, 'g', true),
+      makeBasicWordSequential(7, 'h', true),
     ]);
   });
 
   it('should handle words being pasted to the end of the transcription', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd', true),
-        makeBasicWord(4, 'e', true),
-        makeBasicWord(5, 'f', true),
-        makeBasicWord(6, 'g'),
-        makeBasicWord(7, 'h'),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e', true),
+        makeBasicWordSequential(5, 'f', true),
+        makeBasicWordSequential(6, 'g'),
+        makeBasicWordSequential(7, 'h'),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 7,
           clipboard: [
-            makeBasicWord(3, 'd'),
-            makeBasicWord(4, 'e'),
-            makeBasicWord(5, 'f'),
+            makeBasicWordSequential(3, 'd'),
+            makeBasicWordSequential(4, 'e'),
+            makeBasicWordSequential(5, 'f'),
           ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd', true),
-      makeBasicWord(4, 'e', true),
-      makeBasicWord(5, 'f', true),
-      makeBasicWord(6, 'g'),
-      makeBasicWord(7, 'h'),
-      makeBasicWord(3, 'd', false, 1),
-      makeBasicWord(4, 'e', false, 2),
-      makeBasicWord(5, 'f', false, 3),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e', true),
+      makeBasicWordSequential(5, 'f', true),
+      makeBasicWordSequential(6, 'g'),
+      makeBasicWordSequential(7, 'h'),
+      makeBasicWordSequential(3, 'd', false, 1),
+      makeBasicWordSequential(4, 'e', false, 2),
+      makeBasicWordSequential(5, 'f', false, 3),
     ]);
   });
 
   it('should handle a paste being undone', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c', false, 1),
-        makeBasicWord(3, 'd', false, 2),
-        makeBasicWord(2, 'c'),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e'),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c', false, 1),
+        makeBasicWordSequential(3, 'd', false, 2),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
       ],
       {
         type: UNDO_PASTE_WORD,
@@ -385,24 +389,24 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c'),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle a paste being undone with various words deleted', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a', true),
-        makeBasicWord(1, 'b'),
-        makeBasicWord(2, 'c', true, 1),
-        makeBasicWord(3, 'd', false, 2),
-        makeBasicWord(2, 'c', true),
-        makeBasicWord(3, 'd'),
-        makeBasicWord(4, 'e'),
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c', true, 1),
+        makeBasicWordSequential(3, 'd', false, 2),
+        makeBasicWordSequential(2, 'c', true),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
       ],
       {
         type: UNDO_PASTE_WORD,
@@ -414,36 +418,199 @@ describe('Transcription words reducer', () => {
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a', true),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(2, 'c', true),
-      makeBasicWord(3, 'd'),
-      makeBasicWord(4, 'e'),
+      makeBasicWordSequential(0, 'a', true),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c', true),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 
   it('should handle a paste of multiple words with the same original index', () => {
     const output = transcriptionWordsReducer(
       [
-        makeBasicWord(0, 'a'),
-        makeBasicWord(0, 'a', false, 1),
-        makeBasicWord(1, 'b'),
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(0, 'a', false, 1),
+        makeBasicWordSequential(1, 'b'),
       ],
       {
         type: PASTE_WORD,
         payload: {
           startIndex: 2,
-          clipboard: [makeBasicWord(0, 'a'), makeBasicWord(0, 'a', false, 1)],
+          clipboard: [
+            makeBasicWordSequential(0, 'a'),
+            makeBasicWordSequential(0, 'a', false, 1),
+          ],
         },
       }
     );
 
     expect(output).toEqual([
-      makeBasicWord(0, 'a'),
-      makeBasicWord(0, 'a', false, 1),
-      makeBasicWord(1, 'b'),
-      makeBasicWord(0, 'a', false, 2),
-      makeBasicWord(0, 'a', false, 3),
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(0, 'a', false, 1),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(0, 'a', false, 2),
+      makeBasicWordSequential(0, 'a', false, 3),
+    ]);
+  });
+
+  it('should handle restoring deleted words', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(2, 'b', true),
+        makeBasicWordSequential(3, 'c', true),
+        makeBasicWordSequential(4, 'd'),
+        makeBasicWordSequential(5, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 1,
+              endIndex: 3,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(2, 'b'),
+      makeBasicWordSequential(3, 'c'),
+      makeBasicWordSequential(4, 'd'),
+      makeBasicWordSequential(5, 'e'),
+    ]);
+  });
+
+  it('should handle undo restoring deleted words', () => {
+    const words = [
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(2, 'b', true),
+      makeBasicWordSequential(3, 'c', true),
+      makeBasicWordSequential(4, 'd'),
+      makeBasicWordSequential(5, 'e'),
+    ];
+
+    const restoredWords = transcriptionWordsReducer(words, {
+      type: RESTORE_SECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    const output = transcriptionWordsReducer(restoredWords, {
+      type: UNDO_RESTORE_SECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    expect(output).toEqual(words);
+  });
+
+  it('should handle restoring last word', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e', true),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 4,
+              endIndex: 5,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
+    ]);
+  });
+
+  it('should handle restoring first word', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 1,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
+    ]);
+  });
+
+  it('should keep non deleted words as false', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b', true),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 3,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 });

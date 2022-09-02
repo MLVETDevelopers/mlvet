@@ -14,7 +14,6 @@ describe('Clipboard reducer', () => {
             outputStartTime: 0,
             deleted: false,
             key: '0',
-            fileName: 'PLACEHOLDER FILENAME',
           },
           {
             word: 'Abc.',
@@ -23,7 +22,6 @@ describe('Clipboard reducer', () => {
             outputStartTime: 0,
             key: '1',
             deleted: false,
-            fileName: 'PLACEHOLDER FILENAME',
           },
         ],
       })
@@ -35,7 +33,6 @@ describe('Clipboard reducer', () => {
         outputStartTime: 0,
         deleted: false,
         key: '0',
-        fileName: 'PLACEHOLDER FILENAME',
       },
       {
         word: 'Abc.',
@@ -44,7 +41,6 @@ describe('Clipboard reducer', () => {
         outputStartTime: 0,
         key: '1',
         deleted: false,
-        fileName: 'PLACEHOLDER FILENAME',
       },
     ]);
   });

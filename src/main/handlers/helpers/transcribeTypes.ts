@@ -8,11 +8,6 @@ export type TranscriptionFunction = (
 ) => Promise<JSONTranscription>;
 
 // Then add the new engine to this enum
-export enum TranscriptionEngine {
-  DUMMY,
-  VOSK,
-  DEEPSPEECH,
-}
 
 // Then add associate the new transcription function with the enum in the
 // getTranscriptionFunction map in transcribe.ts

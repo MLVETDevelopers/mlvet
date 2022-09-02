@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
+import { mean } from 'renderer/utils/list';
 import { bufferedWordDuration } from '../../../../sharedUtils';
 import { IndexRange, Word } from '../../../../sharedTypes';
 import { isMergeSplitAllowed } from '../../selection/helpers';
@@ -48,6 +49,7 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
     duration: innerDuration,
     bufferDurationBefore: firstWord.bufferDurationBefore,
     bufferDurationAfter: lastWord.bufferDurationAfter,
+    confidence: mean(wordsToMerge.map((word) => word.confidence ?? 1)),
   };
 
   return [...prefix, mergedWord, ...suffix];

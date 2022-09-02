@@ -1,6 +1,5 @@
 import { Box, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
@@ -11,6 +10,7 @@ import { useRef } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
+import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -19,6 +19,7 @@ It will be primarily composed of the transcription area, an editable text box wh
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
+
 const ProjectPage = () => {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
@@ -89,6 +90,9 @@ const ProjectPage = () => {
                       transcription={currentProject.transcription}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       seekToWord={seekToWord}
+                      blockWidth={
+                        window.innerWidth - videoPreviewContainerWidth
+                      }
                     />
                   )}
                 </Stack>

@@ -38,8 +38,8 @@ export type RenderTranscription = (
   onWordMouseMove: (wordIndex: number) => void,
   dragState: DragState,
   isWordBeingDragged: CurriedByWordIndex<boolean>,
-  mouse: MousePosition,
-  mouseThrottled: MousePosition,
+  mouse: MousePosition | null,
+  mouseThrottled: MousePosition | null,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>,
   cancelDrag: () => void
@@ -102,9 +102,10 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
 
       // Calculate the offset between the mouse position and the word so that this can be maintained throughout the drag action;
       // this makes for a more natural experience than forcing the word to always have e.g. its top left corner at the mouse position
+      const wordPosition = wordRef.current?.getBoundingClientRect();
       const offset: Point = {
-        x: (wordRef.current?.offsetLeft ?? 0) - event.clientX,
-        y: (wordRef.current?.offsetTop ?? 0) - event.clientY,
+        x: (wordPosition?.left ?? 0) - event.clientX,
+        y: (wordPosition?.top ?? 0) - event.clientY,
       };
 
       // Update the drag state to mark the start of the drag action
@@ -124,6 +125,7 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
       if (event.altKey) {
         // If alt/option held, then start a drag-move action
         startDragMoveWord(wordIndex)(wordRef)(event);
+        setDragSelectAnchor(wordIndex);
       } else {
         // Otherwise, start a drag-select action
         setDragSelectAnchor(wordIndex);
@@ -195,8 +197,8 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
         onWordMouseMoveDebounced,
         dragState,
         isWordBeingDragged,
-        mouse,
-        mouseThrottled,
+        dragState === null ? null : mouse,
+        dragState === null ? null : mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex,
         cancelDrag

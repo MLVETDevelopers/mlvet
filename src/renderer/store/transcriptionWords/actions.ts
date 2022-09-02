@@ -5,11 +5,13 @@ import {
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
+  RestoreSectionPayload,
   SplitWordPayload,
   UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
+  UndoRestoreSectionPayload,
   UndoSplitWordPayload,
 } from './opPayloads';
 
@@ -27,6 +29,9 @@ export const UNDO_SPLIT_WORD = 'UNDO_SPLIT_WORD';
 
 export const CORRECT_WORD = 'CORRECT_WORD';
 export const UNDO_CORRECT_WORD = 'UNDO_CORRECT_WORD';
+
+export const RESTORE_SECTION = 'RESTORE_SECTION';
+export const UNDO_RESTORE_SECTION = 'UNDO_RESTORE_SECTION';
 
 export const selectionDeleted: (
   ranges: IndexRange[]
@@ -97,8 +102,23 @@ export const wordCorrected: (
 
 export const undoWordCorrected: (
   index: number,
-  prevText: string
-) => Action<UndoCorrectWordPayload> = (index, prevText) => ({
+  prevText: string,
+  prevConfidence: number
+) => Action<UndoCorrectWordPayload> = (index, prevText, prevConfidence) => ({
   type: UNDO_CORRECT_WORD,
-  payload: { index, prevText },
+  payload: { index, prevText, prevConfidence },
+});
+
+export const sectionRestored: (
+  ranges: IndexRange[]
+) => Action<RestoreSectionPayload> = (ranges) => ({
+  type: RESTORE_SECTION,
+  payload: { ranges },
+});
+
+export const undoSectionRestored: (
+  ranges: IndexRange[]
+) => Action<UndoRestoreSectionPayload> = (ranges) => ({
+  type: UNDO_RESTORE_SECTION,
+  payload: { ranges },
 });

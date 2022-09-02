@@ -6,6 +6,7 @@ import React, {
   useMemo,
   RefObject,
   useState,
+  useCallback,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
@@ -21,26 +22,37 @@ import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
 
-const makeWordInner = (isDragActive: boolean) =>
+const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
+
+const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
   styled('div')({
     display: 'inline-block',
-    cursor: 'pointer',
+    cursor: isInInactiveTake ? 'pointer' : 'text',
     color: colors.white,
-    transition: 'padding 0.1s, background 0.1s',
     padding: '0 2px',
     margin: '2px 0',
+    borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],
-      background: isDragActive ? 'none' : `${colors.yellow[500]}50`,
+      background:
+        isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
+      borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
+
+// thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
+const CONFIDENCE_THRESHOLD_MEDIUM = 0.6;
+const CONFIDENCE_THRESHOLD_LOW = 0.4;
 
 interface Props {
   index: number;
   seekToWord: () => void;
   isPlaying: boolean;
   isSelected: boolean;
+  confidence: number;
+  isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
+  isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -48,7 +60,7 @@ interface Props {
   onMouseMove: () => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isBeingDragged: boolean; // whether THIS word is currently being dragged
-  mouse: MousePosition;
+  mouse: MousePosition | null;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
   setDropBeforeIndex: (index: number) => void;
@@ -56,6 +68,8 @@ interface Props {
   submitWordEdit: () => void;
   isBeingEdited: boolean;
   editText: string | null;
+  isInInactiveTake: boolean;
+  isShowingConfidenceUnderlines: boolean;
 }
 
 const WordComponent = ({
@@ -63,6 +77,9 @@ const WordComponent = ({
   seekToWord,
   isPlaying,
   isSelected,
+  confidence,
+  isSelectedLeftCap,
+  isSelectedRightCap,
   text,
   onMouseDown,
   onMouseMove,
@@ -76,6 +93,8 @@ const WordComponent = ({
   submitWordEdit,
   isBeingEdited,
   editText,
+  isInInactiveTake,
+  isShowingConfidenceUnderlines,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -93,15 +112,19 @@ const WordComponent = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const xPosition = ref.current?.offsetLeft ?? 0;
-  const yPosition = ref.current?.offsetTop ?? 0;
+  const refRect = ref.current?.getBoundingClientRect();
+  const xPosition = refRect?.left ?? 0;
+  const yPosition = refRect?.top ?? 0;
   const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
   const height = ref.current?.offsetHeight ?? 0;
-  const mouseX = mouse.clientX ?? 0;
-  const mouseY = mouse.clientY ?? 0;
+  const mouseX = mouse?.clientX ?? 0;
+  const mouseY = mouse?.clientY ?? 0;
 
   useEffect(() => {
-    if (isBeingDragged && (mouse.clientX === null || mouse.clientY === null)) {
+    if (
+      isBeingDragged &&
+      ((mouse?.clientX ?? null) === null || (mouse?.clientY ?? null) === null)
+    ) {
       cancelDrag();
     }
   }, [isBeingDragged, mouse, cancelDrag]);
@@ -162,6 +185,10 @@ const WordComponent = ({
   };
 
   const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (isInInactiveTake) {
+      return;
+    }
+
     if (awaitingSecondClick) {
       startEditing();
       return;
@@ -191,17 +218,35 @@ const WordComponent = ({
     }
     if (isSelected || isBeingDragged) {
       return {
-        background: `${colors.yellow[500]}cc`,
+        background: `${colors.blue[500]}cc`,
         color: colors.white,
-        fontWeight: 'bold',
+        borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
+        borderBottomRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
       };
     }
     if (isPlaying) {
       return {
-        background: colors.blue[500],
+        background: `${colors.yellow[500]}cc`,
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
+        borderRadius: BORDER_RADIUS_AMOUNT,
       };
+    }
+    if (isShowingConfidenceUnderlines) {
+      if (confidence < CONFIDENCE_THRESHOLD_LOW) {
+        return {
+          borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
+          marginBottom: 0,
+        };
+      }
+      if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
+        return {
+          borderBottom: `2px solid ${colors.yellow[500]}88`,
+          marginBottom: 0,
+        };
+      }
     }
     return {};
   })();
@@ -232,8 +277,8 @@ const WordComponent = ({
   };
 
   const WordInner = useMemo(
-    () => makeWordInner(dragState !== null),
-    [dragState]
+    () => makeWordInner(dragState !== null, isInInactiveTake),
+    [dragState, isInInactiveTake]
   );
 
   const setEditText = (value: string) => {
@@ -249,12 +294,23 @@ const WordComponent = ({
 
   const MIN_EDIT_WIDTH = 10;
 
+  const onMouseDownWrapped = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (isInInactiveTake) {
+        return null;
+      }
+
+      return onMouseDown(ref)(event);
+    },
+    [isInInactiveTake, onMouseDown, ref]
+  );
+
   return (
     <WordInner
       ref={ref}
       onClick={onClick}
       onMouseUp={onMouseUp}
-      onMouseDown={onMouseDown(ref)}
+      onMouseDown={onMouseDownWrapped}
       onMouseMove={onMouseMove}
       style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
     >

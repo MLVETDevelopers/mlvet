@@ -6,42 +6,26 @@ import {
   Word,
 } from '../../sharedTypes';
 import { JSONTranscription } from '../types';
-import punctuate from './punctuate';
 import { roundToMs } from '../../sharedUtils';
+import injectTakeInfo from './injectTakeInfo';
+import { findTakes } from '../takeDetection/takeDetection';
 
 /**
  * Injects extra attributes into a PartialWord to make it a full Word
  */
-const injectAttributes: (fileName: string) => MapCallback<PartialWord, Word> =
-  (fileName: string) => (word, index) => ({
-    ...word,
-    outputStartTime: word.startTime,
-    originalIndex: index,
-    pasteKey: 0,
-    deleted: false,
-    fileName,
-    // Buffers are calculated later
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-  });
-
-const calculateAverageSilenceDuration = (
-  jsonTranscription: JSONTranscription,
-  totalDuration: number
-): number => {
-  let silenceSum = 0;
-  for (let i = 0; i < jsonTranscription.words.length - 1; i += 1) {
-    const endTime = jsonTranscription.words[i + 1].startTime;
-    const silenceDuration =
-      endTime -
-      jsonTranscription.words[i].startTime -
-      jsonTranscription.words[i].duration;
-    silenceSum += silenceDuration;
-  }
-  return jsonTranscription.words.length !== 0
-    ? silenceSum / jsonTranscription.words.length
-    : totalDuration;
-};
+const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
+  ...word,
+  // eslint-disable-next-line react/destructuring-assignment
+  outputStartTime: word.startTime,
+  originalIndex: index,
+  pasteKey: 0,
+  deleted: false,
+  confidence: word.confidence,
+  // Buffers are calculated later
+  bufferDurationBefore: 0,
+  bufferDurationAfter: 0,
+  takeInfo: null,
+});
 
 const calculateBufferDurationBefore: (
   word: Word,
@@ -101,30 +85,30 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   };
 
 /**
- * Pre processes a JSON transcript from python for use in the front end
+ * Pre processes a JSON transcript
  * @param jsonTranscript the JSON transcript input (technically a JS object but with some fields missing)
  * @param duration duration of the input media file
  * @returns formatted Transcript object
  */
 const preProcessTranscript = (
   jsonTranscript: JSONTranscription,
-  duration: number,
-  fileName: string
+  duration: number
 ): Transcription => {
-  const averageSilenceDuration: number = calculateAverageSilenceDuration(
-    jsonTranscript,
-    duration
+  const wordsWithoutTakes = jsonTranscript.words
+    .flatMap(injectAttributes)
+    .map(calculateBuffers(duration));
+
+  const injectableTakeGroups = findTakes(wordsWithoutTakes);
+
+  const { words, takeGroups } = injectTakeInfo(
+    wordsWithoutTakes,
+    injectableTakeGroups
   );
 
   return {
-    confidence: jsonTranscript.confidence,
     duration,
-    ...updateOutputTimes(
-      jsonTranscript.words
-        .map(punctuate(duration, averageSilenceDuration))
-        .flatMap(injectAttributes(fileName))
-        .map(calculateBuffers(duration))
-    ),
+    ...updateOutputTimes(words, takeGroups),
+    takeGroups,
   };
 };
 

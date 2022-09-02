@@ -7,9 +7,9 @@ describe('Test exporting', () => {
     For EDL Export Testing, we strictly use /t because /t and a bunch of spaces are strictly different things.
     */
     const transcription: Transcription = {
-      confidence: 1,
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: ' ',
@@ -21,7 +21,8 @@ describe('Test exporting', () => {
           pasteKey: 0,
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
-          fileName: 'PLACEHOLDER FILENAME',
+          confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'abc',
@@ -33,7 +34,8 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
+          confidence: 1,
+          takeInfo: null,
         },
       ],
     };
@@ -58,9 +60,9 @@ describe('Test exporting', () => {
 
   it('should produce expected EDL (with cuts) after EDL construction', () => {
     const transcription: Transcription = {
-      confidence: 1,
       duration: 100,
       outputDuration: 100,
+      takeGroups: [],
       words: [
         {
           word: 'abc',
@@ -72,7 +74,8 @@ describe('Test exporting', () => {
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
           deleted: false,
-          fileName: 'PLACEHOLDER FILENAME',
+          confidence: 1,
+          takeInfo: null,
         },
         {
           word: 'def',
@@ -84,7 +87,8 @@ describe('Test exporting', () => {
           pasteKey: 0,
           bufferDurationBefore: 0,
           bufferDurationAfter: 0,
-          fileName: 'PLACEHOLDER FILENAME',
+          confidence: 1,
+          takeInfo: null,
         },
       ],
     };

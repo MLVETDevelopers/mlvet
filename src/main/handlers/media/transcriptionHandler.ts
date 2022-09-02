@@ -1,6 +1,4 @@
 import ffmpeg from 'fluent-ffmpeg';
-import path from 'path';
-import { TRANSCRIPTION_ENGINE } from '../../config';
 import {
   PartialWord,
   RuntimeProject,
@@ -10,6 +8,7 @@ import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
+import readCloudConfig from '../file/readCloudConfig';
 import transcribe from './transcribe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -28,13 +27,13 @@ const validateWord = <(word: any) => word is PartialWord>(
   ((word) =>
     typeof word.word === 'string' &&
     typeof word.duration === 'number' &&
+    typeof word.confidence === 'number' &&
     typeof word.startTime === 'number')
 );
 
 const validateJsonTranscription = <
   (transcription: any) => transcription is JSONTranscription
 >((transcription) =>
-  typeof transcription.confidence === 'number' &&
   Array.isArray(transcription.words) &&
   transcription.words.every(validateWord));
 
@@ -61,7 +60,12 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
-  const transcript = await transcribe(project, TRANSCRIPTION_ENGINE);
+  const transcript = await transcribe(
+    project,
+    (
+      await readCloudConfig()
+    ).defaultEngine
+  );
 
   if (!validateJsonTranscription(transcript)) {
     throw new Error('JSON transcript is invalid');
@@ -70,13 +74,8 @@ const requestTranscription: RequestTranscription = async (project) => {
   const duration: number =
     (await getAudioDurationInSeconds(getAudioExtractPath(project.id))) || 0;
 
-  const fileName = path.basename(project.mediaFilePath);
+  const processedTranscript = preProcessTranscript(transcript, duration);
 
-  const processedTranscript = preProcessTranscript(
-    transcript,
-    duration,
-    fileName
-  );
   return processedTranscript;
 };
 

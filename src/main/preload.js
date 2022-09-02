@@ -6,14 +6,23 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
 
+  openExternalLink: (url) => ipcRenderer.invoke('open-external-link', url),
+
   openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
 
+  readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
+
+  readDefaultEngineConfig: () =>
+    ipcRenderer.invoke('read-default-engine-config'),
+
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
+
+  requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
@@ -21,6 +30,9 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
+
+  storeCloudCredentials: (defaultEngine, engineConfigs) =>
+    ipcRenderer.invoke('store-cloud-credentials', defaultEngine, engineConfigs),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
@@ -39,6 +51,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
+
+  setConfidenceLinesEnabled: (menuItemEnabled) =>
+    ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
 
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),

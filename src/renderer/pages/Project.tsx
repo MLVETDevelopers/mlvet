@@ -11,6 +11,7 @@ import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
+import CollabController from 'renderer/components/Collab/CollabController';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -68,6 +69,7 @@ const ProjectPage = () => {
                 seekForward={seekForward}
                 seekBack={seekBack}
               />
+              <CollabController />
 
               <Stack
                 id="project-page-layout-container"

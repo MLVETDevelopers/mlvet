@@ -1,5 +1,6 @@
 import http from 'http';
 import { Server as SocketServer } from 'socket.io';
+import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
 import { ClientMessageType } from '../collabSharedTypes';
 import initSessionHandler from './handlers/initSessionHandler';
 import endSessionHandler from './handlers/endSessionHandler';
@@ -7,11 +8,13 @@ import joinSessionHandler from './handlers/joinSessionHandler';
 import leaveSessionHandler from './handlers/leaveSessionHandler';
 import ackServerActionHandler from './handlers/ackServerActionHandler';
 import clientActionHandler from './handlers/clientActionHandler';
-import { ClientMessageHandler } from './types';
+import SessionManager from './SessionManager';
 
 const app = http.createServer();
 
 const io = new SocketServer(app);
+
+const sessionManager = new SessionManager();
 
 const clientMessageHandlers: Record<ClientMessageType, ClientMessageHandler> = {
   [ClientMessageType.INIT_SESSION]: initSessionHandler,
@@ -23,12 +26,8 @@ const clientMessageHandlers: Record<ClientMessageType, ClientMessageHandler> = {
 };
 
 Object.keys(clientMessageHandlers).forEach((eventKey) => {
-  io.on(eventKey, clientMessageHandlers[eventKey as ClientMessageType]);
-});
-
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+  io.on(
+    eventKey,
+    clientMessageHandlers[eventKey as ClientMessageType](sessionManager)
+  );
 });

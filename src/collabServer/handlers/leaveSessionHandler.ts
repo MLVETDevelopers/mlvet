@@ -1,5 +1,6 @@
-import { ClientMessageHandler } from 'collabServer/types';
+import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
 
-const leaveSessionHandler: ClientMessageHandler = (socket, payload) => {};
+const leaveSessionHandler: ClientMessageHandler =
+  (sessionManager) => (socket, payload) => {};
 
 export default leaveSessionHandler;

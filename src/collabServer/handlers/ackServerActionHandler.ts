@@ -1,5 +1,6 @@
-import { ClientMessageHandler } from 'collabServer/types';
+import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
 
-const ackServerActionHandler: ClientMessageHandler = (socket, payload) => {};
+const ackServerActionHandler: ClientMessageHandler =
+  (sessionManager) => (socket, payload) => {};
 
 export default ackServerActionHandler;

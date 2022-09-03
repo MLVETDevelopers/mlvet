@@ -2,13 +2,30 @@ import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
 import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
 import { Transcription } from 'sharedTypes';
 
+/** Shadow types */
+
+export type ActionId = string; // UUID
+
+export type ClientId = string; // UUID
+
+export type SessionId = string; // UUID
+
+export type SessionCode = string; // six digit code
+
+/** Misc */
+
+export interface Client {
+  name: string;
+  id: ClientId;
+}
+
 /** Server actions */
 
-interface ServerAction {
+export interface ServerAction {
   op: Op<DoPayload, UndoPayload>;
-  clientId: string;
+  clientId: ClientId;
   index: number;
-  id: string; // UUID
+  id: ActionId;
 }
 
 /** Message types */
@@ -64,7 +81,7 @@ export interface InitSessionPayload {
 export type EndSessionPayload = null;
 
 export interface JoinSessionPayload {
-  sessionCode: string;
+  sessionCode: SessionCode;
   clientName: string;
 }
 
@@ -75,15 +92,15 @@ export interface AckServerActionPayload {
 }
 
 export interface ClientActionPayload {
-  id: string; // UUID
+  id: ActionId; // UUID
   ops: Op<DoPayload, UndoPayload>[];
 }
 
 /** Server message payloads */
 
 export interface AckInitSessionPayload {
-  sessionCode: string;
-  clientId: string;
+  sessionCode: SessionCode;
+  clientId: ClientId;
 }
 
 export type AckEndSessionPayload = null;
@@ -91,8 +108,8 @@ export type AckEndSessionPayload = null;
 export interface AckJoinSessionPayload {
   transcription: Transcription;
   undoStack: UndoStack;
-  otherClientNames: string[];
-  clientId: string;
+  otherClients: Client[];
+  clientId: ClientId;
   mediaFileName: string;
 }
 
@@ -101,21 +118,21 @@ export type AckLeaveSessionPayload = null;
 export type SessionEndedPayload = null;
 
 export interface GuestJoinedPayload {
-  clientName: string;
-  clientId: string;
+  client: Client;
 }
 
 export interface GuestLeftPayload {
-  clientId: string;
+  clientId: ClientId;
 }
 
 export interface ServerActionPayload {
-  clientId: string;
+  clientId: ClientId;
   actions: ServerAction[];
 }
 
 export interface AckClientActionPayload {
-  id: string;
+  id: ActionId;
+  isAccepted: boolean;
 }
 
 /** Client message types */
@@ -126,7 +143,7 @@ export type ClientMessagePayload =
   | JoinSessionPayload
   | LeaveSessionPayload
   | AckServerActionPayload
-  | AckClientActionPayload;
+  | ClientActionPayload;
 
 type InitSessionMessage = ClientMessageBase<
   ClientMessageType.INIT_SESSION,
@@ -176,39 +193,39 @@ type ServerMessagePayload =
   | ServerActionPayload
   | AckClientActionPayload;
 
-type AckInitSessionMessage = ServerMessageBase<
+export type AckInitSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_INIT_SESSION,
   AckInitSessionPayload
 >;
-type AckEndSessionMessage = ServerMessageBase<
+export type AckEndSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_END_SESSION,
   AckEndSessionPayload
 >;
-type AckJoinSessionMessage = ServerMessageBase<
+export type AckJoinSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_JOIN_SESSION,
   AckJoinSessionPayload
 >;
-type AckLeaveSessionMessage = ServerMessageBase<
+export type AckLeaveSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_LEAVE_SESSION,
   AckLeaveSessionPayload
 >;
-type SessionEndedMessage = ServerMessageBase<
+export type SessionEndedMessage = ServerMessageBase<
   ServerMessageType.SESSION_ENDED,
   SessionEndedPayload
 >;
-type GuestJoinedMessage = ServerMessageBase<
+export type GuestJoinedMessage = ServerMessageBase<
   ServerMessageType.GUEST_JOINED,
   GuestJoinedPayload
 >;
-type GuestLeftMessage = ServerMessageBase<
+export type GuestLeftMessage = ServerMessageBase<
   ServerMessageType.GUEST_LEFT,
   GuestLeftPayload
 >;
-type ServerActionMessage = ServerMessageBase<
+export type ServerActionMessage = ServerMessageBase<
   ServerMessageType.SERVER_ACTION,
   ServerActionPayload
 >;
-type AckClientActionMessage = ServerMessageBase<
+export type AckClientActionMessage = ServerMessageBase<
   ServerMessageType.ACK_CLIENT_ACTION,
   AckClientActionPayload
 >;

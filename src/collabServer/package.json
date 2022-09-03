@@ -4,6 +4,11 @@
   "main": "server.ts",
   "license": "MIT",
   "dependencies": {
-    "socket.io": "^4.5.2"
+    "randomatic": "^3.1.1",
+    "socket.io": "^4.5.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/randomatic": "^3.1.3"
   }
 }

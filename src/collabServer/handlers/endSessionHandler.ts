@@ -1,12 +1,12 @@
-import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
+import { ClientMessageHandler } from '../clientMessageHandler';
 import {
   AckEndSessionMessage,
   ServerMessageType,
   SessionEndedMessage,
-} from 'collabSharedTypes';
+} from '../../collabSharedTypes';
 
 const endSessionHandler: ClientMessageHandler =
-  (sessionManager) => (socket) => {
+  (sessionManager) => (socket) => () => {
     const session = sessionManager.socketIdToSession(socket.id);
 
     if (session === null) {

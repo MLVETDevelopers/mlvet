@@ -1,12 +1,12 @@
-import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
+import { ClientMessageHandler } from '../clientMessageHandler';
 import {
   AckInitSessionMessage,
   InitSessionPayload,
   ServerMessageType,
-} from 'collabSharedTypes';
+} from '../../collabSharedTypes';
 
 const initSessionHandler: ClientMessageHandler =
-  (sessionManager) => (socket, payload) => {
+  (sessionManager) => (socket) => (payload) => {
     const { transcription, undoStack, clientName, mediaFileName } =
       payload as InitSessionPayload;
 

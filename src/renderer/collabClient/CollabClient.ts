@@ -31,6 +31,8 @@ class CollabClient {
         undoStack,
       },
     });
+
+    console.log(`Collab session initiated`);
   }
 
   sendMessage(message: ClientMessage): void {

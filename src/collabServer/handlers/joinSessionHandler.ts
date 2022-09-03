@@ -1,6 +1,8 @@
-import { ClientMessageHandler } from 'collabServer/clientMessageHandler';
+import { ClientMessageHandler } from '../clientMessageHandler';
 
 const joinSessionHandler: ClientMessageHandler =
-  (sessionManager) => (socket, payload) => {};
+  (sessionManager) => (socket) => (payload) => {
+    console.log(sessionManager, socket, payload);
+  };
 
 export default joinSessionHandler;

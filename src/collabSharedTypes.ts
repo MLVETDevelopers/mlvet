@@ -13,7 +13,7 @@ interface ServerAction {
 
 /** Message types */
 
-enum ClientMessageType {
+export enum ClientMessageType {
   INIT_SESSION = 'init-session',
   END_SESSION = 'end-session',
   JOIN_SESSION = 'join-session',
@@ -22,7 +22,7 @@ enum ClientMessageType {
   CLIENT_ACTION = 'client-action',
 }
 
-enum ServerMessageType {
+export enum ServerMessageType {
   ACK_INIT_SESSION = 'ack-init-session',
   ACK_END_SESSION = 'ack-end-session',
   ACK_JOIN_SESSION = 'ack-join-session',
@@ -54,41 +54,41 @@ interface ServerMessageBase<
 
 /** Client message payloads */
 
-interface InitSessionPayload {
+export interface InitSessionPayload {
   transcription: Transcription;
   undoStack: UndoStack;
   clientName: string;
   mediaFileName: string;
 }
 
-type EndSessionPayload = null;
+export type EndSessionPayload = null;
 
-interface JoinSessionPayload {
+export interface JoinSessionPayload {
   sessionCode: string;
   clientName: string;
 }
 
-type LeaveSessionPayload = null;
+export type LeaveSessionPayload = null;
 
-interface AckServerActionPayload {
+export interface AckServerActionPayload {
   index: number; // index of the most recent action that was ack'd
 }
 
-interface ClientActionPayload {
+export interface ClientActionPayload {
   id: string; // UUID
   ops: Op<DoPayload, UndoPayload>[];
 }
 
 /** Server message payloads */
 
-interface AckInitSessionPayload {
+export interface AckInitSessionPayload {
   sessionCode: string;
   clientId: string;
 }
 
-type AckEndSessionPayload = null;
+export type AckEndSessionPayload = null;
 
-interface AckJoinSessionPayload {
+export interface AckJoinSessionPayload {
   transcription: Transcription;
   undoStack: UndoStack;
   otherClientNames: string[];
@@ -96,31 +96,31 @@ interface AckJoinSessionPayload {
   mediaFileName: string;
 }
 
-type AckLeaveSessionPayload = null;
+export type AckLeaveSessionPayload = null;
 
-type SessionEndedPayload = null;
+export type SessionEndedPayload = null;
 
-interface GuestJoinedPayload {
+export interface GuestJoinedPayload {
   clientName: string;
   clientId: string;
 }
 
-interface GuestLeftPayload {
+export interface GuestLeftPayload {
   clientId: string;
 }
 
-interface ServerActionPayload {
+export interface ServerActionPayload {
   clientId: string;
   actions: ServerAction[];
 }
 
-interface AckClientActionPayload {
+export interface AckClientActionPayload {
   id: string;
 }
 
 /** Client message types */
 
-type ClientMessagePayload =
+export type ClientMessagePayload =
   | InitSessionPayload
   | EndSessionPayload
   | JoinSessionPayload

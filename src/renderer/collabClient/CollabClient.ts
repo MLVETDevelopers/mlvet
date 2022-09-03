@@ -3,6 +3,7 @@ import {
   ClientMessageType,
   ServerMessageType,
 } from 'collabSharedTypes';
+import { Action } from 'renderer/store/action';
 import { io, Socket } from 'socket.io-client';
 import store from '../store/store';
 import disconnectHandler from './handlers/disconnectHandler';
@@ -36,12 +37,16 @@ const wrapHandler: (
 class CollabClient implements ICollabClient {
   socket: Socket;
 
+  name: string;
+
   constructor() {
     this.socket = io(COLLAB_HOST);
 
     this.initSession();
 
     this.registerHandlers();
+
+    this.name = 'Test';
   }
 
   initSession(): void {
@@ -56,7 +61,7 @@ class CollabClient implements ICollabClient {
     this.sendMessage({
       type: ClientMessageType.INIT_SESSION,
       payload: {
-        clientName: 'Test',
+        clientName: this.getClientName(),
         mediaFileName: 'test.mp4',
         transcription,
         undoStack,
@@ -80,6 +85,14 @@ class CollabClient implements ICollabClient {
   sendMessage(message: ClientMessage): void {
     // Send the specified message
     this.socket.emit(message.type, message.payload);
+  }
+
+  dispatchToStore: (action: Action<any>) => void = (action) => {
+    store.dispatch(action);
+  };
+
+  getClientName() {
+    return this.name;
   }
 }
 

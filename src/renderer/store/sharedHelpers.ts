@@ -1,3 +1,4 @@
+import { CollabClientSessionState } from 'renderer/collabClient/types';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
@@ -21,6 +22,8 @@ export interface ApplicationStore {
   editWord: { index: number; text: string } | null;
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
+  // Collab session state
+  collab: CollabClientSessionState | null;
 }
 
 /**
@@ -39,4 +42,5 @@ export const initialStore: ApplicationStore = {
   isUpdateTranscriptionAPIKeyOpened: false,
   editWord: null,
   isShowingConfidenceUnderlines: false,
+  collab: null,
 };

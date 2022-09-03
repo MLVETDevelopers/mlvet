@@ -11,7 +11,7 @@ import { Socket } from 'socket.io';
 
 export type SocketId = string;
 
-export interface CollabSessionState {
+export interface CollabServerSessionState {
   id: SessionId;
   code: SessionCode;
   actions: ServerAction[];

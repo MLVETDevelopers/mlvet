@@ -9,10 +9,10 @@ import { Transcription } from 'sharedTypes';
 import { UndoStack } from 'renderer/store/undoStack/helpers';
 import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
-import { CollabSessionState, SocketId } from './types';
+import { CollabServerSessionState, SocketId } from './types';
 
 class SessionManager {
-  sessions: Record<SessionId, CollabSessionState>;
+  sessions: Record<SessionId, CollabServerSessionState>;
 
   constructor() {
     this.sessions = {};
@@ -32,7 +32,7 @@ class SessionManager {
     clientName: string;
     mediaFileName: string;
     sessionCode: SessionCode;
-  }) => CollabSessionState = ({
+  }) => CollabServerSessionState = ({
     socket,
     sessionId,
     hostId,
@@ -155,7 +155,7 @@ class SessionManager {
     return clientSocket;
   }
 
-  socketIdToSession(socketId: SocketId): CollabSessionState | null {
+  socketIdToSession(socketId: SocketId): CollabServerSessionState | null {
     // TODO(chloe): O(1) lookup
     const session = Object.values(this.sessions).find((potentialSession) =>
       Object.values(potentialSession.sockets).some(

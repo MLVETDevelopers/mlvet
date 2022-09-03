@@ -1,21 +1,16 @@
 import { Button } from '@mui/material';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
-import CollabClient from '../../collabClient/CollabClient';
+import CollabClientManager from '../../collabClient/CollabClientManager';
 
 const CollabController = () => {
   const collab = useSelector((store: ApplicationStore) => store.collab);
 
-  const [collabClient, setCollabClient] = useState<CollabClient | null>(null);
-
   const startCollabSession = useCallback(() => {
-    if (collabClient !== null) {
-      return;
-    }
-
-    setCollabClient(new CollabClient());
-  }, [collabClient, setCollabClient]);
+    // Init the client if it isn't already initialised
+    CollabClientManager.getClient();
+  }, []);
 
   if (collab === null) {
     return <Button onClick={startCollabSession}>Start Collab Session</Button>;

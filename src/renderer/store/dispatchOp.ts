@@ -1,3 +1,4 @@
+import CollabClientManager from 'renderer/collabClient/CollabClientManager';
 import { undoStackPushed } from './undoStack/actions';
 import { Op } from './undoStack/helpers';
 import { DoPayload, UndoPayload } from './undoStack/opPayloads';
@@ -11,6 +12,12 @@ const { dispatch } = store;
 const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
   op: Op<T, U>
 ) => void = (op) => {
+  // Send the action to the collab server
+  if (CollabClientManager.hasClient()) {
+    const client = CollabClientManager.getClient();
+    client.sendOp(op);
+  }
+
   // Dispatch the actual actions
   op.do.forEach(dispatch);
 

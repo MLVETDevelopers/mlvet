@@ -4,7 +4,10 @@ import {
   ServerMessageType,
 } from 'collabSharedTypes';
 import { Action } from 'renderer/store/action';
+import { Op } from 'renderer/store/undoStack/helpers';
+import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
 import { io, Socket } from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid';
 import store from '../store/store';
 import disconnectHandler from './handlers/disconnectHandler';
 import ICollabClient from './ICollabClient';
@@ -80,6 +83,18 @@ class CollabClient implements ICollabClient {
     });
 
     this.socket.on('disconnect', disconnectHandler(this));
+  }
+
+  sendOp(op: Op<DoPayload, UndoPayload>): void {
+    const message: ClientMessage = {
+      type: ClientMessageType.CLIENT_ACTION,
+      payload: {
+        id: uuidv4(),
+        ops: [op],
+      },
+    };
+
+    this.sendMessage(message);
   }
 
   sendMessage(message: ClientMessage): void {

@@ -7,12 +7,11 @@ import {
 } from './clientMessageHandler';
 import { ClientMessageType } from '../collabSharedTypes';
 import initSessionHandler from './handlers/initSessionHandler';
-import endSessionHandler from './handlers/endSessionHandler';
 import joinSessionHandler from './handlers/joinSessionHandler';
-import leaveSessionHandler from './handlers/leaveSessionHandler';
 import ackServerActionHandler from './handlers/ackServerActionHandler';
 import clientActionHandler from './handlers/clientActionHandler';
 import SessionManager from './SessionManager';
+import disconnectHandler from './handlers/disconnectHandler';
 
 const LOG_VERBOSE = true;
 
@@ -24,9 +23,7 @@ const sessionManager = new SessionManager();
 
 const clientMessageHandlers: Record<ClientMessageType, ClientMessageHandler> = {
   [ClientMessageType.INIT_SESSION]: initSessionHandler,
-  [ClientMessageType.END_SESSION]: endSessionHandler,
   [ClientMessageType.JOIN_SESSION]: joinSessionHandler,
-  [ClientMessageType.LEAVE_SESSION]: leaveSessionHandler,
   [ClientMessageType.ACK_SERVER_ACTION]: ackServerActionHandler,
   [ClientMessageType.CLIENT_ACTION]: clientActionHandler,
 };
@@ -53,13 +50,16 @@ const wrapHandler: (
   };
 };
 
-const addHandlersForSocket: (socket: Socket) => void = (socket) =>
+const addHandlersForSocket: (socket: Socket) => void = (socket) => {
   Object.keys(clientMessageHandlers).forEach((eventKey) => {
     const clientMessageType = eventKey as ClientMessageType;
     const handler = clientMessageHandlers[clientMessageType](sessionManager);
 
     socket.on(eventKey, wrapHandler(handler, clientMessageType, socket));
   });
+
+  socket.on('disconnect', disconnectHandler(sessionManager)(socket));
+};
 
 const PORT = 5151;
 

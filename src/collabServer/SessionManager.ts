@@ -107,6 +107,31 @@ class SessionManager {
     delete this.sessions[sessionId];
   }
 
+  handleGuestLeaving(sessionId: SessionId, clientId: ClientId): void {
+    const session = this.sessions[sessionId];
+
+    if (session === undefined) {
+      return;
+    }
+
+    // Remove socket from sockets list
+    delete session.sockets[clientId];
+
+    // Remove client from clientAcks
+    delete session.clientAcks[clientId];
+
+    const clientIndex = session.clients.findIndex(
+      (client) => client.id === clientId
+    );
+
+    if (clientIndex === -1) {
+      return;
+    }
+
+    // Remove client from clients list
+    session.clients.splice(clientIndex, 1);
+  }
+
   clientIdToSocket(clientId: ClientId): Socket | null {
     // TODO(chloe): O(1) lookup
     const clientSession = Object.values(this.sessions).find((session) =>

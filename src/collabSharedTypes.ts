@@ -12,6 +12,8 @@ export type SessionId = string; // UUID
 
 export type SessionCode = string; // six digit code
 
+export type DisconnectReason = string;
+
 /** Misc */
 
 export interface Client {
@@ -32,18 +34,14 @@ export interface ServerAction {
 
 export enum ClientMessageType {
   INIT_SESSION = 'init-session',
-  END_SESSION = 'end-session',
   JOIN_SESSION = 'join-session',
-  LEAVE_SESSION = 'leave-session',
   ACK_SERVER_ACTION = 'ack-server-action',
   CLIENT_ACTION = 'client-action',
 }
 
 export enum ServerMessageType {
   ACK_INIT_SESSION = 'ack-init-session',
-  ACK_END_SESSION = 'ack-end-session',
   ACK_JOIN_SESSION = 'ack-join-session',
-  ACK_LEAVE_SESSION = 'ack-leave-session',
   SESSION_ENDED = 'session-ended',
   GUEST_JOINED = 'guest-joined',
   GUEST_LEFT = 'guest-left',
@@ -78,14 +76,10 @@ export interface InitSessionPayload {
   mediaFileName: string;
 }
 
-export type EndSessionPayload = null;
-
 export interface JoinSessionPayload {
   sessionCode: SessionCode;
   clientName: string;
 }
-
-export type LeaveSessionPayload = null;
 
 export interface AckServerActionPayload {
   index: number; // index of the most recent action that was ack'd
@@ -139,27 +133,18 @@ export interface AckClientActionPayload {
 
 export type ClientMessagePayload =
   | InitSessionPayload
-  | EndSessionPayload
   | JoinSessionPayload
-  | LeaveSessionPayload
   | AckServerActionPayload
-  | ClientActionPayload;
+  | ClientActionPayload
+  | DisconnectReason;
 
 type InitSessionMessage = ClientMessageBase<
   ClientMessageType.INIT_SESSION,
   InitSessionPayload
 >;
-type EndSessionMessage = ClientMessageBase<
-  ClientMessageType.END_SESSION,
-  EndSessionPayload
->;
 type JoinSessionMessage = ClientMessageBase<
   ClientMessageType.JOIN_SESSION,
   JoinSessionPayload
->;
-type LeaveSessionMessage = ClientMessageBase<
-  ClientMessageType.LEAVE_SESSION,
-  LeaveSessionPayload
 >;
 type AckServerActionMessage = ClientMessageBase<
   ClientMessageType.ACK_SERVER_ACTION,
@@ -174,15 +159,13 @@ type ClientActionMessage = ClientMessageBase<
 // as it matches action types to their respective payloads
 export type ClientMessage =
   | InitSessionMessage
-  | EndSessionMessage
   | JoinSessionMessage
-  | LeaveSessionMessage
   | AckServerActionMessage
   | ClientActionMessage;
 
 /** Server message types */
 
-type ServerMessagePayload =
+export type ServerMessagePayload =
   | AckInitSessionPayload
   | AckEndSessionPayload
   | AckJoinSessionPayload
@@ -191,23 +174,16 @@ type ServerMessagePayload =
   | GuestJoinedPayload
   | GuestLeftPayload
   | ServerActionPayload
-  | AckClientActionPayload;
+  | AckClientActionPayload
+  | DisconnectReason;
 
 export type AckInitSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_INIT_SESSION,
   AckInitSessionPayload
 >;
-export type AckEndSessionMessage = ServerMessageBase<
-  ServerMessageType.ACK_END_SESSION,
-  AckEndSessionPayload
->;
 export type AckJoinSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_JOIN_SESSION,
   AckJoinSessionPayload
->;
-export type AckLeaveSessionMessage = ServerMessageBase<
-  ServerMessageType.ACK_LEAVE_SESSION,
-  AckLeaveSessionPayload
 >;
 export type SessionEndedMessage = ServerMessageBase<
   ServerMessageType.SESSION_ENDED,
@@ -234,9 +210,7 @@ export type AckClientActionMessage = ServerMessageBase<
 // as it matches action types to their respective payloads
 export type ServerMessage =
   | AckInitSessionMessage
-  | AckEndSessionMessage
   | AckJoinSessionMessage
-  | AckLeaveSessionMessage
   | SessionEndedMessage
   | GuestJoinedMessage
   | GuestLeftMessage

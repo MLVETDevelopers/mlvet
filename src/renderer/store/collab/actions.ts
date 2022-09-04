@@ -8,12 +8,24 @@ export const COLLAB_SESSION_JOINED = 'COLLAB_SESSION_JOINED';
 
 export const COLLAB_SESSION_ENDED = 'COLLAB_SESSION_ENDED';
 
+export const COLLAB_GUEST_JOINED = 'COLLAB_GUEST_JOINED';
+
+export const COLLAB_GUEST_LEFT = 'COLLAB_GUEST_LEFT';
+
 export type CollabSessionStartedPayload = Pick<
   CollabClientSessionState,
   'sessionCode' | 'clients' | 'ownClientId'
 >;
 
 export type CollabSessionJoinedPayload = CollabSessionStartedPayload;
+
+export interface CollabGuestJoinedPayload {
+  client: Client;
+}
+
+export interface CollabGuestLeftPayload {
+  clientId: ClientId;
+}
 
 export const collabSessionStarted: (
   sessionCode: SessionCode,
@@ -52,4 +64,22 @@ export const collabSessionJoined: (
 export const collabSessionEnded: () => Action<null> = () => ({
   type: COLLAB_SESSION_ENDED,
   payload: null,
+});
+
+export const collabGuestJoined: (
+  client: Client
+) => Action<CollabGuestJoinedPayload> = (client) => ({
+  type: COLLAB_GUEST_JOINED,
+  payload: {
+    client,
+  },
+});
+
+export const collabGuestLeft: (
+  clientId: ClientId
+) => Action<CollabGuestLeftPayload> = (clientId) => ({
+  type: COLLAB_GUEST_LEFT,
+  payload: {
+    clientId,
+  },
 });

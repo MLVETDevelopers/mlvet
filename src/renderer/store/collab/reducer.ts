@@ -5,6 +5,10 @@ import {
   COLLAB_SESSION_ENDED,
   CollabSessionStartedPayload,
   CollabSessionJoinedPayload,
+  COLLAB_GUEST_JOINED,
+  CollabGuestJoinedPayload,
+  CollabGuestLeftPayload,
+  COLLAB_GUEST_LEFT,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
@@ -39,6 +43,32 @@ const collabReducer: Reducer<ApplicationStore['collab'], Action<any>> = (
 
   if (action.type === COLLAB_SESSION_ENDED) {
     return null;
+  }
+
+  if (action.type === COLLAB_GUEST_JOINED) {
+    const { client } = action.payload as CollabGuestJoinedPayload;
+
+    if (collab === null) {
+      return collab;
+    }
+
+    return {
+      ...collab,
+      clients: collab.clients.concat([client]),
+    };
+  }
+
+  if (action.type === COLLAB_GUEST_LEFT) {
+    const { clientId } = action.payload as CollabGuestLeftPayload;
+
+    if (collab === null) {
+      return collab;
+    }
+
+    return {
+      ...collab,
+      clients: collab.clients.filter((client) => client.id !== clientId),
+    };
   }
 
   return collab;

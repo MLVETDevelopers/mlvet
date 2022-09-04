@@ -1,14 +1,14 @@
-import {
-  ClientMessage,
-  ClientMessageType,
-  ServerMessageType,
-  SessionCode,
-} from 'collabSharedTypes';
 import { Action } from 'renderer/store/action';
 import { Op } from 'renderer/store/undoStack/helpers';
 import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  ClientMessage,
+  ClientMessageType,
+  ServerMessageType,
+  SessionCode,
+} from '../../collabSharedTypes';
 import store from '../store/store';
 import disconnectHandler from './handlers/disconnectHandler';
 import ICollabClient from './ICollabClient';

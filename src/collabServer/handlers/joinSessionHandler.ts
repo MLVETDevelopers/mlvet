@@ -3,7 +3,7 @@ import {
   GuestJoinedMessage,
   JoinSessionPayload,
   ServerMessageType,
-} from 'collabSharedTypes';
+} from '../../collabSharedTypes';
 import { ClientMessageHandler } from '../clientMessageHandler';
 
 const joinSessionHandler: ClientMessageHandler =

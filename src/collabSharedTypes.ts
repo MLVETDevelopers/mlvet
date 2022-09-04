@@ -66,7 +66,7 @@ interface ClientMessageBase<
 
 interface ServerMessageBase<
   T extends ServerMessageType,
-  U extends ServerMessagePayload
+  U extends ServerMessagePayload | ErrorPayload
 > {
   type: T;
   payload: U;

@@ -1,4 +1,4 @@
-import { ClientActionPayload } from 'collabSharedTypes';
+import { ClientActionPayload } from '../../collabSharedTypes';
 import { ClientMessageHandler } from '../clientMessageHandler';
 
 const clientActionHandler: ClientMessageHandler =

@@ -1,13 +1,13 @@
+import { UndoStack } from 'renderer/store/undoStack/helpers';
+import { Transcription } from 'sharedTypes';
+import { Socket } from 'socket.io';
 import {
   Client,
   ClientId,
   ServerAction,
   SessionCode,
   SessionId,
-} from 'collabSharedTypes';
-import { UndoStack } from 'renderer/store/undoStack/helpers';
-import { Transcription } from 'sharedTypes';
-import { Socket } from 'socket.io';
+} from '../collabSharedTypes';
 
 export type SocketId = string;
 

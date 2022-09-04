@@ -1,5 +1,5 @@
-import { ClientId, SessionCode, SessionId } from 'collabSharedTypes';
 import { Socket } from 'socket.io';
+import { ClientId, SessionCode, SessionId } from '../collabSharedTypes';
 import { CollabServerSessionState, SocketId } from './types';
 
 export type SessionsGetter = () => Record<SessionId, CollabServerSessionState>;

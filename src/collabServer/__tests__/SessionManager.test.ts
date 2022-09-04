@@ -316,16 +316,9 @@ describe('SessionManager', () => {
     // Guest pushes an action, it gets accepted
     sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);
 
-    // Host pushes an action, it gets rejected as the host doesn't know about the guest's latest action
-    sessionManager.handleClientAction(secondActionId, ops, hostId, session.id);
-
-    expect(hostSocketSpy).toBeCalledTimes(2);
-
     // First call should be notification of the guest's action
-    expect(hostSocketSpy.mock.calls[0][0]).toEqual(
-      ServerMessageType.SERVER_ACTION
-    );
-    expect(hostSocketSpy.mock.calls[0][1]).toEqual({
+    expect(hostSocketSpy).toBeCalledTimes(1);
+    expect(hostSocketSpy).toBeCalledWith(ServerMessageType.SERVER_ACTION, {
       actions: [
         {
           clientId: guestId,
@@ -336,17 +329,56 @@ describe('SessionManager', () => {
       ],
     });
 
+    // Host pushes an action, it gets rejected as the host doesn't know about the guest's latest action
+    sessionManager.handleClientAction(secondActionId, ops, hostId, session.id);
+
     // Second call should be rejection of the host's action
-    expect(hostSocketSpy.mock.calls[1][0]).toEqual(
-      ServerMessageType.ACK_CLIENT_ACTION
-    );
-    expect(hostSocketSpy.mock.calls[1][1]).toEqual({
+    expect(hostSocketSpy).toBeCalledTimes(2);
+    expect(hostSocketSpy).toBeCalledWith(ServerMessageType.ACK_CLIENT_ACTION, {
       id: secondActionId,
       isAccepted: false,
     });
   });
 
-  it('should handle two client actions arriving sequentially with an ack between', () => {});
+  it('should handle two client actions arriving sequentially with an ack between', () => {
+    const { session, sessionManager, guestId, hostId, hostSocketSpy } =
+      initFakeSessionWithGuest();
+
+    expect(hostSocketSpy).toBeCalledTimes(0);
+
+    const firstActionId = 'abc';
+    const secondActionId = 'def';
+    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+
+    // Guest pushes an action, it gets accepted
+    sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);
+
+    // First call should be notification of the guest's action
+    expect(hostSocketSpy).toBeCalledTimes(1);
+    expect(hostSocketSpy).toBeCalledWith(ServerMessageType.SERVER_ACTION, {
+      actions: [
+        {
+          clientId: guestId,
+          id: firstActionId,
+          index: 0,
+          ops,
+        },
+      ],
+    });
+
+    // Host ack's the guest's action
+    sessionManager.handleClientAck(session.sockets[hostId].id, 0);
+
+    // Host pushes an action, it gets accepted as the host knows about the guest's latest action
+    sessionManager.handleClientAction(secondActionId, ops, hostId, session.id);
+
+    // Second call should be acceptance of the host's action
+    expect(hostSocketSpy).toBeCalledTimes(2);
+    expect(hostSocketSpy).toBeCalledWith(ServerMessageType.ACK_CLIENT_ACTION, {
+      id: secondActionId,
+      isAccepted: true,
+    });
+  });
 
   it('should handle two sessions being managed at once', () => {});
 });

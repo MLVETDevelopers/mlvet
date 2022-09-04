@@ -16,7 +16,7 @@ import {
   SessionCode,
   SessionId,
 } from '../collabSharedTypes';
-import { CollabServerSessionState } from './types';
+import { CollabServerSessionState, SocketId } from './types';
 import SessionLookupHelper from './SessionLookupHelper';
 
 class SessionManager {
@@ -338,6 +338,25 @@ class SessionManager {
 
       this.sendMessageToClient(clientId, serverActionMessage);
     });
+  }
+
+  handleClientAck(socketId: SocketId, ackIndex: number): void {
+    const session = this.lookup.socketIdToSession(socketId);
+    if (session === null) {
+      return;
+    }
+
+    const clientId = this.lookup.socketIdToClientId(socketId);
+    if (clientId === null) {
+      return;
+    }
+
+    if (!(clientId in session.clientAcks)) {
+      return;
+    }
+
+    // Update the ack index for the client
+    session.clientAcks[clientId] = ackIndex;
   }
 }
 

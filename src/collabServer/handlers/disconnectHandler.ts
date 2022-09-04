@@ -4,7 +4,6 @@ import {
   DisconnectReason,
   GuestLeftMessage,
   ServerMessageType,
-  SessionEndedMessage,
   SessionId,
 } from '../../collabSharedTypes';
 import SessionManager from '../SessionManager';
@@ -13,20 +12,6 @@ const endSession: (
   sessionManager: SessionManager,
   sessionId: SessionId
 ) => void = (sessionManager, sessionId) => {
-  const sessionEndedMessage: SessionEndedMessage = {
-    type: ServerMessageType.SESSION_ENDED,
-    payload: null,
-  };
-
-  // Inform all clients that the session is ended
-  // This is done before the actual session is ended because the session is needed
-  // to retrieve the client socket IDs
-  sessionManager.sendMessageToAllClientsInSession(
-    sessionId,
-    sessionEndedMessage
-  );
-
-  // End the session
   sessionManager.endSession(sessionId);
 };
 

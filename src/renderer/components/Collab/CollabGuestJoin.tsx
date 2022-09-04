@@ -1,17 +1,28 @@
 import { Button, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
-import CollabClientManager from '../../collabClient/CollabClientManager';
+import { useDispatch, useSelector } from 'react-redux';
+import CollabClient from 'renderer/collabClient/CollabClient';
+import { collabClientInstantiated } from 'renderer/store/collab/actions';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
 
 const CollabGuestJoin = () => {
   const [clientName, setClientName] = useState<string>('Guest');
   const [sessionCode, setSessionCode] = useState<string>('ABCDEF');
 
+  const dispatch = useDispatch();
+
+  const collab = useSelector((store: ApplicationStore) => store.collab);
+
   const joinCollabSession = useCallback(() => {
     // Init the client if it isn't already initialised
-    const collabClient = CollabClientManager.getClient();
+    const hasClient = collab !== null;
+    const collabClient = hasClient ? collab.collabClient : new CollabClient();
+    if (!hasClient) {
+      dispatch(collabClientInstantiated(collabClient));
+    }
 
     collabClient.joinSession(clientName, sessionCode);
-  }, [clientName, sessionCode]);
+  }, [clientName, sessionCode, collab, dispatch]);
 
   return (
     <div>

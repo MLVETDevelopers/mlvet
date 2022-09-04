@@ -47,7 +47,6 @@ export enum ClientMessageType {
 export enum ServerMessageType {
   ACK_INIT_SESSION = 'ack-init-session',
   ACK_JOIN_SESSION = 'ack-join-session',
-  SESSION_ENDED = 'session-ended',
   GUEST_JOINED = 'guest-joined',
   GUEST_LEFT = 'guest-left',
   SERVER_ACTION = 'server-action',
@@ -102,8 +101,6 @@ export interface AckInitSessionPayload {
   clientId: ClientId;
 }
 
-export type AckEndSessionPayload = null;
-
 export interface AckJoinSessionPayload {
   transcription: Transcription;
   undoStack: UndoStack;
@@ -113,10 +110,6 @@ export interface AckJoinSessionPayload {
   sessionCode: SessionCode;
   error: boolean;
 }
-
-export type AckLeaveSessionPayload = null;
-
-export type SessionEndedPayload = null;
 
 export interface GuestJoinedPayload {
   client: Client;
@@ -173,10 +166,7 @@ export type ClientMessage =
 
 export type ServerMessagePayload =
   | AckInitSessionPayload
-  | AckEndSessionPayload
   | AckJoinSessionPayload
-  | AckLeaveSessionPayload
-  | SessionEndedPayload
   | GuestJoinedPayload
   | GuestLeftPayload
   | ServerActionPayload
@@ -190,10 +180,6 @@ export type AckInitSessionMessage = ServerMessageBase<
 export type AckJoinSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_JOIN_SESSION,
   AckJoinSessionPayload | ErrorPayload
->;
-export type SessionEndedMessage = ServerMessageBase<
-  ServerMessageType.SESSION_ENDED,
-  SessionEndedPayload
 >;
 export type GuestJoinedMessage = ServerMessageBase<
   ServerMessageType.GUEST_JOINED,
@@ -217,7 +203,6 @@ export type AckClientActionMessage = ServerMessageBase<
 export type ServerMessage =
   | AckInitSessionMessage
   | AckJoinSessionMessage
-  | SessionEndedMessage
   | GuestJoinedMessage
   | GuestLeftMessage
   | ServerActionMessage

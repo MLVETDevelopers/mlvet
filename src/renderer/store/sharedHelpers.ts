@@ -1,7 +1,11 @@
-import { CollabClientSessionState } from 'renderer/collabClient/types';
+import {
+  CollabClientInitialState,
+  CollabClientSessionState,
+} from 'renderer/collabClient/types';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
+import { OpQueueItem } from './opQueue/helpers';
 import { UndoStack } from './undoStack/helpers';
 
 /**
@@ -23,7 +27,9 @@ export interface ApplicationStore {
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
   // Collab session state
-  collab: CollabClientSessionState | null;
+  collab: CollabClientSessionState | CollabClientInitialState | null;
+  // Op queue session state for pending actions when in a collab session
+  opQueue: OpQueueItem[];
 }
 
 /**
@@ -43,4 +49,5 @@ export const initialStore: ApplicationStore = {
   editWord: null,
   isShowingConfidenceUnderlines: false,
   collab: null,
+  opQueue: [],
 };

@@ -1,6 +1,9 @@
 import { Client, ClientId, SessionCode } from 'collabSharedTypes';
+import ICollabClient from 'renderer/collabClient/ICollabClient';
 import { CollabClientSessionState } from 'renderer/collabClient/types';
 import { Action } from '../action';
+
+export const COLLAB_CLIENT_INSTANTIATED = 'COLLAB_CLIENT_INSTANTIATED';
 
 export const COLLAB_SESSION_STARTED = 'COLLAB_SESSION_STARTED';
 
@@ -11,6 +14,10 @@ export const COLLAB_SESSION_ENDED = 'COLLAB_SESSION_ENDED';
 export const COLLAB_GUEST_JOINED = 'COLLAB_GUEST_JOINED';
 
 export const COLLAB_GUEST_LEFT = 'COLLAB_GUEST_LEFT';
+
+export interface CollabClientInstantiatedPayload {
+  collabClient: ICollabClient;
+}
 
 export type CollabSessionStartedPayload = Pick<
   CollabClientSessionState,
@@ -26,6 +33,15 @@ export interface CollabGuestJoinedPayload {
 export interface CollabGuestLeftPayload {
   clientId: ClientId;
 }
+
+export const collabClientInstantiated: (
+  collabClient: ICollabClient
+) => Action<CollabClientInstantiatedPayload> = (collabClient) => ({
+  type: COLLAB_CLIENT_INSTANTIATED,
+  payload: {
+    collabClient,
+  },
+});
 
 export const collabSessionStarted: (
   sessionCode: SessionCode,

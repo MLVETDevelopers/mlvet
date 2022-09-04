@@ -11,6 +11,7 @@ import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reduce
 import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
+import opQueueReducer from './opQueue/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
+  opQueue: opQueueReducer,
 });
 
 export default rootReducer;

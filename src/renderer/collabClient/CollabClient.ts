@@ -4,39 +4,15 @@ import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import {
+  ActionId,
   ClientMessage,
   ClientMessageType,
-  ServerMessageType,
   SessionCode,
 } from '../../collabSharedTypes';
 import store from '../store/store';
-import disconnectHandler from './handlers/disconnectHandler';
+import { COLLAB_HOST } from './config';
+import registerClientCollabHandlers from './handlerRegistration';
 import ICollabClient from './ICollabClient';
-import serverMessageHandlers from './serverMessageHandlers';
-import { ServerMessageHandlerInner } from './types';
-
-const COLLAB_HOST = 'ws://localhost:5151';
-const LOG_VERBOSE = true;
-
-const wrapHandler: (
-  handler: ServerMessageHandlerInner,
-  serverMessageType: ServerMessageType
-) => ServerMessageHandlerInner = (handler, serverMessageType) => {
-  if (!LOG_VERBOSE) {
-    return handler;
-  }
-
-  return (payload) => {
-    console.log(
-      `Received server message of type ${serverMessageType}
-      with payload ${JSON.stringify(payload).slice(
-        0,
-        100
-      )} (payload may be truncated)`
-    );
-    return handler(payload);
-  };
-};
 
 class CollabClient implements ICollabClient {
   socket: Socket | null;
@@ -108,31 +84,23 @@ class CollabClient implements ICollabClient {
     if (this.socket === null) {
       return;
     }
-
-    Object.keys(serverMessageHandlers).forEach((eventKey) => {
-      const serverMessageType = eventKey as ServerMessageType;
-      const handler = serverMessageHandlers[serverMessageType](this);
-
-      if (this.socket === null) {
-        return;
-      }
-
-      this.socket.on(eventKey, wrapHandler(handler, serverMessageType));
-    });
-
-    this.socket.on('disconnect', disconnectHandler(this));
+    registerClientCollabHandlers(this.socket, this);
   }
 
-  sendOp(op: Op<DoPayload, UndoPayload>): void {
+  sendOp(op: Op<DoPayload, UndoPayload>): ActionId {
+    const actionId: ActionId = uuidv4();
+
     const message: ClientMessage = {
       type: ClientMessageType.CLIENT_ACTION,
       payload: {
-        id: uuidv4(),
+        id: actionId,
         ops: [op],
       },
     };
 
     this.sendMessage(message);
+
+    return actionId;
   }
 
   sendMessage(message: ClientMessage): void {

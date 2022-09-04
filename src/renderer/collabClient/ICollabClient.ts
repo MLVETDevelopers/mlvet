@@ -1,7 +1,6 @@
 import { ActionId, ClientMessage, SessionCode } from 'collabSharedTypes';
 import { Action } from 'renderer/store/action';
-import { Op } from 'renderer/store/undoStack/helpers';
-import { OpPayload } from 'renderer/store/undoStack/opPayloads';
+import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 
 interface ICollabClient {
   sendMessage: (message: ClientMessage) => void;
@@ -13,6 +12,8 @@ interface ICollabClient {
   joinSession: (clientName: string, sessionCode: SessionCode) => void;
 
   sendOp: (op: Op<OpPayload, OpPayload>) => ActionId;
+
+  closeSocket: () => void;
 }
 
 export default ICollabClient;

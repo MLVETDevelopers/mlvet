@@ -1,5 +1,4 @@
-import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
-import { OpPayload } from 'renderer/store/undoStack/opPayloads';
+import { Op, UndoStack, OpPayload } from 'renderer/store/undoStack/helpers';
 import { Transcription } from 'sharedTypes';
 
 /** Shadow types */
@@ -109,6 +108,7 @@ export interface AckJoinSessionPayload {
   mediaFileName: string;
   sessionCode: SessionCode;
   error: boolean;
+  actions: ServerAction[];
 }
 
 export interface GuestJoinedPayload {

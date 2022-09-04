@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Transcription } from 'sharedTypes';
-import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
+import { Op, UndoStack, OpPayload } from 'renderer/store/undoStack/helpers';
 import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
-import { OpPayload } from 'renderer/store/undoStack/opPayloads';
 import {
   AckClientActionMessage,
   ActionId,
@@ -114,6 +113,7 @@ class SessionManager {
     otherClients: Client[];
     transcription: Transcription;
     undoStack: UndoStack;
+    actions: ServerAction[];
   } {
     const session = this.lookup.findSessionByCode(sessionCode);
 
@@ -129,6 +129,7 @@ class SessionManager {
       initialTranscription: transcription,
       clients: otherClients,
       mediaFileName,
+      actions,
     } = session;
 
     // Add the new client to the session
@@ -147,6 +148,7 @@ class SessionManager {
       otherClients,
       transcription,
       undoStack,
+      actions,
     };
   }
 
@@ -217,6 +219,13 @@ class SessionManager {
     if (clientSocket === null) {
       return;
     }
+
+    console.log(
+      `Sending message to client ${clientId}: ${JSON.stringify(message).slice(
+        0,
+        1
+      )} (message may be truncated)`
+    );
 
     this.sendMessageToSocket(clientSocket, message);
   }

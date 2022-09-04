@@ -1,6 +1,11 @@
 import { Action } from '../action';
-import { DoPayload, UndoPayload } from './opPayloads';
-import { Op } from './helpers';
+import {
+  Op,
+  DoPayload,
+  UndoPayload,
+  UndoStackPoppedPayload,
+  UndoStackPushedPayload,
+} from './helpers';
 
 // For declaring the state of the undo stack when joining a collab session
 export const UNDO_STACK_SET = 'UNDO_STACK_SET';
@@ -22,14 +27,14 @@ export const undoStackSet: (
   payload: { ops, index },
 });
 
-export const undoStackPushed: <T extends DoPayload, U extends UndoPayload>(
-  op: Op<T, U>
-) => Action<Op<T, U>> = (undoAction) => ({
+export const undoStackPushed: (
+  op: Op<DoPayload, UndoPayload>
+) => Action<UndoStackPushedPayload> = (undoAction) => ({
   type: UNDO_STACK_PUSHED,
   payload: undoAction,
 });
 
-export const undoStackPopped: () => Action<null> = () => ({
+export const undoStackPopped: () => Action<UndoStackPoppedPayload> = () => ({
   type: UNDO_STACK_POPPED,
   payload: null,
 });

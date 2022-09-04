@@ -1,6 +1,5 @@
 import { Action } from 'renderer/store/action';
-import { Op } from 'renderer/store/undoStack/helpers';
-import { OpPayload } from 'renderer/store/undoStack/opPayloads';
+import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { sleep } from '../../sharedUtils';

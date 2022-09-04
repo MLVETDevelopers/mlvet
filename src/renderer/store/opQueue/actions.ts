@@ -1,7 +1,6 @@
 import { ActionId } from 'collabSharedTypes';
+import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 import { Action } from '../action';
-import { Op } from '../undoStack/helpers';
-import { OpPayload } from '../undoStack/opPayloads';
 import { OpQueueItem } from './helpers';
 
 export const OP_QUEUE_PUSHED = 'OP_QUEUE_PUSHED';

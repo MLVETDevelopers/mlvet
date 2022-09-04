@@ -7,13 +7,12 @@ import {
   UNDO_STACK_SET,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
-import { DoPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
 import {
   CURRENT_PROJECT_CLOSED,
   PROJECT_OPENED,
 } from '../currentProject/actions';
-import { Op } from './helpers';
+import { Op, DoPayload, UndoPayload } from './helpers';
 
 const undoStackReducer: Reducer<ApplicationStore['undoStack'], Action<any>> = (
   undoStack = initialStore.undoStack,

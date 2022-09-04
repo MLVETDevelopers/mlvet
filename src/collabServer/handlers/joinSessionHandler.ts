@@ -18,6 +18,7 @@ const joinSessionHandler: ClientMessageHandler =
         otherClients,
         transcription,
         undoStack,
+        actions,
       } = sessionManager.joinSession({
         clientName,
         sessionCode,
@@ -33,6 +34,7 @@ const joinSessionHandler: ClientMessageHandler =
           sessionCode,
           transcription,
           undoStack,
+          actions,
           error: false,
         },
       };

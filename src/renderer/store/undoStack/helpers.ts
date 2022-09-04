@@ -1,6 +1,17 @@
 import { IndexRange } from 'sharedTypes';
-import { DoPayload, OpPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
+import {
+  CorrectWordPayload,
+  DeleteSelectionPayload,
+  MergeWordsPayload,
+  PasteWordsPayload,
+  SplitWordPayload,
+  UndoCorrectWordPayload,
+  UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
 
 // Selection payloads can be applied to any op do or undo
 export type SelectionPayload = IndexRange | null;
@@ -29,3 +40,26 @@ export interface UndoStack {
   stack: Op<DoPayload, UndoPayload>[];
   index: number; // Used for supporting redo
 }
+
+export type UndoStackPushedPayload = Op<DoPayload, UndoPayload>;
+export type UndoStackPoppedPayload = null;
+
+export type DoPayload =
+  | DeleteSelectionPayload
+  | PasteWordsPayload
+  | CorrectWordPayload
+  | MergeWordsPayload
+  | SplitWordPayload;
+
+export type UndoPayload =
+  | UndoDeleteSelectionPayload
+  | UndoPasteWordsPayload
+  | UndoCorrectWordPayload
+  | UndoMergeWordsPayload
+  | UndoSplitWordPayload;
+
+export type OpPayload =
+  | DoPayload
+  | UndoPayload
+  | UndoStackPushedPayload
+  | UndoStackPoppedPayload;

@@ -1,6 +1,5 @@
-import { undoStackPushed } from './undoStack/actions';
-import { Op } from './undoStack/helpers';
-import { DoPayload, OpPayload, UndoPayload } from './undoStack/opPayloads';
+import { undoStackPopped, undoStackPushed } from './undoStack/actions';
+import { Op, DoPayload, OpPayload, UndoPayload } from './undoStack/helpers';
 import store from './store';
 import { opQueuePushed } from './opQueue/actions';
 
@@ -22,18 +21,25 @@ const dispatchOp: <T extends OpPayload, U extends OpPayload>(
 
     console.log('op', op);
 
-    // Queue the action to be run once it is ack'd by the server
-    dispatch(opQueuePushed(actionId, op));
-  } else {
-    // TODO: eagerly evaluate the following
+    // Queue the action to be run once it is ack'd by the server.
+    // Pushing to the undo stack is now part of the op and we mark the op to skip the stack,
+    // so that it can be undone by the op queue
+    const newOp: Op<OpPayload, OpPayload> = {
+      do: [...op.do, undoStackPushed(op as Op<DoPayload, UndoPayload>)],
+      // TODO: may need a force-pop so the undo is genuine (rather than just moving an index)
+      undo: [...op.undo, undoStackPopped()],
+      skipStack: true,
+    };
+    dispatch(opQueuePushed(actionId, newOp));
+  }
 
-    // Dispatch the actual actions
-    op.do.forEach(dispatch);
+  // Dispatch the actual actions - these are tentatively eager-evaluated if there is a collab session
+  // in progress and may be later undone by the op queue
+  op.do.forEach(dispatch);
 
-    if (!op.skipStack) {
-      // Push the entire op to the undo stack, so that we can support undo and redo of this action
-      dispatch(undoStackPushed(op as Op<DoPayload, UndoPayload>));
-    }
+  if (!op.skipStack) {
+    // Push the entire op to the undo stack, so that we can support undo and redo of this action
+    dispatch(undoStackPushed(op as Op<DoPayload, UndoPayload>));
   }
 };
 

@@ -1,5 +1,4 @@
 import { AckClientActionPayload } from 'collabSharedTypes';
-import dispatchOp from 'renderer/store/dispatchOp';
 import {
   opQueueActionAccepted,
   opQueueActionRejected,
@@ -12,27 +11,26 @@ const ackClientActionHandler: ServerMessageHandler = () => (payload) => {
 
   const { dispatch } = store;
 
+  // Run the actions in the op queue up to the accepted action
+  const { opQueue } = store.getState();
+  console.log('op queue', opQueue);
+
+  const actionIndex = opQueue.findIndex((item) => item.actionId === id);
+
+  if (actionIndex === -1) {
+    return;
+  }
+
   if (isAccepted) {
-    // Run the actions in the op queue up to the accepted action
-    const { opQueue } = store.getState();
-
-    console.log('op queue', opQueue);
-
-    const actionIndex = opQueue.findIndex((item) => item.actionId === id);
-
-    if (actionIndex === -1) {
-      return;
-    }
-
-    // Force-dispatch all ops in the queue
-    opQueue
-      .slice(0, actionIndex + 1)
-      .map((item) => item.op)
-      .forEach((op) => dispatchOp(op, true));
-
     // Wipe the op queue up to the action that was run
     dispatch(opQueueActionAccepted(id));
   } else {
+    // Undo all actions from the action that was rejected onwards
+    opQueue
+      .slice(actionIndex)
+      .map((item) => item.op)
+      .forEach((op) => op.undo.forEach(dispatch));
+
     dispatch(opQueueActionRejected(id));
   }
 };

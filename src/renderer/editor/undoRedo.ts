@@ -1,12 +1,7 @@
 import { opQueuePushed } from 'renderer/store/opQueue/actions';
 import store from 'renderer/store/store';
 import { opRedone, undoStackPopped } from 'renderer/store/undoStack/actions';
-import { Op } from 'renderer/store/undoStack/helpers';
-import {
-  DoPayload,
-  OpPayload,
-  UndoPayload,
-} from 'renderer/store/undoStack/opPayloads';
+import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 
 const { dispatch } = store;
 
@@ -24,13 +19,7 @@ export const performUndo: () => void = () => {
 
   const { collab } = store.getState();
 
-  if (collab === null) {
-    // Dispatch the undo operations
-    lastAction.undo.forEach(dispatch);
-
-    // Let the undo stack know we just did an undo so it can decrement its index
-    dispatch(undoStackPopped());
-  } else {
+  if (collab !== null) {
     // Send the undo action to the collab server
     const client = collab.collabClient;
 
@@ -48,6 +37,12 @@ export const performUndo: () => void = () => {
     // Queue the action to be run once it is ack'd by the server
     dispatch(opQueuePushed(actionId, undoAsOp));
   }
+
+  // Dispatch the undo operations
+  lastAction.undo.forEach(dispatch);
+
+  // Let the undo stack know we just did an undo so it can decrement its index
+  dispatch(undoStackPopped());
 };
 
 export const performRedo: () => void = () => {
@@ -64,28 +59,28 @@ export const performRedo: () => void = () => {
 
   const { collab } = store.getState();
 
-  if (collab === null) {
-    // Dispatch the redo
-    lastAction.do.forEach(dispatch);
-
-    // Let the undo stack know we just did a redo so it can increment its index
-    dispatch(opRedone());
-  } else {
+  if (collab !== null) {
     // Send the undo action to the collab server
     const client = collab.collabClient;
 
     // Wacky meta stuff where our dos are our undos and nothing is real
-    const undoAsOp: Op<OpPayload, OpPayload> = {
+    const redoAsOp: Op<OpPayload, OpPayload> = {
       do: [...lastAction.do, opRedone()],
       undo: [...lastAction.undo, undoStackPopped()],
       skipStack: true,
     };
 
-    const actionId = client.sendOp(undoAsOp);
+    const actionId = client.sendOp(redoAsOp);
 
-    console.log('op', undoAsOp);
+    console.log('op', redoAsOp);
 
     // Queue the action to be run once it is ack'd by the server
-    dispatch(opQueuePushed(actionId, undoAsOp));
+    dispatch(opQueuePushed(actionId, redoAsOp));
   }
+
+  // Dispatch the redo
+  lastAction.do.forEach(dispatch);
+
+  // Let the undo stack know we just did a redo so it can increment its index
+  dispatch(opRedone());
 };

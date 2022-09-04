@@ -8,6 +8,7 @@ import store from 'renderer/store/store';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerMessageHandler } from '../types';
 import { CURRENT_SCHEMA_VERSION } from '../../../constants';
+import serverActionHandler from './serverActionHandler';
 
 const ackJoinSessionHandler: ServerMessageHandler = (client) => (payload) => {
   const {
@@ -18,6 +19,7 @@ const ackJoinSessionHandler: ServerMessageHandler = (client) => (payload) => {
     undoStack,
     sessionCode,
     error,
+    actions,
   } = payload as AckJoinSessionPayload;
   if (error) {
     return;
@@ -57,6 +59,9 @@ const ackJoinSessionHandler: ServerMessageHandler = (client) => (payload) => {
   dispatch(collabSessionJoined(sessionCode, allClients, clientId));
 
   dispatch(undoStackSet(undoStack.stack, undoStack.index));
+
+  // Get the client up to date on all actions performed so far
+  serverActionHandler(client)({ actions });
 };
 
 export default ackJoinSessionHandler;

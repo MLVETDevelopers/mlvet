@@ -1,4 +1,4 @@
-import { ClientId } from 'collabTypes/collabSharedTypes';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import {
   CollabClientInitialState,
   CollabClientSessionState,

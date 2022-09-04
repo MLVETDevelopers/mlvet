@@ -20,6 +20,8 @@ const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
     const client = collab.collabClient;
     const actionId = client.sendOp(op);
 
+    console.log('op', op);
+
     // Queue the action to be run once it is ack'd by the server
     dispatch(opQueuePushed(actionId, op));
   } else {

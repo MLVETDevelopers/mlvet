@@ -123,3 +123,6 @@ export const isInInactiveTake: (
 
   return true;
 };
+
+export const sleep: (seconds: number) => Promise<void> = (seconds) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));

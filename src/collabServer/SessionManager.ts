@@ -18,6 +18,8 @@ import {
 } from '../collabSharedTypes';
 import { CollabServerSessionState, SocketId } from './types';
 import SessionLookupHelper from './SessionLookupHelper';
+import { sleep } from '../sharedUtils';
+import { SERVER_TO_CLIENT_DELAY_SIMULATED } from './config';
 
 class SessionManager {
   sessions: Record<SessionId, CollabServerSessionState>;
@@ -164,6 +166,11 @@ class SessionManager {
   }
 
   endSession(sessionId: SessionId): void {
+    // Close all sockets that are part of the session
+    Object.values(this.sessions[sessionId].sockets).forEach((socket) =>
+      socket.disconnect()
+    );
+
     // Wipe the session data from memory
     delete this.sessions[sessionId];
   }
@@ -193,10 +200,13 @@ class SessionManager {
     session.clients.splice(clientIndex, 1);
   }
 
-  sendMessageToSocket: (socket: Socket, message: ServerMessage) => void = (
-    socket,
-    message
-  ) => {
+  sendMessageToSocket: (
+    socket: Socket,
+    message: ServerMessage
+  ) => Promise<void> = async (socket, message) => {
+    // Simulate sleep if enabled
+    await sleep(SERVER_TO_CLIENT_DELAY_SIMULATED);
+
     // Send the specified message
     socket.emit(message.type, message.payload);
   };

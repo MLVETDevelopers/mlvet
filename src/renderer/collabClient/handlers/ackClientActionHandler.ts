@@ -16,7 +16,13 @@ const ackClientActionHandler: ServerMessageHandler = () => (payload) => {
     // Run the actions in the op queue up to the accepted action
     const { opQueue } = store.getState();
 
+    console.log('op queue', opQueue);
+
     const actionIndex = opQueue.findIndex((item) => item.actionId === id);
+
+    if (actionIndex === -1) {
+      return;
+    }
 
     // Force-dispatch all ops in the queue
     opQueue

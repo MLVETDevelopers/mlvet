@@ -38,7 +38,7 @@ export const opQueuePushed: (
 export const opQueueActionAccepted: (
   actionId: ActionId
 ) => Action<OpQueueActionAcceptedPayload> = (actionId) => ({
-  type: OP_QUEUE_PUSHED,
+  type: OP_QUEUE_ACTION_ACCEPTED,
   payload: {
     actionId,
   },
@@ -47,7 +47,7 @@ export const opQueueActionAccepted: (
 export const opQueueActionRejected: (
   actionId: ActionId
 ) => Action<OpQueueActionRejectedPayload> = (actionId) => ({
-  type: OP_QUEUE_PUSHED,
+  type: OP_QUEUE_ACTION_REJECTED,
   payload: {
     actionId,
   },

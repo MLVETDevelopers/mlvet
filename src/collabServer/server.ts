@@ -12,8 +12,7 @@ import ackServerActionHandler from './handlers/ackServerActionHandler';
 import clientActionHandler from './handlers/clientActionHandler';
 import SessionManager from './SessionManager';
 import disconnectHandler from './handlers/disconnectHandler';
-
-const LOG_VERBOSE = true;
+import { COLLAB_SERVER_PORT, LOG_VERBOSE } from './config';
 
 const app = http.createServer();
 
@@ -61,15 +60,13 @@ const addHandlersForSocket: (socket: Socket) => void = (socket) => {
   socket.on('disconnect', disconnectHandler(sessionManager)(socket));
 };
 
-const PORT = 5151;
-
 io.on('connection', addHandlersForSocket);
 
-io.listen(PORT, {
+io.listen(COLLAB_SERVER_PORT, {
   cors: {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   },
 });
 
-console.log(`Listening on port ${PORT}`);
+console.log(`Listening on port ${COLLAB_SERVER_PORT}`);

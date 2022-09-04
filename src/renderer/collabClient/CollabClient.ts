@@ -3,6 +3,7 @@ import { Op } from 'renderer/store/undoStack/helpers';
 import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import { sleep } from '../../sharedUtils';
 import {
   ActionId,
   ClientMessage,
@@ -10,7 +11,7 @@ import {
   SessionCode,
 } from '../../collabSharedTypes';
 import store from '../store/store';
-import { COLLAB_HOST } from './config';
+import { CLIENT_TO_SERVER_DELAY_SIMULATED, COLLAB_HOST } from './config';
 import registerClientCollabHandlers from './handlerRegistration';
 import ICollabClient from './ICollabClient';
 
@@ -103,10 +104,13 @@ class CollabClient implements ICollabClient {
     return actionId;
   }
 
-  sendMessage(message: ClientMessage): void {
+  async sendMessage(message: ClientMessage): Promise<void> {
     if (this.socket === null) {
       return;
     }
+
+    // Simulate sleep if enabled
+    await sleep(CLIENT_TO_SERVER_DELAY_SIMULATED);
 
     // Send the specified message
     this.socket.emit(message.type, message.payload);

@@ -1,7 +1,7 @@
 import { ActionId } from 'collabSharedTypes';
 import { Action } from '../action';
 import { Op } from '../undoStack/helpers';
-import { DoPayload, UndoPayload } from '../undoStack/opPayloads';
+import { OpPayload } from '../undoStack/opPayloads';
 import { OpQueueItem } from './helpers';
 
 export const OP_QUEUE_PUSHED = 'OP_QUEUE_PUSHED';
@@ -24,7 +24,7 @@ export interface OpQueueActionRejectedPayload {
 
 export const opQueuePushed: (
   actionId: ActionId,
-  op: Op<DoPayload, UndoPayload>
+  op: Op<OpPayload, OpPayload>
 ) => Action<OpQueuePushedPayload> = (actionId, op) => ({
   type: OP_QUEUE_PUSHED,
   payload: {

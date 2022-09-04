@@ -1,6 +1,6 @@
 import { undoStackPushed } from './undoStack/actions';
 import { Op } from './undoStack/helpers';
-import { DoPayload, UndoPayload } from './undoStack/opPayloads';
+import { DoPayload, OpPayload, UndoPayload } from './undoStack/opPayloads';
 import store from './store';
 import { opQueuePushed } from './opQueue/actions';
 
@@ -9,7 +9,7 @@ const { dispatch } = store;
 /**
  * Dispatches an op, running its 'do' action and giving the undo stack a reference to the op.
  */
-const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
+const dispatchOp: <T extends OpPayload, U extends OpPayload>(
   op: Op<T, U>,
   forceDispatch?: boolean
 ) => void = (op, forceDispatch = false) => {
@@ -30,8 +30,10 @@ const dispatchOp: <T extends DoPayload, U extends UndoPayload>(
     // Dispatch the actual actions
     op.do.forEach(dispatch);
 
-    // Push the entire op to the undo stack, so that we can support undo and redo of this action
-    dispatch(undoStackPushed(op));
+    if (!op.skipStack) {
+      // Push the entire op to the undo stack, so that we can support undo and redo of this action
+      dispatch(undoStackPushed(op as Op<DoPayload, UndoPayload>));
+    }
   }
 };
 

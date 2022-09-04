@@ -3,7 +3,7 @@ import { Transcription } from 'sharedTypes';
 import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
 import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
-import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
+import { OpPayload } from 'renderer/store/undoStack/opPayloads';
 import {
   AckClientActionMessage,
   ActionId,
@@ -254,7 +254,7 @@ class SessionManager {
   acceptClientAction(
     clientId: ClientId,
     actionId: ActionId,
-    ops: Op<DoPayload, UndoPayload>[],
+    ops: Op<OpPayload, OpPayload>[],
     sessionId: SessionId
   ): void {
     const session = this.sessions[sessionId];
@@ -293,7 +293,7 @@ class SessionManager {
 
   handleClientAction(
     actionId: ActionId,
-    ops: Op<DoPayload, UndoPayload>[],
+    ops: Op<OpPayload, OpPayload>[],
     clientId: ClientId,
     sessionId: SessionId
   ): void {

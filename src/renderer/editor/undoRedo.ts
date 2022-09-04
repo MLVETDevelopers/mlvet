@@ -1,5 +1,12 @@
+import { opQueuePushed } from 'renderer/store/opQueue/actions';
 import store from 'renderer/store/store';
 import { opRedone, undoStackPopped } from 'renderer/store/undoStack/actions';
+import { Op } from 'renderer/store/undoStack/helpers';
+import {
+  DoPayload,
+  OpPayload,
+  UndoPayload,
+} from 'renderer/store/undoStack/opPayloads';
 
 const { dispatch } = store;
 
@@ -15,11 +22,32 @@ export const performUndo: () => void = () => {
   // We want to undo the nth thing, so get stack[n-1]
   const lastAction = stack[index - 1];
 
-  // Dispatch the undo operations
-  lastAction.undo.forEach(dispatch);
+  const { collab } = store.getState();
 
-  // Let the undo stack know we just did an undo so it can decrement its index
-  dispatch(undoStackPopped());
+  if (collab === null) {
+    // Dispatch the undo operations
+    lastAction.undo.forEach(dispatch);
+
+    // Let the undo stack know we just did an undo so it can decrement its index
+    dispatch(undoStackPopped());
+  } else {
+    // Send the undo action to the collab server
+    const client = collab.collabClient;
+
+    // Wacky meta stuff where our dos are our undos and nothing is real
+    const undoAsOp: Op<OpPayload, OpPayload> = {
+      do: [...lastAction.undo, undoStackPopped()],
+      undo: [...lastAction.do, opRedone()],
+      skipStack: true,
+    };
+
+    const actionId = client.sendOp(undoAsOp);
+
+    console.log('op', undoAsOp);
+
+    // Queue the action to be run once it is ack'd by the server
+    dispatch(opQueuePushed(actionId, undoAsOp));
+  }
 };
 
 export const performRedo: () => void = () => {
@@ -34,9 +62,30 @@ export const performRedo: () => void = () => {
   // We want to redo the (n+1)th thing, so get stack[n]
   const lastAction = stack[index];
 
-  // Dispatch the redo
-  lastAction.do.forEach(dispatch);
+  const { collab } = store.getState();
 
-  // Let the undo stack know we just did a redo so it can increment its index
-  dispatch(opRedone());
+  if (collab === null) {
+    // Dispatch the redo
+    lastAction.do.forEach(dispatch);
+
+    // Let the undo stack know we just did a redo so it can increment its index
+    dispatch(opRedone());
+  } else {
+    // Send the undo action to the collab server
+    const client = collab.collabClient;
+
+    // Wacky meta stuff where our dos are our undos and nothing is real
+    const undoAsOp: Op<OpPayload, OpPayload> = {
+      do: [...lastAction.do, opRedone()],
+      undo: [...lastAction.undo, undoStackPopped()],
+      skipStack: true,
+    };
+
+    const actionId = client.sendOp(undoAsOp);
+
+    console.log('op', undoAsOp);
+
+    // Queue the action to be run once it is ack'd by the server
+    dispatch(opQueuePushed(actionId, undoAsOp));
+  }
 };

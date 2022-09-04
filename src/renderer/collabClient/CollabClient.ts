@@ -1,6 +1,6 @@
 import { Action } from 'renderer/store/action';
 import { Op } from 'renderer/store/undoStack/helpers';
-import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
+import { OpPayload } from 'renderer/store/undoStack/opPayloads';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { sleep } from '../../sharedUtils';
@@ -88,7 +88,7 @@ class CollabClient implements ICollabClient {
     registerClientCollabHandlers(this.socket, this);
   }
 
-  sendOp(op: Op<DoPayload, UndoPayload>): ActionId {
+  sendOp(op: Op<OpPayload, OpPayload>): ActionId {
     const actionId: ActionId = uuidv4();
 
     const message: ClientMessage = {

@@ -24,3 +24,5 @@ export type UndoPayload =
   | UndoCorrectWordPayload
   | UndoMergeWordsPayload
   | UndoSplitWordPayload;
+
+export type OpPayload = DoPayload | UndoPayload;

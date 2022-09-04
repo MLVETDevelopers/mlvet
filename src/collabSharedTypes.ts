@@ -1,5 +1,5 @@
 import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
-import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
+import { OpPayload } from 'renderer/store/undoStack/opPayloads';
 import { Transcription } from 'sharedTypes';
 
 /** Shadow types */
@@ -29,7 +29,7 @@ export interface ErrorPayload {
 /** Server actions */
 
 export interface ServerAction {
-  ops: Op<DoPayload, UndoPayload>[];
+  ops: Op<OpPayload, OpPayload>[];
   clientId: ClientId;
   index: number;
   id: ActionId;
@@ -91,7 +91,7 @@ export interface AckServerActionPayload {
 
 export interface ClientActionPayload {
   id: ActionId; // UUID
-  ops: Op<DoPayload, UndoPayload>[];
+  ops: Op<OpPayload, OpPayload>[];
 }
 
 /** Server message payloads */

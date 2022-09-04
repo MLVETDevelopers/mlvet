@@ -2,9 +2,9 @@
 
 import { ActionId } from 'collabSharedTypes';
 import { Op } from '../undoStack/helpers';
-import { DoPayload, UndoPayload } from '../undoStack/opPayloads';
+import { OpPayload } from '../undoStack/opPayloads';
 
 export interface OpQueueItem {
   actionId: ActionId;
-  op: Op<DoPayload, UndoPayload>;
+  op: Op<OpPayload, OpPayload>;
 }

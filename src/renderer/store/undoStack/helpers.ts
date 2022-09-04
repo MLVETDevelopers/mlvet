@@ -1,5 +1,5 @@
 import { IndexRange } from 'sharedTypes';
-import { DoPayload, UndoPayload } from './opPayloads';
+import { DoPayload, OpPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
 
 // Selection payloads can be applied to any op do or undo
@@ -11,9 +11,10 @@ export type SelectionPayload = IndexRange | null;
  * The list of 'do' actions is represented in the order the actions are done.
  * The list of 'undo' actions is represented in the order the actions are undone.
  */
-export interface Op<T extends DoPayload, U extends UndoPayload> {
+export interface Op<T extends OpPayload, U extends OpPayload> {
   do: Action<T | SelectionPayload>[];
   undo: Action<U | SelectionPayload>[];
+  skipStack?: boolean; // bolt on for collab, so that we can represent undos themselves as ops (wow meta)
 }
 
 /**

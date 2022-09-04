@@ -144,19 +144,19 @@ export type ClientMessagePayload =
   | ClientActionPayload
   | DisconnectReason;
 
-type InitSessionMessage = ClientMessageBase<
+export type InitSessionMessage = ClientMessageBase<
   ClientMessageType.INIT_SESSION,
   InitSessionPayload
 >;
-type JoinSessionMessage = ClientMessageBase<
+export type JoinSessionMessage = ClientMessageBase<
   ClientMessageType.JOIN_SESSION,
   JoinSessionPayload
 >;
-type AckServerActionMessage = ClientMessageBase<
+export type AckServerActionMessage = ClientMessageBase<
   ClientMessageType.ACK_SERVER_ACTION,
   AckServerActionPayload
 >;
-type ClientActionMessage = ClientMessageBase<
+export type ClientActionMessage = ClientMessageBase<
   ClientMessageType.CLIENT_ACTION,
   ClientActionPayload
 >;

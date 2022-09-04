@@ -1,8 +1,11 @@
 import MockedSocket from 'socket.io-mock';
-import { ClientId, SessionCode } from 'collabSharedTypes';
+import { ClientId, ServerMessageType, SessionCode } from 'collabSharedTypes';
 import { Socket } from 'socket.io-client';
 import { Transcription } from 'sharedTypes';
 import { UndoStack } from 'renderer/store/undoStack/helpers';
+import { CollabServerSessionState } from 'collabServer/types';
+import { rangeLengthOne } from 'renderer/utils/range';
+import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import SessionManager from '../SessionManager';
 
 const initFakeSession: (sessionManager: SessionManager) => {
@@ -13,10 +16,10 @@ const initFakeSession: (sessionManager: SessionManager) => {
   transcription: Transcription;
   undoStack: UndoStack;
   mediaFileName: string;
-  socketSpy: jest.SpyInstance;
+  hostSocketSpy: jest.SpyInstance;
 } = (sessionManager) => {
-  const mockedSocket = new MockedSocket();
-  const socketSpy = jest.spyOn(mockedSocket, 'emit');
+  const hostSocket = new MockedSocket();
+  const hostSocketSpy = jest.spyOn(hostSocket, 'emit');
 
   const clientName = 'Test client';
   const transcription = {
@@ -34,7 +37,7 @@ const initFakeSession: (sessionManager: SessionManager) => {
   const { hostId, sessionCode } = sessionManager.initSession({
     clientName,
     mediaFileName,
-    socket: mockedSocket,
+    socket: hostSocket,
     transcription,
     undoStack,
   });
@@ -42,12 +45,47 @@ const initFakeSession: (sessionManager: SessionManager) => {
   return {
     hostId,
     sessionCode,
-    mockedSocket,
+    mockedSocket: hostSocket,
+    hostSocketSpy,
     clientName,
     transcription,
     undoStack,
     mediaFileName,
-    socketSpy,
+  };
+};
+
+const initFakeSessionWithGuest: () => {
+  session: CollabServerSessionState;
+  sessionManager: SessionManager;
+  hostId: ClientId;
+  hostSocketSpy: jest.SpyInstance;
+  guestId: ClientId;
+  guestSocketSpy: jest.SpyInstance;
+} = () => {
+  const sessionManager = new SessionManager();
+
+  const { sessionCode, hostId, hostSocketSpy } =
+    initFakeSession(sessionManager);
+
+  const guestClientName = 'Guest';
+  const guestSocket = new MockedSocket();
+  const guestSocketSpy = jest.spyOn(guestSocket, 'emit');
+
+  const { clientId: guestId } = sessionManager.joinSession({
+    clientName: guestClientName,
+    sessionCode,
+    socket: guestSocket,
+  });
+
+  const session = sessionManager.lookup.findSessionByCode(sessionCode);
+
+  return {
+    session: session as CollabServerSessionState,
+    sessionManager,
+    guestId,
+    guestSocketSpy,
+    hostId,
+    hostSocketSpy,
   };
 };
 
@@ -196,4 +234,119 @@ describe('SessionManager', () => {
       mediaFileName,
     });
   });
+
+  it('should handle a client action being accepted', () => {
+    const { session, sessionManager, guestId, guestSocketSpy } =
+      initFakeSessionWithGuest();
+
+    expect(guestSocketSpy).toBeCalledTimes(0);
+
+    const actionId = 'abc';
+    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+
+    sessionManager.handleClientAction(actionId, ops, guestId, session.id);
+
+    expect(guestSocketSpy).toBeCalledTimes(1);
+    expect(guestSocketSpy).toBeCalledWith(ServerMessageType.ACK_CLIENT_ACTION, {
+      id: actionId,
+      isAccepted: true,
+    });
+  });
+
+  it('should inform other clients after an action is accepted', () => {
+    const { session, sessionManager, guestId, hostSocketSpy } =
+      initFakeSessionWithGuest();
+
+    expect(hostSocketSpy).toBeCalledTimes(0);
+
+    const actionId = 'abc';
+    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+
+    sessionManager.handleClientAction(actionId, ops, guestId, session.id);
+
+    expect(hostSocketSpy).toBeCalledTimes(1);
+    expect(hostSocketSpy).toBeCalledWith(ServerMessageType.SERVER_ACTION, {
+      actions: [
+        {
+          clientId: guestId,
+          id: actionId,
+          index: 0,
+          ops,
+        },
+      ],
+    });
+  });
+
+  it('should handle a client action being rejected due to client being out of date', () => {
+    const { session, sessionManager, guestId, guestSocketSpy } =
+      initFakeSessionWithGuest();
+
+    // Push an action to the actions list that the client doesn't know about
+    session.actions.push({
+      clientId: 'def',
+      id: 'ghi',
+      index: 0,
+      ops: [],
+    });
+
+    const actionId = 'abc';
+    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+
+    expect(guestSocketSpy).toBeCalledTimes(0);
+
+    sessionManager.handleClientAction(actionId, ops, guestId, session.id);
+
+    expect(guestSocketSpy).toBeCalledTimes(1);
+    expect(guestSocketSpy).toBeCalledWith(ServerMessageType.ACK_CLIENT_ACTION, {
+      id: actionId,
+      isAccepted: false,
+    });
+  });
+
+  it('should handle two client actions arriving sequentially with no acks between', () => {
+    const { session, sessionManager, guestId, hostId, hostSocketSpy } =
+      initFakeSessionWithGuest();
+
+    expect(hostSocketSpy).toBeCalledTimes(0);
+
+    const firstActionId = 'abc';
+    const secondActionId = 'def';
+    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+
+    // Guest pushes an action, it gets accepted
+    sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);
+
+    // Host pushes an action, it gets rejected as the host doesn't know about the guest's latest action
+    sessionManager.handleClientAction(secondActionId, ops, hostId, session.id);
+
+    expect(hostSocketSpy).toBeCalledTimes(2);
+
+    // First call should be notification of the guest's action
+    expect(hostSocketSpy.mock.calls[0][0]).toEqual(
+      ServerMessageType.SERVER_ACTION
+    );
+    expect(hostSocketSpy.mock.calls[0][1]).toEqual({
+      actions: [
+        {
+          clientId: guestId,
+          id: firstActionId,
+          index: 0,
+          ops,
+        },
+      ],
+    });
+
+    // Second call should be rejection of the host's action
+    expect(hostSocketSpy.mock.calls[1][0]).toEqual(
+      ServerMessageType.ACK_CLIENT_ACTION
+    );
+    expect(hostSocketSpy.mock.calls[1][1]).toEqual({
+      id: secondActionId,
+      isAccepted: false,
+    });
+  });
+
+  it('should handle two client actions arriving sequentially with an ack between', () => {});
+
+  it('should handle two sessions being managed at once', () => {});
 });

@@ -25,6 +25,6 @@ export const makeDeleteSelection: (
   undo: [
     undoSelectionDeleted(ranges),
     selectionCleared(),
-    ...ranges.map(selectionRangeAdded),
+    ...ranges.map((range) => selectionRangeAdded(range)),
   ],
 });

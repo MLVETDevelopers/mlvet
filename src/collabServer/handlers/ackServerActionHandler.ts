@@ -1,4 +1,4 @@
-import { AckServerActionPayload } from 'collabSharedTypes';
+import { AckServerActionPayload } from 'collabTypes/collabSharedTypes';
 import { ClientMessageHandler } from '../clientMessageHandler';
 
 const ackServerActionHandler: ClientMessageHandler =

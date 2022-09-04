@@ -1,4 +1,4 @@
-import { AckInitSessionPayload, Client } from 'collabSharedTypes';
+import { AckInitSessionPayload, Client } from 'collabTypes/collabSharedTypes';
 import { collabSessionStarted } from 'renderer/store/collab/actions';
 import { ServerMessageHandler } from '../types';
 

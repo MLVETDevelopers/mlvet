@@ -69,7 +69,7 @@ const TranscriptionBlock = ({
   }, [transcription]);
 
   const selectionArray = useSelector(
-    (store: ApplicationStore) => store.selection
+    (store: ApplicationStore) => store.selection.self
   );
 
   const selectionSet = useMemo(

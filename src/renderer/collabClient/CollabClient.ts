@@ -2,13 +2,12 @@ import { Action } from 'renderer/store/action';
 import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import { ActionId, SessionCode } from 'collabTypes/collabShadowTypes';
 import { sleep } from '../../sharedUtils';
 import {
-  ActionId,
   ClientMessage,
   ClientMessageType,
-  SessionCode,
-} from '../../collabSharedTypes';
+} from '../../collabTypes/collabSharedTypes';
 import store from '../store/store';
 import { CLIENT_TO_SERVER_DELAY_SIMULATED, COLLAB_HOST } from './config';
 import registerClientCollabHandlers from './handlerRegistration';

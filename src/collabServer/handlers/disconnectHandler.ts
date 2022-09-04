@@ -5,7 +5,7 @@ import {
   GuestLeftMessage,
   ServerMessageType,
   SessionId,
-} from '../../collabSharedTypes';
+} from '../../collabTypes/collabSharedTypes';
 import SessionManager from '../SessionManager';
 
 const endSession: (

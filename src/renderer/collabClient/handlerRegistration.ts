@@ -1,4 +1,4 @@
-import { ServerMessageType } from 'collabSharedTypes';
+import { ServerMessageType } from 'collabTypes/collabSharedTypes';
 import { Socket } from 'socket.io-client';
 import ICollabClient from './ICollabClient';
 import serverMessageHandlers from './serverMessageHandlers';

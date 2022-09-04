@@ -3,7 +3,7 @@ import {
   ClientId,
   ServerMessagePayload,
   SessionCode,
-} from '../../collabSharedTypes';
+} from '../../collabTypes/collabSharedTypes';
 import ICollabClient from './ICollabClient';
 
 export type ServerMessageHandlerInner = (payload: ServerMessagePayload) => void;

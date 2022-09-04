@@ -1,5 +1,11 @@
-import { IndexRange } from 'sharedTypes';
 import { Action } from '../action';
+import {
+  SelectionClearedPayload,
+  SelectionRangeAddedPayload,
+  SelectionRangeRemovedPayload,
+  SelectionRangeSetToPayload,
+  SelectionRangeToggledPayload,
+} from '../selection/actions';
 import {
   CorrectWordPayload,
   DeleteSelectionPayload,
@@ -14,7 +20,12 @@ import {
 } from '../transcriptionWords/opPayloads';
 
 // Selection payloads can be applied to any op do or undo
-export type SelectionPayload = IndexRange | null;
+export type SelectionPayload =
+  | SelectionRangeAddedPayload
+  | SelectionRangeRemovedPayload
+  | SelectionRangeToggledPayload
+  | SelectionRangeSetToPayload
+  | SelectionClearedPayload;
 
 /**
  * An Op is a representation of an action that can be both done and undone.

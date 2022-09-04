@@ -1,4 +1,4 @@
-import { AckClientActionPayload } from 'collabSharedTypes';
+import { AckClientActionPayload } from 'collabTypes/collabSharedTypes';
 import {
   opQueueActionAccepted,
   opQueueActionRejected,

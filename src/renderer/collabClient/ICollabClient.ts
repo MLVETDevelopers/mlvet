@@ -1,4 +1,5 @@
-import { ActionId, ClientMessage, SessionCode } from 'collabSharedTypes';
+import { ActionId, SessionCode } from 'collabTypes/collabShadowTypes';
+import { ClientMessage } from 'collabTypes/collabSharedTypes';
 import { Action } from 'renderer/store/action';
 import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 

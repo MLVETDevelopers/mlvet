@@ -1,3 +1,3 @@
 /* eslint-disable import/prefer-default-export */
 
-export const COLLAB_ENABLED = false;
+export const COLLAB_ENABLED = true;

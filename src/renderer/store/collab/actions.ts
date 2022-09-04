@@ -1,4 +1,4 @@
-import { Client, ClientId, SessionCode } from 'collabSharedTypes';
+import { Client, ClientId, SessionCode } from 'collabTypes/collabSharedTypes';
 import ICollabClient from 'renderer/collabClient/ICollabClient';
 import { CollabClientSessionState } from 'renderer/collabClient/types';
 import { Action } from '../action';

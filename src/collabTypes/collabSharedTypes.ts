@@ -1,17 +1,11 @@
+import {
+  ActionId,
+  ClientId,
+  DisconnectReason,
+  SessionCode,
+} from 'collabTypes/collabShadowTypes';
 import { Op, UndoStack, OpPayload } from 'renderer/store/undoStack/helpers';
 import { Transcription } from 'sharedTypes';
-
-/** Shadow types */
-
-export type ActionId = string; // UUID
-
-export type ClientId = string; // UUID
-
-export type SessionId = string; // UUID
-
-export type SessionCode = string; // six digit code
-
-export type DisconnectReason = string;
 
 /** Misc */
 

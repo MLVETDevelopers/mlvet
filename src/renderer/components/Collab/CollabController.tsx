@@ -28,7 +28,7 @@ const CollabController = () => {
           onChange={(e) => setClientName(e.target.value)}
           placeholder="Your name"
         />
-        <Button onClick={startCollabSession}>Start Collab Session</Button>;
+        <Button onClick={startCollabSession}>Start Collab Session</Button>
       </div>
     );
   }

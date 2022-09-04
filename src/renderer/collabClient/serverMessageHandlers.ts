@@ -1,4 +1,4 @@
-import { ServerMessageType } from 'collabSharedTypes';
+import { ServerMessageType } from 'collabTypes/collabSharedTypes';
 import ackClientActionHandler from './handlers/ackClientActionHandler';
 import ackInitSessionHandler from './handlers/ackInitSessionHandler';
 import ackJoinSessionHandler from './handlers/ackJoinSessionHandler';

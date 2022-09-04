@@ -7,7 +7,7 @@ import {
   ServerAction,
   SessionCode,
   SessionId,
-} from '../collabSharedTypes';
+} from '../collabTypes/collabSharedTypes';
 
 export type SocketId = string;
 

@@ -3,7 +3,7 @@ import {
   AckInitSessionMessage,
   InitSessionPayload,
   ServerMessageType,
-} from '../../collabSharedTypes';
+} from '../../collabTypes/collabSharedTypes';
 
 const initSessionHandler: ClientMessageHandler =
   (sessionManager) => (socket) => (payload) => {

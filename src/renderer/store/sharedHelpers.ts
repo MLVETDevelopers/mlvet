@@ -1,3 +1,4 @@
+import { ClientId } from 'collabTypes/collabSharedTypes';
 import {
   CollabClientInitialState,
   CollabClientSessionState,
@@ -7,6 +8,13 @@ import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { UndoStack } from './undoStack/helpers';
+
+export type SelectionIndices = number[];
+
+export interface SelectionState {
+  self: SelectionIndices;
+  others: Record<ClientId, SelectionIndices>;
+}
 
 /**
  * The schema for the root-level application / redux store, containing the global app state.
@@ -19,7 +27,7 @@ export interface ApplicationStore {
   exportIo: ExportIo;
   clipboard: Word[];
   // Array of numbers corresponding to indices of words within the transcription
-  selection: number[];
+  selection: SelectionState;
   shortcutsOpened: boolean;
   isUpdateTranscriptionAPIKeyOpened: boolean;
   // Index of word currently being edited, otherwise null
@@ -43,7 +51,10 @@ export const initialStore: ApplicationStore = {
   undoStack: { stack: [], index: 0 },
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
-  selection: [],
+  selection: {
+    self: [],
+    others: {},
+  },
   shortcutsOpened: false,
   isUpdateTranscriptionAPIKeyOpened: false,
   editWord: null,

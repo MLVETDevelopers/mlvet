@@ -1,11 +1,12 @@
 import MockedSocket from 'socket.io-mock';
-import { ClientId, ServerMessageType, SessionCode } from 'collabSharedTypes';
+import { ServerMessageType } from 'collabTypes/collabSharedTypes';
 import { Socket } from 'socket.io-client';
 import { Transcription } from 'sharedTypes';
 import { UndoStack } from 'renderer/store/undoStack/helpers';
 import { CollabServerSessionState } from 'collabServer/types';
 import { rangeLengthOne } from 'renderer/utils/range';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { ClientId, SessionCode } from 'collabTypes/collabShadowTypes';
 import SessionManager from '../SessionManager';
 
 const initFakeSession: (sessionManager: SessionManager) => {

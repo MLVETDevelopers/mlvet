@@ -5,16 +5,18 @@ import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
 import {
   AckClientActionMessage,
-  ActionId,
   Client,
-  ClientId,
   ServerAction,
   ServerActionMessage,
   ServerMessage,
   ServerMessageType,
+} from '../collabTypes/collabSharedTypes';
+import {
+  ActionId,
+  ClientId,
   SessionCode,
   SessionId,
-} from '../collabSharedTypes';
+} from '../collabTypes/collabShadowTypes';
 import { CollabServerSessionState, SocketId } from './types';
 import SessionLookupHelper from './SessionLookupHelper';
 import { sleep } from '../sharedUtils';

@@ -1,4 +1,4 @@
-import { ActionId } from 'collabSharedTypes';
+import { ActionId } from 'collabTypes/collabShadowTypes';
 import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 import { Action } from '../action';
 import { OpQueueItem } from './helpers';

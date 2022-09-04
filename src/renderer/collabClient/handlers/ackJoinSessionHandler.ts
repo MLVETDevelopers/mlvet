@@ -1,4 +1,4 @@
-import { AckJoinSessionPayload } from 'collabSharedTypes';
+import { AckJoinSessionPayload } from 'collabTypes/collabSharedTypes';
 import { collabSessionJoined } from 'renderer/store/collab/actions';
 import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';

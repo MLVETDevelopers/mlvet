@@ -115,10 +115,10 @@ export default function StoreChangeObserver() {
 
   // Update clipboard options in edit menu when clipboard or selection is changed
   useEffect(() => {
-    const cutCopyDeleteEnabled = selection.length > 0;
+    const cutCopyDeleteEnabled = selection.self.length > 0;
 
     // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled = selection.length > 0 && clipboard.length > 0;
+    const pasteEnabled = selection.self.length > 0 && clipboard.length > 0;
 
     ipc.setClipboardEnabled(
       cutCopyDeleteEnabled,
@@ -137,7 +137,7 @@ export default function StoreChangeObserver() {
 
     const { merge, split } = isMergeSplitAllowed(
       words,
-      indicesToRanges(selection)
+      indicesToRanges(selection.self)
     );
 
     ipc.setMergeSplitEnabled(merge, split);

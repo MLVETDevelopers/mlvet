@@ -1,4 +1,4 @@
-import { GuestLeftPayload } from 'collabSharedTypes';
+import { GuestLeftPayload } from 'collabTypes/collabSharedTypes';
 import { collabGuestLeft } from 'renderer/store/collab/actions';
 import store from 'renderer/store/store';
 import { ServerMessageHandler } from '../types';

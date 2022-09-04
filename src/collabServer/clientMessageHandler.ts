@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io';
-import { ClientMessagePayload } from '../collabSharedTypes';
+import { ClientMessagePayload } from '../collabTypes/collabSharedTypes';
 import SessionManager from './SessionManager';
 
 export type ClientMessageHandlerPayload = (

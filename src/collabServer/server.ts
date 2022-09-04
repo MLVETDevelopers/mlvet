@@ -5,7 +5,7 @@ import {
   ClientMessageHandlerInner,
   ClientMessageHandlerPayload,
 } from './clientMessageHandler';
-import { ClientMessageType } from '../collabSharedTypes';
+import { ClientMessageType } from '../collabTypes/collabSharedTypes';
 import initSessionHandler from './handlers/initSessionHandler';
 import joinSessionHandler from './handlers/joinSessionHandler';
 import ackServerActionHandler from './handlers/ackServerActionHandler';

@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { ActionId } from 'collabSharedTypes';
+import { ActionId } from 'collabTypes/collabShadowTypes';
 import { Op, OpPayload } from 'renderer/store/undoStack/helpers';
 
 export interface OpQueueItem {

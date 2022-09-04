@@ -6,9 +6,15 @@ const ackInitSessionHandler: ServerMessageHandler = (client) => (payload) => {
   console.log(client, payload);
   const { clientId, sessionCode } = payload as AckInitSessionPayload;
 
+  const clientName = client.getClientName();
+
+  if (clientName === null) {
+    return;
+  }
+
   const ownClientData: Client = {
     id: clientId,
-    name: client.getClientName(),
+    name: clientName,
   };
 
   client.dispatchToStore(

@@ -6,7 +6,7 @@ interface ICollabClient {
 
   dispatchToStore: (action: Action<any>) => void;
 
-  getClientName: () => string;
+  getClientName: () => string | null;
 }
 
 export default ICollabClient;

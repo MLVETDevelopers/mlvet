@@ -21,10 +21,15 @@ export interface Client {
   id: ClientId;
 }
 
+export interface ErrorPayload {
+  error: true;
+  message: string | null;
+}
+
 /** Server actions */
 
 export interface ServerAction {
-  op: Op<DoPayload, UndoPayload>;
+  ops: Op<DoPayload, UndoPayload>[];
   clientId: ClientId;
   index: number;
   id: ActionId;
@@ -105,6 +110,8 @@ export interface AckJoinSessionPayload {
   otherClients: Client[];
   clientId: ClientId;
   mediaFileName: string;
+  sessionCode: SessionCode;
+  error: boolean;
 }
 
 export type AckLeaveSessionPayload = null;
@@ -120,7 +127,6 @@ export interface GuestLeftPayload {
 }
 
 export interface ServerActionPayload {
-  clientId: ClientId;
   actions: ServerAction[];
 }
 
@@ -183,7 +189,7 @@ export type AckInitSessionMessage = ServerMessageBase<
 >;
 export type AckJoinSessionMessage = ServerMessageBase<
   ServerMessageType.ACK_JOIN_SESSION,
-  AckJoinSessionPayload
+  AckJoinSessionPayload | ErrorPayload
 >;
 export type SessionEndedMessage = ServerMessageBase<
   ServerMessageType.SESSION_ENDED,

@@ -2,6 +2,7 @@ import {
   ClientMessage,
   ClientMessageType,
   ServerMessageType,
+  SessionCode,
 } from 'collabSharedTypes';
 import { Action } from 'renderer/store/action';
 import { Op } from 'renderer/store/undoStack/helpers';
@@ -38,21 +39,28 @@ const wrapHandler: (
 };
 
 class CollabClient implements ICollabClient {
-  socket: Socket;
+  socket: Socket | null;
 
-  name: string;
+  clientName: string | null;
 
   constructor() {
-    this.socket = io(COLLAB_HOST);
-
-    this.initSession();
-
-    this.registerHandlers();
-
-    this.name = 'Test';
+    this.socket = null;
+    this.clientName = null;
   }
 
-  initSession(): void {
+  initSocket(): void {
+    this.socket = io(COLLAB_HOST);
+  }
+
+  closeSocket(): void {
+    if (this.socket === null) {
+      return;
+    }
+
+    this.socket.close();
+  }
+
+  initSession(clientName: string): void {
     const state = store.getState();
     const transcription = state.currentProject?.transcription ?? null;
     const { undoStack } = state;
@@ -61,10 +69,15 @@ class CollabClient implements ICollabClient {
       return;
     }
 
+    this.initSocket();
+    this.registerHandlers();
+
+    this.clientName = clientName;
+
     this.sendMessage({
       type: ClientMessageType.INIT_SESSION,
       payload: {
-        clientName: this.getClientName(),
+        clientName,
         mediaFileName: 'test.mp4',
         transcription,
         undoStack,
@@ -74,10 +87,35 @@ class CollabClient implements ICollabClient {
     console.log(`Collab session initiated`);
   }
 
+  joinSession(clientName: string, sessionCode: SessionCode): void {
+    this.initSocket();
+    this.registerHandlers();
+
+    this.clientName = clientName;
+
+    this.sendMessage({
+      type: ClientMessageType.JOIN_SESSION,
+      payload: {
+        clientName,
+        sessionCode,
+      },
+    });
+
+    console.log(`Collab session joined`);
+  }
+
   registerHandlers() {
+    if (this.socket === null) {
+      return;
+    }
+
     Object.keys(serverMessageHandlers).forEach((eventKey) => {
       const serverMessageType = eventKey as ServerMessageType;
       const handler = serverMessageHandlers[serverMessageType](this);
+
+      if (this.socket === null) {
+        return;
+      }
 
       this.socket.on(eventKey, wrapHandler(handler, serverMessageType));
     });
@@ -98,6 +136,10 @@ class CollabClient implements ICollabClient {
   }
 
   sendMessage(message: ClientMessage): void {
+    if (this.socket === null) {
+      return;
+    }
+
     // Send the specified message
     this.socket.emit(message.type, message.payload);
   }
@@ -106,8 +148,8 @@ class CollabClient implements ICollabClient {
     store.dispatch(action);
   };
 
-  getClientName() {
-    return this.name;
+  getClientName(): string | null {
+    return this.clientName;
   }
 }
 

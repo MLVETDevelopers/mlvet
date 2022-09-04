@@ -17,6 +17,11 @@ class CollabClientManager {
   }
 
   static clearClient() {
+    if (CollabClientManager.hasClient()) {
+      const collabClient = CollabClientManager.getClient();
+      collabClient.closeSocket();
+    }
+
     CollabClientManager.client = null;
   }
 }

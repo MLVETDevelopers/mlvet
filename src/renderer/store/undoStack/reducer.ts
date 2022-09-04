@@ -1,5 +1,11 @@
 import { Reducer } from 'redux';
-import { UNDO_STACK_PUSHED, UNDO_STACK_POPPED, OP_REDONE } from './actions';
+import {
+  UNDO_STACK_PUSHED,
+  UNDO_STACK_POPPED,
+  OP_REDONE,
+  UndoStackSetPayload,
+  UNDO_STACK_SET,
+} from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { DoPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
@@ -18,6 +24,15 @@ const undoStackReducer: Reducer<ApplicationStore['undoStack'], Action<any>> = (
     action.type === CURRENT_PROJECT_CLOSED
   ) {
     return initialStore.undoStack;
+  }
+
+  if (action.type === UNDO_STACK_SET) {
+    const { ops, index } = action.payload as UndoStackSetPayload;
+
+    return {
+      stack: ops,
+      index,
+    };
   }
 
   if (action.type === UNDO_STACK_PUSHED) {

@@ -1,21 +1,33 @@
 import {
+  AckClientActionMessage,
+  ActionId,
+  Client,
   ClientId,
+  ServerAction,
+  ServerActionMessage,
   ServerMessage,
+  ServerMessageType,
   SessionCode,
   SessionId,
 } from 'collabSharedTypes';
 import { v4 as uuidv4 } from 'uuid';
 import { Transcription } from 'sharedTypes';
-import { UndoStack } from 'renderer/store/undoStack/helpers';
+import { Op, UndoStack } from 'renderer/store/undoStack/helpers';
 import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
-import { CollabServerSessionState, SocketId } from './types';
+import { DoPayload, UndoPayload } from 'renderer/store/undoStack/opPayloads';
+import { Session } from 'inspector';
+import { CollabServerSessionState } from './types';
+import SessionLookupHelper from './SessionLookupHelper';
 
 class SessionManager {
   sessions: Record<SessionId, CollabServerSessionState>;
 
+  lookup: SessionLookupHelper;
+
   constructor() {
     this.sessions = {};
+    this.lookup = new SessionLookupHelper(() => this.sessions);
   }
 
   generateSessionCode: () => SessionCode = () => {
@@ -87,6 +99,56 @@ class SessionManager {
     return { hostId, sessionCode };
   }
 
+  joinSession({
+    clientName,
+    sessionCode,
+    socket,
+  }: {
+    clientName: string;
+    sessionCode: SessionCode;
+    socket: Socket;
+  }): {
+    clientId: ClientId;
+    mediaFileName: string;
+    otherClients: Client[];
+    transcription: Transcription;
+    undoStack: UndoStack;
+  } {
+    const session = this.lookup.findSessionByCode(sessionCode);
+
+    if (session === null) {
+      console.error(`Session with code ${sessionCode} not found`);
+      throw new Error();
+    }
+
+    const clientId = uuidv4();
+
+    const {
+      initialUndoStack: undoStack,
+      initialTranscription: transcription,
+      clients: otherClients,
+      mediaFileName,
+    } = session;
+
+    // Add the new client to the session
+
+    session.sockets[clientId] = socket;
+    session.clientAcks[clientId] = -1;
+
+    // Immutable because we're sending the old list as 'otherClients'
+    session.clients = session.clients.concat([
+      { id: clientId, name: clientName },
+    ]);
+
+    return {
+      clientId,
+      mediaFileName,
+      otherClients,
+      transcription,
+      undoStack,
+    };
+  }
+
   isHostOfSession(sessionId: SessionId, clientId: ClientId): boolean {
     const session = this.sessions[sessionId];
 
@@ -132,78 +194,22 @@ class SessionManager {
     session.clients.splice(clientIndex, 1);
   }
 
-  clientIdToSocket(clientId: ClientId): Socket | null {
-    // TODO(chloe): O(1) lookup
-    const clientSession = Object.values(this.sessions).find((session) =>
-      session.clients.some((client) => client.id === clientId)
-    );
-
-    if (clientSession === undefined) {
-      console.error(`Could not find session for client ID: ${clientId}`);
-      return null;
-    }
-
-    const clientSocket = clientSession.sockets[clientId];
-
-    if (clientSocket === undefined) {
-      console.log(
-        `Could not find socket for client ID: ${clientId} and session: ${clientSession}`
-      );
-      return null;
-    }
-
-    return clientSocket;
-  }
-
-  socketIdToSession(socketId: SocketId): CollabServerSessionState | null {
-    // TODO(chloe): O(1) lookup
-    const session = Object.values(this.sessions).find((potentialSession) =>
-      Object.values(potentialSession.sockets).some(
-        (socket) => socket.id === socketId
-      )
-    );
-
-    if (session === undefined) {
-      console.error(`Could not find client ID for socket ID: ${socketId}`);
-      return null;
-    }
-
-    return session;
-  }
-
-  sessionIdAndSocketIdToClientId(
-    sessionId: SessionId,
-    socketId: SocketId
-  ): ClientId | null {
-    const session = this.sessions[sessionId];
-
-    if (session === undefined) {
-      console.error(`Could not find session with ID: ${sessionId}`);
-      return null;
-    }
-
-    // TODO(chloe): O(1) lookup
-    const clientId = Object.keys(session.sockets).find(
-      (potentialClientId) => session.sockets[potentialClientId].id === socketId
-    );
-
-    if (clientId === undefined) {
-      console.error(`Could not find client ID for session: ${session}`);
-      return null;
-    }
-
-    return clientId;
-  }
+  sendMessageToSocket: (socket: Socket, message: ServerMessage) => void = (
+    socket,
+    message
+  ) => {
+    // Send the specified message
+    socket.emit(message.type, message.payload);
+  };
 
   sendMessageToClient(clientId: ClientId, message: ServerMessage): void {
-    const clientSocket = this.clientIdToSocket(clientId);
+    const clientSocket = this.lookup.clientIdToSocket(clientId);
 
     if (clientSocket === null) {
       return;
     }
 
-    // Send the specified message
-    clientSocket.emit(message.type, message.payload);
+    this.sendMessageToSocket(clientSocket, message);
   }
 
   sendMessageToAllClientsInSession(
@@ -221,6 +227,117 @@ class SessionManager {
     sockets.forEach((socket) => {
       // Send the specified message
       socket.emit(message.type, message.payload);
+    });
+  }
+
+  rejectClientAction(clientId: ClientId, actionId: ActionId): void {
+    const actionRejectedMessage: AckClientActionMessage = {
+      type: ServerMessageType.ACK_CLIENT_ACTION,
+      payload: {
+        id: actionId,
+        isAccepted: false,
+      },
+    };
+
+    this.sendMessageToClient(clientId, actionRejectedMessage);
+  }
+
+  acceptClientAction(
+    clientId: ClientId,
+    actionId: ActionId,
+    ops: Op<DoPayload, UndoPayload>[],
+    sessionId: SessionId
+  ): void {
+    const session = this.sessions[sessionId];
+    if (session === null) {
+      return;
+    }
+
+    const actionIndex = session.actions.length;
+
+    // Create the action and add it to the action log
+    const action: ServerAction = {
+      id: actionId,
+      ops,
+      clientId,
+      index: actionIndex,
+    };
+    session.actions.push(action);
+
+    // Tell the client their action was accepted
+    const actionAcceptedMessage: AckClientActionMessage = {
+      type: ServerMessageType.ACK_CLIENT_ACTION,
+      payload: {
+        id: actionId,
+        isAccepted: true,
+      },
+    };
+
+    this.sendMessageToClient(clientId, actionAcceptedMessage);
+
+    // Mark the client who submitted the action as having ack'd the action
+    session.clientAcks[clientId] = actionIndex;
+
+    // Update all clients
+    this.updateClientsWithLatestActions(sessionId);
+  }
+
+  handleClientAction(
+    actionId: ActionId,
+    ops: Op<DoPayload, UndoPayload>[],
+    clientId: ClientId,
+    sessionId: SessionId
+  ): void {
+    const session = this.sessions[sessionId];
+    if (session === null) {
+      return;
+    }
+
+    // Confirm that the client sending the action is up to date with the latest actions
+    const clientAck = session.clientAcks[clientId];
+
+    // If the client is not up to date, reject the action
+    if (clientAck < session.actions.length - 1) {
+      this.rejectClientAction(clientId, actionId);
+      return;
+    }
+
+    // Otherwise, accept the action
+    this.acceptClientAction(clientId, actionId, ops, sessionId);
+  }
+
+  /**
+   * Updates all clients in a session, sending each of them any actions they haven't ack'd yet
+   */
+  updateClientsWithLatestActions(sessionId: SessionId) {
+    const session = this.sessions[sessionId];
+    if (session === null) {
+      return;
+    }
+
+    if (session.actions.length === 0) {
+      return;
+    }
+
+    const latestAck = session.actions[session.actions.length - 1].index;
+
+    Object.keys(session.clientAcks).forEach((clientId) => {
+      const clientAck = session.clientAcks[clientId];
+
+      if (clientAck >= latestAck) {
+        // Client is up to date, do nothing
+        return;
+      }
+
+      // Send all un-acknowledged actions to the client
+      const serverActionMessage: ServerActionMessage = {
+        type: ServerMessageType.SERVER_ACTION,
+        payload: {
+          actions: session.actions.filter((action) => action.index > clientAck),
+        },
+      };
+
+      this.sendMessageToClient(clientId, serverActionMessage);
     });
   }
 }

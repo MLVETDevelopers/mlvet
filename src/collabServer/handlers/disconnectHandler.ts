@@ -42,13 +42,11 @@ const leaveSession: (
     },
   };
 
-  // Inform all clients that the session is ended
-  // This is done before the actual session is ended because the session is needed
-  // to retrieve the client socket IDs
-  sessionManager.sendMessageToAllClientsInSession(sessionId, guestLeftMessage);
-
-  // End the session
+  // Remove the guest from the session
   sessionManager.handleGuestLeaving(sessionId, clientId);
+
+  // Inform all clients that a guest left
+  sessionManager.sendMessageToAllClientsInSession(sessionId, guestLeftMessage);
 };
 
 const disconnectHandler: ClientMessageHandler =
@@ -57,14 +55,14 @@ const disconnectHandler: ClientMessageHandler =
 
     console.log(`Client ${socket.id} disconnected, reason: ${reason}`);
 
-    const session = sessionManager.socketIdToSession(socket.id);
+    const session = sessionManager.lookup.socketIdToSession(socket.id);
 
     if (session === null) {
       console.error(`Could not load session for socket ID: ${socket.id}`);
       return;
     }
 
-    const clientId = sessionManager.sessionIdAndSocketIdToClientId(
+    const clientId = sessionManager.lookup.sessionIdAndSocketIdToClientId(
       session.id,
       socket.id
     );

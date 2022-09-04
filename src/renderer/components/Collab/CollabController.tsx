@@ -8,8 +8,16 @@ const CollabController = () => {
   const collab = useSelector((store: ApplicationStore) => store.collab);
 
   const startCollabSession = useCallback(() => {
+    const clientName = window.prompt('Enter your name: ');
+
+    if (clientName === null) {
+      return;
+    }
+
     // Init the client if it isn't already initialised
-    CollabClientManager.getClient();
+    const collabClient = CollabClientManager.getClient();
+
+    collabClient.initSession(clientName);
   }, []);
 
   if (collab === null) {

@@ -1,8 +1,7 @@
+import { ClientId, SessionCode } from 'collabTypes/collabShadowTypes';
 import {
   Client,
-  ClientId,
   ServerMessagePayload,
-  SessionCode,
 } from '../../collabTypes/collabSharedTypes';
 import ICollabClient from './ICollabClient';
 

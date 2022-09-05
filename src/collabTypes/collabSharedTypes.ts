@@ -35,6 +35,7 @@ export enum ClientMessageType {
   JOIN_SESSION = 'join-session',
   ACK_SERVER_ACTION = 'ack-server-action',
   CLIENT_ACTION = 'client-action',
+  CLIENT_BROADCAST = 'client-broadcast',
 }
 
 export enum ServerMessageType {
@@ -43,6 +44,7 @@ export enum ServerMessageType {
   GUEST_JOINED = 'guest-joined',
   GUEST_LEFT = 'guest-left',
   SERVER_ACTION = 'server-action',
+  SERVER_BROADCAST = 'server-broadcast',
   ACK_CLIENT_ACTION = 'ack-client-action',
 }
 
@@ -115,6 +117,7 @@ export interface GuestLeftPayload {
 
 export interface ServerActionPayload {
   actions: ServerAction[];
+  isBroadcast: boolean; // doesn't need commits / integrity checks
 }
 
 export interface AckClientActionPayload {

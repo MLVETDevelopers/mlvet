@@ -24,7 +24,7 @@ const selectionActionTypes = [
 ];
 
 const serverActionHandler: ServerMessageHandler = (client) => (payload) => {
-  const { actions } = payload as ServerActionPayload;
+  const { actions, isBroadcast } = payload as ServerActionPayload;
 
   actions.forEach((action) => {
     const { clientId, id, index, ops } = action;

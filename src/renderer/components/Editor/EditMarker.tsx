@@ -14,6 +14,7 @@ interface Props {
   word: Word;
   index: number;
   isSelected: boolean;
+  isSelectedByAnotherClient: boolean;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
 }
@@ -25,6 +26,7 @@ const EditMarker = ({
   isSelected,
   popoverWidth,
   transcriptionBlockRef,
+  isSelectedByAnotherClient,
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
   const [popperText, setPopperText] = useState<string | null>(null);
@@ -57,6 +59,16 @@ const EditMarker = ({
     setPopperText(getOriginalText());
   };
 
+  const background = (() => {
+    if (isSelected) {
+      return `${colors.blue[500]}cc`;
+    }
+    if (isSelectedByAnotherClient) {
+      return `${colors.purple[500]}cc`;
+    }
+    return 'none';
+  })();
+
   return (isInOriginalPos || hasNotMoved) &&
     hasNoNeighbourMarker &&
     notPasted ? (
@@ -75,7 +87,7 @@ const EditMarker = ({
       )}
       <Box
         sx={{
-          background: isSelected ? `${colors.blue[500]}cc` : 'none',
+          background,
           transform: 'translateY(-6.5px)',
           cursor: 'pointer',
         }}

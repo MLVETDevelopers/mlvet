@@ -43,7 +43,8 @@ interface TakeComponentProps {
   cancelDrag: () => void;
   submitWordEdit: () => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selectionSet: Set<number>;
+  otherSelectionSets: Set<number>[];
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   isWordBeingDragged: (wordIndex: number) => boolean;
@@ -69,6 +70,7 @@ const TakeComponent = ({
   submitWordEdit,
   nowPlayingWordIndex,
   selectionSet,
+  otherSelectionSets,
   onWordMouseDown,
   onWordMouseMove,
   isWordBeingDragged,
@@ -159,6 +161,7 @@ const TakeComponent = ({
                 submitWordEdit={submitWordEdit}
                 nowPlayingWordIndex={nowPlayingWordIndex}
                 selectionSet={selectionSet}
+                otherSelectionSets={otherSelectionSets}
                 onWordMouseDown={onWordMouseDown}
                 onWordMouseMove={onWordMouseMove}
                 isWordBeingDragged={isWordBeingDragged}

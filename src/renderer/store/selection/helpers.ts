@@ -1,4 +1,4 @@
-import { ClientId } from 'collabTypes/collabSharedTypes';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isInOriginalOrder } from 'renderer/utils/words';
 import { IndexRange, Word } from 'sharedTypes';
 import { SelectionIndices, SelectionState } from '../sharedHelpers';

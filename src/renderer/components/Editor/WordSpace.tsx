@@ -3,11 +3,13 @@ import colors from 'renderer/colors';
 interface Props {
   isDropMarkerActive: boolean;
   isBetweenHighlightedWords: boolean;
+  isBetweenOtherClientHighlightedWords: boolean;
 }
 
 const WordSpace = ({
   isDropMarkerActive,
   isBetweenHighlightedWords,
+  isBetweenOtherClientHighlightedWords,
 }: Props) => {
   const background: string = (() => {
     if (isDropMarkerActive) {
@@ -15,6 +17,9 @@ const WordSpace = ({
     }
     if (isBetweenHighlightedWords) {
       return `${colors.blue[500]}cc`;
+    }
+    if (isBetweenOtherClientHighlightedWords) {
+      return `${colors.purple[500]}cc`;
     }
     return 'none';
   })();

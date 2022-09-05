@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
-import { Fragment, RefObject } from 'react';
+import { Fragment, RefObject, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { Word, Transcription } from 'sharedTypes';
@@ -14,7 +14,8 @@ interface WordOuterComponentProps {
   index: number;
   transcription: Transcription;
   seekToWord: (wordIndex: number) => void;
-  selectionSet: Set<any>;
+  selectionSet: Set<number>;
+  otherSelectionSets: Set<number>[];
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
@@ -44,6 +45,7 @@ const WordOuterComponent = ({
   transcription,
   seekToWord,
   selectionSet,
+  otherSelectionSets,
   onWordMouseDown,
   onWordMouseMove,
   dragState,
@@ -64,6 +66,36 @@ const WordOuterComponent = ({
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
   );
 
+  const isSelected = useMemo(
+    () => selectionSet.has(index),
+    [selectionSet, index]
+  );
+
+  const isSelectedByAnotherClient = useMemo(
+    () =>
+      !isSelected &&
+      Object.values(otherSelectionSets).some((otherSelectionSet) =>
+        otherSelectionSet.has(index)
+      ),
+    [otherSelectionSets, isSelected, index]
+  );
+  const isSelectedByAnotherClientLeftCap = useMemo(
+    () =>
+      !isSelected &&
+      Object.values(otherSelectionSets).every(
+        (otherSelectionSet) => !otherSelectionSet.has(index - 1)
+      ),
+    [otherSelectionSets, isSelected, index]
+  );
+  const isSelectedByAnotherClientRightCap = useMemo(
+    () =>
+      !isSelected &&
+      Object.values(otherSelectionSets).every(
+        (otherSelectionSet) => !otherSelectionSet.has(index + 1)
+      ),
+    [otherSelectionSets, isSelected, index]
+  );
+
   return (
     <WordAndSpaceContainer
       key={`container-${word.originalIndex}-${word.pasteKey}`}
@@ -74,7 +106,8 @@ const WordOuterComponent = ({
           transcription={transcription}
           word={word}
           index={index}
-          isSelected={selectionSet.has(index)}
+          isSelected={isSelected}
+          isSelectedByAnotherClient={isSelectedByAnotherClient}
           popoverWidth={popoverWidth}
           transcriptionBlockRef={transcriptionBlockRef}
         />
@@ -86,17 +119,25 @@ const WordOuterComponent = ({
             isBetweenHighlightedWords={
               selectionSet.has(index - 1) && selectionSet.has(index)
             }
+            isBetweenOtherClientHighlightedWords={
+              !isSelectedByAnotherClientLeftCap && isSelectedByAnotherClient
+            }
           />
           <WordComponent
             key={`word-${word.originalIndex}-${word.pasteKey}`}
             seekToWord={() => seekToWord(index)}
             isPlaying={index === nowPlayingWordIndex}
-            isSelected={selectionSet.has(index)}
+            isSelected={isSelected}
             isSelectedLeftCap={
               selectionSet.has(index) && !selectionSet.has(index - 1)
             }
             isSelectedRightCap={
               selectionSet.has(index) && !selectionSet.has(index + 1)
+            }
+            isSelectedByAnotherClient={isSelectedByAnotherClient}
+            isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
+            isSelectedByAnotherClientRightCap={
+              isSelectedByAnotherClientRightCap
             }
             text={word.word}
             confidence={word.confidence ?? 1}
@@ -124,6 +165,7 @@ const WordOuterComponent = ({
                 dropBeforeIndex === transcription.words.length
               }
               isBetweenHighlightedWords={false}
+              isBetweenOtherClientHighlightedWords={false}
             />
           )}
         </Fragment>

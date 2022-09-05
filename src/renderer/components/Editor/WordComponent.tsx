@@ -53,6 +53,9 @@ interface Props {
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
+  isSelectedByAnotherClient: boolean;
+  isSelectedByAnotherClientLeftCap: boolean;
+  isSelectedByAnotherClientRightCap: boolean;
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -95,6 +98,9 @@ const WordComponent = ({
   editText,
   isInInactiveTake,
   isShowingConfidenceUnderlines,
+  isSelectedByAnotherClient,
+  isSelectedByAnotherClientLeftCap,
+  isSelectedByAnotherClientRightCap,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -232,6 +238,24 @@ const WordComponent = ({
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
         borderRadius: BORDER_RADIUS_AMOUNT,
+      };
+    }
+    if (isSelectedByAnotherClient) {
+      return {
+        background: `${colors.purple[500]}cc`,
+        color: colors.white,
+        borderTopLeftRadius: isSelectedByAnotherClientLeftCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderBottomLeftRadius: isSelectedByAnotherClientLeftCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderTopRightRadius: isSelectedByAnotherClientRightCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderBottomRightRadius: isSelectedByAnotherClientRightCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
       };
     }
     if (isShowingConfidenceUnderlines) {

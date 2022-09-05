@@ -17,7 +17,12 @@ import {
   SessionCode,
   SessionId,
 } from '../collabTypes/collabShadowTypes';
-import { CollabServerSessionState, SocketId } from './types';
+import {
+  BroadcastableAction,
+  CollabServerSessionState,
+  ServerBroadcast,
+  SocketId,
+} from './types';
 import SessionLookupHelper from './SessionLookupHelper';
 import { sleep } from '../sharedUtils';
 import { SERVER_TO_CLIENT_DELAY_SIMULATED } from './config';
@@ -302,6 +307,16 @@ class SessionManager {
     this.updateClientsWithLatestActions(sessionId);
   }
 
+  handleBroadcast(
+    sessionId: SessionId,
+    clientId: ClientId,
+    actions: BroadcastableAction[]
+  ): void {
+    const broadcastMessage: ServerBroadcast;
+
+    this.sendMessageToAllClientsInSession(sessionId, broadcastMessage);
+  }
+
   handleClientAction(
     actionId: ActionId,
     ops: Op<OpPayload, OpPayload>[],
@@ -354,6 +369,7 @@ class SessionManager {
         type: ServerMessageType.SERVER_ACTION,
         payload: {
           actions: session.actions.filter((action) => action.index > clientAck),
+          isBroadcast: false,
         },
       };
 

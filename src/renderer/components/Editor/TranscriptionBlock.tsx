@@ -68,14 +68,25 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
-  const selectionArray = useSelector(
+  const ownSelectionArray = useSelector(
     (store: ApplicationStore) => store.selection.self
   );
 
-  const selectionSet = useMemo(
-    () => (editWord === null ? new Set(selectionArray) : new Set()),
-    [selectionArray, editWord]
+  const ownSelectionSet = useMemo(
+    () => (editWord === null ? new Set(ownSelectionArray) : new Set<number>()),
+    [ownSelectionArray, editWord]
   );
+
+  const otherSelections = useSelector(
+    (store: ApplicationStore) => store.selection.others
+  );
+
+  const otherSelectionSets = useMemo(() => {
+    const sets: Set<number>[] = Object.values(otherSelections).map(
+      (selection) => new Set(selection)
+    );
+    return sets;
+  }, [otherSelections]);
 
   const dispatch = useDispatch();
 
@@ -163,7 +174,8 @@ const TranscriptionBlock = ({
                       transcription={transcription}
                       seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
-                      selectionSet={selectionSet}
+                      selectionSet={ownSelectionSet}
+                      otherSelectionSets={otherSelectionSets}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                     />

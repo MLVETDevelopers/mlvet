@@ -24,7 +24,9 @@ class CollabClient implements ICollabClient {
   }
 
   initSocket(): void {
-    this.socket = io(COLLAB_HOST);
+    if (this.socket === null) {
+      this.socket = io(COLLAB_HOST);
+    }
   }
 
   closeSocket(): void {
@@ -108,7 +110,9 @@ class CollabClient implements ICollabClient {
     }
 
     // Simulate sleep if enabled
-    await sleep(CLIENT_TO_SERVER_DELAY_SIMULATED);
+    if (CLIENT_TO_SERVER_DELAY_SIMULATED > 0) {
+      await sleep(CLIENT_TO_SERVER_DELAY_SIMULATED);
+    }
 
     // Send the specified message
     this.socket.emit(message.type, message.payload);

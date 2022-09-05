@@ -63,7 +63,7 @@ export const performRedo: () => void = () => {
     // Send the undo action to the collab server
     const client = collab.collabClient;
 
-    // Wacky meta stuff where our dos are our undos and nothing is real
+    // Still nothing is real but at least this time the dos are dos and the undos are undos
     const redoAsOp: Op<OpPayload, OpPayload> = {
       do: [...lastAction.do, opRedone()],
       undo: [...lastAction.undo, undoStackPopped()],

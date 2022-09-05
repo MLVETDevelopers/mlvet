@@ -14,7 +14,7 @@ import {
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
-import { updateSelection } from './helpers';
+import { extractSelection, updateSelection } from './helpers';
 
 const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
   selection = initialStore.selection,
@@ -22,11 +22,9 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
 ) => {
   if (action.type === SELECTION_RANGE_ADDED) {
     const { range, clientId } = action.payload as SelectionRangeAddedPayload;
-
     const { startIndex, endIndex } = range;
 
-    const currentSelection =
-      clientId === null ? selection.self : selection.others[clientId];
+    const currentSelection = extractSelection(selection, clientId);
 
     /**
      * Selection is stored in redux as an array because redux
@@ -47,11 +45,9 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
 
   if (action.type === SELECTION_RANGE_REMOVED) {
     const { range, clientId } = action.payload as SelectionRangeRemovedPayload;
-
     const { startIndex, endIndex } = range;
 
-    const currentSelection =
-      clientId === null ? selection.self : selection.others[clientId];
+    const currentSelection = extractSelection(selection, clientId);
 
     // Same caveats as for SELECTION_RANGE_ADDED
     const selectionSet = new Set(currentSelection);
@@ -67,11 +63,9 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
 
   if (action.type === SELECTION_RANGE_TOGGLED) {
     const { range, clientId } = action.payload as SelectionRangeToggledPayload;
-
     const { startIndex, endIndex } = range;
 
-    const currentSelection =
-      clientId === null ? selection.self : selection.others[clientId];
+    const currentSelection = extractSelection(selection, clientId);
 
     // Same caveats as for SELECTION_RANGE_ADDED
     const selectionSet = new Set(currentSelection);

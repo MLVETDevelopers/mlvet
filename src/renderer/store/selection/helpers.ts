@@ -47,6 +47,18 @@ export const isMergeSplitAllowed: (
   };
 };
 
+/**
+ * Extracts a selection for the given client ID
+ */
+export const extractSelection: (
+  selectionState: SelectionState,
+  clientId: ClientId | null
+) => SelectionIndices = (selectionState, clientId) =>
+  clientId === null ? selectionState.self : selectionState.others[clientId];
+
+/**
+ * Immutably updates a selection for the given client ID (self if clientId is null)
+ */
 export const updateSelection: (
   clientId: ClientId | null,
   prevSelectionState: SelectionState,

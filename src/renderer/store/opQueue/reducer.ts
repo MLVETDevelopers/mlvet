@@ -17,8 +17,6 @@ const opQueueReducer: Reducer<ApplicationStore['opQueue'], Action<any>> = (
   if (action.type === OP_QUEUE_PUSHED) {
     const { item } = action.payload as OpQueuePushedPayload;
 
-    console.log('item', item);
-
     return opQueue.concat([item]);
   }
 

@@ -24,21 +24,29 @@ const CollabGuestJoin = () => {
     collabClient.joinSession(clientName, sessionCode);
   }, [clientName, sessionCode, collab, dispatch]);
 
-  return (
-    <div>
-      <TextField
-        value={clientName}
-        onChange={(e) => setClientName(e.target.value)}
-        placeholder="Your name"
-      />
-      <TextField
-        value={sessionCode}
-        onChange={(e) => setSessionCode(e.target.value)}
-        placeholder="Session code"
-      />
-      <Button onClick={joinCollabSession}>Join a collab session</Button>
-    </div>
-  );
+  if (collab === null) {
+    return (
+      <div>
+        <TextField
+          value={clientName}
+          onChange={(e) => setClientName(e.target.value)}
+          placeholder="Your name"
+        />
+        <TextField
+          value={sessionCode}
+          onChange={(e) => setSessionCode(e.target.value)}
+          placeholder="Session code"
+        />
+        <Button onClick={joinCollabSession}>Join collab session</Button>
+      </div>
+    );
+  }
+
+  if (collab.sessionCode === null) {
+    return <div>Joining collab session...</div>;
+  }
+
+  return null;
 };
 
 export default CollabGuestJoin;

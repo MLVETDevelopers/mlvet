@@ -1,3 +1,4 @@
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import {
   AckServerActionMessage,
   ClientMessageType,
@@ -23,6 +24,19 @@ const selectionActionTypes = [
   SELECTION_CLEARED,
 ];
 
+// Injects client IDs into any selection actions
+const injectClientId: (
+  clientId: ClientId
+) => MapCallback<Action<any>, Action<any>> = (clientId) => (doOrUndoAction) => {
+  if (selectionActionTypes.includes(doOrUndoAction.type)) {
+    return {
+      ...doOrUndoAction,
+      payload: { ...doOrUndoAction.payload, clientId },
+    };
+  }
+  return doOrUndoAction;
+};
+
 const serverActionHandler: ServerMessageHandler = (client) => (payload) => {
   const { actions, isBroadcast } = payload as ServerActionPayload;
 
@@ -31,23 +45,10 @@ const serverActionHandler: ServerMessageHandler = (client) => (payload) => {
 
     console.log(`Received server action`, clientId, id, index, ops);
 
-    // Inject client IDs into any selection actions
-    const injectClientId: MapCallback<Action<any>, Action<any>> = (
-      doOrUndoAction
-    ) => {
-      if (selectionActionTypes.includes(doOrUndoAction.type)) {
-        return {
-          ...doOrUndoAction,
-          payload: { ...doOrUndoAction.payload, clientId },
-        };
-      }
-      return doOrUndoAction;
-    };
-
     const opsMarked = ops.map((op) => ({
       ...op,
-      do: op.do.map(injectClientId),
-      undo: op.undo.map(injectClientId),
+      do: op.do.map(injectClientId(clientId)),
+      undo: op.undo.map(injectClientId(clientId)),
     }));
 
     opsMarked.forEach((op) => dispatchOp(op, true));

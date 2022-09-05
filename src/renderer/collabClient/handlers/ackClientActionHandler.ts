@@ -26,9 +26,9 @@ const ackClientActionHandler: ServerMessageHandler = () => (payload) => {
     dispatch(opQueueActionAccepted(id));
   } else {
     // Undo all actions from the action that was rejected onwards
-    // TODO(chloe): this should be done in reverse!!!
     opQueue
       .slice(actionIndex)
+      .reverse() // actions are undone in reverse
       .map((item) => item.op)
       .forEach((op) => op.undo.forEach(dispatch));
 

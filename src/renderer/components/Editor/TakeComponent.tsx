@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import { RefObject, useMemo } from 'react';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
@@ -44,7 +45,7 @@ interface TakeComponentProps {
   submitWordEdit: () => void;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<number>;
-  otherSelectionSets: Set<number>[];
+  otherSelectionSets: Record<ClientId, Set<number>>;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   isWordBeingDragged: (wordIndex: number) => boolean;

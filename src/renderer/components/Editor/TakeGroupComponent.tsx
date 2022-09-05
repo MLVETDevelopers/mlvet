@@ -1,6 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 
 import { MousePosition } from '@react-hook/mouse-position';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { Dispatch, RefObject, SetStateAction, useMemo, useState } from 'react';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
@@ -24,7 +25,7 @@ interface TakeGroupComponentProps {
   seekToWord: (wordIndex: number) => void;
   submitWordEdit: () => void;
   selectionSet: Set<any>;
-  otherSelectionSets: Set<number>[];
+  otherSelectionSets: Record<ClientId, Set<number>>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
 }

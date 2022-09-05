@@ -1,9 +1,17 @@
-import { Button, TextField } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  CircularProgress,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CollabClient from 'renderer/collabClient/CollabClient';
+import colors from 'renderer/colors';
 import { collabClientInstantiated } from 'renderer/store/collab/actions';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { getColourForIndex } from 'renderer/utils/ui';
 
 const CollabController = () => {
   const [clientName, setClientName] = useState<string>('Host');
@@ -34,19 +42,36 @@ const CollabController = () => {
   }
 
   if (collab.sessionCode === null) {
-    return <div>Collab session starting...</div>;
+    return (
+      <CircularProgress
+        sx={{ color: colors.yellow[500], fontSize: 24, margin: '3px' }}
+        size="23px"
+        thickness={4}
+      />
+    );
   }
 
   return (
     <div>
-      <div>Collab session code: {collab.sessionCode}</div>
-      <div>{collab.isHost ? "You're the host" : 'Editing as a guest'}</div>
+      <div>Session code: {collab.sessionCode}</div>
       <div>
-        Other collaborators connected:
         {collab.clients
           .filter((client) => client.id !== collab.ownClientId)
-          .map((client) => (
-            <div key={client.id}>{client.name}</div>
+          .map((client, index) => (
+            <Tooltip key={client.id} title={client.name}>
+              <Avatar
+                key={client.id}
+                sx={{
+                  bgcolor: getColourForIndex(index),
+                  display: 'inline-flex',
+                  marginTop: '10px',
+                  marginLeft: '10px',
+                }}
+                alt={client.name}
+              >
+                {client.name.slice(0, 1).toUpperCase()}
+              </Avatar>
+            </Tooltip>
           ))}
       </div>
     </div>

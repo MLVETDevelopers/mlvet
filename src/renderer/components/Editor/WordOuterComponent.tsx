@@ -1,5 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { Fragment, RefObject, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
@@ -15,7 +16,7 @@ interface WordOuterComponentProps {
   transcription: Transcription;
   seekToWord: (wordIndex: number) => void;
   selectionSet: Set<number>;
-  otherSelectionSets: Set<number>[];
+  otherSelectionSets: Record<ClientId, Set<number>>;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
@@ -71,30 +72,58 @@ const WordOuterComponent = ({
     [selectionSet, index]
   );
 
-  const isSelectedByAnotherClient = useMemo(
-    () =>
-      !isSelected &&
-      Object.values(otherSelectionSets).some((otherSelectionSet) =>
-        otherSelectionSet.has(index)
-      ),
-    [otherSelectionSets, isSelected, index]
-  );
-  const isSelectedByAnotherClientLeftCap = useMemo(
-    () =>
-      !isSelected &&
-      Object.values(otherSelectionSets).every(
-        (otherSelectionSet) => !otherSelectionSet.has(index - 1)
-      ),
-    [otherSelectionSets, isSelected, index]
-  );
-  const isSelectedByAnotherClientRightCap = useMemo(
-    () =>
-      !isSelected &&
-      Object.values(otherSelectionSets).every(
-        (otherSelectionSet) => !otherSelectionSet.has(index + 1)
-      ),
-    [otherSelectionSets, isSelected, index]
-  );
+  const collab = useSelector((store: ApplicationStore) => store.collab);
+
+  const otherClients = useMemo(() => {
+    if (collab === null || collab.sessionCode === null) {
+      return [];
+    }
+
+    return collab.clients.filter((client) => client.id !== collab.ownClientId);
+  }, [collab]);
+
+  const selectedByClientWithIndex = useMemo(() => {
+    if (isSelected) {
+      return null;
+    }
+
+    const clientIndex = otherClients.findIndex(
+      (client) =>
+        client.id in otherSelectionSets &&
+        otherSelectionSets[client.id].has(index)
+    );
+
+    return clientIndex === -1 ? null : clientIndex;
+  }, [otherSelectionSets, isSelected, index, otherClients]);
+
+  const [isSelectedByAnotherClientLeftCap, isSelectedByAnotherClientRightCap] =
+    useMemo(() => {
+      if (
+        isSelected ||
+        selectedByClientWithIndex === null ||
+        collab === null ||
+        collab.sessionCode === null
+      ) {
+        return [false, false];
+      }
+
+      const left = index - 1;
+      const right = index + 1;
+
+      return [left, right].map(
+        (testIndex) =>
+          !otherSelectionSets[otherClients[selectedByClientWithIndex].id].has(
+            testIndex
+          )
+      );
+    }, [
+      otherSelectionSets,
+      isSelected,
+      index,
+      collab,
+      otherClients,
+      selectedByClientWithIndex,
+    ]);
 
   return (
     <WordAndSpaceContainer
@@ -107,7 +136,7 @@ const WordOuterComponent = ({
           word={word}
           index={index}
           isSelected={isSelected}
-          isSelectedByAnotherClient={isSelectedByAnotherClient}
+          selectedByClientWithIndex={selectedByClientWithIndex}
           popoverWidth={popoverWidth}
           transcriptionBlockRef={transcriptionBlockRef}
         />
@@ -119,8 +148,10 @@ const WordOuterComponent = ({
             isBetweenHighlightedWords={
               selectionSet.has(index - 1) && selectionSet.has(index)
             }
-            isBetweenOtherClientHighlightedWords={
-              !isSelectedByAnotherClientLeftCap && isSelectedByAnotherClient
+            highlightedByClientWithIndex={
+              isSelectedByAnotherClientLeftCap
+                ? null
+                : selectedByClientWithIndex
             }
           />
           <WordComponent
@@ -134,7 +165,7 @@ const WordOuterComponent = ({
             isSelectedRightCap={
               selectionSet.has(index) && !selectionSet.has(index + 1)
             }
-            isSelectedByAnotherClient={isSelectedByAnotherClient}
+            selectedByClientWithIndex={selectedByClientWithIndex}
             isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
             isSelectedByAnotherClientRightCap={
               isSelectedByAnotherClientRightCap
@@ -165,7 +196,7 @@ const WordOuterComponent = ({
                 dropBeforeIndex === transcription.words.length
               }
               isBetweenHighlightedWords={false}
-              isBetweenOtherClientHighlightedWords={false}
+              highlightedByClientWithIndex={null}
             />
           )}
         </Fragment>

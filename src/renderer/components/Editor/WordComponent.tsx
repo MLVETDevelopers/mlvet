@@ -17,7 +17,11 @@ import {
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
-import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
+import {
+  getCanvasFont,
+  getColourForIndex,
+  getTextWidth,
+} from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -53,7 +57,7 @@ interface Props {
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
-  isSelectedByAnotherClient: boolean;
+  selectedByClientWithIndex: number | null;
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
   text: string;
@@ -98,7 +102,7 @@ const WordComponent = ({
   editText,
   isInInactiveTake,
   isShowingConfidenceUnderlines,
-  isSelectedByAnotherClient,
+  selectedByClientWithIndex,
   isSelectedByAnotherClientLeftCap,
   isSelectedByAnotherClientRightCap,
 }: Props) => {
@@ -240,9 +244,9 @@ const WordComponent = ({
         borderRadius: BORDER_RADIUS_AMOUNT,
       };
     }
-    if (isSelectedByAnotherClient) {
+    if (selectedByClientWithIndex !== null) {
       return {
-        background: `${colors.purple[500]}cc`,
+        background: `${getColourForIndex(selectedByClientWithIndex)}cc`,
         color: colors.white,
         borderTopLeftRadius: isSelectedByAnotherClientLeftCap
           ? BORDER_RADIUS_AMOUNT

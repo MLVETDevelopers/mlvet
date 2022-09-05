@@ -14,6 +14,7 @@ import {
   isTakeGroup,
 } from 'renderer/utils/takeDetection';
 import { mapWithAccumulator } from 'renderer/utils/list';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -82,9 +83,10 @@ const TranscriptionBlock = ({
   );
 
   const otherSelectionSets = useMemo(() => {
-    const sets: Set<number>[] = Object.values(otherSelections).map(
-      (selection) => new Set(selection)
-    );
+    const sets: Record<ClientId, Set<number>> = {};
+    Object.keys(otherSelections).forEach((clientId) => {
+      sets[clientId] = new Set(otherSelections[clientId]);
+    });
     return sets;
   }, [otherSelections]);
 

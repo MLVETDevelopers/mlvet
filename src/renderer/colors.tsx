@@ -11,6 +11,16 @@ const colors = {
   purple: {
     '500': '#b262d1',
   },
+  pink: {
+    '500': '#c034eb',
+    '300': '#eb3486',
+  },
+  orange: {
+    '500': '#eb6234',
+  },
+  green: {
+    '700': '#33a15a',
+  },
   grey: {
     '000': '#FAFBFC',
     '300': '#DEDEDE',

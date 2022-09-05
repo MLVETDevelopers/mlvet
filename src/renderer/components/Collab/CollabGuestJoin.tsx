@@ -1,7 +1,8 @@
-import { Button, TextField } from '@mui/material';
+import { Button, CircularProgress, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CollabClient from 'renderer/collabClient/CollabClient';
+import colors from 'renderer/colors';
 import { collabClientInstantiated } from 'renderer/store/collab/actions';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 
@@ -43,7 +44,13 @@ const CollabGuestJoin = () => {
   }
 
   if (collab.sessionCode === null) {
-    return <div>Joining collab session...</div>;
+    return (
+      <CircularProgress
+        sx={{ color: colors.yellow[500], fontSize: 24, margin: '3px' }}
+        size="23px"
+        thickness={4}
+      />
+    );
   }
 
   return null;

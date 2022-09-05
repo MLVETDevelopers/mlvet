@@ -98,12 +98,7 @@ const WordOuterComponent = ({
 
   const [isSelectedByAnotherClientLeftCap, isSelectedByAnotherClientRightCap] =
     useMemo(() => {
-      if (
-        isSelected ||
-        selectedByClientWithIndex === null ||
-        collab === null ||
-        collab.sessionCode === null
-      ) {
+      if (isSelected || selectedByClientWithIndex === null) {
         return [false, false];
       }
 
@@ -120,7 +115,6 @@ const WordOuterComponent = ({
       otherSelectionSets,
       isSelected,
       index,
-      collab,
       otherClients,
       selectedByClientWithIndex,
     ]);

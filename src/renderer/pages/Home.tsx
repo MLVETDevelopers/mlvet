@@ -12,8 +12,8 @@ const HomePage = () => {
 
   return (
     <>
-      <NewProjectBlock isFullSize={!hasRecentProjects} />
       {COLLAB_ENABLED && <CollabGuestJoin />}
+      <NewProjectBlock isFullSize={!hasRecentProjects} />
       {hasRecentProjects && <RecentProjectsBlock />}
     </>
   );

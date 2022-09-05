@@ -5,6 +5,12 @@ import store from '../store/store';
 
 import StoreChangeObserver from '../StoreChangeObserver';
 
+jest.mock('@react-hook/debounce', () => {
+  return {
+    useDebounce: jest.fn((value) => [value, () => null]),
+  };
+});
+
 describe('StoreChangeObserver', () => {
   it('should render successfully', async () => {
     const rendered = render(

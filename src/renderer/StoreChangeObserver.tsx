@@ -16,7 +16,7 @@ const { readRecentProjects, writeRecentProjects } = ipc;
  * Component that handles sending off side effects when the store changes -
  * e.g. updating which menu items are active
  */
-export default function StoreChangeObserver() {
+const StoreChangeObserver = () => {
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
   );
@@ -179,4 +179,6 @@ export default function StoreChangeObserver() {
 
   // Component doesn't render anything
   return null;
-}
+};
+
+export default StoreChangeObserver;

@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ActionId, SessionCode } from 'collabTypes/collabShadowTypes';
 import { sleep } from '../../sharedUtils';
 import {
-  ClientBroadcastMessage,
   ClientBroadcastPayload,
   ClientMessage,
   ClientMessageType,
@@ -62,8 +61,6 @@ class CollabClient implements ICollabClient {
         undoStack,
       },
     });
-
-    console.log(`Collab session initiated`);
   }
 
   joinSession(clientName: string, sessionCode: SessionCode): void {
@@ -79,8 +76,6 @@ class CollabClient implements ICollabClient {
         sessionCode,
       },
     });
-
-    console.log(`Collab session joined`);
   }
 
   registerHandlers() {

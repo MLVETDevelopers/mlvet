@@ -1,8 +1,8 @@
 import { ClientId, SessionCode } from 'collabTypes/collabShadowTypes';
 import { Client } from 'collabTypes/collabSharedTypes';
 import ICollabClient from 'renderer/collabClient/ICollabClient';
-import { CollabClientSessionState } from 'renderer/collabClient/types';
 import { Action } from '../action';
+import { CollabClientSessionState } from './helpers';
 
 export const COLLAB_CLIENT_INSTANTIATED = 'COLLAB_CLIENT_INSTANTIATED';
 

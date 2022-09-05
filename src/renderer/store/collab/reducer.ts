@@ -1,5 +1,4 @@
 import { Reducer } from 'redux';
-import { CollabClientSessionState } from 'renderer/collabClient/types';
 import {
   COLLAB_SESSION_STARTED,
   COLLAB_SESSION_JOINED,
@@ -15,6 +14,7 @@ import {
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
+import { CollabClientSessionState } from './helpers';
 
 const collabReducer: Reducer<ApplicationStore['collab'], Action<any>> = (
   collab = initialStore.collab,

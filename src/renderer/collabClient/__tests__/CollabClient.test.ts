@@ -8,9 +8,9 @@ import store from 'renderer/store/store';
 import { projectCreated } from 'renderer/store/currentProject/actions';
 import { Transcription } from 'sharedTypes';
 import { collabClientInstantiated } from 'renderer/store/collab/actions';
+import { CollabClientSessionState } from 'renderer/store/collab/helpers';
 import { CURRENT_SCHEMA_VERSION } from '../../../constants';
 import ackInitSessionHandler from '../handlers/ackInitSessionHandler';
-import { CollabClientSessionState } from '../types';
 import ackJoinSessionHandler from '../handlers/ackJoinSessionHandler';
 import CollabClient from '../CollabClient';
 

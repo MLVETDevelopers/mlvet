@@ -10,7 +10,7 @@ import {
   SELECTION_CLEARED,
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
-  SELECTION_RANGE_SET_TO,
+  SELECTION_RANGES_SET_TO,
   SELECTION_RANGE_TOGGLED,
 } from 'renderer/store/selection/actions';
 import { MapCallback } from 'sharedTypes';
@@ -19,7 +19,7 @@ import { ServerMessageHandler } from '../types';
 const selectionActionTypes = [
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
-  SELECTION_RANGE_SET_TO,
+  SELECTION_RANGES_SET_TO,
   SELECTION_RANGE_TOGGLED,
   SELECTION_CLEARED,
 ];

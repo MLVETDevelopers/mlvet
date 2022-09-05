@@ -3,7 +3,7 @@ import {
   SelectionClearedPayload,
   SelectionRangeAddedPayload,
   SelectionRangeRemovedPayload,
-  SelectionRangeSetToPayload,
+  SelectionRangesSetToPayload,
   SelectionRangeToggledPayload,
 } from '../selection/actions';
 import {
@@ -24,7 +24,7 @@ export type SelectionPayload =
   | SelectionRangeAddedPayload
   | SelectionRangeRemovedPayload
   | SelectionRangeToggledPayload
-  | SelectionRangeSetToPayload
+  | SelectionRangesSetToPayload
   | SelectionClearedPayload;
 
 /**

@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useDebounce } from '@react-hook/debounce';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
 import { isMergeSplitAllowed } from './store/selection/helpers';
 import { indicesToRanges } from './utils/range';
 import { ApplicationPage } from './store/currentPage/helpers';
+import dispatchBroadcast from './collabClient/dispatchBroadcast';
+import { selectionIndicesSetTo } from './store/selection/actions';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -37,7 +40,18 @@ export default function StoreChangeObserver() {
 
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
-  const selection = useSelector((store: ApplicationStore) => store.selection);
+  const selfSelection = useSelector(
+    (store: ApplicationStore) => store.selection.self
+  );
+
+  // Debounce the selection to limit network requests for sharing selection with other clients
+  const [debouncedSelection, setDebouncedSelection] =
+    useDebounce(selfSelection);
+
+  // Update the debounced selection when the selection changes, but debounced
+  useEffect(() => {
+    setDebouncedSelection(selfSelection);
+  }, [setDebouncedSelection, selfSelection]);
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
@@ -115,10 +129,10 @@ export default function StoreChangeObserver() {
 
   // Update clipboard options in edit menu when clipboard or selection is changed
   useEffect(() => {
-    const cutCopyDeleteEnabled = selection.self.length > 0;
+    const cutCopyDeleteEnabled = selfSelection.length > 0;
 
     // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled = selection.self.length > 0 && clipboard.length > 0;
+    const pasteEnabled = selfSelection.length > 0 && clipboard.length > 0;
 
     ipc.setClipboardEnabled(
       cutCopyDeleteEnabled,
@@ -126,7 +140,12 @@ export default function StoreChangeObserver() {
       pasteEnabled,
       cutCopyDeleteEnabled
     );
-  }, [clipboard, selection]);
+  }, [clipboard, selfSelection]);
+
+  // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
+  useEffect(() => {
+    dispatchBroadcast(selectionIndicesSetTo(debouncedSelection));
+  }, [debouncedSelection]);
 
   // Update merge/split options in edit menu when selection is changed
   useEffect(() => {
@@ -137,11 +156,11 @@ export default function StoreChangeObserver() {
 
     const { merge, split } = isMergeSplitAllowed(
       words,
-      indicesToRanges(selection.self)
+      indicesToRanges(selfSelection)
     );
 
     ipc.setMergeSplitEnabled(merge, split);
-  }, [words, selection]);
+  }, [words, selfSelection]);
 
   // Update undo/redo options in edit menu when undo stack is changed
   useEffect(() => {

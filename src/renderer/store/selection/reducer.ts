@@ -1,16 +1,18 @@
 import { Reducer } from 'redux';
-import { rangeToIndices } from 'renderer/utils/range';
+import { rangesToIndices } from 'renderer/utils/range';
 import {
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
   SELECTION_CLEARED,
   SELECTION_RANGE_TOGGLED,
-  SELECTION_RANGE_SET_TO,
+  SELECTION_RANGES_SET_TO,
   SelectionRangeAddedPayload,
   SelectionRangeRemovedPayload,
   SelectionRangeToggledPayload,
-  SelectionRangeSetToPayload,
+  SelectionRangesSetToPayload,
+  SelectionIndicesSetToPayload,
   SelectionClearedPayload,
+  SELECTION_INDICES_SET_TO,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
@@ -83,13 +85,20 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
     return updateSelection(clientId, selection, newSelection);
   }
 
-  if (action.type === SELECTION_RANGE_SET_TO) {
-    const { range, clientId } = action.payload as SelectionRangeSetToPayload;
+  if (action.type === SELECTION_RANGES_SET_TO) {
+    const { ranges, clientId } = action.payload as SelectionRangesSetToPayload;
 
     // Build the selection from scratch out of the single range that was given
-    const newSelection = rangeToIndices(range);
+    const newSelection = Array.from(rangesToIndices(ranges));
 
     return updateSelection(clientId, selection, newSelection);
+  }
+
+  if (action.type === SELECTION_INDICES_SET_TO) {
+    const { indices, clientId } =
+      action.payload as SelectionIndicesSetToPayload;
+
+    return updateSelection(clientId, selection, indices);
   }
 
   if (action.type === SELECTION_CLEARED) {

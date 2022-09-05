@@ -1,7 +1,13 @@
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isInOriginalOrder } from 'renderer/utils/words';
 import { IndexRange, Word } from 'sharedTypes';
-import { SelectionIndices, SelectionState } from '../sharedHelpers';
+
+export type SelectionIndices = number[];
+
+export interface SelectionState {
+  self: SelectionIndices;
+  others: Record<ClientId, SelectionIndices>;
+}
 
 /**
  * Returns whether merge and/or split are allowed given the current state

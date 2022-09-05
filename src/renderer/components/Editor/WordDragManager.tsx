@@ -21,7 +21,7 @@ import { ContainerRefContext } from 'renderer/RootContainerContext';
 import { makeMoveWords } from '../../store/transcriptionWords/ops/moveWords';
 import {
   selectionCleared,
-  selectionRangeSetTo,
+  selectionRangesSetTo,
 } from '../../store/selection/actions';
 import { rangeLengthOne } from '../../utils/range';
 import { MouseButton } from '../../utils/input';
@@ -145,7 +145,7 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
         endIndex: Math.max(wordIndex, dragSelectAnchor) + 1,
       };
 
-      dispatch(selectionRangeSetTo(range));
+      dispatch(selectionRangesSetTo([range]));
     },
     [dragSelectAnchor, dispatch]
   );

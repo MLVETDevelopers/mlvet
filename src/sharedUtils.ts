@@ -1,4 +1,7 @@
-import { SelectionIndices, SelectionState } from 'renderer/store/sharedHelpers';
+import {
+  SelectionIndices,
+  SelectionState,
+} from 'renderer/store/selection/helpers';
 import {
   RuntimeProject,
   ProjectMetadata,

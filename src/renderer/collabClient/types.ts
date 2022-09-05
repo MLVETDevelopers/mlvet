@@ -1,8 +1,4 @@
-import { ClientId, SessionCode } from 'collabTypes/collabShadowTypes';
-import {
-  Client,
-  ServerMessagePayload,
-} from '../../collabTypes/collabSharedTypes';
+import { ServerMessagePayload } from '../../collabTypes/collabSharedTypes';
 import ICollabClient from './ICollabClient';
 
 export type ServerMessageHandlerInner = (payload: ServerMessagePayload) => void;
@@ -10,16 +6,3 @@ export type ServerMessageHandlerInner = (payload: ServerMessagePayload) => void;
 export type ServerMessageHandler = (
   client: ICollabClient
 ) => ServerMessageHandlerInner;
-
-export interface CollabClientInitialState {
-  sessionCode: null;
-  collabClient: ICollabClient;
-}
-
-export interface CollabClientSessionState {
-  sessionCode: SessionCode;
-  isHost: boolean;
-  clients: Client[];
-  ownClientId: ClientId;
-  collabClient: ICollabClient;
-}

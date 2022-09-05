@@ -1,20 +1,13 @@
-import { ClientId } from 'collabTypes/collabShadowTypes';
 import {
   CollabClientInitialState,
   CollabClientSessionState,
-} from 'renderer/collabClient/types';
+} from 'renderer/store/collab/helpers';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
+import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
-
-export type SelectionIndices = number[];
-
-export interface SelectionState {
-  self: SelectionIndices;
-  others: Record<ClientId, SelectionIndices>;
-}
 
 /**
  * The schema for the root-level application / redux store, containing the global app state.

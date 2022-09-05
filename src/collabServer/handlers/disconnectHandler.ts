@@ -1,10 +1,12 @@
-import { ClientMessageHandler } from '../clientMessageHandler';
 import {
   ClientId,
   DisconnectReason,
+  SessionId,
+} from 'collabTypes/collabShadowTypes';
+import { ClientMessageHandler } from '../clientMessageHandler';
+import {
   GuestLeftMessage,
   ServerMessageType,
-  SessionId,
 } from '../../collabTypes/collabSharedTypes';
 import SessionManager from '../SessionManager';
 

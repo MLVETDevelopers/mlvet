@@ -1,11 +1,13 @@
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { IndexRange } from '../../../sharedTypes';
 import { Action } from '../action';
+import { SelectionIndices } from './helpers';
 
 export const SELECTION_RANGE_ADDED = 'SELECTION_RANGE_ADDED';
 export const SELECTION_RANGE_REMOVED = 'SELECTION_RANGE_REMOVED';
 export const SELECTION_RANGE_TOGGLED = 'SELECTION_RANGE_TOGGLED';
-export const SELECTION_RANGE_SET_TO = 'SELECTION_RANGE_SET_TO';
+export const SELECTION_RANGES_SET_TO = 'SELECTION_RANGES_SET_TO';
+export const SELECTION_INDICES_SET_TO = 'SELECTION_INDICES_SET_TO';
 export const SELECTION_CLEARED = 'SELECTION_CLEARED';
 
 export interface SelectionRangeAddedPayload {
@@ -17,7 +19,15 @@ export type SelectionRangeRemovedPayload = SelectionRangeAddedPayload;
 
 export type SelectionRangeToggledPayload = SelectionRangeAddedPayload;
 
-export type SelectionRangeSetToPayload = SelectionRangeAddedPayload;
+export interface SelectionRangesSetToPayload {
+  ranges: IndexRange[];
+  clientId: ClientId | null;
+}
+
+export interface SelectionIndicesSetToPayload {
+  indices: SelectionIndices;
+  clientId: ClientId | null;
+}
 
 export interface SelectionClearedPayload {
   clientId: ClientId | null; // null if self
@@ -59,14 +69,25 @@ export const selectionRangeToggled: (
 });
 
 /**
- * Efficiently sets the range to be a certain value.
+ * Sets the ranges to be a certain value.
  */
-export const selectionRangeSetTo: (
-  range: IndexRange,
+export const selectionRangesSetTo: (
+  ranges: IndexRange[],
   clientId?: ClientId | null
-) => Action<SelectionRangeSetToPayload> = (range, clientId = null) => ({
-  type: SELECTION_RANGE_SET_TO,
-  payload: { range, clientId },
+) => Action<SelectionRangesSetToPayload> = (ranges, clientId = null) => ({
+  type: SELECTION_RANGES_SET_TO,
+  payload: { ranges, clientId },
+});
+
+/**
+ * Sets the selection to be a certain value directly.
+ */
+export const selectionIndicesSetTo: (
+  indices: SelectionIndices,
+  clientId?: ClientId | null
+) => Action<SelectionIndicesSetToPayload> = (indices, clientId = null) => ({
+  type: SELECTION_INDICES_SET_TO,
+  payload: { indices, clientId },
 });
 
 /**

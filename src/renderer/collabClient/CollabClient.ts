@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ActionId, SessionCode } from 'collabTypes/collabShadowTypes';
 import { sleep } from '../../sharedUtils';
 import {
+  ClientBroadcastMessage,
+  ClientBroadcastPayload,
   ClientMessage,
   ClientMessageType,
 } from '../../collabTypes/collabSharedTypes';
@@ -116,6 +118,10 @@ class CollabClient implements ICollabClient {
 
     // Send the specified message
     this.socket.emit(message.type, message.payload);
+  }
+
+  sendBroadcast(payload: ClientBroadcastPayload): void {
+    this.sendMessage({ type: ClientMessageType.CLIENT_BROADCAST, payload });
   }
 
   dispatchToStore: (action: Action<any>) => void = (action) => {

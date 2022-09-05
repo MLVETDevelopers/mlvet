@@ -7,7 +7,7 @@ import {
 import store from 'renderer/store/store';
 import { ServerMessageHandler } from '../types';
 
-const serverActionHandler: ServerMessageHandler = () => (payload) => {
+const serverBroadcastHandler: ServerMessageHandler = () => (payload) => {
   const { action, clientId } = payload as ServerBroadcastPayload;
 
   const { dispatch } = store;
@@ -27,4 +27,4 @@ const serverActionHandler: ServerMessageHandler = () => (payload) => {
   }
 };
 
-export default serverActionHandler;
+export default serverBroadcastHandler;

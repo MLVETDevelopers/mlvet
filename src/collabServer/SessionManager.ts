@@ -238,7 +238,8 @@ class SessionManager {
 
   sendMessageToAllClientsInSession(
     sessionId: SessionId,
-    message: ServerMessage
+    message: ServerMessage,
+    except?: ClientId
   ): void {
     const session = this.sessions[sessionId];
 
@@ -249,8 +250,13 @@ class SessionManager {
     const sockets = Object.values(session.sockets);
 
     sockets.forEach((socket) => {
+      // Skip the excepted client if there is one
+      if (except !== undefined && session.sockets[except] === socket) {
+        return;
+      }
+
       // Send the specified message
-      socket.emit(message.type, message.payload);
+      this.sendMessageToSocket(socket, message);
     });
   }
 
@@ -319,7 +325,13 @@ class SessionManager {
       },
     };
 
-    this.sendMessageToAllClientsInSession(sessionId, broadcastMessage);
+    const exceptClient = clientId;
+
+    this.sendMessageToAllClientsInSession(
+      sessionId,
+      broadcastMessage,
+      exceptClient
+    );
   }
 
   handleClientAction(
@@ -332,8 +344,6 @@ class SessionManager {
     if (session === null) {
       return;
     }
-
-    console.log('session', session);
 
     // Confirm that the client sending the action is up to date with the latest actions
     const clientAck = session.clientAcks[clientId];

@@ -12,7 +12,7 @@ const clientBroadcastHandler: ClientMessageHandler =
       return;
     }
 
-    sessionManager.handleClientBroadcast(action, clientId, session.id);
+    sessionManager.handleClientBroadcast(action, session.id, clientId);
   };
 
 export default clientBroadcastHandler;

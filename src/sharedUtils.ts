@@ -1,3 +1,4 @@
+import { SelectionIndices, SelectionState } from 'renderer/store/sharedHelpers';
 import {
   RuntimeProject,
   ProjectMetadata,
@@ -103,6 +104,13 @@ export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   confidence: 1,
   takeInfo: null,
   ...override,
+});
+
+export const makeSelfSelection: (
+  selection: SelectionIndices
+) => SelectionState = (selection) => ({
+  self: selection,
+  others: {},
 });
 
 export const isInInactiveTake: (

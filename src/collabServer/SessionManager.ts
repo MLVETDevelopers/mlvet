@@ -5,9 +5,11 @@ import randomatic from 'randomatic';
 import { Socket } from 'socket.io';
 import {
   AckClientActionMessage,
+  BroadcastableAction,
   Client,
   ServerAction,
   ServerActionMessage,
+  ServerBroadcastMessage,
   ServerMessage,
   ServerMessageType,
 } from '../collabTypes/collabSharedTypes';
@@ -17,12 +19,7 @@ import {
   SessionCode,
   SessionId,
 } from '../collabTypes/collabShadowTypes';
-import {
-  BroadcastableAction,
-  CollabServerSessionState,
-  ServerBroadcast,
-  SocketId,
-} from './types';
+import { CollabServerSessionState, SocketId } from './types';
 import SessionLookupHelper from './SessionLookupHelper';
 import { sleep } from '../sharedUtils';
 import { SERVER_TO_CLIENT_DELAY_SIMULATED } from './config';
@@ -214,7 +211,9 @@ class SessionManager {
     message: ServerMessage
   ) => Promise<void> = async (socket, message) => {
     // Simulate sleep if enabled
-    await sleep(SERVER_TO_CLIENT_DELAY_SIMULATED);
+    if (SERVER_TO_CLIENT_DELAY_SIMULATED > 0) {
+      await sleep(SERVER_TO_CLIENT_DELAY_SIMULATED);
+    }
 
     // Send the specified message
     socket.emit(message.type, message.payload);
@@ -307,12 +306,18 @@ class SessionManager {
     this.updateClientsWithLatestActions(sessionId);
   }
 
-  handleBroadcast(
+  handleClientBroadcast(
+    action: BroadcastableAction,
     sessionId: SessionId,
-    clientId: ClientId,
-    actions: BroadcastableAction[]
+    clientId: ClientId
   ): void {
-    const broadcastMessage: ServerBroadcast;
+    const broadcastMessage: ServerBroadcastMessage = {
+      type: ServerMessageType.SERVER_BROADCAST,
+      payload: {
+        clientId,
+        action,
+      },
+    };
 
     this.sendMessageToAllClientsInSession(sessionId, broadcastMessage);
   }
@@ -327,6 +332,8 @@ class SessionManager {
     if (session === null) {
       return;
     }
+
+    console.log('session', session);
 
     // Confirm that the client sending the action is up to date with the latest actions
     const clientAck = session.clientAcks[clientId];
@@ -369,7 +376,6 @@ class SessionManager {
         type: ServerMessageType.SERVER_ACTION,
         payload: {
           actions: session.actions.filter((action) => action.index > clientAck),
-          isBroadcast: false,
         },
       };
 

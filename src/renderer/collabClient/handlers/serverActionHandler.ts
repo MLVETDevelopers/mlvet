@@ -38,7 +38,7 @@ const injectClientId: (
 };
 
 const serverActionHandler: ServerMessageHandler = (client) => (payload) => {
-  const { actions, isBroadcast } = payload as ServerActionPayload;
+  const { actions } = payload as ServerActionPayload;
 
   actions.forEach((action) => {
     const { clientId, id, index, ops } = action;

@@ -13,6 +13,7 @@ import clientActionHandler from './handlers/clientActionHandler';
 import SessionManager from './SessionManager';
 import disconnectHandler from './handlers/disconnectHandler';
 import { COLLAB_SERVER_PORT, LOG_VERBOSE } from './config';
+import clientBroadcastHandler from './handlers/clientBroadcastHandler';
 
 const app = http.createServer();
 
@@ -25,6 +26,7 @@ const clientMessageHandlers: Record<ClientMessageType, ClientMessageHandler> = {
   [ClientMessageType.JOIN_SESSION]: joinSessionHandler,
   [ClientMessageType.ACK_SERVER_ACTION]: ackServerActionHandler,
   [ClientMessageType.CLIENT_ACTION]: clientActionHandler,
+  [ClientMessageType.CLIENT_BROADCAST]: clientBroadcastHandler,
 };
 
 const wrapHandler: (

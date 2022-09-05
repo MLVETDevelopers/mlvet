@@ -1,24 +1,13 @@
 import { SELECTION_RANGE_ADDED } from 'renderer/store/selection/actions';
+import { makeSelfSelection } from '../../sharedUtils';
 import { expandSelectionToWord, getSelectionRanges } from '../editor/selection';
-import {
-  ApplicationStore,
-  initialStore,
-  SelectionIndices,
-  SelectionState,
-} from '../store/sharedHelpers';
+import { ApplicationStore, initialStore } from '../store/sharedHelpers';
 import store from '../store/store';
 
 jest.mock('../store/store');
 const getStateMock = store.getState as unknown as jest.Mock<ApplicationStore>;
 
 const dispatchSpy = jest.spyOn(store, 'dispatch');
-
-const makeSelfSelection: (selection: SelectionIndices) => SelectionState = (
-  selection
-) => ({
-  self: selection,
-  others: {},
-});
 
 describe('getSelectionRanges', () => {
   it('should return empty list of ranges when selection is empty', () => {

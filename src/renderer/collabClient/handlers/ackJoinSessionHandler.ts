@@ -61,7 +61,7 @@ const ackJoinSessionHandler: ServerMessageHandler = (client) => (payload) => {
   dispatch(undoStackSet(undoStack.stack, undoStack.index));
 
   // Get the client up to date on all actions performed so far
-  serverActionHandler(client)({ actions, isBroadcast: false });
+  serverActionHandler(client)({ actions });
 };
 
 export default ackJoinSessionHandler;

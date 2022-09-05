@@ -3,7 +3,7 @@ import {
   ClientId,
   SessionCode,
   SessionId,
-} from '../collabTypes/collabSharedTypes';
+} from '../collabTypes/collabShadowTypes';
 import { CollabServerSessionState, SocketId } from './types';
 
 export type SessionsGetter = () => Record<SessionId, CollabServerSessionState>;

@@ -4,7 +4,13 @@ import {
   DisconnectReason,
   SessionCode,
 } from 'collabTypes/collabShadowTypes';
-import { Op, UndoStack, OpPayload } from 'renderer/store/undoStack/helpers';
+import { Action } from 'renderer/store/action';
+import {
+  Op,
+  UndoStack,
+  OpPayload,
+  SelectionPayload,
+} from 'renderer/store/undoStack/helpers';
 import { Transcription } from 'sharedTypes';
 
 /** Misc */
@@ -18,6 +24,8 @@ export interface ErrorPayload {
   error: true;
   message: string | null;
 }
+
+export type BroadcastableAction = Action<SelectionPayload>;
 
 /** Server actions */
 
@@ -89,6 +97,10 @@ export interface ClientActionPayload {
   ops: Op<OpPayload, OpPayload>[];
 }
 
+export interface ClientBroadcastPayload {
+  action: BroadcastableAction;
+}
+
 /** Server message payloads */
 
 export interface AckInitSessionPayload {
@@ -117,7 +129,11 @@ export interface GuestLeftPayload {
 
 export interface ServerActionPayload {
   actions: ServerAction[];
-  isBroadcast: boolean; // doesn't need commits / integrity checks
+}
+
+export interface ServerBroadcastPayload {
+  action: BroadcastableAction;
+  clientId: ClientId;
 }
 
 export interface AckClientActionPayload {
@@ -132,6 +148,7 @@ export type ClientMessagePayload =
   | JoinSessionPayload
   | AckServerActionPayload
   | ClientActionPayload
+  | ClientBroadcastPayload
   | DisconnectReason;
 
 export type InitSessionMessage = ClientMessageBase<
@@ -150,6 +167,10 @@ export type ClientActionMessage = ClientMessageBase<
   ClientMessageType.CLIENT_ACTION,
   ClientActionPayload
 >;
+export type ClientBroadcastMessage = ClientMessageBase<
+  ClientMessageType.CLIENT_BROADCAST,
+  ClientBroadcastPayload
+>;
 
 // Slightly more refined type than ClientMessageBase,
 // as it matches action types to their respective payloads
@@ -157,7 +178,8 @@ export type ClientMessage =
   | InitSessionMessage
   | JoinSessionMessage
   | AckServerActionMessage
-  | ClientActionMessage;
+  | ClientActionMessage
+  | ClientBroadcastMessage;
 
 /** Server message types */
 
@@ -167,6 +189,7 @@ export type ServerMessagePayload =
   | GuestJoinedPayload
   | GuestLeftPayload
   | ServerActionPayload
+  | ServerBroadcastPayload
   | AckClientActionPayload
   | DisconnectReason;
 
@@ -190,6 +213,10 @@ export type ServerActionMessage = ServerMessageBase<
   ServerMessageType.SERVER_ACTION,
   ServerActionPayload
 >;
+export type ServerBroadcastMessage = ServerMessageBase<
+  ServerMessageType.SERVER_BROADCAST,
+  ServerBroadcastPayload
+>;
 export type AckClientActionMessage = ServerMessageBase<
   ServerMessageType.ACK_CLIENT_ACTION,
   AckClientActionPayload
@@ -203,4 +230,5 @@ export type ServerMessage =
   | GuestJoinedMessage
   | GuestLeftMessage
   | ServerActionMessage
+  | ServerBroadcastMessage
   | AckClientActionMessage;

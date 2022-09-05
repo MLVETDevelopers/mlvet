@@ -1,7 +1,6 @@
-import { SelectionPayload, UndoStack } from 'renderer/store/undoStack/helpers';
+import { UndoStack } from 'renderer/store/undoStack/helpers';
 import { Transcription } from 'sharedTypes';
 import { Socket } from 'socket.io';
-import { Action } from 'renderer/store/action';
 import { Client, ServerAction } from '../collabTypes/collabSharedTypes';
 import {
   ClientId,
@@ -26,5 +25,3 @@ export interface CollabServerSessionState {
   initialUndoStack: UndoStack;
   mediaFileName: string;
 }
-
-export type BroadcastableAction = Action<SelectionPayload>;

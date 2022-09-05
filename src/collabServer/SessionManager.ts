@@ -230,7 +230,7 @@ class SessionManager {
     console.log(
       `Sending message to client ${clientId}: ${JSON.stringify(message).slice(
         0,
-        1
+        100
       )} (message may be truncated)`
     );
 

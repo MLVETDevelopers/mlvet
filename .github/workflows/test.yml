@@ -23,4 +23,5 @@ jobs:
           cache: 'npm'
       - run: npm i -g yarn
       - run: yarn
+      - run: cd src/collabServer && yarn && cd ../../ # install dependencies for collab server as that is tested in the same workflow
       - run: yarn test

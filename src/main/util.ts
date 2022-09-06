@@ -48,11 +48,14 @@ export const getProjectDataDir: (projectId: string) => string = (projectId) =>
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
-  path.join(getProjectDataDir(projectId), 'extractedAudio.wav');
+  path.join(getProjectDataDir(projectId), 'extractedAudio.mp3');
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>
   path.join(getProjectDataDir(projectId), 'thumbnail.png');
+
+export const appCloudConfigPath: () => string = () =>
+  path.join(appDataStoragePath(), 'cloudConfig.json');
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

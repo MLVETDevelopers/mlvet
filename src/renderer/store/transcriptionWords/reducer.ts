@@ -1,27 +1,37 @@
 import { Reducer } from 'react';
-import { mapInRanges } from 'renderer/utils/list';
+import { mapInRanges } from 'sharedUtils';
 import { Word } from 'sharedTypes';
+import { rangeLengthOne } from 'renderer/utils/range';
+import { markWordDeleted } from 'renderer/utils/words';
 import { Action } from '../action';
-import { mergeWords } from './mergeWords';
-import { splitWord } from './splitWord';
+import { mergeWords } from './helpers/mergeWordsHelper';
+import { splitWord } from './helpers/splitWordHelper';
 import {
+  CORRECT_WORD,
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
+  RESTORE_SECTION,
   SPLIT_WORD,
+  UNDO_CORRECT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
+  UNDO_RESTORE_SECTION,
 } from './actions';
 import {
+  CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
   PasteWordsPayload,
+  RestoreSectionPayload,
   SplitWordPayload,
+  UndoCorrectWordPayload,
   UndoDeleteSelectionPayload,
   UndoMergeWordsPayload,
   UndoPasteWordsPayload,
+  UndoRestoreSectionPayload,
 } from './opPayloads';
 
 /**
@@ -34,9 +44,7 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === DELETE_SELECTION) {
     const { ranges } = action.payload as DeleteSelectionPayload;
 
-    const markDeleted = (word: Word) => ({ ...word, deleted: true });
-
-    return mapInRanges(words, markDeleted, ranges);
+    return mapInRanges(words, markWordDeleted, ranges);
   }
 
   if (action.type === UNDO_DELETE_SELECTION) {
@@ -103,9 +111,45 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === SPLIT_WORD) {
     const { index } = action.payload as SplitWordPayload;
 
-    const split = splitWord(words, index);
+    return splitWord(words, index);
+  }
 
-    return split;
+  if (action.type === CORRECT_WORD) {
+    const { index, text } = action.payload as CorrectWordPayload;
+
+    return mapInRanges(
+      words,
+      (word) => ({ ...word, word: text, confidence: 1 }),
+      [rangeLengthOne(index)]
+    );
+  }
+
+  if (action.type === UNDO_CORRECT_WORD) {
+    const { index, prevText, prevConfidence } =
+      action.payload as UndoCorrectWordPayload;
+
+    return mapInRanges(
+      words,
+      (word) => ({ ...word, word: prevText, prevConfidence }),
+      [rangeLengthOne(index)]
+    );
+  }
+
+  if (action.type === RESTORE_SECTION) {
+    const { ranges } = action.payload as RestoreSectionPayload;
+
+    const markUndeleted = (word: Word) => ({
+      ...word,
+      deleted: false,
+    });
+
+    return mapInRanges(words, markUndeleted, ranges);
+  }
+
+  if (action.type === UNDO_RESTORE_SECTION) {
+    const { ranges } = action.payload as UndoRestoreSectionPayload;
+
+    return mapInRanges(words, markWordDeleted, ranges);
   }
 
   return words;

@@ -1,655 +1,2073 @@
 {
-  "transcripts": [
+  "duration": 65.844,
+  "words": [
     {
-      "confidence": -977.0841064453125,
-      "words": [
-        {
-          "word": "that",
-          "start_time": 0.48,
-          "duration": 0.08
-        },
-        {
-          "word": "was",
-          "start_time": 0.6,
-          "duration": 0.1
-        },
-        {
-          "word": "actually",
-          "start_time": 0.78,
-          "duration": 0.28
-        },
-        {
-          "word": "example",
-          "start_time": 1.12,
-          "duration": 0.4
-        },
-        {
-          "word": "of",
-          "start_time": 1.58,
-          "duration": 0.08
-        },
-        {
-          "word": "how",
-          "start_time": 1.76,
-          "duration": 0.16
-        },
-        {
-          "word": "not",
-          "start_time": 2.0,
-          "duration": 0.26
-        },
-        {
-          "word": "so",
-          "start_time": 2.3,
-          "duration": 0.14
-        },
-        {
-          "word": "amazing",
-          "start_time": 2.52,
-          "duration": 0.34
-        },
-        {
-          "word": "he",
-          "start_time": 2.98,
-          "duration": 0.12
-        },
-        {
-          "word": "was",
-          "start_time": 3.16,
-          "duration": 0.18
-        },
-        {
-          "word": "but",
-          "start_time": 3.42,
-          "duration": 0.12
-        },
-        {
-          "word": "you",
-          "start_time": 3.56,
-          "duration": 0.12
-        },
-        {
-          "word": "really",
-          "start_time": 3.72,
-          "duration": 0.18
-        },
-        {
-          "word": "going",
-          "start_time": 3.94,
-          "duration": 0.22
-        },
-        {
-          "word": "through",
-          "start_time": 4.2,
-          "duration": 0.24
-        },
-        {
-          "word": "something",
-          "start_time": 4.54,
-          "duration": 0.32
-        },
-        {
-          "word": "here",
-          "start_time": 4.94,
-          "duration": 1.88
-        },
-        {
-          "word": "now",
-          "start_time": 6.92,
-          "duration": 1.1
-        },
-        {
-          "word": "i",
-          "start_time": 8.28,
-          "duration": 0.18
-        },
-        {
-          "word": "find",
-          "start_time": 8.54,
-          "duration": 0.54
-        },
-        {
-          "word": "all",
-          "start_time": 9.22,
-          "duration": 0.1
-        },
-        {
-          "word": "those",
-          "start_time": 9.38,
-          "duration": 0.2
-        },
-        {
-          "word": "years",
-          "start_time": 9.68,
-          "duration": 0.26
-        },
-        {
-          "word": "when",
-          "start_time": 10.0,
-          "duration": 0.1
-        },
-        {
-          "word": "i",
-          "start_time": 10.14,
-          "duration": 0.06
-        },
-        {
-          "word": "pretended",
-          "start_time": 10.26,
-          "duration": 0.34
-        },
-        {
-          "word": "to",
-          "start_time": 10.64,
-          "duration": 0.1
-        },
-        {
-          "word": "cry",
-          "start_time": 10.8,
-          "duration": 0.2
-        },
-        {
-          "word": "i",
-          "start_time": 11.04,
-          "duration": 0.02
-        },
-        {
-          "word": "used",
-          "start_time": 11.14,
-          "duration": 0.12
-        },
-        {
-          "word": "to",
-          "start_time": 11.28,
-          "duration": 0.08
-        },
-        {
-          "word": "use",
-          "start_time": 11.44,
-          "duration": 0.14
-        },
-        {
-          "word": "dad's",
-          "start_time": 11.64,
-          "duration": 0.28
-        },
-        {
-          "word": "death",
-          "start_time": 12.0,
-          "duration": 0.2
-        },
-        {
-          "word": "to",
-          "start_time": 12.24,
-          "duration": 0.08
-        },
-        {
-          "word": "get",
-          "start_time": 12.36,
-          "duration": 0.12
-        },
-        {
-          "word": "me",
-          "start_time": 12.52,
-          "duration": 0.12
-        },
-        {
-          "word": "going",
-          "start_time": 12.72,
-          "duration": 0.34
-        },
-        {
-          "word": "i",
-          "start_time": 13.12,
-          "duration": 0.06
-        },
-        {
-          "word": "try",
-          "start_time": 13.22,
-          "duration": 0.1
-        },
-        {
-          "word": "with",
-          "start_time": 13.44,
-          "duration": 0.12
-        },
-        {
-          "word": "mom",
-          "start_time": 13.62,
-          "duration": 0.3
-        },
-        {
-          "word": "but",
-          "start_time": 13.96,
-          "duration": 0.16
-        },
-        {
-          "word": "i",
-          "start_time": 14.18,
-          "duration": 0.08
-        },
-        {
-          "word": "just",
-          "start_time": 14.28,
-          "duration": 0.12
-        },
-        {
-          "word": "end",
-          "start_time": 14.52,
-          "duration": 0.08
-        },
-        {
-          "word": "up",
-          "start_time": 14.68,
-          "duration": 0.2
-        },
-        {
-          "word": "smiling",
-          "start_time": 14.96,
-          "duration": 0.38
-        },
-        {
-          "word": "and",
-          "start_time": 15.42,
-          "duration": 0.06
-        },
-        {
-          "word": "ruining",
-          "start_time": 15.58,
-          "duration": 0.32
-        },
-        {
-          "word": "it",
-          "start_time": 15.96,
-          "duration": 0.16
-        },
-        {
-          "word": "but",
-          "start_time": 16.18,
-          "duration": 1.02
-        },
-        {
-          "word": "it",
-          "start_time": 17.38,
-          "duration": 0.08
-        },
-        {
-          "word": "feels",
-          "start_time": 17.52,
-          "duration": 0.24
-        },
-        {
-          "word": "like",
-          "start_time": 17.84,
-          "duration": 0.26
-        },
-        {
-          "word": "real",
-          "start_time": 18.2,
-          "duration": 0.3
-        },
-        {
-          "word": "you",
-          "start_time": 18.62,
-          "duration": 0.12
-        },
-        {
-          "word": "know",
-          "start_time": 18.78,
-          "duration": 0.28
-        },
-        {
-          "word": "and",
-          "start_time": 19.22,
-          "duration": 0.22
-        },
-        {
-          "word": "you",
-          "start_time": 19.48,
-          "duration": 0.12
-        },
-        {
-          "word": "haven't",
-          "start_time": 19.64,
-          "duration": 0.26
-        },
-        {
-          "word": "really",
-          "start_time": 19.96,
-          "duration": 0.24
-        },
-        {
-          "word": "allowed",
-          "start_time": 20.3,
-          "duration": 0.24
-        },
-        {
-          "word": "herself",
-          "start_time": 20.58,
-          "duration": 0.38
-        },
-        {
-          "word": "to",
-          "start_time": 21.02,
-          "duration": 0.14
-        },
-        {
-          "word": "grieve",
-          "start_time": 21.22,
-          "duration": 0.32
-        },
-        {
-          "word": "much",
-          "start_time": 21.64,
-          "duration": 0.14
-        },
-        {
-          "word": "at",
-          "start_time": 21.84,
-          "duration": 0.08
-        },
-        {
-          "word": "all",
-          "start_time": 22.0,
-          "duration": 0.84
-        },
-        {
-          "word": "moralists",
-          "start_time": 22.9,
-          "duration": 1.2
-        },
-        {
-          "word": "much",
-          "start_time": 24.14,
-          "duration": 0.22
-        },
-        {
-          "word": "more",
-          "start_time": 24.42,
-          "duration": 0.92
-        },
-        {
-          "word": "what",
-          "start_time": 25.4,
-          "duration": 0.16
-        },
-        {
-          "word": "more",
-          "start_time": 25.62,
-          "duration": 0.14
-        },
-        {
-          "word": "complicated",
-          "start_time": 25.82,
-          "duration": 0.52
-        },
-        {
-          "word": "than",
-          "start_time": 26.38,
-          "duration": 0.08
-        },
-        {
-          "word": "yours",
-          "start_time": 26.5,
-          "duration": 0.18
-        },
-        {
-          "word": "is",
-          "start_time": 26.74,
-          "duration": 0.1
-        },
-        {
-          "word": "predicated",
-          "start_time": 26.94,
-          "duration": 0.38
-        },
-        {
-          "word": "will",
-          "start_time": 27.42,
-          "duration": 0.14
-        },
-        {
-          "word": "unsecured",
-          "start_time": 27.6,
-          "duration": 0.5
-        },
-        {
-          "word": "and",
-          "start_time": 28.18,
-          "duration": 0.1
-        },
-        {
-          "word": "lies",
-          "start_time": 28.36,
-          "duration": 0.2
-        },
-        {
-          "word": "it",
-          "start_time": 28.62,
-          "duration": 0.06
-        },
-        {
-          "word": "wasn't",
-          "start_time": 28.7,
-          "duration": 0.24
-        },
-        {
-          "word": "a",
-          "start_time": 28.96,
-          "duration": 0.04
-        },
-        {
-          "word": "whole",
-          "start_time": 29.04,
-          "duration": 0.14
-        },
-        {
-          "word": "lot",
-          "start_time": 29.22,
-          "duration": 0.12
-        },
-        {
-          "word": "of",
-          "start_time": 29.38,
-          "duration": 0.94
-        },
-        {
-          "word": "trust",
-          "start_time": 30.42,
-          "duration": 0.3
-        },
-        {
-          "word": "there",
-          "start_time": 30.78,
-          "duration": 0.24
-        },
-        {
-          "word": "you",
-          "start_time": 31.08,
-          "duration": 0.1
-        },
-        {
-          "word": "know",
-          "start_time": 31.22,
-          "duration": 0.76
-        },
-        {
-          "word": "heroes",
-          "start_time": 32.06,
-          "duration": 1.44
-        },
-        {
-          "word": "here",
-          "start_time": 33.56,
-          "duration": 0.22
-        },
-        {
-          "word": "comes",
-          "start_time": 33.84,
-          "duration": 0.34
-        },
-        {
-          "word": "john",
-          "start_time": 34.3,
-          "duration": 0.24
-        },
-        {
-          "word": "wayne",
-          "start_time": 34.66,
-          "duration": 2.38
-        },
-        {
-          "word": "i'm",
-          "start_time": 37.16,
-          "duration": 0.14
-        },
-        {
-          "word": "not",
-          "start_time": 37.34,
-          "duration": 0.2
-        },
-        {
-          "word": "going",
-          "start_time": 37.58,
-          "duration": 0.12
-        },
-        {
-          "word": "to",
-          "start_time": 37.72,
-          "duration": 0.18
-        },
-        {
-          "word": "cry",
-          "start_time": 38.06,
-          "duration": 0.34
-        },
-        {
-          "word": "about",
-          "start_time": 38.5,
-          "duration": 0.34
-        },
-        {
-          "word": "a",
-          "start_time": 39.5,
-          "duration": 0.68
-        },
-        {
-          "word": "i'm",
-          "start_time": 40.28,
-          "duration": 0.12
-        },
-        {
-          "word": "going",
-          "start_time": 40.42,
-          "duration": 0.12
-        },
-        {
-          "word": "to",
-          "start_time": 40.56,
-          "duration": 0.14
-        },
-        {
-          "word": "build",
-          "start_time": 40.76,
-          "duration": 0.22
-        },
-        {
-          "word": "airport",
-          "start_time": 41.18,
-          "duration": 0.74
-        },
-        {
-          "word": "butcherings",
-          "start_time": 41.96,
-          "duration": 6.42
-        },
-        {
-          "word": "you",
-          "start_time": 48.42,
-          "duration": 0.1
-        },
-        {
-          "word": "can",
-          "start_time": 48.56,
-          "duration": 0.1
-        },
-        {
-          "word": "keep",
-          "start_time": 48.7,
-          "duration": 0.14
-        },
-        {
-          "word": "him",
-          "start_time": 48.9,
-          "duration": 0.14
-        },
-        {
-          "word": "bottled",
-          "start_time": 49.06,
-          "duration": 0.3
-        },
-        {
-          "word": "up",
-          "start_time": 49.44,
-          "duration": 0.12
-        },
-        {
-          "word": "but",
-          "start_time": 49.6,
-          "duration": 0.1
-        },
-        {
-          "word": "they",
-          "start_time": 49.74,
-          "duration": 0.2
-        },
-        {
-          "word": "will",
-          "start_time": 50.02,
-          "duration": 0.24
-        },
-        {
-          "word": "come",
-          "start_time": 50.32,
-          "duration": 0.12
-        },
-        {
-          "word": "out",
-          "start_time": 50.52,
-          "duration": 0.16
-        },
-        {
-          "word": "michael",
-          "start_time": 50.72,
-          "duration": 0.3
-        },
-        {
-          "word": "sometimes",
-          "start_time": 51.08,
-          "duration": 0.64
-        },
-        {
-          "word": "in",
-          "start_time": 51.78,
-          "duration": 0.06
-        },
-        {
-          "word": "the",
-          "start_time": 51.88,
-          "duration": 0.1
-        },
-        {
-          "word": "most",
-          "start_time": 52.02,
-          "duration": 0.36
-        },
-        {
-          "word": "conceited",
-          "start_time": 52.54,
-          "duration": 4.42
-        }
-      ]
+      "word": "That",
+      "startTime": 0.43,
+      "duration": 0.128,
+      "confidence": 0.92954,
+      "outputStartTime": 0,
+      "originalIndex": 0,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.43,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "was",
+      "startTime": 0.584,
+      "duration": 0.154,
+      "confidence": 0.99467,
+      "outputStartTime": 0.571,
+      "originalIndex": 1,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "actually",
+      "startTime": 0.764,
+      "duration": 0.154,
+      "confidence": 0.99503,
+      "outputStartTime": 0.751,
+      "originalIndex": 2,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "an",
+      "startTime": 0.944,
+      "duration": 0.118,
+      "confidence": 0.83373,
+      "outputStartTime": 0.931,
+      "originalIndex": 3,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "example",
+      "startTime": 1.076,
+      "duration": 0.322,
+      "confidence": 0.64487,
+      "outputStartTime": 1.069,
+      "originalIndex": 4,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "of",
+      "startTime": 1.484,
+      "duration": 0.178,
+      "confidence": 1,
+      "outputStartTime": 1.441,
+      "originalIndex": 5,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "how",
+      "startTime": 1.676,
+      "duration": 0.178,
+      "confidence": 0.99931,
+      "outputStartTime": 1.669,
+      "originalIndex": 6,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "not",
+      "startTime": 1.892,
+      "duration": 0.238,
+      "confidence": 1,
+      "outputStartTime": 1.873,
+      "originalIndex": 7,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "so",
+      "startTime": 2.18,
+      "duration": 0.214,
+      "confidence": 0.86532,
+      "outputStartTime": 2.155,
+      "originalIndex": 8,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "amazing",
+      "startTime": 2.432,
+      "duration": 0.346,
+      "confidence": 0.99966,
+      "outputStartTime": 2.413,
+      "originalIndex": 9,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "he",
+      "startTime": 2.864,
+      "duration": 0.214,
+      "confidence": 0.99637,
+      "outputStartTime": 2.821,
+      "originalIndex": 10,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "was.",
+      "startTime": 3.104,
+      "duration": 0.19,
+      "confidence": 0.99706,
+      "outputStartTime": 3.091,
+      "originalIndex": 11,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "Boy,",
+      "startTime": 3.332,
+      "duration": 0.166,
+      "confidence": 0.99008,
+      "outputStartTime": 3.313,
+      "originalIndex": 12,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "you're",
+      "startTime": 3.524,
+      "duration": 0.158,
+      "confidence": 0.79036,
+      "outputStartTime": 3.511,
+      "originalIndex": 13,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "really",
+      "startTime": 3.706,
+      "duration": 0.188,
+      "confidence": 0.99579,
+      "outputStartTime": 3.694,
+      "originalIndex": 14,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "going",
+      "startTime": 3.932,
+      "duration": 0.202,
+      "confidence": 0.98323,
+      "outputStartTime": 3.913,
+      "originalIndex": 15,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "through",
+      "startTime": 4.172,
+      "duration": 0.238,
+      "confidence": 0.99916,
+      "outputStartTime": 4.153,
+      "originalIndex": 16,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "something",
+      "startTime": 4.46,
+      "duration": 0.286,
+      "confidence": 0.94129,
+      "outputStartTime": 4.435,
+      "originalIndex": 17,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "here.",
+      "startTime": 4.808,
+      "duration": 0.612,
+      "confidence": 0.99329,
+      "outputStartTime": 4.777,
+      "originalIndex": 18,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.345,
+      "takeInfo": null
+    },
+    {
+      "word": "I",
+      "startTime": 6.11,
+      "duration": 0.436,
+      "confidence": 0.59,
+      "outputStartTime": 5.765,
+      "originalIndex": 19,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.345,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "know.",
+      "startTime": 6.608,
+      "duration": 0.612,
+      "confidence": 0.99708,
+      "outputStartTime": 6.577,
+      "originalIndex": 20,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.285,
+      "takeInfo": null
+    },
+    {
+      "word": "You",
+      "startTime": 7.79,
+      "duration": 0.256,
+      "confidence": 0.7,
+      "outputStartTime": 7.505,
+      "originalIndex": 21,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.285,
+      "bufferDurationAfter": 0.001,
+      "takeInfo": null
+    },
+    {
+      "word": "know,",
+      "startTime": 8.048,
+      "duration": 0.094,
+      "confidence": 0.97388,
+      "outputStartTime": 8.047,
+      "originalIndex": 22,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.001,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "it's",
+      "startTime": 8.156,
+      "duration": 0.206,
+      "confidence": 0.63479,
+      "outputStartTime": 8.149,
+      "originalIndex": 23,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "funny.",
+      "startTime": 8.386,
+      "duration": 0.528,
+      "confidence": 0.99984,
+      "outputStartTime": 8.374,
+      "originalIndex": 24,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.054,
+      "takeInfo": null
+    },
+    {
+      "word": "All",
+      "startTime": 9.022,
+      "duration": 0.236,
+      "confidence": 0.99986,
+      "outputStartTime": 8.968,
+      "originalIndex": 25,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.054,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "those",
+      "startTime": 9.284,
+      "duration": 0.226,
+      "confidence": 0.75874,
+      "outputStartTime": 9.271,
+      "originalIndex": 26,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "years",
+      "startTime": 9.56,
+      "duration": 0.286,
+      "confidence": 0.9999,
+      "outputStartTime": 9.535,
+      "originalIndex": 27,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "when",
+      "startTime": 9.908,
+      "duration": 0.154,
+      "confidence": 0.99915,
+      "outputStartTime": 9.877,
+      "originalIndex": 28,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "I",
+      "startTime": 10.076,
+      "duration": 0.106,
+      "confidence": 0.99,
+      "outputStartTime": 10.069,
+      "originalIndex": 29,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "pretended",
+      "startTime": 10.196,
+      "duration": 0.326,
+      "confidence": 0.50689,
+      "outputStartTime": 10.189,
+      "originalIndex": 30,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 10.546,
+      "duration": 0.116,
+      "confidence": 1,
+      "outputStartTime": 10.534,
+      "originalIndex": 31,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "cry,",
+      "startTime": 10.676,
+      "duration": 0.242,
+      "confidence": 0.98064,
+      "outputStartTime": 10.669,
+      "originalIndex": 32,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "I",
+      "startTime": 10.954,
+      "duration": 0.128,
+      "confidence": 0.98,
+      "outputStartTime": 10.936,
+      "originalIndex": 33,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "used",
+      "startTime": 11.096,
+      "duration": 0.106,
+      "confidence": 0.99601,
+      "outputStartTime": 11.089,
+      "originalIndex": 34,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 11.216,
+      "duration": 0.106,
+      "confidence": 0.99,
+      "outputStartTime": 11.209,
+      "originalIndex": 35,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "use",
+      "startTime": 11.336,
+      "duration": 0.178,
+      "confidence": 0.54285,
+      "outputStartTime": 11.329,
+      "originalIndex": 36,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "Dad's",
+      "startTime": 11.552,
+      "duration": 0.35,
+      "confidence": 0.72374,
+      "outputStartTime": 11.533,
+      "originalIndex": 37,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "death",
+      "startTime": 11.926,
+      "duration": 0.192,
+      "confidence": 0.88927,
+      "outputStartTime": 11.914,
+      "originalIndex": 38,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 12.154,
+      "duration": 0.164,
+      "confidence": 0.96,
+      "outputStartTime": 12.136,
+      "originalIndex": 39,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "get",
+      "startTime": 12.344,
+      "duration": 0.118,
+      "confidence": 0.99929,
+      "outputStartTime": 12.331,
+      "originalIndex": 40,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "me",
+      "startTime": 12.476,
+      "duration": 0.142,
+      "confidence": 0.99835,
+      "outputStartTime": 12.469,
+      "originalIndex": 41,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "going.",
+      "startTime": 12.644,
+      "duration": 0.262,
+      "confidence": 0.99492,
+      "outputStartTime": 12.631,
+      "originalIndex": 42,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "I",
+      "startTime": 12.968,
+      "duration": 0.154,
+      "confidence": 1,
+      "outputStartTime": 12.937,
+      "originalIndex": 43,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "tried",
+      "startTime": 13.136,
+      "duration": 0.142,
+      "confidence": 0.99872,
+      "outputStartTime": 13.129,
+      "originalIndex": 44,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "it",
+      "startTime": 13.304,
+      "duration": 0.118,
+      "confidence": 0.99796,
+      "outputStartTime": 13.291,
+      "originalIndex": 45,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "with",
+      "startTime": 13.436,
+      "duration": 0.106,
+      "confidence": 0.9994,
+      "outputStartTime": 13.429,
+      "originalIndex": 46,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "Moms,",
+      "startTime": 13.556,
+      "duration": 0.302,
+      "confidence": 0.50075,
+      "outputStartTime": 13.549,
+      "originalIndex": 47,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "but",
+      "startTime": 13.894,
+      "duration": 0.128,
+      "confidence": 0.96338,
+      "outputStartTime": 13.876,
+      "originalIndex": 48,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "if",
+      "startTime": 14.036,
+      "duration": 0.106,
+      "confidence": 0.82533,
+      "outputStartTime": 14.029,
+      "originalIndex": 49,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "I",
+      "startTime": 14.156,
+      "duration": 0.106,
+      "confidence": 1,
+      "outputStartTime": 14.149,
+      "originalIndex": 50,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "just",
+      "startTime": 14.276,
+      "duration": 0.142,
+      "confidence": 0.98903,
+      "outputStartTime": 14.269,
+      "originalIndex": 51,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "end",
+      "startTime": 14.444,
+      "duration": 0.118,
+      "confidence": 0.99702,
+      "outputStartTime": 14.431,
+      "originalIndex": 52,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "up",
+      "startTime": 14.576,
+      "duration": 0.286,
+      "confidence": 0.76444,
+      "outputStartTime": 14.569,
+      "originalIndex": 53,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.037,
+      "takeInfo": null
+    },
+    {
+      "word": "smiling",
+      "startTime": 14.936,
+      "duration": 0.386,
+      "confidence": 0.67354,
+      "outputStartTime": 14.899,
+      "originalIndex": 54,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.037,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "and",
+      "startTime": 15.346,
+      "duration": 0.152,
+      "confidence": 0.99,
+      "outputStartTime": 15.334,
+      "originalIndex": 55,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "ruining",
+      "startTime": 15.524,
+      "duration": 0.338,
+      "confidence": 0.99289,
+      "outputStartTime": 15.511,
+      "originalIndex": 56,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "it",
+      "startTime": 15.886,
+      "duration": 0.188,
+      "confidence": 0.99403,
+      "outputStartTime": 15.874,
+      "originalIndex": 57,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "but",
+      "startTime": 16.112,
+      "duration": 0.588,
+      "confidence": 0.69179,
+      "outputStartTime": 16.093,
+      "originalIndex": 58,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.165,
+      "takeInfo": null
+    },
+    {
+      "word": "it",
+      "startTime": 17.03,
+      "duration": 0.364,
+      "confidence": 0.99729,
+      "outputStartTime": 16.865,
+      "originalIndex": 59,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.165,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "feels",
+      "startTime": 17.432,
+      "duration": 0.326,
+      "confidence": 0.99705,
+      "outputStartTime": 17.413,
+      "originalIndex": 60,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "like",
+      "startTime": 17.794,
+      "duration": 0.272,
+      "confidence": 0.95,
+      "outputStartTime": 17.776,
+      "originalIndex": 61,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "real,",
+      "startTime": 18.128,
+      "duration": 0.334,
+      "confidence": 1,
+      "outputStartTime": 18.097,
+      "originalIndex": 62,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.037,
+      "takeInfo": null
+    },
+    {
+      "word": "you",
+      "startTime": 18.536,
+      "duration": 0.166,
+      "confidence": 0.58,
+      "outputStartTime": 18.499,
+      "originalIndex": 63,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.037,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "know?",
+      "startTime": 18.716,
+      "duration": 0.25,
+      "confidence": 0.99802,
+      "outputStartTime": 18.709,
+      "originalIndex": 64,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "And",
+      "startTime": 19.028,
+      "duration": 0.298,
+      "confidence": 0.9,
+      "outputStartTime": 18.997,
+      "originalIndex": 65,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "you",
+      "startTime": 19.388,
+      "duration": 0.19,
+      "confidence": 1,
+      "outputStartTime": 19.357,
+      "originalIndex": 66,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "haven't",
+      "startTime": 19.604,
+      "duration": 0.29,
+      "confidence": 0.94632,
+      "outputStartTime": 19.591,
+      "originalIndex": 67,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.024,
+      "takeInfo": null
+    },
+    {
+      "word": "really",
+      "startTime": 19.942,
+      "duration": 0.212,
+      "confidence": 0.99442,
+      "outputStartTime": 19.918,
+      "originalIndex": 68,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.024,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "allowed",
+      "startTime": 20.192,
+      "duration": 0.314,
+      "confidence": 0.99944,
+      "outputStartTime": 20.173,
+      "originalIndex": 69,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.006,
+      "takeInfo": null
+    },
+    {
+      "word": "yourself",
+      "startTime": 20.518,
+      "duration": 0.32,
+      "confidence": 0.59,
+      "outputStartTime": 20.512,
+      "originalIndex": 70,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.006,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 20.924,
+      "duration": 0.178,
+      "confidence": 1,
+      "outputStartTime": 20.881,
+      "originalIndex": 71,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "grieve",
+      "startTime": 21.116,
+      "duration": 0.398,
+      "confidence": 0.85343,
+      "outputStartTime": 21.109,
+      "originalIndex": 72,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.024,
+      "takeInfo": null
+    },
+    {
+      "word": "much",
+      "startTime": 21.562,
+      "duration": 0.176,
+      "confidence": 0.99998,
+      "outputStartTime": 21.538,
+      "originalIndex": 73,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.024,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "at",
+      "startTime": 21.764,
+      "duration": 0.118,
+      "confidence": 1,
+      "outputStartTime": 21.751,
+      "originalIndex": 74,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "all.",
+      "startTime": 21.896,
+      "duration": 0.178,
+      "confidence": 0.99971,
+      "outputStartTime": 21.889,
+      "originalIndex": 75,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "Michael,",
+      "startTime": 22.112,
+      "duration": 0.542,
+      "confidence": 0.9679,
+      "outputStartTime": 22.093,
+      "originalIndex": 76,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.054,
+      "takeInfo": null
+    },
+    {
+      "word": "my",
+      "startTime": 22.762,
+      "duration": 0.272,
+      "confidence": 0.9994,
+      "outputStartTime": 22.708,
+      "originalIndex": 77,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.054,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "relationship",
+      "startTime": 23.072,
+      "duration": 0.346,
+      "confidence": 0.99768,
+      "outputStartTime": 23.053,
+      "originalIndex": 78,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "with",
+      "startTime": 23.504,
+      "duration": 0.178,
+      "confidence": 0.99949,
+      "outputStartTime": 23.461,
+      "originalIndex": 79,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "dad",
+      "startTime": 23.696,
+      "duration": 0.206,
+      "confidence": 0.468,
+      "outputStartTime": 23.689,
+      "originalIndex": 80,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "was",
+      "startTime": 23.926,
+      "duration": 0.574,
+      "confidence": 0.95553,
+      "outputStartTime": 23.914,
+      "originalIndex": 81,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.345,
+      "takeInfo": null
+    },
+    {
+      "word": "much",
+      "startTime": 25.19,
+      "duration": 0.328,
+      "confidence": 0.98462,
+      "outputStartTime": 24.845,
+      "originalIndex": 82,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.345,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "more",
+      "startTime": 25.544,
+      "duration": 0.19,
+      "confidence": 1,
+      "outputStartTime": 25.531,
+      "originalIndex": 83,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "complicated",
+      "startTime": 25.772,
+      "duration": 0.446,
+      "confidence": 0.99419,
+      "outputStartTime": 25.753,
+      "originalIndex": 84,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "than",
+      "startTime": 26.254,
+      "duration": 0.164,
+      "confidence": 0.54462,
+      "outputStartTime": 26.236,
+      "originalIndex": 85,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "yours.",
+      "startTime": 26.444,
+      "duration": 0.182,
+      "confidence": 0.97592,
+      "outputStartTime": 26.431,
+      "originalIndex": 86,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.006,
+      "takeInfo": null
+    },
+    {
+      "word": "It",
+      "startTime": 26.638,
+      "duration": 0.104,
+      "confidence": 0.22556,
+      "outputStartTime": 26.632,
+      "originalIndex": 87,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.006,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "was",
+      "startTime": 26.756,
+      "duration": 0.142,
+      "confidence": 0.87084,
+      "outputStartTime": 26.749,
+      "originalIndex": 88,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "predicated",
+      "startTime": 26.924,
+      "duration": 0.374,
+      "confidence": 0.98459,
+      "outputStartTime": 26.911,
+      "originalIndex": 89,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "a",
+      "startTime": 27.334,
+      "duration": 0.092,
+      "confidence": 0.99,
+      "outputStartTime": 27.316,
+      "originalIndex": 90,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.001,
+      "takeInfo": null
+    },
+    {
+      "word": "lot",
+      "startTime": 27.428,
+      "duration": 0.094,
+      "confidence": 0.99975,
+      "outputStartTime": 27.427,
+      "originalIndex": 91,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.001,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "on",
+      "startTime": 27.536,
+      "duration": 0.142,
+      "confidence": 0.97562,
+      "outputStartTime": 27.529,
+      "originalIndex": 92,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "secrets",
+      "startTime": 27.704,
+      "duration": 0.398,
+      "confidence": 0.58262,
+      "outputStartTime": 27.691,
+      "originalIndex": 93,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "and",
+      "startTime": 28.126,
+      "duration": 0.116,
+      "confidence": 0.99,
+      "outputStartTime": 28.114,
+      "originalIndex": 94,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "lies.",
+      "startTime": 28.256,
+      "duration": 0.242,
+      "confidence": 0.79337,
+      "outputStartTime": 28.249,
+      "originalIndex": 95,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "There",
+      "startTime": 28.534,
+      "duration": 0.128,
+      "confidence": 0.67079,
+      "outputStartTime": 28.516,
+      "originalIndex": 96,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "wasn't",
+      "startTime": 28.676,
+      "duration": 0.206,
+      "confidence": 0.98847,
+      "outputStartTime": 28.669,
+      "originalIndex": 97,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "a",
+      "startTime": 28.906,
+      "duration": 0.08,
+      "confidence": 0.97,
+      "outputStartTime": 28.894,
+      "originalIndex": 98,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.001,
+      "takeInfo": null
+    },
+    {
+      "word": "whole",
+      "startTime": 28.988,
+      "duration": 0.13,
+      "confidence": 0.79941,
+      "outputStartTime": 28.987,
+      "originalIndex": 99,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.001,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "lot",
+      "startTime": 29.144,
+      "duration": 0.154,
+      "confidence": 0.74606,
+      "outputStartTime": 29.131,
+      "originalIndex": 100,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "of",
+      "startTime": 29.324,
+      "duration": 0.622,
+      "confidence": 1,
+      "outputStartTime": 29.311,
+      "originalIndex": 101,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.091,
+      "takeInfo": null
+    },
+    {
+      "word": "trust.",
+      "startTime": 30.128,
+      "duration": 0.454,
+      "confidence": 0.8016,
+      "outputStartTime": 30.037,
+      "originalIndex": 102,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.091,
+      "bufferDurationAfter": 0.037,
+      "takeInfo": null
+    },
+    {
+      "word": "There",
+      "startTime": 30.656,
+      "duration": 0.624,
+      "confidence": 0.99755,
+      "outputStartTime": 30.619,
+      "originalIndex": 103,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.037,
+      "bufferDurationAfter": 0.405,
+      "takeInfo": null
+    },
+    {
+      "word": "he",
+      "startTime": 32.09,
+      "duration": 0.75,
+      "confidence": 0.52563,
+      "outputStartTime": 31.685,
+      "originalIndex": 104,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.405,
+      "bufferDurationAfter": 0.345,
+      "takeInfo": null
+    },
+    {
+      "word": "comes.",
+      "startTime": 33.53,
+      "duration": 0.508,
+      "confidence": 0.54785,
+      "outputStartTime": 33.185,
+      "originalIndex": 105,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.345,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "John",
+      "startTime": 34.124,
+      "duration": 0.286,
+      "confidence": 0.97592,
+      "outputStartTime": 34.081,
+      "originalIndex": 106,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "Wayne.",
+      "startTime": 34.46,
+      "duration": 0.73,
+      "confidence": 0.97637,
+      "outputStartTime": 34.435,
+      "originalIndex": 107,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.82,
+      "takeInfo": null
+    },
+    {
+      "word": "I'm",
+      "startTime": 36.83,
+      "duration": 0.428,
+      "confidence": 0.95482,
+      "outputStartTime": 36.01,
+      "originalIndex": 108,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.82,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "not",
+      "startTime": 37.294,
+      "duration": 0.2,
+      "confidence": 1,
+      "outputStartTime": 37.276,
+      "originalIndex": 109,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "going",
+      "startTime": 37.532,
+      "duration": 0.13,
+      "confidence": 0.99772,
+      "outputStartTime": 37.513,
+      "originalIndex": 110,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 37.676,
+      "duration": 0.178,
+      "confidence": 0.93,
+      "outputStartTime": 37.669,
+      "originalIndex": 111,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "cry",
+      "startTime": 37.892,
+      "duration": 0.374,
+      "confidence": 0.99394,
+      "outputStartTime": 37.873,
+      "originalIndex": 112,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.036,
+      "takeInfo": null
+    },
+    {
+      "word": "about",
+      "startTime": 38.338,
+      "duration": 0.344,
+      "confidence": 0.99974,
+      "outputStartTime": 38.302,
+      "originalIndex": 113,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.036,
+      "bufferDurationAfter": 0.037,
+      "takeInfo": null
+    },
+    {
+      "word": "my",
+      "startTime": 38.756,
+      "duration": 0.238,
+      "confidence": 0.63669,
+      "outputStartTime": 38.719,
+      "originalIndex": 114,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.037,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "paw.",
+      "startTime": 39.032,
+      "duration": 0.758,
+      "confidence": 0.70707,
+      "outputStartTime": 39.013,
+      "originalIndex": 115,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.09,
+      "takeInfo": null
+    },
+    {
+      "word": "I'm",
+      "startTime": 39.97,
+      "duration": 0.372,
+      "confidence": 0.94739,
+      "outputStartTime": 39.88,
+      "originalIndex": 116,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.09,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    },
+    {
+      "word": "going",
+      "startTime": 40.366,
+      "duration": 0.116,
+      "confidence": 0.93408,
+      "outputStartTime": 40.354,
+      "originalIndex": 117,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "to",
+      "startTime": 40.496,
+      "duration": 0.142,
+      "confidence": 0.97,
+      "outputStartTime": 40.489,
+      "originalIndex": 118,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "build",
+      "startTime": 40.664,
+      "duration": 0.226,
+      "confidence": 0.99976,
+      "outputStartTime": 40.651,
+      "originalIndex": 119,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "an",
+      "startTime": 40.94,
+      "duration": 0.178,
+      "confidence": 0.9988,
+      "outputStartTime": 40.915,
+      "originalIndex": 120,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "airport,",
+      "startTime": 41.144,
+      "duration": 0.554,
+      "confidence": 0.83167,
+      "outputStartTime": 41.131,
+      "originalIndex": 121,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.048,
+      "takeInfo": null
+    },
+    {
+      "word": "put",
+      "startTime": 41.794,
+      "duration": 0.26,
+      "confidence": 0.99491,
+      "outputStartTime": 41.746,
+      "originalIndex": 122,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.048,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "my",
+      "startTime": 42.092,
+      "duration": 0.166,
+      "confidence": 0.99895,
+      "outputStartTime": 42.073,
+      "originalIndex": 123,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "name",
+      "startTime": 42.284,
+      "duration": 0.262,
+      "confidence": 1,
+      "outputStartTime": 42.271,
+      "originalIndex": 124,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.031,
+      "takeInfo": null
+    },
+    {
+      "word": "on",
+      "startTime": 42.608,
+      "duration": 0.154,
+      "confidence": 0.9998,
+      "outputStartTime": 42.577,
+      "originalIndex": 125,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "it.",
+      "startTime": 42.776,
+      "duration": 0.322,
+      "confidence": 0.72408,
+      "outputStartTime": 42.769,
+      "originalIndex": 126,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.043,
+      "takeInfo": null
+    },
+    {
+      "word": "Why,",
+      "startTime": 43.184,
+      "duration": 0.286,
+      "confidence": 0.97609,
+      "outputStartTime": 43.141,
+      "originalIndex": 127,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "Michael?",
+      "startTime": 43.52,
+      "duration": 0.73,
+      "confidence": 0.40737,
+      "outputStartTime": 43.495,
+      "originalIndex": 128,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.31,
+      "takeInfo": null
+    },
+    {
+      "word": "Can",
+      "startTime": 44.87,
+      "duration": 0.4,
+      "confidence": 0.79987,
+      "outputStartTime": 44.56,
+      "originalIndex": 129,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.31,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "fly",
+      "startTime": 45.32,
+      "duration": 0.314,
+      "confidence": 0.79865,
+      "outputStartTime": 45.295,
+      "originalIndex": 130,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.024,
+      "takeInfo": null
+    },
+    {
+      "word": "away",
+      "startTime": 45.682,
+      "duration": 0.248,
+      "confidence": 1,
+      "outputStartTime": 45.658,
+      "originalIndex": 131,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.024,
+      "bufferDurationAfter": 0.025,
+      "takeInfo": null
+    },
+    {
+      "word": "from",
+      "startTime": 45.98,
+      "duration": 0.178,
+      "confidence": 0.99996,
+      "outputStartTime": 45.955,
+      "originalIndex": 132,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.025,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "your",
+      "startTime": 46.184,
+      "duration": 0.154,
+      "confidence": 0.99854,
+      "outputStartTime": 46.171,
+      "originalIndex": 133,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "feelings.",
+      "startTime": 46.364,
+      "duration": 0.766,
+      "confidence": 0.94755,
+      "outputStartTime": 46.351,
+      "originalIndex": 134,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.52,
+      "takeInfo": null
+    },
+    {
+      "word": "You",
+      "startTime": 48.17,
+      "duration": 0.292,
+      "confidence": 1,
+      "outputStartTime": 47.65,
+      "originalIndex": 135,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.52,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "can",
+      "startTime": 48.476,
+      "duration": 0.142,
+      "confidence": 0.99421,
+      "outputStartTime": 48.469,
+      "originalIndex": 136,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "keep",
+      "startTime": 48.644,
+      "duration": 0.154,
+      "confidence": 0.99991,
+      "outputStartTime": 48.631,
+      "originalIndex": 137,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "them",
+      "startTime": 48.824,
+      "duration": 0.154,
+      "confidence": 0.99004,
+      "outputStartTime": 48.811,
+      "originalIndex": 138,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "bottled",
+      "startTime": 49.004,
+      "duration": 0.29,
+      "confidence": 0.56472,
+      "outputStartTime": 48.991,
+      "originalIndex": 139,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.024,
+      "takeInfo": null
+    },
+    {
+      "word": "up,",
+      "startTime": 49.342,
+      "duration": 0.176,
+      "confidence": 0.9988,
+      "outputStartTime": 49.318,
+      "originalIndex": 140,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.024,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "but",
+      "startTime": 49.544,
+      "duration": 0.154,
+      "confidence": 0.99019,
+      "outputStartTime": 49.531,
+      "originalIndex": 141,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "they",
+      "startTime": 49.724,
+      "duration": 0.19,
+      "confidence": 0.99882,
+      "outputStartTime": 49.711,
+      "originalIndex": 142,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "will",
+      "startTime": 49.952,
+      "duration": 0.202,
+      "confidence": 0.9989,
+      "outputStartTime": 49.933,
+      "originalIndex": 143,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "come",
+      "startTime": 50.192,
+      "duration": 0.202,
+      "confidence": 0.99988,
+      "outputStartTime": 50.173,
+      "originalIndex": 144,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "out.",
+      "startTime": 50.432,
+      "duration": 0.166,
+      "confidence": 0.99979,
+      "outputStartTime": 50.413,
+      "originalIndex": 145,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "Michael,",
+      "startTime": 50.624,
+      "duration": 0.35,
+      "confidence": 0.6382,
+      "outputStartTime": 50.611,
+      "originalIndex": 146,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.024,
+      "takeInfo": null
+    },
+    {
+      "word": "sometimes",
+      "startTime": 51.022,
+      "duration": 0.464,
+      "confidence": 0.99787,
+      "outputStartTime": 50.998,
+      "originalIndex": 147,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.024,
+      "bufferDurationAfter": 0.061,
+      "takeInfo": null
+    },
+    {
+      "word": "in",
+      "startTime": 51.608,
+      "duration": 0.214,
+      "confidence": 0.99761,
+      "outputStartTime": 51.547,
+      "originalIndex": 148,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.061,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": null
+    },
+    {
+      "word": "the",
+      "startTime": 51.836,
+      "duration": 0.142,
+      "confidence": 1,
+      "outputStartTime": 51.829,
+      "originalIndex": 149,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "most",
+      "startTime": 52.004,
+      "duration": 0.37,
+      "confidence": 0.99911,
+      "outputStartTime": 51.991,
+      "originalIndex": 150,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.049,
+      "takeInfo": null
+    },
+    {
+      "word": "unexpected",
+      "startTime": 52.472,
+      "duration": 1.258,
+      "confidence": 0.85375,
+      "outputStartTime": 52.423,
+      "originalIndex": 151,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.049,
+      "bufferDurationAfter": 0.37,
+      "takeInfo": null
+    },
+    {
+      "word": "hey,",
+      "startTime": 54.47,
+      "duration": 0.796,
+      "confidence": 0.97631,
+      "outputStartTime": 54.1,
+      "originalIndex": 152,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.37,
+      "bufferDurationAfter": 0.091,
+      "takeInfo": null
+    },
+    {
+      "word": "where",
+      "startTime": 55.448,
+      "duration": 0.31,
+      "confidence": 0.63457,
+      "outputStartTime": 55.357,
+      "originalIndex": 153,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.091,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "the",
+      "startTime": 55.784,
+      "duration": 0.514,
+      "confidence": 0.93,
+      "outputStartTime": 55.771,
+      "originalIndex": 154,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.073,
+      "takeInfo": null
+    },
+    {
+      "word": "my",
+      "startTime": 56.444,
+      "duration": 0.274,
+      "confidence": 0.67077,
+      "outputStartTime": 56.371,
+      "originalIndex": 155,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.073,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "hard",
+      "startTime": 56.744,
+      "duration": 0.19,
+      "confidence": 0.32325,
+      "outputStartTime": 56.731,
+      "originalIndex": 156,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.019,
+      "takeInfo": null
+    },
+    {
+      "word": "boiled",
+      "startTime": 56.972,
+      "duration": 0.386,
+      "confidence": 0.43316,
+      "outputStartTime": 56.953,
+      "originalIndex": 157,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.019,
+      "bufferDurationAfter": 0.018,
+      "takeInfo": null
+    },
+    {
+      "word": "eggs?",
+      "startTime": 57.394,
+      "duration": 0.216,
+      "confidence": 0.54469,
+      "outputStartTime": 57.376,
+      "originalIndex": 158,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.018,
+      "bufferDurationAfter": 8.233999999999995,
+      "takeInfo": null
     }
-  ]
+  ],
+  "outputDuration": 65.844
 }
-

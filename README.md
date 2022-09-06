@@ -2,6 +2,8 @@
 
 ## Dependencies
 
+Supported Hardware - Windows - Mac (Intel) - Mac (ARM) - Linux
+
 Node v16: download from https://nodejs.org/en/
 
 Yarn package manager - run the following from your command line
@@ -22,24 +24,9 @@ yarn
 
 This will install all dependencies required by electron needed to run the app.
 
-Then go into `src/pyServer` and run
+## Generating IPC Handlers
 
-```bash
-pip install -r requirements.txt
-```
-
-This will install all dependencies required to run the python server.
-
-For Deepspeech transcription to work, you will need to also add the pre-trained model and scorer to `src/pyServer`
-
-```bash
-curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
-curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
-```
-
-If you encounter an import error `ImportError: DLL load failed: The specified module could not be found.` when trying to use Deepspeech, you may need to move the `libdeepspeech.so` file from
-`Lib/site-packages/deepspeech/lib/libdeepspeech.so` to
-`Lib/site-packages/deepspeech/libdeepspeech.so` (in your virtual environment).
+Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS_README.md`
 
 ## Additional steps you need to follow
 

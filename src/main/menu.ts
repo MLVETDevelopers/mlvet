@@ -166,6 +166,16 @@ export default class MenuBuilder {
         },
         enabled: false, // by default, gets updated when selection changes
       },
+      {
+        id: 'confidence',
+        label: 'Toggle Confidence Underlines',
+        accelerator: 'CommandOrControl+U',
+        click: () => {
+          // Tell the renderer to toggle the confidence underlines
+          this.mainWindow.webContents.send('toggle-confidence-underlines');
+        },
+        enabled: false, // by default, gets updated when a project is entered
+      },
     ];
   }
 
@@ -212,6 +222,14 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-export-project');
         },
       },
+      {
+        id: 'updateTranscriptionAPIKey',
+        label: 'Update Transcription API Key',
+        accelerator: 'CommandOrControl+K',
+        click: () => {
+          this.mainWindow.webContents.send('open-update-transcription-api-key');
+        },
+      },
     ];
   }
 
@@ -239,6 +257,17 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-return-to-home');
         },
         enabled: false,
+      },
+    ];
+  }
+
+  buildHelpOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        label: 'Keyboard Shortcuts',
+        click: () => {
+          this.mainWindow.webContents.send('open-shortcuts');
+        },
       },
     ];
   }
@@ -344,6 +373,12 @@ export default class MenuBuilder {
       ],
     };
 
+    const subMenuHelp: DarwinMenuItemConstructorOptions = {
+      id: 'help',
+      label: 'Help',
+      submenu: this.buildHelpOptions(),
+    };
+
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
@@ -357,6 +392,7 @@ export default class MenuBuilder {
       subMenuView,
       subMenuHistory,
       subMenuWindow,
+      subMenuHelp,
     ];
   }
 
@@ -427,34 +463,7 @@ export default class MenuBuilder {
       {
         id: 'help',
         label: 'Help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
-            },
-          },
-          {
-            label: 'Documentation',
-            click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
-              );
-            },
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
-            },
-          },
-        ],
+        submenu: this.buildHelpOptions(),
       },
     ];
 

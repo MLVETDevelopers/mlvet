@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { RuntimeProject } from 'sharedTypes';
-import { bufferedWordDuration } from 'sharedUtils';
+import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
 
 type ChildFunction = (
@@ -57,7 +57,8 @@ const PlaybackManager = ({
       (word) =>
         time >= word.outputStartTime &&
         time < word.outputStartTime + bufferedWordDuration(word) &&
-        !word.deleted
+        !word.deleted &&
+        !isInInactiveTake(word, currentProject.transcription?.takeGroups ?? [])
     );
 
     if (newPlayingWordIndex !== nowPlayingWordIndex) {

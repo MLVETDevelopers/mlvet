@@ -11,20 +11,25 @@ import {
 import transcriptionReducer from '../transcription/reducer';
 import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 import {
+  CORRECT_WORD,
   DELETE_SELECTION,
   MERGE_WORDS,
   PASTE_WORD,
+  UNDO_CORRECT_WORD,
   SPLIT_WORD,
   UNDO_DELETE_SELECTION,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
+  RESTORE_SECTION,
+  UNDO_RESTORE_SECTION,
 } from '../transcriptionWords/actions';
 import {
   EXPORT_PROGRESS_UPDATE,
   FINISH_EXPORT,
   START_EXPORT,
 } from '../exportIo/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
@@ -91,10 +96,16 @@ const currentProjectReducer: Reducer<
       UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
       MERGE_WORDS,
       UNDO_MERGE_WORDS,
       SPLIT_WORD,
       UNDO_SPLIT_WORD,
+      SELECT_TAKE,
+      DELETE_TAKE_GROUP,
+      RESTORE_SECTION,
+      UNDO_RESTORE_SECTION,
     ].includes(action.type) &&
     currentProject !== null
   ) {

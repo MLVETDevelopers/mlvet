@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import React, {
+import {
   Dispatch,
   MouseEventHandler,
   RefObject,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import useMouse, { MousePosition } from '@react-hook/mouse-position';
@@ -18,7 +18,7 @@ import { IndexRange } from 'sharedTypes';
 import { useDebounceCallback } from '@react-hook/debounce';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { makeMoveWords } from '../../store/undoStack/ops';
+import { makeMoveWords } from '../../store/transcriptionWords/ops/moveWords';
 import {
   selectionCleared,
   selectionRangeSetTo,
@@ -38,13 +38,11 @@ export type RenderTranscription = (
   onWordMouseMove: (wordIndex: number) => void,
   dragState: DragState,
   isWordBeingDragged: CurriedByWordIndex<boolean>,
-  mouse: MousePosition,
-  mouseThrottled: MousePosition,
+  mouse: MousePosition | null,
+  mouseThrottled: MousePosition | null,
   dropBeforeIndex: number | null,
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>,
-  cancelDrag: () => void,
-  dragSelectAnchor: number | null,
-  setDragSelectAnchor: React.Dispatch<React.SetStateAction<number | null>>
+  cancelDrag: () => void
 ) => JSX.Element;
 
 export type DragState = null | {
@@ -53,10 +51,14 @@ export type DragState = null | {
 };
 
 interface Props {
+  clearSelection: (
+    dragSelectAnchor: number | null,
+    clearAnchor: () => void
+  ) => void;
   children: RenderTranscription;
 }
 
-const WordDragManager = ({ children }: Props) => {
+const WordDragManager = ({ clearSelection, children }: Props) => {
   const containerRef = useContext(ContainerRefContext);
 
   const dispatch = useDispatch();
@@ -75,6 +77,14 @@ const WordDragManager = ({ children }: Props) => {
   // Index of the word that is currently marked as the 'drop' receiver for the word being dragged
   const [dropBeforeIndex, setDropBeforeIndex] = useState<number | null>(null);
 
+  // Handle mouse-up events on the overall page using the container ref
+  useEffect(() => {
+    if (containerRef !== null && containerRef.current !== null) {
+      containerRef.current.onmouseup = () =>
+        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
+    }
+  }, [containerRef, clearSelection, dragSelectAnchor, setDragSelectAnchor]);
+
   const mouse = useMouse(containerRef);
 
   // Default throttle is 30 fps, seems reasonable for now
@@ -85,16 +95,17 @@ const WordDragManager = ({ children }: Props) => {
   }, [mouse, setMouseThrottled]);
 
   // Handles words being dragged around
-  const startDragMoveWord: WordMouseHandler = useMemo(
-    () => (wordIndex) => (wordRef) => (event) => {
+  const startDragMoveWord: WordMouseHandler = useCallback(
+    (wordIndex) => (wordRef) => (event) => {
       // Clear the current selection so that other words don't stay selected when a word is being dragged
       dispatch(selectionCleared());
 
       // Calculate the offset between the mouse position and the word so that this can be maintained throughout the drag action;
       // this makes for a more natural experience than forcing the word to always have e.g. its top left corner at the mouse position
+      const wordPosition = wordRef.current?.getBoundingClientRect();
       const offset: Point = {
-        x: (wordRef.current?.offsetLeft ?? 0) - event.clientX,
-        y: (wordRef.current?.offsetTop ?? 0) - event.clientY,
+        x: (wordPosition?.left ?? 0) - event.clientX,
+        y: (wordPosition?.top ?? 0) - event.clientY,
       };
 
       // Update the drag state to mark the start of the drag action
@@ -103,17 +114,9 @@ const WordDragManager = ({ children }: Props) => {
     [dispatch, setDragState]
   );
 
-  // Handles dragging across words to build a selection
-  const startDragSelectWord: (wordIndex: number) => void = useMemo(
-    () => (wordIndex) => {
-      setDragSelectAnchor(wordIndex);
-    },
-    []
-  );
-
   // Handles mouse-down events on a particular word
-  const onWordMouseDown: WordMouseHandler = useMemo(
-    () => (wordIndex) => (wordRef) => (event) => {
+  const onWordMouseDown: WordMouseHandler = useCallback(
+    (wordIndex) => (wordRef) => (event) => {
       // Only start dragging if the mouse button pressed was the left one
       if (event.button !== MouseButton.LEFT) {
         return;
@@ -122,16 +125,17 @@ const WordDragManager = ({ children }: Props) => {
       if (event.altKey) {
         // If alt/option held, then start a drag-move action
         startDragMoveWord(wordIndex)(wordRef)(event);
+        setDragSelectAnchor(wordIndex);
       } else {
         // Otherwise, start a drag-select action
-        startDragSelectWord(wordIndex);
+        setDragSelectAnchor(wordIndex);
       }
     },
-    [startDragMoveWord, startDragSelectWord]
+    [startDragMoveWord, setDragSelectAnchor]
   );
 
-  const onWordMouseMove: (wordIndex: number) => void = useMemo(
-    () => (wordIndex) => {
+  const onWordMouseMove: (wordIndex: number) => void = useCallback(
+    (wordIndex) => {
       if (dragSelectAnchor === null) {
         return;
       }
@@ -149,56 +153,55 @@ const WordDragManager = ({ children }: Props) => {
   const onWordMouseMoveDebounced = useDebounceCallback(onWordMouseMove, 10);
 
   // Helper to determine whether a given word is being dragged
-  const isWordBeingDragged: (wordIndex: number) => boolean = useMemo(
-    () => (wordIndex) => {
+  const isWordBeingDragged: (wordIndex: number) => boolean = useCallback(
+    (wordIndex) => {
       return dragState?.wordIndex === wordIndex;
     },
     [dragState]
   );
 
   // Handles mouse-up events anywhere in the transcription box
-  const onMouseUp: MouseEventHandler<HTMLDivElement> = useMemo(
-    () => () => {
-      if (
-        dropBeforeIndex !== null &&
-        dragState !== null &&
-        dragState.wordIndex !== null &&
-        words !== undefined
-      ) {
-        setDragState(null);
+  const onMouseUp: MouseEventHandler<HTMLDivElement> = useCallback(() => {
+    if (
+      dropBeforeIndex !== null &&
+      dragState !== null &&
+      dragState.wordIndex !== null &&
+      words !== undefined
+    ) {
+      setDragState(null);
 
-        dispatchOp(
-          makeMoveWords(
-            words,
-            [rangeLengthOne(dragState.wordIndex)],
-            dropBeforeIndex - 1
-          )
-        );
+      dispatchOp(
+        makeMoveWords(
+          words,
+          [rangeLengthOne(dragState.wordIndex)],
+          dropBeforeIndex - 1
+        )
+      );
 
-        // TODO(chloe): seek to the word that was moved
-      }
-    },
-    [dropBeforeIndex, dragState, words, setDragState]
-  );
+      // TODO(chloe): seek to the word that was moved
+    }
+  }, [dropBeforeIndex, dragState, words, setDragState]);
 
-  const cancelDrag = () => {
+  const cancelDrag = useCallback(() => {
     setDragState(null);
-  };
+  }, [setDragState]);
 
   return (
-    <div onMouseUp={onMouseUp}>
+    <div
+      id="word-drag-manager"
+      style={{ height: '100%' }}
+      onMouseUp={onMouseUp}
+    >
       {children(
         onWordMouseDown,
         onWordMouseMoveDebounced,
         dragState,
         isWordBeingDragged,
-        mouse,
-        mouseThrottled,
+        dragState === null ? null : mouse,
+        dragState === null ? null : mouseThrottled,
         dropBeforeIndex,
         setDropBeforeIndex,
-        cancelDrag,
-        dragSelectAnchor,
-        setDragSelectAnchor
+        cancelDrag
       )}
     </div>
   );

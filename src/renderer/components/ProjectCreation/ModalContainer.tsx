@@ -1,13 +1,17 @@
 import { Modal, styled, Box } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { pageChanged } from '../../store/currentPage/actions';
 import { ApplicationPage } from '../../store/currentPage/helpers';
 import NewProjectView from './NewProjectView';
+import CloudConfigView from './CloudConfigView';
 import RunTranscriptionView from './RunTranscriptionView';
 import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 import CancelProjectModal from './CancelProjectModal';
+import ipc from '../../ipc';
+
+const { requireCloudConfig } = ipc;
 
 const CustomModal = styled(Modal)({
   display: 'flex',
@@ -30,6 +34,7 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
   const [projectName, setProjectName] = useState<string>('');
+  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -57,11 +62,26 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     }
   };
 
-  const viewComponents = [
-    NewProjectView,
-    ImportMediaView,
-    RunTranscriptionView,
-  ];
+  const viewComponents = useMemo(() => {
+    if (isCloudConfigRequired) {
+      return [
+        NewProjectView,
+        CloudConfigView,
+        ImportMediaView,
+        RunTranscriptionView,
+      ];
+    }
+    return [NewProjectView, ImportMediaView, RunTranscriptionView];
+  }, [isCloudConfigRequired]);
+
+  useEffect(() => {
+    const fetchIfCloudConfigRequired = async () => {
+      const isConfigRequired = await requireCloudConfig();
+      setIsCloudConfigRequired(isConfigRequired);
+    };
+
+    fetchIfCloudConfigRequired().catch(console.log);
+  }, [setIsCloudConfigRequired]);
 
   const nextView: () => void = () => {
     if (currentView >= viewComponents.length - 1) {
@@ -90,6 +110,15 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
             nextView={nextView}
             projectName={projectName}
             setProjectName={setProjectName}
+          />
+        );
+      case CloudConfigView:
+        return (
+          <CloudConfigView
+            prevView={prevView}
+            closeModal={showCancelProject}
+            nextView={nextView}
+            projectName={projectName}
           />
         );
       case ImportMediaView:

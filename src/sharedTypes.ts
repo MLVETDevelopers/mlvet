@@ -33,13 +33,40 @@ export type AudioFileExtension = 'mp3';
 export type VideoFileExtension = 'mp4';
 
 export interface Transcription {
-  confidence: number;
   words: Word[];
   duration: number;
   outputDuration: number;
+  takeGroups: TakeGroup[];
 }
 
-export type PartialWord = Pick<Word, 'word' | 'startTime' | 'duration'>;
+export type PartialWord = Pick<
+  Word,
+  'word' | 'startTime' | 'duration' | 'confidence'
+>;
+
+export interface TakeGroup {
+  // each time a new take group is created we find the highest take group ID in use and add one
+  id: number;
+  activeTakeIndex: number;
+}
+
+export interface TakeInfo {
+  takeGroupId: number;
+  takeIndex: number;
+}
+
+export enum TranscriptionEngine {
+  DUMMY = 'DUMMY',
+  ASSEMBLYAI = 'ASSEMBLYAI',
+}
+
+export type EngineConfig = string | null;
+
+export interface CloudConfig {
+  defaultEngine: TranscriptionEngine;
+  ASSEMBLYAI: EngineConfig;
+  DUMMY: EngineConfig;
+}
 
 export interface Word {
   // Text content of the word
@@ -62,10 +89,12 @@ export interface Word {
   // higher if it has been pasted one or more times.
   // Used in combination with the originalIndex to produce a unique key
   pasteKey: number;
-  // Used to differentiate between different projects/media;
-  // TODO(chloe) this should be replaced with project ID or transcript ID
-  // in order to support multiple projects without relying on a filename (which can change)
-  fileName: string;
+  // Stores information related to take detection and manipulation
+  takeInfo: TakeInfo | null;
+  // Now that we have assemblyAI, we can do this - individual confidence for each word.
+  // Ranges from 0 - 1.
+  // if using another platform that doesn't support this, just set to null.
+  confidence: number | null | undefined;
 }
 
 export interface Cut {

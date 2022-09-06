@@ -1,6 +1,7 @@
 import { isMergeSplitAllowed } from 'renderer/store/selection/helpers';
 import dispatchOp from 'renderer/store/dispatchOp';
-import { makeMergeWords, makeSplitWord } from 'renderer/store/undoStack/ops';
+import { makeMergeWords } from 'renderer/store/transcriptionWords/ops/mergeWords';
+import { makeSplitWord } from 'renderer/store/transcriptionWords/ops/splitWord';
 import { Word } from 'sharedTypes';
 import store from '../store/store';
 import { getSelectionRanges } from './selection';

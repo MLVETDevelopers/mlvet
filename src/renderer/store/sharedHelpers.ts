@@ -13,8 +13,14 @@ export interface ApplicationStore {
   undoStack: UndoStack;
   exportIo: ExportIo;
   clipboard: Word[];
-  // Array of numbers corresponding to indexes of words within the transcription
+  // Array of numbers corresponding to indices of words within the transcription
   selection: number[];
+  shortcutsOpened: boolean;
+  isUpdateTranscriptionAPIKeyOpened: boolean;
+  // Index of word currently being edited, otherwise null
+  editWord: { index: number; text: string } | null;
+  // whether confidence underlines are currently visible
+  isShowingConfidenceUnderlines: boolean;
 }
 
 /**
@@ -29,4 +35,8 @@ export const initialStore: ApplicationStore = {
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
   selection: [],
+  shortcutsOpened: false,
+  isUpdateTranscriptionAPIKeyOpened: false,
+  editWord: null,
+  isShowingConfidenceUnderlines: false,
 };

@@ -1,0 +1,7 @@
+{
+  "name": "vosk_local",
+  "version": "0.0.1",
+  "description": "Makes vosk work",
+  "main": "index.ts",
+  "license": "MIT"
+}

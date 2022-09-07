@@ -3,11 +3,17 @@
  */
 
 import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 import webpackPaths from './webpack.paths';
 import { dependencies as externals } from '../../release/app/package.json';
 
 const configuration: webpack.Configuration = {
-  externals: [...Object.keys(externals || {})],
+  externals: [
+    ...Object.keys(externals || {}),
+    nodeExternals({
+      allowlist: [/^(?!(^(ffi-napi)$)).*$/i],
+    }),
+  ],
 
   stats: 'errors-only',
 

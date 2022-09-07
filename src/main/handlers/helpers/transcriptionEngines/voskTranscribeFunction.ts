@@ -29,8 +29,6 @@ const voskTranscribeFunction: TranscriptionFunction = async (project) => {
     (await transcribeWithVosk(audioPath)) as string
   );
 
-  console.log(jsonTranscript);
-
   return transcriptionAdaptor(jsonTranscript.alternatives[0].result || []);
 };
 

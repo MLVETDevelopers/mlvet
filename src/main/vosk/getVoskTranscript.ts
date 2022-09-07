@@ -42,7 +42,7 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
   const transcript: string = JSON.stringify(rec.finalResult(rec), null, 4);
 
   rec.free();
-  // model.free();
+  model.free();
 
   return transcript;
 };

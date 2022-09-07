@@ -2,15 +2,13 @@ import {
   Box,
   Button,
   IconButton,
-  Link,
   Stack,
   styled,
-  TextField,
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
 import { TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
@@ -27,7 +25,7 @@ const choices = [
   },
 ];
 
-const { storeCloudCredentials, readDefaultEngineConfig } = ipc;
+const { storeCloudCredentials } = ipc;
 
 interface Props {
   prevView: (() => void) | null;
@@ -62,7 +60,7 @@ const TranscriptionChoiceView = ({
     null
   );
   const [isAwaitingChoice, setIsAwaitingChoice] = useState(true);
-  const [text, setText] = useState<string>(defaultText);
+  const text = defaultText;
 
   const handleChoiceClicked = (choice: TranscriptionEngine) => {
     setEngineChoice(choice);

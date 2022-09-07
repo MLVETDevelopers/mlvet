@@ -283,8 +283,7 @@
     "socket.io-client": "^4.5.0",
     "uuid": "^8.3.2",
     "vimond-replay": "^3.3.0",
-    "wavefile": "^11.0.0",
-    "webpack-node-externals": "^3.0.0"
+    "wavefile": "^11.0.0"
   },
   "devEngines": {
     "node": "16.x",

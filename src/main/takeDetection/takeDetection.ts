@@ -1,9 +1,9 @@
-import { Word, IndexRange } from 'sharedTypes';
+import { Word, IndexRange } from '../../sharedTypes';
 import {
   InjectableTake,
   InjectableTakeGroup,
-} from 'main/editDelete/injectTakeInfo';
-import getSimilarityScore from './sentenceSimilarity';
+} from '../editDelete/injectTakeInfo';
+import { getSimilarityScore } from './sentenceSimilarity';
 import { THRESHOLD } from './constants';
 
 export type Sentence = {
@@ -68,7 +68,10 @@ function newTakeGroup(
   return newGroup;
 }
 
-export function findTakes(words: Word[], threshold = THRESHOLD): InjectableTakeGroup[] {
+export function findTakes(
+  words: Word[],
+  threshold = THRESHOLD
+): InjectableTakeGroup[] {
   const takeGroups: InjectableTakeGroup[] = [];
   const sentences: Sentence[] = findSentences(words);
   for (let i = 0; i < sentences.length - 1; i += 1) {

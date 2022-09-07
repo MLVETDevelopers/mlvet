@@ -1,7 +1,7 @@
 import { JSONTranscription } from 'main/types';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
-import transcribeWithVosk from '../../../../../vosk/vosk';
+import transcribeWithVosk from '../../../vosk/vosk';
 
 interface VoskWord {
   end: number;

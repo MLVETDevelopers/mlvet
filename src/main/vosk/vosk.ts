@@ -6,7 +6,7 @@ const transcribeWithVosk = async (audioFilePath: string) => {
   const modelName = 'vosk-model-en-us-0.22';
   const modelPath = path.join(
     __dirname,
-    '../.',
+    '../../../.',
     `assets/voskModel/${modelName}`
   );
 

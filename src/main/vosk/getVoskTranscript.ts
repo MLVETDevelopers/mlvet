@@ -31,30 +31,18 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
     process.exit(1);
   }
 
-  console.log('=========================================================');
-  console.log(modelPath);
-  console.log(filePath);
-  console.log(model);
-  console.log('=========================================================');
-
   const rec = new vosk.Recognizer({ model, sampleRate: 16000 });
   rec.setMaxAlternatives(1); // reduced from 10
   rec.setWords(true);
   rec.setPartialWords(true); // what is this idek
 
-  console.log('===================================================');
-  console.log('got here');
-
   const wavData = wav.data as WaveData;
-
-  console.log(wavData);
-
   rec.acceptWaveform(wavData.samples);
 
   const transcript: string = JSON.stringify(rec.finalResult(rec), null, 4);
 
   rec.free();
-  model.free();
+  // model.free();
 
   return transcript;
 };

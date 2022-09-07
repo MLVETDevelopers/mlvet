@@ -58,6 +58,7 @@ export interface TakeInfo {
 export enum TranscriptionEngine {
   DUMMY = 'DUMMY',
   ASSEMBLYAI = 'ASSEMBLYAI',
+  VOSK = 'VOSK',
 }
 
 export type EngineConfig = string | null;
@@ -66,6 +67,7 @@ export interface CloudConfig {
   defaultEngine: TranscriptionEngine;
   ASSEMBLYAI: EngineConfig;
   DUMMY: EngineConfig;
+  VOSK: EngineConfig;
 }
 
 export interface Word {

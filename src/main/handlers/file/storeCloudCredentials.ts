@@ -16,6 +16,7 @@ const initCloudConfig: CloudConfig = {
   defaultEngine: TranscriptionEngine.ASSEMBLYAI,
   ASSEMBLYAI: null,
   DUMMY: null,
+  VOSK: null,
 };
 
 const updateCloudConfig = (
@@ -29,6 +30,13 @@ const updateCloudConfig = (
         ...cloudConfig,
         defaultEngine,
         ASSEMBLYAI: engineConfigs,
+      };
+    }
+    case TranscriptionEngine.VOSK: {
+      return {
+        ...cloudConfig,
+        defaultEngine,
+        VOSK: engineConfigs,
       };
     }
     default: {

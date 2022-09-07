@@ -3,5 +3,10 @@
   "version": "0.0.1",
   "description": "Makes vosk work",
   "main": "index.ts",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^18.7.15",
+    "vosk": "^0.3.39",
+    "wav": "^1.0.2"
+  }
 }

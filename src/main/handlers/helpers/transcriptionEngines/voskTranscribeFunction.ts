@@ -1,7 +1,7 @@
 import { JSONTranscription } from 'main/types';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
-import transcribeWithVosk from '../../../../../vosk';
+import transcribeWithVosk from '../../../../../vosk/vosk';
 
 interface VoskWord {
   end: number;
@@ -22,6 +22,8 @@ const transcriptionAdaptor: (wordList: VoskWord[]) => JSONTranscription = (
 
 const voskTranscribeFunction: TranscriptionFunction = async (project) => {
   const audioPath = getAudioExtractPath(project.id);
+
+  console.log('Transcribing with vosk...');
 
   const jsonTranscript = JSON.parse(
     (await transcribeWithVosk(audioPath)) as string

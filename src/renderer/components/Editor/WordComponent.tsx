@@ -31,6 +31,7 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     color: colors.white,
     padding: '0 2px',
     margin: '2px 0',
+    borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],
@@ -111,8 +112,9 @@ const WordComponent = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const xPosition = ref.current?.offsetLeft ?? 0;
-  const yPosition = ref.current?.offsetTop ?? 0;
+  const refRect = ref.current?.getBoundingClientRect();
+  const xPosition = refRect?.left ?? 0;
+  const yPosition = refRect?.top ?? 0;
   const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
   const height = ref.current?.offsetHeight ?? 0;
   const mouseX = mouse?.clientX ?? 0;
@@ -186,8 +188,6 @@ const WordComponent = ({
     if (isInInactiveTake) {
       return;
     }
-
-    console.log('click');
 
     if (awaitingSecondClick) {
       startEditing();

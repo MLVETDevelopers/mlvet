@@ -1,11 +1,11 @@
-import { IndexRange, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Word } from 'sharedTypes';
 import { mapInRanges } from '../../sharedUtils';
 
-interface InjectableTake {
+export interface InjectableTake {
   wordRange: IndexRange;
 }
 
-interface InjectableTakeGroup {
+export interface InjectableTakeGroup {
   takes: InjectableTake[];
 }
 
@@ -25,15 +25,17 @@ const mockTakeGroups: InjectableTakeGroup[] = [
   },
 ];
 
-const injectMockTakeInfo = (words: Word[]) => {
+const injectTakeInfo: (
+  words: Word[],
+  takeGroups?: InjectableTakeGroup[]
+) => { words: Word[]; takeGroups: TakeGroup[] } = (
+  words,
+  takeGroups = mockTakeGroups
+) => {
   let wordsCopy = [...words];
 
-  const takeGroups = mockTakeGroups.map((_, takeGroupIndex) => ({
-    id: takeGroupIndex,
-    activeTakeIndex: 0,
-  }));
-
-  mockTakeGroups.forEach((takeGroup, takeGroupIndex) => {
+  // Inject take info into words
+  takeGroups.forEach((takeGroup, takeGroupIndex) => {
     takeGroup.takes.forEach((take, takeIndex) => {
       const { wordRange } = take;
 
@@ -48,10 +50,18 @@ const injectMockTakeInfo = (words: Word[]) => {
     });
   });
 
+  // Convert a list of InjectableTakeGroup into a list of regular TakeGroup
+  const strippedDownTakeGroups: TakeGroup[] = takeGroups.map(
+    (_, takeGroupIndex) => ({
+      id: takeGroupIndex,
+      activeTakeIndex: 0,
+    })
+  );
+
   return {
     words: wordsCopy,
-    takeGroups,
+    takeGroups: strippedDownTakeGroups,
   };
 };
 
-export default injectMockTakeInfo;
+export default injectTakeInfo;

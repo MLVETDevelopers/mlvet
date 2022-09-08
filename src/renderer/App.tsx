@@ -1,9 +1,10 @@
-import { Box, CssBaseline, styled, ThemeProvider } from '@mui/material';
+import { Box, CssBaseline, Modal, styled, ThemeProvider } from '@mui/material';
 import { ReactElement, useContext } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import colors from './colors';
 import KeyboardShortcutsDialog from './components/KeyboardShortcutsDialog';
+import CloudConfigView from './components/ProjectCreation/CloudConfigView';
 import HomePage from './pages/Home';
 import ProjectPage from './pages/Project';
 import { ContainerRefContext, ContextStore } from './RootContainerContext';
@@ -11,6 +12,7 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { ApplicationStore } from './store/sharedHelpers';
 import { toggleShortcuts } from './store/shortcuts/actions';
 import applicationStore from './store/store';
+import { toggleUpdateTranscriptionAPIKey } from './store/updateTranscriptionAPIKey/actions';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
 
@@ -18,6 +20,19 @@ const RootContainer = styled(Box)({
   margin: 0,
   background: colors.grey[900],
   height: '100vh',
+});
+
+const CustomModal = styled(Modal)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+const CustomModalInner = styled(Box)({
+  background: colors.grey[700],
+  padding: '15px 30px 30px 30px',
+  borderRadius: '5px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
 });
 
 function Router() {
@@ -47,6 +62,13 @@ function AppContents() {
 
   const closeShortcut = () => dispatch(toggleShortcuts(false));
 
+  const hasOpenedUpdateTranscriptionAPIKey = useSelector(
+    (store: ApplicationStore) => store.isUpdateTranscriptionAPIKeyOpened
+  );
+
+  const closeUpdateTranscriptionAPIKey = () =>
+    dispatch(toggleUpdateTranscriptionAPIKey(false));
+
   return (
     <CssBaseline>
       <RootContainer ref={containerRefContext}>
@@ -55,6 +77,19 @@ function AppContents() {
           open={hasOpenedShortcuts}
           onClose={closeShortcut}
         />
+        <CustomModal
+          open={hasOpenedUpdateTranscriptionAPIKey}
+          onClose={closeUpdateTranscriptionAPIKey}
+        >
+          <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
+            <CloudConfigView
+              prevView={null}
+              closeModal={closeUpdateTranscriptionAPIKey}
+              nextView={null}
+              projectName=""
+            />
+          </CustomModalInner>
+        </CustomModal>
       </RootContainer>
     </CssBaseline>
   );

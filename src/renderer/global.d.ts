@@ -4,7 +4,6 @@
 
 import { BrowserWindow, IpcRendererEvent } from 'electron';
 import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
-import { TranscriptionEngine } from 'main/handlers/helpers/transcribeTypes';
 import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
@@ -13,6 +12,9 @@ import {
   RecentProject,
   Transcription,
   ProjectIdAndFilePath,
+  TranscriptionEngine,
+  EngineConfig,
+  CloudConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -23,6 +25,8 @@ declare global {
       // START GENERATED CODE
       deleteProject: (project: ProjectIdAndFilePath) => Promise<void>;
 
+      openExternalLink: (url: string) => Promise<void>;
+
       openProject: (
         filePath: string | null
       ) => Promise<{ project: RuntimeProject | null; filePath: string }>;
@@ -31,9 +35,15 @@ declare global {
         project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
 
+      readCloudConfig: () => Promise<CloudConfig>;
+
+      readDefaultEngineConfig: () => Promise<EngineConfig>;
+
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;
+
+      requireCloudConfig: () => Promise<boolean>;
 
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
@@ -43,6 +53,11 @@ declare global {
       ) => SaveDialogSelections;
 
       saveProject: (project: RuntimeProject) => Promise<string>;
+
+      storeCloudCredentials: (
+        defaultEngine: TranscriptionEngine,
+        engineConfigs: EngineConfig
+      ) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 

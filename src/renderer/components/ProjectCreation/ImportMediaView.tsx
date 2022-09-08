@@ -91,7 +91,7 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
   );
 
   return (
-    <Container sx={{ height: { xs: 500 } }}>
+    <Container position="relative" sx={{ height: { xs: 500 } }}>
       <CustomColumnStack
         alignItems="flex-start"
         justifyContent="space-between"
@@ -131,7 +131,12 @@ const ImportMediaView = ({ prevView, closeModal, nextView }: Props) => {
           removeMediaFromImport={removeMediaFromImport}
         />
       </CustomColumnStack>
-      <CustomRowStack justifyContent="space-between" sx={{ gap: '32px' }}>
+      <CustomRowStack
+        position="absolute"
+        bottom="0px"
+        justifyContent="space-between"
+        sx={{ gap: '32px' }}
+      >
         {cancelButton}
         {transcribeButton}
       </CustomRowStack>

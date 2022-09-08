@@ -2,8 +2,10 @@ import { Word } from 'sharedTypes';
 import {
   DELETE_SELECTION,
   PASTE_WORD,
+  RESTORE_SECTION,
   UNDO_DELETE_SELECTION,
   UNDO_PASTE_WORD,
+  UNDO_RESTORE_SECTION,
 } from '../actions';
 import transcriptionWordsReducer from '../reducer';
 
@@ -449,6 +451,166 @@ describe('Transcription words reducer', () => {
       makeBasicWordSequential(1, 'b'),
       makeBasicWordSequential(0, 'a', false, 2),
       makeBasicWordSequential(0, 'a', false, 3),
+    ]);
+  });
+
+  it('should handle restoring deleted words', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(2, 'b', true),
+        makeBasicWordSequential(3, 'c', true),
+        makeBasicWordSequential(4, 'd'),
+        makeBasicWordSequential(5, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 1,
+              endIndex: 3,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(2, 'b'),
+      makeBasicWordSequential(3, 'c'),
+      makeBasicWordSequential(4, 'd'),
+      makeBasicWordSequential(5, 'e'),
+    ]);
+  });
+
+  it('should handle undo restoring deleted words', () => {
+    const words = [
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(2, 'b', true),
+      makeBasicWordSequential(3, 'c', true),
+      makeBasicWordSequential(4, 'd'),
+      makeBasicWordSequential(5, 'e'),
+    ];
+
+    const restoredWords = transcriptionWordsReducer(words, {
+      type: RESTORE_SECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    const output = transcriptionWordsReducer(restoredWords, {
+      type: UNDO_RESTORE_SECTION,
+      payload: {
+        ranges: [
+          {
+            startIndex: 1,
+            endIndex: 3,
+          },
+        ],
+      },
+    });
+
+    expect(output).toEqual(words);
+  });
+
+  it('should handle restoring last word', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a'),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e', true),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 4,
+              endIndex: 5,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
+    ]);
+  });
+
+  it('should handle restoring first word', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b'),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd'),
+        makeBasicWordSequential(4, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 1,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd'),
+      makeBasicWordSequential(4, 'e'),
+    ]);
+  });
+
+  it('should keep non deleted words as false', () => {
+    const output = transcriptionWordsReducer(
+      [
+        makeBasicWordSequential(0, 'a', true),
+        makeBasicWordSequential(1, 'b', true),
+        makeBasicWordSequential(2, 'c'),
+        makeBasicWordSequential(3, 'd', true),
+        makeBasicWordSequential(4, 'e'),
+      ],
+      {
+        type: RESTORE_SECTION,
+        payload: {
+          ranges: [
+            {
+              startIndex: 0,
+              endIndex: 3,
+            },
+          ],
+        },
+      }
+    );
+
+    expect(output).toEqual([
+      makeBasicWordSequential(0, 'a'),
+      makeBasicWordSequential(1, 'b'),
+      makeBasicWordSequential(2, 'c'),
+      makeBasicWordSequential(3, 'd', true),
+      makeBasicWordSequential(4, 'e'),
     ]);
   });
 });

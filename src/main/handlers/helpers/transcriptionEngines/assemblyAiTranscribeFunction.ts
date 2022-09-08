@@ -2,10 +2,11 @@ import fs from 'fs/promises';
 import axios, { AxiosError } from 'axios';
 import queryString from 'query-string';
 import { JSONTranscription } from 'main/types';
+import fetch from 'node-fetch';
+import readDefaultEngineConfig from '../../file/readDefaultEngineConfig';
 
 // Axios doesn't work for the file upload for some reason, so use node fetch instead.
 // Have to use a slightly older version (2.6.6) as well due to module issues
-import fetch from 'node-fetch';
 import { TranscriptionFunction } from '../transcribeTypes';
 import { getAudioExtractPath, roundToMs } from '../../../util';
 
@@ -13,13 +14,17 @@ const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
 // TODO: put in config
-const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
+// const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
 
 const AUTH_ERROR_STRING = 'Authentication error, API token missing/invalid';
 
 class ApiTokenError extends Error {}
 
+const getApiKey = () => readDefaultEngineConfig().then((val) => val ?? '');
+
 const uploadAudio = async (audioPath: string) => {
+  const ASSEMBLYAI_API_KEY = await getApiKey();
+  console.log(ASSEMBLYAI_API_KEY);
   const data = await fs.readFile(audioPath);
 
   const url = 'https://api.assemblyai.com/v2/upload';
@@ -44,6 +49,7 @@ const uploadAudio = async (audioPath: string) => {
 const initTranscription: (audioUrl: string) => Promise<string> = async (
   audioUrl
 ) => {
+  const ASSEMBLYAI_API_KEY = await getApiKey();
   const endpoint = 'https://api.assemblyai.com/v2/transcript';
 
   const jsonData = {
@@ -75,6 +81,7 @@ const initTranscription: (audioUrl: string) => Promise<string> = async (
 };
 
 const pollTranscriptionResultInner = async (transcriptionId: string) => {
+  const ASSEMBLYAI_API_KEY = await getApiKey();
   const endpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
 
   const headers = {

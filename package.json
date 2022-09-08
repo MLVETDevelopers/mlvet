@@ -6,7 +6,7 @@
     "name": "MLVET Legends",
     "url": "https://github.com/chloebrett/mlvet"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -60,7 +60,20 @@
     "files": [
       "dist",
       "node_modules",
-      "package.json"
+      "package.json",
+      "node_modules/ffprobe-static/index.js",
+      "node_modules/ffprobe-static/package.json"
+    ],
+    "extraResources": [
+      "./assets/**",
+      {
+        "from": "node_modules/ffmpeg-static/",
+        "to": "ffmpeg-static/"
+      },
+      {
+        "from": "node_modules/ffprobe-static/",
+        "to": "ffprobe-static/"
+      }
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
@@ -71,6 +84,12 @@
           "x64"
         ]
       },
+      "files": [
+        "!node_modules/ffmpeg-static/bin/linux${/*}",
+        "!node_modules/ffmpeg-static/bin/win32${/*}",
+        "!node_modules/ffprobe-static/bin/linux${/*}",
+        "!node_modules/ffprobe-static/bin/win32${/*}"
+      ],
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -94,22 +113,31 @@
     "win": {
       "target": [
         "nsis"
+      ],
+      "files": [
+        "!node_modules/ffmpeg-static/bin/linux${/*}",
+        "!node_modules/ffmpeg-static/bin/darwin${/*}",
+        "!node_modules/ffprobe-static/bin/linux${/*}",
+        "!node_modules/ffprobe-static/bin/darwin${/*}"
       ]
     },
     "linux": {
       "target": [
         "AppImage"
       ],
-      "category": "Development"
+      "category": "Development",
+      "files": [
+        "!node_modules/ffmpeg-static/bin/darwin${/*}",
+        "!node_modules/ffmpeg-static/bin/win32${/*}",
+        "!node_modules/ffprobe-static/bin/darwin${/*}",
+        "!node_modules/ffprobe-static/bin/win32${/*}"
+      ]
     },
     "directories": {
       "app": "release/app",
       "buildResources": "assets",
       "output": "release/build"
     },
-    "extraResources": [
-      "./assets/**"
-    ],
     "publish": {
       "provider": "github",
       "owner": "chloebrett",

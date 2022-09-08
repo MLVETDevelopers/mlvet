@@ -1,12 +1,12 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-console */
-import '@tensorflow/tfjs-backend-cpu';
-import '@tensorflow/tfjs-backend-webgl';
-
 import * as use from '@tensorflow-models/universal-sentence-encoder';
-// import * as tf from '@tensorflow/tfjs-node-gpu'; // <-- GPU
-import * as tf from '@tensorflow/tfjs'; // <-- CPU
+import * as tf from '@tensorflow/tfjs';
 import { Tensor2D } from '@tensorflow/tfjs';
+
+require('@tensorflow/tfjs-node');
+const use = require('@tensorflow-models/universal-sentence-encoder');
+const fs = require('fs');
 
 console.log = require('electron-log').info;
 
@@ -54,10 +54,6 @@ export const findSimilarities = async (threshold = 0.65) => {
   const model = await use.load();
   const embeddings = await model.embed(sentences);
   console.timeEnd('Model Embedding');
-  /*
-   Expect ~9s on cpu
-   Expect ~7.6s on gpu
-   */
 
   console.log(sentences);
   await sentences.map(async (_, index, array) => {

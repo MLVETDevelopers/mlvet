@@ -69,23 +69,20 @@ const newTakeGroup = (
   return { takes };
 };
 
-const startDetection: (
+const startDetection = (
   potentialTakeLen: number,
   potentialTakeStartIdxs: number[],
   sentences: Sentence[],
-  takeGroups: InjectableTakeGroup[],
   threshold: number
-) => number = (
-  potentialTakeLen,
-  potentialTakeStartIdxs,
-  sentences,
-  takeGroups,
-  threshold
-) => {
+): {
+  updatedCurrentSentenceIdx: number;
+  updatedPotentialTakeStartIdxs: number[];
+} => {
   // not constructive, and potential take before this sentence is valid
   // assume sentences in potential take are similar
   let isSimilarTake = true;
   let updatedCurrentSentenceIdx = 0;
+  const updatedPotentialTakeStartIdxs = potentialTakeStartIdxs;
 
   // compare sentences within the potential take length, start from the second sentence
   for (let i = 1; i < potentialTakeLen; i += 1) {
@@ -96,31 +93,32 @@ const startDetection: (
 
     // compute the next sentence's index in the first take group
     // as reference to compare the rest
-    const nextSentenceIdxToCompare = potentialTakeStartIdxs[0] + i;
+    const nextSentenceIdxToCompare = updatedPotentialTakeStartIdxs[0] + i;
 
     // compare sentence in first potential take chunk with every other potential take chunk
     // compare the next sentence each time
-    for (let j = 1; j < potentialTakeStartIdxs.length; j += 1) {
+    for (let j = 1; j < updatedPotentialTakeStartIdxs.length; j += 1) {
       const nextSimilarity = getSimilarityScore(
         sentences[nextSentenceIdxToCompare].sentenceString,
-        sentences[potentialTakeStartIdxs[j] + i].sentenceString
+        sentences[updatedPotentialTakeStartIdxs[j] + i].sentenceString
       );
 
       // if sentence in the chunk is not similar, discard all chunks to the right
       if (nextSimilarity < threshold) {
-        const potentialTakeStartIdxsLen = potentialTakeStartIdxs.length;
+        const potentialTakeStartIdxsLen = updatedPotentialTakeStartIdxs.length;
         const chunksToDiscard =
-          potentialTakeStartIdxsLen - potentialTakeStartIdxs[j];
+          potentialTakeStartIdxsLen - updatedPotentialTakeStartIdxs[j];
         const chunksLeft = potentialTakeStartIdxsLen - chunksToDiscard;
 
         // if only the first chunk left, reset
         if (chunksLeft === 1) {
           // if potential take greater then two, re-start from the first sentence in the second chunk
           if (potentialTakeStartIdxsLen > 2) {
-            updatedCurrentSentenceIdx = potentialTakeStartIdxs[j] + i - 1;
+            updatedCurrentSentenceIdx =
+              updatedPotentialTakeStartIdxs[j] + i - 1;
           } else {
             // else start from the failed sentence
-            updatedCurrentSentenceIdx = potentialTakeStartIdxs[j] + i;
+            updatedCurrentSentenceIdx = updatedPotentialTakeStartIdxs[j] + i;
           }
 
           isSimilarTake = false;
@@ -129,22 +127,17 @@ const startDetection: (
 
         // discard chunks to the right
         for (let k = 0; k < chunksToDiscard; k += 1) {
-          potentialTakeStartIdxs.pop();
+          updatedPotentialTakeStartIdxs.pop();
         }
       }
     }
   }
 
-  if (isSimilarTake) {
+  if (isSimilarTake)
     updatedCurrentSentenceIdx =
-      potentialTakeLen * potentialTakeStartIdxs.length;
+      potentialTakeLen * updatedPotentialTakeStartIdxs.length;
 
-    takeGroups.push(
-      newTakeGroup(potentialTakeStartIdxs, potentialTakeLen, sentences)
-    );
-  }
-
-  return updatedCurrentSentenceIdx;
+  return { updatedCurrentSentenceIdx, updatedPotentialTakeStartIdxs };
 };
 
 export function findTakes(
@@ -204,14 +197,21 @@ export function findTakes(
     if (potentialTakeStartIdxs.length > 1) {
       if (potentialTakeLen > 1) {
         // start detection after find all potential take start index
-        const updatedCurrentSentenceIdx = startDetection(
-          potentialTakeLen,
-          potentialTakeStartIdxs,
-          sentences,
-          takeGroups,
-          threshold
-        );
+        const { updatedCurrentSentenceIdx, updatedPotentialTakeStartIdxs } =
+          startDetection(
+            potentialTakeLen,
+            potentialTakeStartIdxs,
+            sentences,
+            threshold
+          );
 
+        takeGroups.push(
+          newTakeGroup(
+            updatedPotentialTakeStartIdxs,
+            potentialTakeLen,
+            sentences
+          )
+        );
         currentSentenceIdx = updatedCurrentSentenceIdx;
       } else {
         takeGroups.push(

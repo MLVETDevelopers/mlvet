@@ -123,7 +123,14 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
       }
 
       if (event.altKey) {
-        // If alt/option held, then start a drag-move action
+        // If alt/option held, then start a drag-move action.
+
+        // Pauses (where word text === null) cannot be dragged around
+        const isPause = (words ?? [])[wordIndex].word === null;
+        if (isPause) {
+          return;
+        }
+
         startDragMoveWord(wordIndex)(wordRef)(event);
         setDragSelectAnchor(wordIndex);
       } else {
@@ -131,7 +138,7 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
         setDragSelectAnchor(wordIndex);
       }
     },
-    [startDragMoveWord, setDragSelectAnchor]
+    [startDragMoveWord, setDragSelectAnchor, words]
   );
 
   const onWordMouseMove: (wordIndex: number) => void = useCallback(

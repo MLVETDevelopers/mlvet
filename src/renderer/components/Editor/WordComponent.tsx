@@ -60,7 +60,7 @@ interface Props {
   selectedByClientWithIndex: number | null;
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
-  text: string;
+  text: string | null;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
   ) => MouseEventHandler<HTMLDivElement>;
@@ -191,6 +191,11 @@ const WordComponent = ({
   ]);
 
   const startEditing = () => {
+    // Don't allow editing the 'text' of pauses
+    if (text === null) {
+      return;
+    }
+
     dispatch(editWordStarted(index, text));
   };
 
@@ -333,6 +338,8 @@ const WordComponent = ({
     [isInInactiveTake, onMouseDown, ref]
   );
 
+  const textOrUnderscore = text ?? '_';
+
   return (
     <WordInner
       ref={ref}
@@ -359,12 +366,12 @@ const WordComponent = ({
             },
           }}
           type="text"
-          value={editText ?? text}
+          value={editText ?? textOrUnderscore}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />
       ) : (
-        text
+        textOrUnderscore
       )}
     </WordInner>
   );

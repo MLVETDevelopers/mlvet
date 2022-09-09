@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useState,
   useCallback,
-  Profiler,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
 import { pointIsInsideRect } from 'renderer/utils/geometry';
@@ -22,7 +21,6 @@ import {
   getColourForIndex,
   getTextWidth,
 } from 'renderer/utils/ui';
-import profileWords from 'renderer/utils/profile';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';

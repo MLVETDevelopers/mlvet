@@ -52,6 +52,7 @@ interface TakeComponentProps {
   transcriptionIndex: number;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TakeComponent = ({
@@ -78,6 +79,7 @@ const TakeComponent = ({
   transcriptionIndex,
   popoverWidth,
   transcriptionBlockRef,
+  setPlaybackTime,
 }: TakeComponentProps) => {
   const dispatch = useDispatch();
 
@@ -169,6 +171,7 @@ const TakeComponent = ({
                 isInInactiveTake={!isActive || !isTakeGroupOpened}
                 popoverWidth={popoverWidth}
                 transcriptionBlockRef={transcriptionBlockRef}
+                setPlaybackTime={setPlaybackTime}
               />
             ))}
           </>

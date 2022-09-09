@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { RuntimeProject, Word } from 'sharedTypes';
+import { RuntimeProject } from 'sharedTypes';
 import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
 

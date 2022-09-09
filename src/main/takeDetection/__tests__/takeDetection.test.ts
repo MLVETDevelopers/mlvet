@@ -1,5 +1,6 @@
 import { AssertionError } from 'assert';
 import { Word } from '../../../sharedTypes';
+import { makeBasicWord } from '../../../sharedUtils';
 import { InjectableTakeGroup } from '../../editDelete/injectTakeInfo';
 import { findSentences, Sentence, findTakes } from '../takeDetection';
 import { getSimilarityScore } from '../sentenceSimilarity';
@@ -14,9 +15,6 @@ function mockGetSentenceSimilarity(
   if (sentenceOne === 'Hello world!' && sentenceTwo === 'All ok?') {
     return 0.2;
   }
-  // if (sentenceOne === 'Hi there.' && sentenceTwo === 'All ok?') {
-  //   return 0.2;
-  // }
   if (sentenceOne === 'All ok?' && sentenceTwo === 'test.') {
     return 0.4;
   }
@@ -26,9 +24,6 @@ function mockGetSentenceSimilarity(
   if (sentenceOne === 'test.' && sentenceTwo === 'exam') {
     return 0.8;
   }
-  // if (sentenceOne === 'assessment.' && sentenceTwo === 'exam') {
-  //   return 0.8;
-  // }
   throw new AssertionError();
 }
 
@@ -38,29 +33,9 @@ const mockedSentenceSim = getSimilarityScore as jest.Mocked<
 >;
 
 const makeWords = (words: string[]): Word[] => {
-  const defaultWord = {
-    word: 'default',
-    duration: 1,
-    startTime: 0,
-    outputStartTime: 0,
-    originalIndex: 0,
-    pasteKey: 0,
-    bufferDurationBefore: 0,
-    bufferDurationAfter: 0,
-    deleted: false,
-    confidence: 1,
-    takeInfo: null,
-  };
-
-  const newWords: Word[] = [];
-  words.forEach((word) => {
-    newWords.push({
-      ...defaultWord,
-      word,
-    });
+  return words.map((word) => {
+    return makeBasicWord({ word });
   });
-
-  return newWords;
 };
 
 describe('findSentences should return a list of Sentence objects based on punctuation and findTakes should correctly identify different takes', () => {
@@ -127,7 +102,7 @@ describe('findSentences should return a list of Sentence objects based on punctu
     (mockedSentenceSim as jest.Mock).mockImplementation(
       mockGetSentenceSimilarity
     );
-    const takes: InjectableTakeGroup[] = findTakes(wordList);
+    const takes: InjectableTakeGroup[] = findTakes(wordList, 0.7);
     expect(takes).toEqual([
       {
         takes: [

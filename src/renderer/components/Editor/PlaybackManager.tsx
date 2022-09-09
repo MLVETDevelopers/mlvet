@@ -5,9 +5,10 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
-import { RuntimeProject } from 'sharedTypes';
+import { RuntimeProject, Word } from 'sharedTypes';
 import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
 
@@ -21,7 +22,6 @@ type ChildFunction = (
   pause: () => void,
   seekForward: () => void,
   seekBack: () => void,
-  seekToWord: (wordIndex: number) => void,
   setPlaybackTime: (newPlaybackTime: number) => void
 ) => ReactElement;
 
@@ -41,9 +41,15 @@ const PlaybackManager = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
-  const play = () => videoPreviewControllerRef?.current?.play();
+  const play = useCallback(
+    () => videoPreviewControllerRef?.current?.play(),
+    [videoPreviewControllerRef]
+  );
 
-  const pause = () => videoPreviewControllerRef?.current?.pause();
+  const pause = useCallback(
+    () => videoPreviewControllerRef?.current?.pause(),
+    [videoPreviewControllerRef]
+  );
 
   const setPlaybackTime = useCallback(
     (newPlaybackTime: number) =>
@@ -51,9 +57,15 @@ const PlaybackManager = ({
     [videoPreviewControllerRef]
   );
 
-  const seekForward = () => videoPreviewControllerRef?.current?.seekForward();
+  const seekForward = useCallback(
+    () => videoPreviewControllerRef?.current?.seekForward(),
+    [videoPreviewControllerRef]
+  );
 
-  const seekBack = () => videoPreviewControllerRef?.current?.seekBack();
+  const seekBack = useCallback(
+    () => videoPreviewControllerRef?.current?.seekBack(),
+    [videoPreviewControllerRef]
+  );
 
   // TODO: Look into optimisations
   useEffect(() => {
@@ -75,34 +87,33 @@ const PlaybackManager = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);
 
-  const seekToWord: (wordIndex: number) => void = useCallback(
-    (wordIndex) => {
-      if (currentProject !== null && currentProject?.transcription !== null) {
-        // Fixes some minor floating point errors that cause the previous word to be selected
-        // instead of the current one
-        const epsilon = 0.01;
-
-        const newTime =
-          currentProject.transcription.words[wordIndex].outputStartTime +
-          epsilon;
-        setPlaybackTime(newTime);
-      }
-    },
-    [currentProject, setPlaybackTime]
-  );
-
-  return children(
-    time,
-    setTime,
-    isPlaying,
-    setIsPlaying,
-    nowPlayingWordIndex,
-    play,
-    pause,
-    seekForward,
-    seekBack,
-    seekToWord,
-    setPlaybackTime
+  return useMemo(
+    () =>
+      children(
+        time,
+        setTime,
+        isPlaying,
+        setIsPlaying,
+        nowPlayingWordIndex,
+        play,
+        pause,
+        seekForward,
+        seekBack,
+        setPlaybackTime
+      ),
+    [
+      time,
+      setTime,
+      isPlaying,
+      setIsPlaying,
+      nowPlayingWordIndex,
+      play,
+      pause,
+      seekForward,
+      seekBack,
+      setPlaybackTime,
+      children,
+    ]
   );
 };
 

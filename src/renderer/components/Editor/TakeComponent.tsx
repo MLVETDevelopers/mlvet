@@ -35,7 +35,6 @@ interface TakeComponentProps {
   isTakeGroupOpened: boolean;
   setIsTakeGroupOpened: (isOpen: boolean) => void;
   transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   mousePosition: MousePosition | null;
   mouseThrottled: MousePosition | null;
@@ -62,7 +61,6 @@ const TakeComponent = ({
   isTakeGroupOpened,
   setIsTakeGroupOpened,
   transcription,
-  seekToWord,
   dragState,
   mousePosition,
   dropBeforeIndex,
@@ -152,7 +150,6 @@ const TakeComponent = ({
                 word={word}
                 index={transcriptionIndex + index}
                 transcription={transcription}
-                seekToWord={seekToWord}
                 dragState={dragState}
                 mouse={mousePosition}
                 mouseThrottled={mouseThrottled}
@@ -160,8 +157,10 @@ const TakeComponent = ({
                 setDropBeforeIndex={setDropBeforeIndex}
                 cancelDrag={cancelDrag}
                 submitWordEdit={submitWordEdit}
-                nowPlayingWordIndex={nowPlayingWordIndex}
-                selectionSet={selectionSet}
+                isPlaying={nowPlayingWordIndex === index}
+                isSelected={selectionSet.has(index)}
+                isPrevWordSelected={selectionSet.has(index - 1)}
+                isNextWordSelected={selectionSet.has(index + 1)}
                 otherSelectionSets={otherSelectionSets}
                 onWordMouseDown={onWordMouseDown}
                 onWordMouseMove={onWordMouseMove}

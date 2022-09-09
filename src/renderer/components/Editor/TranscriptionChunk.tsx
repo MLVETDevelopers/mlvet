@@ -22,12 +22,12 @@ interface TranscriptionChunkProps {
   editWord: any;
   nowPlayingWordIndex: number | null;
   transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
   submitWordEdit: () => void;
   selectionSet: Set<number>;
   otherSelectionSets: Record<ClientId, Set<number>>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TranscriptionChunk = ({
@@ -45,12 +45,12 @@ const TranscriptionChunk = ({
   editWord,
   nowPlayingWordIndex,
   transcription,
-  seekToWord,
   submitWordEdit,
   selectionSet,
   otherSelectionSets,
   popoverWidth,
   transcriptionBlockRef,
+  setPlaybackTime,
 }: TranscriptionChunkProps) => {
   return isTakeGroup(chunk) ? (
     <TakeGroupComponent
@@ -68,20 +68,21 @@ const TranscriptionChunk = ({
       editWord={editWord}
       nowPlayingWordIndex={nowPlayingWordIndex}
       transcription={transcription}
-      seekToWord={seekToWord}
       submitWordEdit={submitWordEdit}
       selectionSet={selectionSet}
       otherSelectionSets={otherSelectionSets}
       popoverWidth={popoverWidth}
       transcriptionBlockRef={transcriptionBlockRef}
+      setPlaybackTime={setPlaybackTime}
     />
   ) : (
     <WordOuterComponent
       word={chunk as Word}
       index={chunkIndex}
       transcription={transcription}
-      seekToWord={seekToWord}
-      selectionSet={selectionSet}
+      isSelected={selectionSet.has(chunkIndex)}
+      isPrevWordSelected={selectionSet.has(chunkIndex - 1)}
+      isNextWordSelected={selectionSet.has(chunkIndex + 1)}
       otherSelectionSets={otherSelectionSets}
       onWordMouseDown={onWordMouseDown}
       onWordMouseMove={onWordMouseMove}
@@ -94,10 +95,11 @@ const TranscriptionChunk = ({
       cancelDrag={cancelDrag}
       submitWordEdit={submitWordEdit}
       editWord={editWord}
-      nowPlayingWordIndex={nowPlayingWordIndex}
+      isPlaying={nowPlayingWordIndex === chunkIndex}
       isInInactiveTake={false}
       popoverWidth={popoverWidth}
       transcriptionBlockRef={transcriptionBlockRef}
+      setPlaybackTime={setPlaybackTime}
     />
   );
 };

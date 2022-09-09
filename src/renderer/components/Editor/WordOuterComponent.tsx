@@ -1,10 +1,9 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import { Fragment, Profiler, RefObject, useEffect, useMemo } from 'react';
+import { Fragment, RefObject, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
-import profileWords from 'renderer/utils/profile';
 import { Word, Transcription } from 'sharedTypes';
 import EditMarker from './EditMarker';
 import WordComponent from './WordComponent';
@@ -15,8 +14,9 @@ interface WordOuterComponentProps {
   word: Word;
   index: number;
   transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
-  selectionSet: Set<number>;
+  isSelected: boolean;
+  isPrevWordSelected: boolean;
+  isNextWordSelected: boolean;
   otherSelectionSets: Record<ClientId, Set<number>>;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: any;
@@ -29,10 +29,11 @@ interface WordOuterComponentProps {
   cancelDrag: () => void;
   submitWordEdit: () => void;
   editWord: any;
-  nowPlayingWordIndex: number | null;
   isInInactiveTake: boolean;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  isPlaying: boolean;
+  setPlaybackTime: (time: number) => void;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -45,8 +46,9 @@ const WordOuterComponent = ({
   word,
   index,
   transcription,
-  seekToWord,
-  selectionSet,
+  isSelected,
+  isPrevWordSelected,
+  isNextWordSelected,
   otherSelectionSets,
   onWordMouseDown,
   onWordMouseMove,
@@ -59,27 +61,14 @@ const WordOuterComponent = ({
   cancelDrag,
   submitWordEdit,
   editWord,
-  nowPlayingWordIndex,
+  isPlaying,
   isInInactiveTake,
   popoverWidth,
   transcriptionBlockRef,
+  setPlaybackTime,
 }: WordOuterComponentProps) => {
   const isShowingConfidenceUnderlines = useSelector(
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
-  );
-
-  useEffect(() => {
-    console.log(
-      editWord,
-      isInInactiveTake,
-      popoverWidth,
-      transcriptionBlockRef
-    );
-  }, [editWord, isInInactiveTake, popoverWidth, transcriptionBlockRef]);
-
-  const isSelected = useMemo(
-    () => selectionSet.has(index),
-    [selectionSet, index]
   );
 
   const collab = useSelector((store: ApplicationStore) => store.collab);
@@ -130,88 +119,77 @@ const WordOuterComponent = ({
     ]);
 
   return (
-    <Profiler id="wordouter" onRender={profileWords}>
-      <WordAndSpaceContainer
-        key={`container-${word.originalIndex}-${word.pasteKey}`}
-      >
-        {word.deleted ? (
-          <EditMarker
-            key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
-            transcription={transcription}
-            word={word}
-            index={index}
-            isSelected={isSelected}
-            selectedByClientWithIndex={selectedByClientWithIndex}
-            popoverWidth={popoverWidth}
-            transcriptionBlockRef={transcriptionBlockRef}
+    <WordAndSpaceContainer
+      key={`container-${word.originalIndex}-${word.pasteKey}`}
+    >
+      {word.deleted ? (
+        <EditMarker
+          key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
+          transcription={transcription}
+          word={word}
+          index={index}
+          isSelected={isSelected}
+          selectedByClientWithIndex={selectedByClientWithIndex}
+          popoverWidth={popoverWidth}
+          transcriptionBlockRef={transcriptionBlockRef}
+        />
+      ) : (
+        <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+          <WordSpace
+            key={`space-${word.originalIndex}-${word.pasteKey}`}
+            isDropMarkerActive={dragState !== null && dropBeforeIndex === index}
+            isBetweenHighlightedWords={isSelected && isPrevWordSelected}
+            highlightedByClientWithIndex={
+              isSelectedByAnotherClientLeftCap
+                ? null
+                : selectedByClientWithIndex
+            }
           />
-        ) : (
-          <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
+          <WordComponent
+            key={`word-${word.originalIndex}-${word.pasteKey}`}
+            isPlaying={isPlaying}
+            isSelected={isSelected}
+            isSelectedLeftCap={isSelected && !isPrevWordSelected}
+            isSelectedRightCap={isSelected && !isNextWordSelected}
+            selectedByClientWithIndex={selectedByClientWithIndex}
+            isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
+            isSelectedByAnotherClientRightCap={
+              isSelectedByAnotherClientRightCap
+            }
+            text={word.word}
+            confidence={word.confidence ?? 1}
+            index={index}
+            onMouseDown={onWordMouseDown}
+            onMouseMove={onWordMouseMove}
+            dragState={dragState}
+            isBeingDragged={isWordBeingDragged(index)}
+            mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
+            isDropBeforeActive={dropBeforeIndex === index}
+            isDropAfterActive={dropBeforeIndex === index + 1}
+            setDropBeforeIndex={setDropBeforeIndex}
+            cancelDrag={cancelDrag}
+            submitWordEdit={submitWordEdit}
+            isBeingEdited={editWord?.index === index}
+            editText={editWord?.text ?? null}
+            isInInactiveTake={isInInactiveTake}
+            isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
+            setPlaybackTime={setPlaybackTime}
+            outputStartTime={word.outputStartTime}
+          />
+          {index === transcription.words.length - 1 && (
             <WordSpace
-              key={`space-${word.originalIndex}-${word.pasteKey}`}
+              key="space-end"
               isDropMarkerActive={
-                dragState !== null && dropBeforeIndex === index
+                dragState !== null &&
+                dropBeforeIndex === transcription.words.length
               }
-              isBetweenHighlightedWords={
-                selectionSet.has(index - 1) && selectionSet.has(index)
-              }
-              highlightedByClientWithIndex={
-                isSelectedByAnotherClientLeftCap
-                  ? null
-                  : selectedByClientWithIndex
-              }
+              isBetweenHighlightedWords={false}
+              highlightedByClientWithIndex={null}
             />
-            <WordComponent
-              key={`word-${word.originalIndex}-${word.pasteKey}`}
-              seekToWord={() => seekToWord(index)}
-              isPlaying={index === nowPlayingWordIndex}
-              isSelected={isSelected}
-              isSelectedLeftCap={
-                selectionSet.has(index) && !selectionSet.has(index - 1)
-              }
-              isSelectedRightCap={
-                selectionSet.has(index) && !selectionSet.has(index + 1)
-              }
-              selectedByClientWithIndex={selectedByClientWithIndex}
-              isSelectedByAnotherClientLeftCap={
-                isSelectedByAnotherClientLeftCap
-              }
-              isSelectedByAnotherClientRightCap={
-                isSelectedByAnotherClientRightCap
-              }
-              text={word.word}
-              confidence={word.confidence ?? 1}
-              index={index}
-              onMouseDown={onWordMouseDown(index)}
-              onMouseMove={() => onWordMouseMove(index)}
-              dragState={dragState}
-              isBeingDragged={isWordBeingDragged(index)}
-              mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
-              isDropBeforeActive={dropBeforeIndex === index}
-              isDropAfterActive={dropBeforeIndex === index + 1}
-              setDropBeforeIndex={setDropBeforeIndex}
-              cancelDrag={cancelDrag}
-              submitWordEdit={submitWordEdit}
-              isBeingEdited={editWord?.index === index}
-              editText={editWord?.text ?? null}
-              isInInactiveTake={isInInactiveTake}
-              isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
-            />
-            {index === transcription.words.length - 1 && (
-              <WordSpace
-                key="space-end"
-                isDropMarkerActive={
-                  dragState !== null &&
-                  dropBeforeIndex === transcription.words.length
-                }
-                isBetweenHighlightedWords={false}
-                highlightedByClientWithIndex={null}
-              />
-            )}
-          </Fragment>
-        )}
-      </WordAndSpaceContainer>
-    </Profiler>
+          )}
+        </Fragment>
+      )}
+    </WordAndSpaceContainer>
   );
 };
 

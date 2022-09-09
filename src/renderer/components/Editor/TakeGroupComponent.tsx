@@ -22,12 +22,12 @@ interface TakeGroupComponentProps {
   editWord: any;
   nowPlayingWordIndex: number | null;
   transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
   submitWordEdit: () => void;
   selectionSet: Set<any>;
   otherSelectionSets: Record<ClientId, Set<number>>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TakeGroupComponent = ({
@@ -45,12 +45,12 @@ const TakeGroupComponent = ({
   editWord,
   nowPlayingWordIndex,
   transcription,
-  seekToWord,
   submitWordEdit,
   selectionSet,
   otherSelectionSets,
   popoverWidth,
   transcriptionBlockRef,
+  setPlaybackTime,
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
 
@@ -111,13 +111,13 @@ const TakeGroupComponent = ({
         editWord={editWord}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        seekToWord={seekToWord}
         submitWordEdit={submitWordEdit}
         selectionSet={selectionSet}
         otherSelectionSets={otherSelectionSets}
         transcriptionIndex={transcriptionIndex}
         popoverWidth={popoverWidth}
         transcriptionBlockRef={transcriptionBlockRef}
+        setPlaybackTime={setPlaybackTime}
       />
     );
   });

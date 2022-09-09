@@ -9,7 +9,7 @@ const profileWords: (label: string, type: string, time: number) => void = (
   TOTAL_WORDS += 1;
   TOTAL_TIME += timeTaken;
 
-  // console.log(TOTAL_TIME, TOTAL_WORDS);
+  console.log(TOTAL_TIME, TOTAL_WORDS);
 };
 
 export default profileWords;

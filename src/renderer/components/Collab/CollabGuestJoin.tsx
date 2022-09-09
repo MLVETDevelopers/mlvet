@@ -22,7 +22,7 @@ const CollabGuestJoin = () => {
       dispatch(collabClientInstantiated(collabClient));
     }
 
-    collabClient.joinSession(clientName, sessionCode);
+    collabClient.joinSession(clientName, sessionCode.toUpperCase());
   }, [clientName, sessionCode, collab, dispatch]);
 
   if (collab === null) {
@@ -35,7 +35,7 @@ const CollabGuestJoin = () => {
         />
         <TextField
           value={sessionCode}
-          onChange={(e) => setSessionCode(e.target.value)}
+          onChange={(e) => setSessionCode(e.target.value.toUpperCase())}
           placeholder="Session code"
         />
         <Button onClick={joinCollabSession}>Join collab session</Button>

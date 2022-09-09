@@ -21,6 +21,9 @@ export type RestoreSectionOp = Op<
 export const makeRestoreSection: (ranges: IndexRange[]) => RestoreSectionOp = (
   ranges
 ) => ({
-  do: [sectionRestored(ranges), ...ranges.map(selectionRangeAdded)],
+  do: [
+    sectionRestored(ranges),
+    ...ranges.map((range) => selectionRangeAdded(range)),
+  ],
   undo: [undoSectionRestored(ranges), selectionCleared()],
 });

@@ -14,6 +14,7 @@ import {
   isTakeGroup,
 } from 'renderer/utils/takeDetection';
 import { mapWithAccumulator } from 'renderer/utils/list';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -68,14 +69,26 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
-  const selectionArray = useSelector(
-    (store: ApplicationStore) => store.selection
+  const ownSelectionArray = useSelector(
+    (store: ApplicationStore) => store.selection.self
   );
 
-  const selectionSet = useMemo(
-    () => (editWord === null ? new Set(selectionArray) : new Set()),
-    [selectionArray, editWord]
+  const ownSelectionSet = useMemo(
+    () => (editWord === null ? new Set(ownSelectionArray) : new Set<number>()),
+    [ownSelectionArray, editWord]
   );
+
+  const otherSelections = useSelector(
+    (store: ApplicationStore) => store.selection.others
+  );
+
+  const otherSelectionSets = useMemo(() => {
+    const sets: Record<ClientId, Set<number>> = {};
+    Object.keys(otherSelections).forEach((clientId) => {
+      sets[clientId] = new Set(otherSelections[clientId]);
+    });
+    return sets;
+  }, [otherSelections]);
 
   const dispatch = useDispatch();
 
@@ -163,7 +176,8 @@ const TranscriptionBlock = ({
                       transcription={transcription}
                       seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
-                      selectionSet={selectionSet}
+                      selectionSet={ownSelectionSet}
+                      otherSelectionSets={otherSelectionSets}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                     />

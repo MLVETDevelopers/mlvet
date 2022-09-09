@@ -42,7 +42,7 @@ export const makeMoveWords: (
       undoWordPasted(toAfterIndex, clipboard.length),
       undoSelectionDeleted(fromRanges),
       selectionCleared(),
-      ...fromRanges.map(selectionRangeAdded),
+      ...fromRanges.map((range) => selectionRangeAdded(range)),
     ],
   };
 };

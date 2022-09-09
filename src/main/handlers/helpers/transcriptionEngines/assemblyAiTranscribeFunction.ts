@@ -9,9 +9,7 @@ import readDefaultEngineConfig from '../../file/readDefaultEngineConfig';
 // Have to use a slightly older version (2.6.6) as well due to module issues
 import { TranscriptionFunction } from '../transcribeTypes';
 import { getAudioExtractPath, roundToMs } from '../../../util';
-
-const sleep: (seconds: number) => Promise<void> = (seconds) =>
-  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+import { sleep } from '../../../../sharedUtils';
 
 // TODO: put in config
 // const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';

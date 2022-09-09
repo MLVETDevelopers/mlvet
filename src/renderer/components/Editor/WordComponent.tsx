@@ -17,7 +17,11 @@ import {
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
-import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
+import {
+  getCanvasFont,
+  getColourForIndex,
+  getTextWidth,
+} from 'renderer/utils/ui';
 import { DragState } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -53,6 +57,9 @@ interface Props {
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
+  selectedByClientWithIndex: number | null;
+  isSelectedByAnotherClientLeftCap: boolean;
+  isSelectedByAnotherClientRightCap: boolean;
   text: string;
   onMouseDown: (
     wordRef: RefObject<HTMLDivElement>
@@ -95,6 +102,9 @@ const WordComponent = ({
   editText,
   isInInactiveTake,
   isShowingConfidenceUnderlines,
+  selectedByClientWithIndex,
+  isSelectedByAnotherClientLeftCap,
+  isSelectedByAnotherClientRightCap,
 }: Props) => {
   const dispatch = useDispatch();
 
@@ -232,6 +242,24 @@ const WordComponent = ({
         color: colors.white,
         boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
         borderRadius: BORDER_RADIUS_AMOUNT,
+      };
+    }
+    if (selectedByClientWithIndex !== null) {
+      return {
+        background: `${getColourForIndex(selectedByClientWithIndex)}cc`,
+        color: colors.white,
+        borderTopLeftRadius: isSelectedByAnotherClientLeftCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderBottomLeftRadius: isSelectedByAnotherClientLeftCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderTopRightRadius: isSelectedByAnotherClientRightCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
+        borderBottomRightRadius: isSelectedByAnotherClientRightCap
+          ? BORDER_RADIUS_AMOUNT
+          : 0,
       };
     }
     if (isShowingConfidenceUnderlines) {

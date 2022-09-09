@@ -1,6 +1,13 @@
-/* eslint-disable import/prefer-default-export */
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isInOriginalOrder } from 'renderer/utils/words';
 import { IndexRange, Word } from 'sharedTypes';
+
+export type SelectionIndices = number[];
+
+export interface SelectionState {
+  self: SelectionIndices;
+  others: Record<ClientId, SelectionIndices>;
+}
 
 /**
  * Returns whether merge and/or split are allowed given the current state
@@ -44,4 +51,35 @@ export const isMergeSplitAllowed: (
     merge: hasAtLeastTwoWords && noSelectedWordsDeleted && inOriginalOrder,
     split: noSelectedWordsDeleted && isWordSplittable,
   };
+};
+
+/**
+ * Extracts a selection for the given client ID
+ */
+export const extractSelection: (
+  selectionState: SelectionState,
+  clientId: ClientId | null
+) => SelectionIndices = (selectionState, clientId) =>
+  clientId === null ? selectionState.self : selectionState.others[clientId];
+
+/**
+ * Immutably updates a selection for the given client ID (self if clientId is null)
+ */
+export const updateSelection: (
+  clientId: ClientId | null,
+  prevSelectionState: SelectionState,
+  newSelection: SelectionIndices
+) => SelectionState = (clientId, prevSelectionState, newSelection) => {
+  return clientId === null
+    ? {
+        ...prevSelectionState,
+        self: newSelection,
+      }
+    : {
+        ...prevSelectionState,
+        others: {
+          ...prevSelectionState.others,
+          [clientId]: newSelection,
+        },
+      };
 };

@@ -1,4 +1,5 @@
 import { MousePosition } from '@react-hook/mouse-position';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { Dispatch, RefObject, SetStateAction } from 'react';
 import { isTakeGroup } from 'renderer/utils/takeDetection';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
@@ -23,7 +24,8 @@ interface TranscriptionChunkProps {
   transcription: Transcription;
   seekToWord: (wordIndex: number) => void;
   submitWordEdit: () => void;
-  selectionSet: Set<any>;
+  selectionSet: Set<number>;
+  otherSelectionSets: Record<ClientId, Set<number>>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
 }
@@ -46,6 +48,7 @@ const TranscriptionChunk = ({
   seekToWord,
   submitWordEdit,
   selectionSet,
+  otherSelectionSets,
   popoverWidth,
   transcriptionBlockRef,
 }: TranscriptionChunkProps) => {
@@ -68,6 +71,7 @@ const TranscriptionChunk = ({
       seekToWord={seekToWord}
       submitWordEdit={submitWordEdit}
       selectionSet={selectionSet}
+      otherSelectionSets={otherSelectionSets}
       popoverWidth={popoverWidth}
       transcriptionBlockRef={transcriptionBlockRef}
     />
@@ -78,6 +82,7 @@ const TranscriptionChunk = ({
       transcription={transcription}
       seekToWord={seekToWord}
       selectionSet={selectionSet}
+      otherSelectionSets={otherSelectionSets}
       onWordMouseDown={onWordMouseDown}
       onWordMouseMove={onWordMouseMove}
       dragState={dragState}

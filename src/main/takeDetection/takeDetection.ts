@@ -179,12 +179,12 @@ export function findTakes(words: Word[]): InjectableTakeGroup[] {
     potentialTakeStartIdxs.push(currentSentenceIdx);
 
     let nextSentenceIdx = currentSentenceIdx + 1;
-    const maxRemainingTakesIdx = Math.round(
-      (sentences.length - currentSentenceIdx) / 2
-    );
+    const maxRemainingTakesIdx =
+      Math.round((sentences.length - currentSentenceIdx) / 2) +
+      currentSentenceIdx;
 
     // search for any similar sentence start from current first sentence
-    while (nextSentenceIdx <= maxRemainingTakesIdx || potentialTakeLen > 0) {
+    while (nextSentenceIdx < maxRemainingTakesIdx || potentialTakeLen > 0) {
       // if remaining sentences can't make valid take
       if (
         nextSentenceIdx > maxSentenceIdx ||
@@ -196,7 +196,7 @@ export function findTakes(words: Word[]): InjectableTakeGroup[] {
         getSimilarityScore(
           sentences[currentSentenceIdx].sentenceString,
           sentences[nextSentenceIdx].sentenceString
-        ) >= THRESHOLD;
+        ) > THRESHOLD;
 
       // if already found potentail take
       // but next sentence at potential take index is not similar

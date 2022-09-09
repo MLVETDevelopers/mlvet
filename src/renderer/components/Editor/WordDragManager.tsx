@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import useMouse, { MousePosition } from '@react-hook/mouse-position';
@@ -186,23 +187,50 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
     setDragState(null);
   }, [setDragState]);
 
+  const mouseOrNull = useMemo(
+    () => (dragState === null ? null : mouse),
+    [dragState, mouse]
+  );
+
+  const mouseThrottledOrNull = useMemo(
+    () => (dragState === null ? null : mouseThrottled),
+    [dragState, mouseThrottled]
+  );
+
+  const childrenRendered = useMemo(
+    () =>
+      children(
+        onWordMouseDown,
+        onWordMouseMoveDebounced,
+        dragState,
+        isWordBeingDragged,
+        mouseOrNull,
+        mouseThrottledOrNull,
+        dropBeforeIndex,
+        setDropBeforeIndex,
+        cancelDrag
+      ),
+    [
+      onWordMouseDown,
+      onWordMouseMoveDebounced,
+      dragState,
+      isWordBeingDragged,
+      mouseOrNull,
+      mouseThrottledOrNull,
+      dropBeforeIndex,
+      setDropBeforeIndex,
+      cancelDrag,
+      children,
+    ]
+  );
+
   return (
     <div
       id="word-drag-manager"
       style={{ height: '100%' }}
       onMouseUp={onMouseUp}
     >
-      {children(
-        onWordMouseDown,
-        onWordMouseMoveDebounced,
-        dragState,
-        isWordBeingDragged,
-        dragState === null ? null : mouse,
-        dragState === null ? null : mouseThrottled,
-        dropBeforeIndex,
-        setDropBeforeIndex,
-        cancelDrag
-      )}
+      {childrenRendered}
     </div>
   );
 };

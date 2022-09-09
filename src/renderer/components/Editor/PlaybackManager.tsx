@@ -3,6 +3,7 @@ import {
   ReactElement,
   RefObject,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -41,10 +42,17 @@ const PlaybackManager = ({
   const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
   const play = () => videoPreviewControllerRef?.current?.play();
+
   const pause = () => videoPreviewControllerRef?.current?.pause();
-  const setPlaybackTime = (newPlaybackTime: number) =>
-    videoPreviewControllerRef?.current?.setPlaybackTime(newPlaybackTime);
+
+  const setPlaybackTime = useCallback(
+    (newPlaybackTime: number) =>
+      videoPreviewControllerRef?.current?.setPlaybackTime(newPlaybackTime),
+    [videoPreviewControllerRef]
+  );
+
   const seekForward = () => videoPreviewControllerRef?.current?.seekForward();
+
   const seekBack = () => videoPreviewControllerRef?.current?.seekBack();
 
   // TODO: Look into optimisations
@@ -67,17 +75,21 @@ const PlaybackManager = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, currentProject?.transcription]);
 
-  const seekToWord: (wordIndex: number) => void = (wordIndex) => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      // Fixes some minor floating point errors that cause the previous word to be selected
-      // instead of the current one
-      const epsilon = 0.01;
+  const seekToWord: (wordIndex: number) => void = useCallback(
+    (wordIndex) => {
+      if (currentProject !== null && currentProject?.transcription !== null) {
+        // Fixes some minor floating point errors that cause the previous word to be selected
+        // instead of the current one
+        const epsilon = 0.01;
 
-      const newTime =
-        currentProject.transcription.words[wordIndex].outputStartTime + epsilon;
-      setPlaybackTime(newTime);
-    }
-  };
+        const newTime =
+          currentProject.transcription.words[wordIndex].outputStartTime +
+          epsilon;
+        setPlaybackTime(newTime);
+      }
+    },
+    [currentProject, setPlaybackTime]
+  );
 
   return children(
     time,

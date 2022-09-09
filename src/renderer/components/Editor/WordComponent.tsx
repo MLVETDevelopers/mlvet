@@ -225,7 +225,7 @@ const WordComponent = ({
         setAwaitingSecondClick(false);
       }, DOUBLE_CLICK_THRESHOLD);
 
-      setPlaybackTime(outputStartTime);
+      setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
       handleSelectWord(event, index);
 
       // Prevent event from being received by the transcription block and therefore intercepted,

@@ -1,4 +1,8 @@
 import {
+  SelectionIndices,
+  SelectionState,
+} from 'renderer/store/selection/helpers';
+import {
   RuntimeProject,
   ProjectMetadata,
   RecentProject,
@@ -105,6 +109,13 @@ export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   ...override,
 });
 
+export const makeSelfSelection: (
+  selection: SelectionIndices
+) => SelectionState = (selection) => ({
+  self: selection,
+  others: {},
+});
+
 export const isInInactiveTake: (
   word: Word,
   takeGroups: TakeGroup[]
@@ -123,3 +134,6 @@ export const isInInactiveTake: (
 
   return true;
 };
+
+export const sleep: (seconds: number) => Promise<void> = (seconds) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));

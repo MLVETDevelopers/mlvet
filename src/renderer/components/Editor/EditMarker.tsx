@@ -6,6 +6,7 @@ import {
   getOriginalWords,
   restoreOriginalSection,
 } from 'renderer/editor/restore';
+import { getColourForIndex } from 'renderer/utils/ui';
 import RestorePopover from './RestorePopover';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
@@ -14,6 +15,7 @@ interface Props {
   word: Word;
   index: number;
   isSelected: boolean;
+  selectedByClientWithIndex: number | null;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
 }
@@ -25,6 +27,7 @@ const EditMarker = ({
   isSelected,
   popoverWidth,
   transcriptionBlockRef,
+  selectedByClientWithIndex,
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
   const [popperText, setPopperText] = useState<string | null>(null);
@@ -57,6 +60,16 @@ const EditMarker = ({
     setPopperText(getOriginalText());
   };
 
+  const background = (() => {
+    if (isSelected) {
+      return `${colors.blue[500]}cc`;
+    }
+    if (selectedByClientWithIndex !== null) {
+      return `${getColourForIndex(selectedByClientWithIndex)}cc`;
+    }
+    return 'none';
+  })();
+
   return (isInOriginalPos || hasNotMoved) &&
     hasNoNeighbourMarker &&
     notPasted ? (
@@ -75,7 +88,7 @@ const EditMarker = ({
       )}
       <Box
         sx={{
-          background: isSelected ? `${colors.blue[500]}cc` : 'none',
+          background,
           transform: 'translateY(-6.5px)',
           cursor: 'pointer',
         }}

@@ -17,13 +17,13 @@ const { dispatch } = store;
 export const getSelectionRanges: () => IndexRange[] = () => {
   const { selection } = store.getState();
 
-  return indicesToRanges(selection);
+  return indicesToRanges(selection.self);
 };
 
 export const expandSelectionToWord: (wordIndex: number) => void = (
   wordIndex
 ) => {
-  const { selection } = store.getState();
+  const selection = store.getState().selection.self;
 
   sortNumerical(selection);
 

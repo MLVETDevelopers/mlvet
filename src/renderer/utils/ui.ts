@@ -1,3 +1,5 @@
+import colors from 'renderer/colors';
+
 /* Returns the style declaration for an element */
 export const getElementStyle: (
   elem: Element
@@ -87,3 +89,16 @@ export const getCanvasFont: (
     .map((prop, i) => (element && getCssStyle(element, prop)) || defaults[i])
     .join(' ');
 };
+
+/** Colour cycle for showing collaborator selections */
+const colourCycle = [
+  colors.purple[500],
+  colors.green[700],
+  colors.pink[500],
+  colors.orange[500],
+  colors.pink[300],
+];
+
+/** Get a colour given a collaborator ID; cycles back to the start if finished */
+export const getColourForIndex: (index: number) => string = (index) =>
+  colourCycle[index % colourCycle.length];

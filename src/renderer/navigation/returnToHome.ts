@@ -1,3 +1,4 @@
+import { collabSessionEnded } from 'renderer/store/collab/actions';
 import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';
 import {
@@ -27,6 +28,13 @@ const returnToHome: () => Promise<void> = async () => {
   }
   store.dispatch(pageChanged(ApplicationPage.HOME));
   store.dispatch(currentProjectClosed());
+
+  const { collab } = store.getState();
+
+  if (collab !== null) {
+    collab.collabClient.closeSocket();
+    store.dispatch(collabSessionEnded());
+  }
 };
 
 export default returnToHome;

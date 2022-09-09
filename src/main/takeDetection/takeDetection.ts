@@ -1,4 +1,4 @@
-import { Word, IndexRange } from '../../sharedTypes';
+import { Word } from '../../sharedTypes';
 import {
   InjectableTake,
   InjectableTakeGroup,
@@ -54,21 +54,19 @@ const newTakeGroup = (
   sentences: Sentence[]
 ): InjectableTakeGroup => {
   // if all the sentence in potential take are similar, add them to takeGroups
-  const newGroup: InjectableTakeGroup = { takes: [] };
-
-  potentialTakeStartIdxs.forEach((startIdx) => {
+  const takes = potentialTakeStartIdxs.map((startIdx) => {
     const takeStartSentence = sentences[startIdx];
     const takeEndSentence = sentences[startIdx + potentialTakeLen - 1];
 
-    const takeRange: IndexRange = {
-      startIndex: takeStartSentence.startIndex as number,
-      endIndex: takeEndSentence.endIndex as number,
-    };
-    const take: InjectableTake = { wordRange: takeRange };
-    newGroup.takes.push(take);
+    return {
+      wordRange: {
+        startIndex: takeStartSentence.startIndex as number,
+        endIndex: takeEndSentence.endIndex as number,
+      },
+    } as InjectableTake;
   });
 
-  return newGroup;
+  return { takes };
 };
 
 const startDetection: (
@@ -157,10 +155,10 @@ export function findTakes(
   const takeGroups: InjectableTakeGroup[] = [];
 
   let currentSentenceIdx = 0;
-  let detectNotCompelet = true;
+  let detectNotComplete = true;
   const maxSentenceIdx = sentences.length - 1;
 
-  while (detectNotCompelet) {
+  while (detectNotComplete) {
     let potentialTakeLen = 0;
     const potentialTakeStartIdxs: number[] = [];
 
@@ -187,7 +185,7 @@ export function findTakes(
           sentences[nextSentenceIdx].sentenceString
         ) > threshold;
 
-      // if already found potentail take
+      // if already found potential take
       // but next sentence at potential take index is not similar
       if (potentialTakeLen > 0 && !isSimilar) break;
 
@@ -230,7 +228,7 @@ export function findTakes(
         potentialTakeLen ===
       sentences.length
     ) {
-      detectNotCompelet = false;
+      detectNotComplete = false;
     }
   }
 

@@ -164,7 +164,7 @@ const WordOuterComponent = ({
             isSelectedByAnotherClientRightCap={
               isSelectedByAnotherClientRightCap
             }
-            text={word.word}
+            text={word.word ?? '_'}
             confidence={word.confidence ?? 1}
             index={index}
             onMouseDown={onWordMouseDown(index)}

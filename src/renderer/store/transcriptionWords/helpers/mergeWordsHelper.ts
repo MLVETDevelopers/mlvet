@@ -26,7 +26,10 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
   }
 
   // Resulting text of the merged words
-  const mergedText = wordsToMerge.map((word) => word.word).join(' ');
+  const mergedText = wordsToMerge
+    .filter((word) => word.word !== null)
+    .map((word) => word.word)
+    .join(' ');
 
   // Combined inner durations of all the inner words
   const innerDuration = wordsToMerge.reduce((durationSoFar, word, index) => {

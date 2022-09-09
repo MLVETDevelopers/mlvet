@@ -20,6 +20,10 @@ export function findSentences(words: Word[]): Sentence[] {
   };
   const sentences: Sentence[] = [];
   words.forEach((word, idx) => {
+    if (word.word === null) {
+      return;
+    }
+
     if (currentSentence.sentenceString === '') {
       currentSentence.sentenceString = word.word;
     } else {
@@ -44,7 +48,9 @@ export function findSentences(words: Word[]): Sentence[] {
       };
     }
   });
-  sentences[sentences.length - 1].endIndex = words.length;
+  if (sentences.length > 0) {
+    sentences[sentences.length - 1].endIndex = words.length;
+  }
   return sentences;
 }
 
@@ -68,7 +74,10 @@ function newTakeGroup(
   return newGroup;
 }
 
-export function findTakes(words: Word[], threshold = THRESHOLD): InjectableTakeGroup[] {
+export function findTakes(
+  words: Word[],
+  threshold = THRESHOLD
+): InjectableTakeGroup[] {
   const takeGroups: InjectableTakeGroup[] = [];
   const sentences: Sentence[] = findSentences(words);
   for (let i = 0; i < sentences.length - 1; i += 1) {
@@ -101,4 +110,4 @@ export function findTakes(words: Word[], threshold = THRESHOLD): InjectableTakeG
   return takeGroups;
 }
 
-export default { getSimilarityScore };
+export default getSimilarityScore;

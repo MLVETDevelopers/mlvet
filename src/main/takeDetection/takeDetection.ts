@@ -148,13 +148,13 @@ export function findTakes(
   const takeGroups: InjectableTakeGroup[] = [];
 
   let currentSentenceIdx = 0;
-  let detectNotComplete = true;
+  let potentialTakeLen = 0;
   const maxSentenceIdx = sentences.length - 1;
+  const potentialTakeStartIdxs: number[] = [];
 
-  while (detectNotComplete) {
-    let potentialTakeLen = 0;
-    const potentialTakeStartIdxs: number[] = [];
-
+  do {
+    potentialTakeLen = 0;
+    potentialTakeStartIdxs.length = 0;
     // set first sentence as potential take
     potentialTakeStartIdxs.push(currentSentenceIdx);
 
@@ -222,15 +222,11 @@ export function findTakes(
     } else {
       currentSentenceIdx += 1;
     }
-
-    if (
-      potentialTakeStartIdxs[potentialTakeStartIdxs.length - 1] +
-        potentialTakeLen ===
-      sentences.length
-    ) {
-      detectNotComplete = false;
-    }
-  }
+  } while (
+    potentialTakeStartIdxs[potentialTakeStartIdxs.length - 1] +
+      potentialTakeLen !==
+    sentences.length
+  );
 
   return takeGroups;
 }

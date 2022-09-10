@@ -2966,6 +2966,11 @@ clsx@^1.1.1:
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.1.1.tgz"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
+cnoke@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/cnoke/-/cnoke-3.2.0.tgz#df314ca1afea13e0feca86be2db9ff6fb9b8f17f"
+  integrity sha512-kglrhvB4ZZlRUFPsZP8UU6HbLkZCYGKfZzGLcpU0x2lRotB2s61Gxa1bPNDTSjZND2i1FdIxni5p0V2/359ORA==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/co/-/co-4.6.0.tgz"
@@ -6477,6 +6482,13 @@ klona@^2.0.4:
   version "2.0.5"
   resolved "https://registry.npmjs.org/klona/-/klona-2.0.5.tgz"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
+
+koffi@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/koffi/-/koffi-2.1.1.tgz#8878894b96bbab9f60f114f8712e65faf9302ece"
+  integrity sha512-Ni2iGr7E7ISF6k0ovRD1BH82j00w/HVEoTZQ1REPuHo4UP8vf+qkqFxssvOaUMhp/f6CvslBGkcR2ah1qZbC/g==
+  dependencies:
+    cnoke "^3.2.0"
 
 language-subtag-registry@~0.3.2:
   version "0.3.21"

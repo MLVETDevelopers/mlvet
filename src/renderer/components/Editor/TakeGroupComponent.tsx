@@ -33,7 +33,7 @@ interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
+  onWordMouseMove: (wordIndex: number) => void;
   mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<any>;

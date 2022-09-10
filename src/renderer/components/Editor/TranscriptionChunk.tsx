@@ -12,7 +12,7 @@ interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
   chunk: Word | TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
+  onWordMouseMove: (wordIndex: number) => void;
   mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<number>;

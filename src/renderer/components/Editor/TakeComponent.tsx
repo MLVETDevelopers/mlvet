@@ -55,7 +55,7 @@ interface TakeComponentProps extends TakePassThroughProps {
   nowPlayingWordIndex: number | null;
   selectionSet: Set<number>;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
+  onWordMouseMove: (wordIndex: number) => void;
   transcriptionIndex: number;
 }
 

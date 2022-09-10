@@ -1,6 +1,8 @@
 import fs from 'fs';
 import { WaveFile } from 'wavefile';
-import { setLogLevel, createModel } from '../../vosk';
+// import { setLogLevel, createModel, getSoname } from '../../vosk';
+// import * as hello from '../../vosk/hello';
+import createVosky from '../../vosk/vosky';
 
 interface WaveFormat {
   audioFormat: number;
@@ -21,16 +23,13 @@ interface WaveData {
 const getVoskTranscript = async (modelPath: string, filePath: string) => {
   console.log('1');
 
-  setLogLevel(0);
+  const vosky = createVosky();
+
+  vosky.setLogLevel(0);
 
   console.log('2');
 
-  let model;
-  try {
-    model = createModel(modelPath);
-  } catch (e) {
-    console.log(e);
-  }
+  const model = vosky.createModel(modelPath);
 
   console.log('3');
 

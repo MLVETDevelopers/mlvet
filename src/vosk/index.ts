@@ -5,6 +5,8 @@ import path from 'path';
 import koffi from 'koffi';
 // import ref from 'ref-napi';
 
+console.log('=========================');
+
 const PLATFORMS = {
   WINDOWS: 'win32',
   LINUX: 'linux',
@@ -84,7 +86,30 @@ if (os.platform() === PLATFORMS.WINDOWS) {
   soname = path.join(__dirname, 'lib', 'linux-x86_64', 'libvosk.so');
 }
 
+console.log('loading lib', soname);
+
 const libvosk = koffi.load(soname);
+
+console.log('loaded lib');
+
+export const getSoname = () => {
+  let test;
+  if (os.platform() === PLATFORMS.WINDOWS) {
+    // Update path to load dependent dlls
+    const currentPath = process.env.Path;
+    const dllDirectory = path.resolve(
+      path.join(__dirname, 'lib', 'win-x86_64')
+    );
+    process.env.Path = currentPath + path.delimiter + dllDirectory;
+
+    test = path.join(__dirname, 'lib', 'win-x86_64', 'libvosk.dll');
+  } else if (os.platform() === PLATFORMS.MAC) {
+    test = path.join(__dirname, 'lib', 'osx-universal', 'libvosk.dylib');
+  } else {
+    test = path.join(__dirname, 'lib', 'linux-x86_64', 'libvosk.so');
+  }
+  console.log(test);
+};
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -95,24 +120,28 @@ const libvosk = koffi.load(soname);
 // const vosk_recognizer = ref.types.void;
 // const vosk_recognizer_ptr = ref.refType(vosk_recognizer);
 
-koffi.struct('VoskModel', { am_v2_path: koffi.types.string });
+// koffi.struct('VoskModel', { am_v2_path: koffi.types.string });
 
 //     string model_conf_v2_path = model_path_str_ + "/conf/model.conf";
 //     string am_v1_path = model_path_str_ + "/final.mdl";
 //     string mfcc_v1_path = model_path_str_ + "/mfcc.conf";
 
-// const vosk_model = koffi.opaque('VoskModel');
+const VoskModel = koffi.opaque('VoskModel');
 const vosk_spk_model = koffi.opaque('VoskSpkModel');
 const vosk_recognizer = koffi.opaque('VoskRecognizer');
+
+console.log('defining opaques');
 
 // const vosk_model = koffi.types.void;
 // const vosk_model_ptr = koffi.inout(koffi.pointer(VoskModel));
 // const vosk_spk_model = koffi.types.void;
-const vosk_spk_model_ptr = koffi.inout(koffi.pointer(vosk_spk_model));
-// const vosk_recognizer = koffi.types.void;
-const vosk_recognizer_ptr = koffi.inout(koffi.pointer(vosk_recognizer));
+// const vosk_spk_model_ptr = koffi.inout(koffi.pointer(vosk_spk_model));
+// // const vosk_recognizer = koffi.types.void;
+// const vosk_recognizer_ptr = koffi.inout(koffi.pointer(vosk_recognizer));
 
 const vosk_set_log_level = libvosk.func('vosk_set_log_level', 'void', ['int']);
+
+console.log('defining set log level');
 
 // Basic vosk model DLL functions
 const vosk_model_new = libvosk.func(
@@ -207,9 +236,10 @@ export const setLogLevel = (level: number) => {
  * @returns {Model} The model to be used with the voice recognition
  */
 export const createModel = (modelPath: string): Model => {
+  console.log('Creating model', modelPath);
   const handle = vosk_model_new(modelPath);
   if (handle === null) {
-    throw new Error(`Failed to load model at ${modelPath}`);
+    console.log(`Failed to load model at ${modelPath}`);
   }
 
   /**

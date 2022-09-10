@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import React, { Profiler, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -133,72 +133,70 @@ const TranscriptionBlock = ({
   );
 
   return (
-    <Profiler id="block" onRender={console.log}>
-      <WordDragManager clearSelection={clearSelection}>
-        {(
-          onWordMouseDown,
-          onWordMouseMove,
-          dragState,
-          isWordBeingDragged,
-          mouse,
-          mouseThrottled,
-          dropBeforeIndex,
-          setDropBeforeIndex,
-          cancelDrag
-        ) => {
-          return (
-            <TranscriptionBox id="transcription-content" ref={blockRef}>
-              {mapWithAccumulator(
-                transcriptionChunks,
-                (chunk, _, acc) => {
-                  return {
-                    item: (
-                      <TranscriptionChunk
-                        key={
-                          isTakeGroup(chunk)
-                            ? `take-group-chunk-${(chunk as TakeGroup).id}`
-                            : `word-chunk-${(chunk as Word).originalIndex}-${
-                                (chunk as Word).pasteKey
-                              }`
-                        }
-                        chunk={chunk}
-                        chunkIndex={acc}
-                        onWordMouseDown={onWordMouseDown}
-                        onWordMouseMove={onWordMouseMove}
-                        dragState={dragState}
-                        isWordBeingDragged={isWordBeingDragged}
-                        mousePosition={mouse}
-                        mouseThrottled={mouseThrottled}
-                        dropBeforeIndex={dropBeforeIndex}
-                        setDropBeforeIndex={setDropBeforeIndex}
-                        cancelDrag={cancelDrag}
-                        editWord={editWord}
-                        nowPlayingWordIndex={nowPlayingWordIndex}
-                        transcription={transcription}
-                        submitWordEdit={submitWordEdit}
-                        selectionSet={ownSelectionSet}
-                        otherSelectionSets={otherSelectionSets}
-                        popoverWidth={blockWidth - 194}
-                        transcriptionBlockRef={blockRef}
-                        setPlaybackTime={setPlaybackTime}
-                      />
-                    ),
-                    acc: isTakeGroup(chunk)
-                      ? acc +
-                        getTakeGroupLength(
-                          chunk as TakeGroup,
-                          transcription.words
-                        )
-                      : acc + 1,
-                  };
-                },
-                0
-              )}
-            </TranscriptionBox>
-          );
-        }}
-      </WordDragManager>
-    </Profiler>
+    <WordDragManager clearSelection={clearSelection}>
+      {(
+        onWordMouseDown,
+        onWordMouseMove,
+        dragState,
+        isWordBeingDragged,
+        mouse,
+        mouseThrottled,
+        dropBeforeIndex,
+        setDropBeforeIndex,
+        cancelDrag
+      ) => {
+        return (
+          <TranscriptionBox id="transcription-content" ref={blockRef}>
+            {mapWithAccumulator(
+              transcriptionChunks,
+              (chunk, _, acc) => {
+                return {
+                  item: (
+                    <TranscriptionChunk
+                      key={
+                        isTakeGroup(chunk)
+                          ? `take-group-chunk-${(chunk as TakeGroup).id}`
+                          : `word-chunk-${(chunk as Word).originalIndex}-${
+                              (chunk as Word).pasteKey
+                            }`
+                      }
+                      chunk={chunk}
+                      chunkIndex={acc}
+                      onWordMouseDown={onWordMouseDown}
+                      onWordMouseMove={onWordMouseMove}
+                      dragState={dragState}
+                      isWordBeingDragged={isWordBeingDragged}
+                      mousePosition={mouse}
+                      mouseThrottled={mouseThrottled}
+                      dropBeforeIndex={dropBeforeIndex}
+                      setDropBeforeIndex={setDropBeforeIndex}
+                      cancelDrag={cancelDrag}
+                      editWord={editWord}
+                      nowPlayingWordIndex={nowPlayingWordIndex}
+                      transcription={transcription}
+                      submitWordEdit={submitWordEdit}
+                      selectionSet={ownSelectionSet}
+                      otherSelectionSets={otherSelectionSets}
+                      popoverWidth={blockWidth - 194}
+                      transcriptionBlockRef={blockRef}
+                      setPlaybackTime={setPlaybackTime}
+                    />
+                  ),
+                  acc: isTakeGroup(chunk)
+                    ? acc +
+                      getTakeGroupLength(
+                        chunk as TakeGroup,
+                        transcription.words
+                      )
+                    : acc + 1,
+                };
+              },
+              0
+            )}
+          </TranscriptionBox>
+        );
+      }}
+    </WordDragManager>
   );
 };
 

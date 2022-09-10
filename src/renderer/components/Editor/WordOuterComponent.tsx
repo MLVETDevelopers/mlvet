@@ -1,10 +1,9 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, { Fragment, Profiler, RefObject, useMemo } from 'react';
+import React, { Fragment, RefObject, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationStore, EditWordState } from 'renderer/store/sharedHelpers';
-import profileWords from 'renderer/utils/profile';
 import { Word } from 'sharedTypes';
 import EditMarker from './EditMarker';
 import WordComponent, { WordPassThroughProps } from './WordComponent';

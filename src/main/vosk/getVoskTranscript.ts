@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { WaveFile } from 'wavefile';
-import vosk from 'vosk';
+import { setLogLevel, createModel, createRecognizer } from '../../vosk';
 
 interface WaveFormat {
   audioFormat: number;
@@ -19,8 +19,8 @@ interface WaveData {
 }
 
 const getVoskTranscript = async (modelPath: string, filePath: string) => {
-  vosk.setLogLevel(-1);
-  const model = new vosk.Model(modelPath);
+  setLogLevel(-1);
+  const model = createModel(modelPath);
 
   const wav = new WaveFile();
   wav.fromBuffer(fs.readFileSync(filePath));
@@ -31,17 +31,21 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
     process.exit(1);
   }
 
-  const rec = new vosk.Recognizer({ model, sampleRate: 16000 });
-  rec.setMaxAlternatives(1); // reduced from 10
-  rec.setWords(true);
-  rec.setPartialWords(true); // what is this idek
+  const voskRecognizer = createRecognizer(model, 16000);
+  voskRecognizer.setMaxAlternatives(1); // reduced from 10
+  voskRecognizer.setWords(true);
+  voskRecognizer.setPartialWords(true); // what is this idek
 
   const wavData = wav.data as WaveData;
-  rec.acceptWaveform(wavData.samples);
+  voskRecognizer.acceptWaveform(wavData.samples);
 
-  const transcript: string = JSON.stringify(rec.finalResult(rec), null, 4);
+  const transcript: string = JSON.stringify(
+    voskRecognizer.finalResult(),
+    null,
+    4
+  );
 
-  rec.free();
+  voskRecognizer.free();
   model.free();
 
   return transcript;

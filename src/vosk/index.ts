@@ -68,10 +68,11 @@ interface Recognizer {
   setWords: (words: boolean) => void;
   setPartialWords: (partialWords: boolean) => void;
   setSpkModel: (spkModel: SpeakerModel) => void;
-  acceptWaveform: (waveform: Buffer) => boolean;
-  result: () => string;
-  finalResult: () => string;
-  partialResult: () => string;
+  acceptWaveform: (waveform: Buffer | number[]) => boolean;
+  resultString: () => string;
+  result: () => Result;
+  finalResult: () => Result;
+  partialResult: () => PartialResults;
   reset: () => void;
 }
 
@@ -194,7 +195,7 @@ export const setLogLevel = (level: number) => {
  * @see models [models](https://alphacephei.com/vosk/models)
  * @returns {Model} The model to be used with the voice recognition
  */
-export const useModel = (modelPath: string): Model => {
+export const createModel = (modelPath: string): Model => {
   const handle = vosk_model_new(modelPath);
   if (handle === null) {
     throw new Error(`Failed to load model at ${modelPath}`);
@@ -218,7 +219,7 @@ export const useModel = (modelPath: string): Model => {
  * @param {string} modelPath the path of the model on the filesystem
  * @see models [models](https://alphacephei.com/vosk/models)
  */
-export const useSpeakerModel = (modelPath: string): SpeakerModel => {
+export const createSpeakerModel = (modelPath: string): SpeakerModel => {
   const handle = vosk_spk_model_new(modelPath);
   if (handle === null) {
     throw new Error(`Failed to load speaker model at ${modelPath}`);
@@ -241,7 +242,7 @@ export const useSpeakerModel = (modelPath: string): SpeakerModel => {
  * @template {XOR<SpeakerRecognizerParam, Partial<GrammarRecognizerParam>>} T extra parameter
  * @see Model
  */
-export const useRecognizer = (
+export const createRecognizer = (
   model: Model,
   sampleRate: number,
   speakerModel?: SpeakerModel
@@ -342,7 +343,7 @@ export const useRecognizer = (
    * @param {Buffer} data audio data in PCM 16-bit mono format
    * @returns true if silence is occured and you can retrieve a new utterance with result method
    */
-  const acceptWaveform = (data: Buffer) => {
+  const acceptWaveform = (data: Buffer | number[]) => {
     return vosk_recognizer_accept_waveform(handle, data, data.length);
   };
 

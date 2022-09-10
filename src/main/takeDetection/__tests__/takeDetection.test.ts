@@ -40,17 +40,9 @@ const makeWords = (words: string[]): Word[] => {
 
 describe('findSentences should return a list of Sentence objects based on punctuation and findTakes should correctly identify different takes', () => {
   it('should produce expected sentences when given a list of words', () => {
-    const wordList = makeWords([
-      'Hello',
-      'world!',
-      'Hi',
-      'there.',
-      'All',
-      'ok?',
-      'test.',
-      'assessment.',
-      'exam',
-    ]);
+    const wordList = makeWords(
+      'Hello world! Hi there. All ok? test. assessment. exam'.split(' ')
+    );
     const sentences: Sentence[] = findSentences(wordList);
 
     expect(sentences).toEqual([
@@ -87,20 +79,12 @@ describe('findSentences should return a list of Sentence objects based on punctu
     ]);
   });
   it('should correctly identify takes based on similarity threshold and consecutiveness and produce expected outupts', () => {
-    const wordList = makeWords([
-      'Hello',
-      'world!',
-      'Hi',
-      'there.',
-      'All',
-      'ok?',
-      'test.',
-      'assessment.',
-      'exam',
-    ]);
-
     (mockedSentenceSim as jest.Mock).mockImplementation(
       mockGetSentenceSimilarity
+    );
+
+    const wordList = makeWords(
+      'Hello world! Hi there. All ok? test. assessment. exam'.split(' ')
     );
     const takes: InjectableTakeGroup[] = findTakes(wordList, 0.7);
     expect(takes).toEqual([

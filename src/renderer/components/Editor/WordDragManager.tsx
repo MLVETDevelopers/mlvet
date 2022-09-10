@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import {
+import React, {
   Dispatch,
   MouseEventHandler,
   RefObject,
@@ -235,4 +235,4 @@ const WordDragManager = ({ clearSelection, children }: Props) => {
   );
 };
 
-export default WordDragManager;
+export default React.memo(WordDragManager);

@@ -1,4 +1,4 @@
-import {
+import React, {
   Dispatch,
   ReactElement,
   RefObject,
@@ -117,4 +117,4 @@ const PlaybackManager = ({
   );
 };
 
-export default PlaybackManager;
+export default React.memo(PlaybackManager);

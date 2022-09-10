@@ -9,6 +9,8 @@ import { OpQueueItem } from './opQueue/helpers';
 import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
 
+export type EditWordState = { index: number; text: string } | null;
+
 /**
  * The schema for the root-level application / redux store, containing the global app state.
  */
@@ -24,7 +26,7 @@ export interface ApplicationStore {
   shortcutsOpened: boolean;
   isUpdateTranscriptionAPIKeyOpened: boolean;
   // Index of word currently being edited, otherwise null
-  editWord: { index: number; text: string } | null;
+  editWord: EditWordState;
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
   // Collab session state

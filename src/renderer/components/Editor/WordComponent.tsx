@@ -55,9 +55,19 @@ const CONFIDENCE_THRESHOLD_LOW = 0.4;
 // pixels
 const MIN_EDIT_WIDTH = 10;
 
-interface Props {
-  index: number;
+export interface WordPassThroughProps {
+  isInInactiveTake: boolean;
   isPlaying: boolean;
+  onMouseDown: WordMouseHandler;
+  onMouseMove: (index: number) => void;
+  cancelDrag: () => void;
+  submitWordEdit: () => void;
+  setDropBeforeIndex: (index: number) => void;
+  setPlaybackTime: (time: number) => void;
+}
+
+interface Props extends WordPassThroughProps {
+  index: number;
   isSelected: boolean;
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
@@ -66,21 +76,13 @@ interface Props {
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
   text: string;
-  onMouseDown: WordMouseHandler;
-  onMouseMove: (index: number) => void;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isBeingDragged: boolean; // whether THIS word is currently being dragged
   mouse: MousePosition | null;
   isDropBeforeActive: boolean;
   isDropAfterActive: boolean;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
-  submitWordEdit: () => void;
   isBeingEdited: boolean;
   editText: string | null;
-  isInInactiveTake: boolean;
-  isShowingConfidenceUnderlines: boolean;
-  setPlaybackTime: (time: number) => void;
   outputStartTime: number;
 }
 
@@ -105,7 +107,6 @@ const WordComponent = ({
   isBeingEdited,
   editText,
   isInInactiveTake,
-  isShowingConfidenceUnderlines,
   selectedByClientWithIndex,
   isSelectedByAnotherClientLeftCap,
   isSelectedByAnotherClientRightCap,
@@ -287,19 +288,17 @@ const WordComponent = ({
               : 0,
           };
         }
-        if (isShowingConfidenceUnderlines) {
-          if (confidence < CONFIDENCE_THRESHOLD_LOW) {
-            return {
-              borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
-              marginBottom: 0,
-            };
-          }
-          if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
-            return {
-              borderBottom: `2px solid ${colors.yellow[500]}88`,
-              marginBottom: 0,
-            };
-          }
+        if (confidence < CONFIDENCE_THRESHOLD_LOW) {
+          return {
+            borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
+            marginBottom: 0,
+          };
+        }
+        if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
+          return {
+            borderBottom: `2px solid ${colors.yellow[500]}88`,
+            marginBottom: 0,
+          };
         }
         return {};
       })(),
@@ -313,7 +312,6 @@ const WordComponent = ({
       isSelectedByAnotherClientLeftCap,
       isSelectedByAnotherClientRightCap,
       selectedByClientWithIndex,
-      isShowingConfidenceUnderlines,
       confidence,
     ]
   );
@@ -428,4 +426,4 @@ const WordComponent = ({
   );
 };
 
-export default WordComponent;
+export default React.memo(WordComponent);

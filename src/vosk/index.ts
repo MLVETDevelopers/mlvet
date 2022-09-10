@@ -194,9 +194,9 @@ export const setLogLevel = (level: number) => {
  * @see models [models](https://alphacephei.com/vosk/models)
  * @returns {Model} The model to be used with the voice recognition
  */
-export const useModel = (modelPath: string) => {
-  const model = vosk_model_new(modelPath);
-  if (model.isNull()) {
+export const useModel = (modelPath: string): Model => {
+  const handle = vosk_model_new(modelPath);
+  if (handle === null) {
     throw new Error(`Failed to load model at ${modelPath}`);
   }
 
@@ -207,9 +207,9 @@ export const useModel = (modelPath: string) => {
    * depends on this model, model might still stay alive. When
    * last recognizer is released, model will be released too.
    */
-  const free = () => vosk_model_free(model);
+  const free = () => vosk_model_free(handle);
 
-  return { handle: model, free };
+  return { handle, free };
 };
 
 /**
@@ -218,9 +218,9 @@ export const useModel = (modelPath: string) => {
  * @param {string} modelPath the path of the model on the filesystem
  * @see models [models](https://alphacephei.com/vosk/models)
  */
-export const useSpeakerModel = (modelPath: string) => {
-  const model = vosk_spk_model_new(modelPath);
-  if (model.isNull()) {
+export const useSpeakerModel = (modelPath: string): SpeakerModel => {
+  const handle = vosk_spk_model_new(modelPath);
+  if (handle === null) {
     throw new Error(`Failed to load speaker model at ${modelPath}`);
   }
 
@@ -231,9 +231,9 @@ export const useSpeakerModel = (modelPath: string) => {
    * depends on this model, model might still stay alive. When
    * last recognizer is released, model will be released too.
    */
-  const free = () => vosk_spk_model_free(model);
+  const free = () => vosk_spk_model_free(handle);
 
-  return { handle: model, free };
+  return { handle, free };
 };
 
 /**
@@ -245,7 +245,7 @@ export const useRecognizer = (
   model: Model,
   sampleRate: number,
   speakerModel?: SpeakerModel
-) => {
+): Recognizer => {
   // Prevent the user to receive unpredictable results
   // if (
   //   hasOwnProperty(param, 'speakerModel') &&
@@ -256,7 +256,7 @@ export const useRecognizer = (
   //   );
   // }
 
-  const handle: Recognizer =
+  const handle =
     typeof speakerModel !== 'undefined'
       ? vosk_recognizer_new_spk(model.handle, sampleRate, speakerModel.handle)
       : vosk_recognizer_new(model.handle, sampleRate);

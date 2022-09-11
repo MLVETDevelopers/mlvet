@@ -14,8 +14,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "koffi": "^2.1.1",
-    "ref-napi": "^3.0.3"
+    "koffi": "^2.1.1"
   }
 }
-

@@ -2,6 +2,7 @@ import fs from 'fs';
 import { WaveFile } from 'wavefile';
 // import { setLogLevel, createModel, getSoname } from '../../vosk';
 // import * as hello from '../../vosk/hello';
+import { Readable } from 'stream';
 import createVosky from '../../vosk/vosky';
 
 interface WaveFormat {
@@ -44,9 +45,38 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
 
   const audioBuffer = fs.readFileSync(filePath);
 
+  // audioBuffer.forEach((b) => {
+  //   voskRecognizer.acceptWaveformAsString(b.toString());
+  // });
+
   const wavData = wav.data as WaveData;
 
-  voskRecognizer.acceptWaveformAsString(audioBuffer.toString('base64'));
+  const acceptWaveform = () => {
+    return new Promise<void>((resolve, reject) => {
+      const readStream = fs.createReadStream(filePath, { encoding: 'utf-8' });
+
+      readStream.on('data', (chunk) => {
+        voskRecognizer.acceptWaveformAsString(chunk.toString());
+      });
+
+      readStream.on('error', (e) => {
+        reject(e);
+      });
+
+      readStream.on('end', () => {
+        resolve();
+      });
+    });
+  };
+
+  await acceptWaveform();
+
+  // try {
+  //   voskRecognizer.acceptWaveformAsString(wav.toBase64());
+  // } catch (e) {
+  //   console.log(e);
+  //   voskRecognizer.acceptWaveformAsString(audioBuffer.toString('utf8'));
+  // }
 
   const transcript: string = JSON.stringify(
     voskRecognizer.finalResult(),

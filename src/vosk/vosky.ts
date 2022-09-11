@@ -61,9 +61,11 @@ interface Recognizer {
   setWords: (words: boolean) => void;
   setPartialWords: (partialWords: boolean) => void;
   setSpkModel: (spkModel: SpeakerModel) => void;
-  acceptWaveformAsString: (waveform: string) => boolean;
-  acceptWaveformAsFloatArr: (waveform: number[] | Float32Array) => boolean;
-  acceptWaveformAsShortArr: (waveform: number[]) => boolean;
+  acceptWaveformAsString: (waveform: string | Buffer) => boolean;
+  acceptWaveformAsFloatArr: (
+    waveform: number[] | Buffer | Float32Array
+  ) => boolean;
+  acceptWaveformAsShortArr: (waveform: number[] | Buffer) => boolean;
   resultString: () => string;
   result: () => Result;
   finalResult: () => Result;
@@ -155,12 +157,12 @@ const vosky = () => {
   const recognizerAcceptWaveformFloatArr = libvosk.func(
     'vosk_recognizer_accept_waveform_f',
     'bool',
-    [recognizerPointer, 'float', 'int']
+    [recognizerPointer, 'float *', 'int']
   );
   const recognizerAcceptWaveformShortArr = libvosk.func(
     'vosk_recognizer_accept_waveform_s',
     'bool',
-    [recognizerPointer, 'short', 'int']
+    [recognizerPointer, 'short *', 'int']
   );
   const recognizerResult = libvosk.func('vosk_recognizer_result', 'string', [
     recognizerPointer,
@@ -343,7 +345,7 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsString = (data: string) => {
+    const acceptWaveformAsString = (data: string | Buffer) => {
       return recognizerAcceptWaveformString(handle, data, data.length);
     };
 
@@ -355,7 +357,9 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsFloatArr = (data: number[] | Float32Array) => {
+    const acceptWaveformAsFloatArr = (
+      data: number[] | Float32Array | Buffer
+    ) => {
       return recognizerAcceptWaveformFloatArr(handle, data, data.length);
     };
 
@@ -367,7 +371,7 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsShortArr = (data: number[]) => {
+    const acceptWaveformAsShortArr = (data: number[] | Buffer) => {
       return recognizerAcceptWaveformShortArr(handle, data, data.length);
     };
 

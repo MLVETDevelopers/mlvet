@@ -3,7 +3,6 @@
 import * as os from 'os';
 import path from 'path';
 import koffi from 'koffi';
-// import ref from 'ref-napi';
 
 const PLATFORMS = {
   WINDOWS: 'win32',
@@ -62,7 +61,9 @@ interface Recognizer {
   setWords: (words: boolean) => void;
   setPartialWords: (partialWords: boolean) => void;
   setSpkModel: (spkModel: SpeakerModel) => void;
-  acceptWaveform: (waveform: Buffer | number[]) => boolean;
+  acceptWaveformAsString: (waveform: string) => boolean;
+  acceptWaveformAsFloatArr: (waveform: number[] | Float32Array) => boolean;
+  acceptWaveformAsShortArr: (waveform: number[]) => boolean;
   resultString: () => string;
   result: () => Result;
   finalResult: () => Result;
@@ -70,8 +71,8 @@ interface Recognizer {
   reset: () => void;
 }
 
-const getSoname = () => {
-  let test;
+const getDLLDir = () => {
+  let dllDir;
   if (os.platform() === PLATFORMS.WINDOWS) {
     // Update path to load dependent dlls
     const currentPath = process.env.Path;
@@ -80,52 +81,110 @@ const getSoname = () => {
     );
     process.env.Path = currentPath + path.delimiter + dllDirectory;
 
-    test = path.join(__dirname, 'lib', 'win-x86_64', 'libvosk.dll');
+    dllDir = path.join(__dirname, 'lib', 'win-x86_64', 'libvosk.dll');
   } else if (os.platform() === PLATFORMS.MAC) {
-    test = path.join(__dirname, 'lib', 'osx-universal', 'libvosk.dylib');
+    dllDir = path.join(__dirname, 'lib', 'osx-universal', 'libvosk.dylib');
   } else {
-    test = path.join(__dirname, 'lib', 'linux-x86_64', 'libvosk.so');
+    dllDir = path.join(__dirname, 'lib', 'linux-x86_64', 'libvosk.so');
   }
-  return test;
+  return dllDir;
 };
 
 const vosky = () => {
-  const soname = getSoname();
+  const dllDir = getDLLDir();
 
-  const libvosk = koffi.load(soname);
-
-  // koffi.pointer(koffi.opaque('VoskModel'), 2);
+  const libvosk = koffi.load(dllDir);
 
   koffi.opaque('VoskModel');
+  const modelPointer = koffi.pointer('void');
+  koffi.opaque('VoskSpkModel');
+  const spkModelPointer = koffi.pointer('void');
+  koffi.opaque('VoskRecognizer');
+  const recognizerPointer = koffi.pointer('void');
 
-  /* eslint-disable @typescript-eslint/naming-convention */
+  const setLogLevelDebug = libvosk.func('vosk_set_log_level', 'void', ['int']);
 
-  const vosk_set_log_level = libvosk.func('vosk_set_log_level', 'void', [
-    'int',
+  const newModel = libvosk.func('vosk_model_new', modelPointer, ['string']);
+  const freeModel = libvosk.func('vosk_model_free', 'void', [modelPointer]);
+
+  // Vosk speaker model DLL functions
+  const newSpkModel = libvosk.func('vosk_spk_model_new', spkModelPointer, [
+    'string',
+  ]);
+  const freeSpkModel = libvosk.func('vosk_spk_model_free', 'void', [
+    spkModelPointer,
   ]);
 
-  // const vosk_model_new = libvosk.func(
-  //   'vosk_model_new',
-  //   koffi.inout(koffi.pointer(VoskModel)),
-  //   ['string']
-  // );
-
-  const vosk_model_new = libvosk.func(
-    'VoskModel *vosk_model_new(const char *model_path)'
+  // Vosk recognizer model DLL functions
+  const newRecognizer = libvosk.func('vosk_recognizer_new', recognizerPointer, [
+    modelPointer,
+    'float',
+  ]);
+  const newSpkRecognizer = libvosk.func(
+    'vosk_recognizer_new_spk',
+    recognizerPointer,
+    [modelPointer, 'float', spkModelPointer]
   );
-
-  const vosk_model_free = libvosk.func(
-    'void vosk_model_free(VoskModel *model)'
+  const freeRecognizer = libvosk.func('vosk_recognizer_free', 'void', [
+    recognizerPointer,
+  ]);
+  const recognizerSetMaxAlternatives = libvosk.func(
+    'vosk_recognizer_set_max_alternatives',
+    'void',
+    [recognizerPointer, 'int']
   );
-
-  /* eslint-enable @typescript-eslint/naming-convention */
+  const recognizerSetWords = libvosk.func('vosk_recognizer_set_words', 'void', [
+    recognizerPointer,
+    'bool',
+  ]);
+  const recognizerSetPartialWords = libvosk.func(
+    'vosk_recognizer_set_partial_words',
+    'void',
+    [recognizerPointer, 'bool']
+  );
+  const recognizerSetSpkModel = libvosk.func(
+    'vosk_recognizer_set_spk_model',
+    'void',
+    [recognizerPointer, spkModelPointer]
+  );
+  const recognizerAcceptWaveformString = libvosk.func(
+    'vosk_recognizer_accept_waveform',
+    'bool',
+    [recognizerPointer, 'string', 'int']
+  );
+  const recognizerAcceptWaveformFloatArr = libvosk.func(
+    'vosk_recognizer_accept_waveform_f',
+    'bool',
+    [recognizerPointer, 'float', 'int']
+  );
+  const recognizerAcceptWaveformShortArr = libvosk.func(
+    'vosk_recognizer_accept_waveform_s',
+    'bool',
+    [recognizerPointer, 'short', 'int']
+  );
+  const recognizerResult = libvosk.func('vosk_recognizer_result', 'string', [
+    recognizerPointer,
+  ]);
+  const recognizerFinalResult = libvosk.func(
+    'vosk_recognizer_final_result',
+    'string',
+    [recognizerPointer]
+  );
+  const recognizerPartialResult = libvosk.func(
+    'vosk_recognizer_partial_result',
+    'string',
+    [recognizerPointer]
+  );
+  const recognizerReset = libvosk.func('vosk_recognizer_reset', 'void', [
+    recognizerPointer,
+  ]);
 
   /**
    * Set log level for Kaldi messages
    * @param {number} level The higher, the more verbose. 0 for infos and errors. Less than 0 for silence.
    */
   const setLogLevel = (level: number) => {
-    vosk_set_log_level(level);
+    setLogLevelDebug(level);
   };
 
   /**
@@ -137,9 +196,7 @@ const vosky = () => {
    * @returns {Model} The model to be used with the voice recognition
    */
   const createModel = (modelPath: string): Model => {
-    console.log('3');
-    const handle = vosk_model_new(modelPath);
-    console.log('4');
+    const handle = newModel(modelPath);
     if (handle === null) {
       console.log(`Failed to load model at ${modelPath}`);
     }
@@ -151,12 +208,265 @@ const vosky = () => {
      * depends on this model, model might still stay alive. When
      * last recognizer is released, model will be released too.
      */
-    const free = () => vosk_model_free(handle);
+    const free = () => freeModel(handle);
 
     return { handle, free };
   };
 
-  return { setLogLevel, createModel };
+  /**
+   * Build a Speaker Model from a speaker model file.
+   * The Speaker Model enables speaker identification.
+   * @param {string} modelPath the path of the model on the filesystem
+   * @see models [models](https://alphacephei.com/vosk/models)
+   */
+  const createSpeakerModel = (modelPath: string): SpeakerModel => {
+    const handle = newSpkModel(modelPath);
+    if (handle === null) {
+      throw new Error(`Failed to load speaker model at ${modelPath}`);
+    }
+
+    /**
+     * Releases the model memory
+     *
+     * The model object is reference-counted so if some recognizer
+     * depends on this model, model might still stay alive. When
+     * last recognizer is released, model will be released too.
+     */
+    const free = () => freeSpkModel(handle);
+
+    return { handle, free };
+  };
+
+  /**
+   * Create a Recognizer that will be able to transform audio streams into text using a Model.
+   * @template {XOR<SpeakerRecognizerParam, Partial<GrammarRecognizerParam>>} T extra parameter
+   * @see Model
+   */
+  const createRecognizer = (
+    model: Model,
+    sampleRate: number,
+    speakerModel?: SpeakerModel
+  ): Recognizer => {
+    // Prevent the user to receive unpredictable results
+    // if (
+    //   hasOwnProperty(param, 'speakerModel') &&
+    //   hasOwnProperty(param, 'grammar')
+    // ) {
+    //   throw new Error(
+    //     'grammar and speakerModel cannot be used together for now.'
+    //   );
+    // }
+
+    const handle =
+      typeof speakerModel !== 'undefined'
+        ? newSpkRecognizer(model.handle, sampleRate, speakerModel.handle)
+        : newRecognizer(model.handle, sampleRate);
+
+    /**
+     * Releases the model memory
+     *
+     * The model object is reference-counted so if some recognizer
+     * depends on this model, model might still stay alive. When
+     * last recognizer is released, model will be released too.
+     */
+    const free = () => freeRecognizer(handle);
+
+    /** Configures recognizer to output n-best results
+     *
+     * <pre>
+     *   {
+     *      "alternatives": [
+     *          { "text": "one two three four five", "confidence": 0.97 },
+     *          { "text": "one two three for five", "confidence": 0.03 },
+     *      ]
+     *   }
+     * </pre>
+     *
+     * @param max_alternatives - maximum alternatives to return from recognition results
+     */
+    const setMaxAlternatives = (maxAlternatives: number) =>
+      recognizerSetMaxAlternatives(handle, maxAlternatives);
+
+    /** Configures recognizer to output words with times
+     *
+     * <pre>
+     *   "result" : [{
+     *       "conf" : 1.000000,
+     *       "end" : 1.110000,
+     *       "start" : 0.870000,
+     *       "word" : "what"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 1.530000,
+     *       "start" : 1.110000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 1.950000,
+     *       "start" : 1.530000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 2.340000,
+     *       "start" : 1.950000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 2.610000,
+     *       "start" : 2.340000,
+     *       "word" : "one"
+     *     }],
+     * </pre>
+     *
+     * @param words - boolean value
+     */
+    const setWords = (words: boolean) => recognizerSetWords(handle, words);
+
+    /** Same as above, but for partial results */
+    const setPartialWords = (partialWords: boolean) =>
+      recognizerSetPartialWords(handle, partialWords);
+
+    /** Adds speaker recognition model to already created recognizer. Helps to initialize
+     * speaker recognition for grammar-based recognizer.
+     *
+     * @param spk_model Speaker recognition model
+     */
+    const setSpkModel = (spk_model: SpeakerModel) => {
+      recognizerSetSpkModel(handle, spk_model.handle);
+    };
+
+    /**
+     * Accept voice data
+     *
+     * accept and process new chunk of voice data
+     *
+     * @param {Buffer} data audio data in PCM 16-bit mono format
+     * @returns true if silence is occured and you can retrieve a new utterance with result method
+     */
+    const acceptWaveformAsString = (data: string) => {
+      return recognizerAcceptWaveformString(handle, data, data.length);
+    };
+
+    /**
+     * Accept voice data
+     *
+     * accept and process new chunk of voice data
+     *
+     * @param {Buffer} data audio data in PCM 16-bit mono format
+     * @returns true if silence is occured and you can retrieve a new utterance with result method
+     */
+    const acceptWaveformAsFloatArr = (data: number[] | Float32Array) => {
+      return recognizerAcceptWaveformFloatArr(handle, data, data.length);
+    };
+
+    /**
+     * Accept voice data
+     *
+     * accept and process new chunk of voice data
+     *
+     * @param {Buffer} data audio data in PCM 16-bit mono format
+     * @returns true if silence is occured and you can retrieve a new utterance with result method
+     */
+    const acceptWaveformAsShortArr = (data: number[]) => {
+      return recognizerAcceptWaveformShortArr(handle, data, data.length);
+    };
+
+    /** Returns speech recognition result in a string
+     *
+     * @returns the result in JSON format which contains decoded line, decoded
+     *          words, times in seconds and confidences. You can parse this result
+     *          with any json parser
+     * <pre>
+     * {
+     *   "result" : [{
+     *       "conf" : 1.000000,
+     *       "end" : 1.110000,
+     *       "start" : 0.870000,
+     *       "word" : "what"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 1.530000,
+     *       "start" : 1.110000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 1.950000,
+     *       "start" : 1.530000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *       "end" : 2.340000,
+     *       "start" : 1.950000,
+     *       "word" : "zero"
+     *     }, {
+     *       "conf" : 1.000000,
+     *      "end" : 2.610000,
+     *       "start" : 2.340000,
+     *       "word" : "one"
+     *     }],
+     *   "text" : "what zero zero zero one"
+     *  }
+     * </pre>
+     */
+    const resultString = (): string => {
+      return recognizerResult(handle);
+    };
+
+    /**
+     * Returns speech recognition results
+     * @returns {Result} The results
+     */
+    const result = (): Result => {
+      return JSON.parse(recognizerResult(handle));
+    };
+
+    /**
+     * speech recognition text which is not yet finalized.
+     * result may change as recognizer process more data.
+     *
+     * @returns {PartialResults} The partial results
+     */
+    const partialResult = (): PartialResults => {
+      return JSON.parse(recognizerPartialResult(handle));
+    };
+
+    /**
+     * Returns speech recognition result. Same as result, but doesn't wait for silence
+     * You usually call it in the end of the stream to get final bits of audio. It
+     * flushes the feature pipeline, so all remaining audio chunks got processed.
+     *
+     * @returns {Result} speech result.
+     */
+    const finalResult = (): Result => {
+      return JSON.parse(recognizerFinalResult(handle));
+    };
+
+    /**
+     * Resets current results so the recognition can continue from scratch
+     */
+    const reset = () => {
+      recognizerReset(handle);
+    };
+
+    return {
+      handle,
+      free,
+      setMaxAlternatives,
+      setWords,
+      setPartialWords,
+      setSpkModel,
+      acceptWaveformAsString,
+      acceptWaveformAsFloatArr,
+      acceptWaveformAsShortArr,
+      resultString,
+      result,
+      partialResult,
+      finalResult,
+      reset,
+    };
+  };
+
+  return { setLogLevel, createModel, createSpeakerModel, createRecognizer };
 };
 
 export default vosky;

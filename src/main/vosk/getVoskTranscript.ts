@@ -21,17 +21,11 @@ interface WaveData {
 }
 
 const getVoskTranscript = async (modelPath: string, filePath: string) => {
-  console.log('1');
-
   const vosky = createVosky();
 
   vosky.setLogLevel(0);
 
-  console.log('2');
-
   const model = vosky.createModel(modelPath);
-
-  console.log('3');
 
   const wav = new WaveFile();
   wav.fromBuffer(fs.readFileSync(filePath));
@@ -42,32 +36,30 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
     process.exit(1);
   }
 
-  console.log('4');
+  const voskRecognizer = vosky.createRecognizer(model, 16000);
 
-  // const voskRecognizer = createRecognizer(model, 16000);
-  // const voskRecognizer = {};
+  voskRecognizer.setMaxAlternatives(1); // reduced from 10
+  voskRecognizer.setWords(true);
+  voskRecognizer.setPartialWords(true); // what is this idek
 
-  // console.log('5');
+  const audioBuffer = fs.readFileSync(filePath);
 
-  // voskRecognizer.setMaxAlternatives(1); // reduced from 10
-  // voskRecognizer.setWords(true);
-  // voskRecognizer.setPartialWords(true); // what is this idek
+  const wavData = wav.data as WaveData;
 
-  // const wavData = wav.data as WaveData;
-  // voskRecognizer.acceptWaveform(wavData.samples);
+  voskRecognizer.acceptWaveformAsString(audioBuffer.toString('base64'));
 
-  // const transcript: string = JSON.stringify(
-  //   voskRecognizer.finalResult(),
-  //   null,
-  //   4
-  // );
+  const transcript: string = JSON.stringify(
+    voskRecognizer.finalResult(),
+    null,
+    4
+  );
 
-  // voskRecognizer.free();
-  // model.free();
+  voskRecognizer.free();
+  model.free();
 
-  // return transcript;
+  console.log(transcript);
 
-  return '';
+  return transcript;
 };
 
 export default getVoskTranscript;

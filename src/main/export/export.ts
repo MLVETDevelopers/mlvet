@@ -2,7 +2,8 @@
 import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
-import { secondToTimestamp, padZeros } from '../timeUtils';
+import ffmpeg from 'fluent-ffmpeg';
+import { secondToEDLTimestamp, padZeros } from '../timeUtils';
 import { RuntimeProject, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
@@ -13,41 +14,53 @@ export const constructEDL: (
   source: string | null,
   mainWindow: BrowserWindow | null
 ) => string = (title, transcription, source, mainWindow) => {
-  let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
+  if (!source) {
+    throw Error('No Video Source');
+  } else {
+    let fps = 30;
 
-  const cuts = convertTranscriptToCuts(transcription);
-  const entries = cuts.length;
+    // get fps
+    ffmpeg(source).on('codecData', (data) => {
+      const fpsString = data.video_details[6];
+      fps = <number>fpsString.substring(0, fpsString.length - 4);
+      console.log(fpsString, fps);
+    });
+    console.log(fps);
 
-  const timeline = {
-    start: 0,
-    end: 0,
-  };
+    let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
 
-  output += cuts
-    .map((cut, i) => {
-      const edlEntry = `${padZeros(
-        i + 1,
-        Math.max(Math.floor(Math.log10(entries)) + 1, 3)
-      )}  AX       AA/V  C`;
+    const cuts = convertTranscriptToCuts(transcription);
+    const entries = cuts.length;
 
-      const editStart = secondToTimestamp(cut.startTime);
-      const editEnd = secondToTimestamp(cut.startTime + cut.duration);
+    const timeline = {
+      start: 0,
+      end: 0,
+    };
 
-      timeline.start = timeline.end;
-      timeline.end = timeline.start + cut.duration;
+    output += cuts
+      .map((cut, i) => {
+        const edlEntry = `${padZeros(
+          i + 1,
+          Math.max(Math.floor(Math.log10(entries)) + 1, 3)
+        )}  AX       AA/V  C`;
 
-      const timelineStart = secondToTimestamp(timeline.start);
-      const timelineEnd = secondToTimestamp(timeline.end);
+        const editStart = secondToEDLTimestamp(cut.startTime, fps);
+        const editEnd = secondToEDLTimestamp(cut.startTime + cut.duration, fps);
 
-      mainWindow?.webContents.send('export-progress-update', i / entries);
+        timeline.start = timeline.end;
+        timeline.end = timeline.start + cut.duration;
 
-      return `${edlEntry}        ${editStart} ${editEnd} ${timelineStart} ${timelineEnd}\n* FROM CLIP NAME: ${
-        source ?? 'FILE PATH NOT FOUND'
-      }\n\n`;
-    }, timeline)
-    .join('');
+        const timelineStart = secondToEDLTimestamp(timeline.start, fps);
+        const timelineEnd = secondToEDLTimestamp(timeline.end, fps);
 
-  return output;
+        mainWindow?.webContents.send('export-progress-update', i / entries);
+
+        return `${edlEntry}        ${editStart} ${editEnd} ${timelineStart} ${timelineEnd}\n* FROM CLIP NAME: ${source}\n\n`;
+      }, timeline)
+      .join('');
+
+    return output;
+  }
 };
 
 export const exportEDL: (

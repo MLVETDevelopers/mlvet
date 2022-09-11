@@ -1,10 +1,10 @@
-import { secondToTimestamp } from '../../timeUtils';
+import { secondToEDLTimestamp } from '../../timeUtils';
 
 describe('Test second to time stamp function', () => {
   it('should produce expected time stamp with input millisecond is 0', () => {
     const inputMillisec = 0;
 
-    const outputMillisec = secondToTimestamp(inputMillisec);
+    const outputMillisec = secondToEDLTimestamp(inputMillisec);
 
     const expectedTimestamp = '00:00:00:00';
 
@@ -14,7 +14,7 @@ describe('Test second to time stamp function', () => {
   it('should produce expected time stamp with postive integer input millisecond', () => {
     const inputMillisec = 10;
 
-    const outputMillisec = secondToTimestamp(inputMillisec);
+    const outputMillisec = secondToEDLTimestamp(inputMillisec);
 
     const expectedTimestamp = '00:00:10:00';
 
@@ -24,7 +24,7 @@ describe('Test second to time stamp function', () => {
   it('should produce expected time stamp with postive decimals input millisecond', () => {
     const inputMillisec = 10.4267;
 
-    const outputMillisec = secondToTimestamp(inputMillisec);
+    const outputMillisec = secondToEDLTimestamp(inputMillisec);
 
     const expectedTimestamp = '00:00:10:42';
 
@@ -37,7 +37,7 @@ describe('Test second to time stamp function', () => {
 
     let thrownError;
     try {
-      secondToTimestamp(inputMillisec);
+      secondToEDLTimestamp(inputMillisec);
     } catch (e) {
       thrownError = e;
     }

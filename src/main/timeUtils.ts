@@ -7,12 +7,20 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 };
 
 // 00:00:00:00
-export const secondToTimestamp: (num: number) => string = (num) => {
+export const secondToEDLTimestamp: (num: number, fps: number) => string = (
+  num,
+  fps
+) => {
   if (num < 0) {
     throw new Error('Negative Input');
   }
+  const edlFps = Math.max(fps, 30);
 
-  return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
+  const date = new Date(num * 1000);
+  const frame = Math.round((edlFps * date.getMilliseconds()) / 1000);
+
+  const timestamp = date.toISOString().slice(11, 20).replace('.', ':');
+  return timestamp.concat(padZeros(frame, 2));
 };
 
 export const secondToTimestampUI = (

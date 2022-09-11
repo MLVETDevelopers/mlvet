@@ -5,6 +5,9 @@ describe('Test exporting', () => {
   it('should produce expected EDL (merging words, if no cuts) after EDL construction', () => {
     /*
     For EDL Export Testing, we strictly use /t because /t and a bunch of spaces are strictly different things.
+
+    Also, we are assuming 30fps videos
+    The way constructEDL gets FPS is by calling ffmpeg, which is kind of a hassle to try to work around for the sake of testing.
     */
     const transcription: Transcription = {
       duration: 100,
@@ -52,7 +55,7 @@ describe('Test exporting', () => {
     const expectedEDL =
       'TITLE: PLACEHOLDER SEQUENCE NAME\n' +
       'FCM: NON-DROP FRAME\n\n' +
-      '001  AX       AA/V  C        00:00:00:00 00:00:01:50 00:00:00:00 00:00:01:50\n' +
+      '001  AX       AA/V  C        00:00:00:00 00:00:01:15 00:00:00:00 00:00:01:15\n' +
       '* FROM CLIP NAME: PLACEHOLDER_PATH\n\n';
 
     expect(outputEDL).toEqual(expectedEDL);
@@ -105,9 +108,9 @@ describe('Test exporting', () => {
     const expectedEDL =
       'TITLE: PLACEHOLDER SEQUENCE NAME\n' +
       'FCM: NON-DROP FRAME\n\n' +
-      '001  AX       AA/V  C        00:00:00:50 00:00:01:50 00:00:00:00 00:00:01:00\n' +
+      '001  AX       AA/V  C        00:00:00:15 00:00:01:15 00:00:00:00 00:00:01:00\n' +
       '* FROM CLIP NAME: PLACEHOLDER_PATH\n\n' +
-      '002  AX       AA/V  C        00:00:00:00 00:00:00:50 00:00:01:00 00:00:01:50\n' +
+      '002  AX       AA/V  C        00:00:00:00 00:00:00:15 00:00:01:00 00:00:01:15\n' +
       '* FROM CLIP NAME: PLACEHOLDER_PATH\n\n';
 
     expect(outputEDL).toEqual(expectedEDL);

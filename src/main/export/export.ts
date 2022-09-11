@@ -23,9 +23,7 @@ export const constructEDL: (
     ffmpeg(source).on('codecData', (data) => {
       const fpsString = data.video_details[6];
       fps = <number>fpsString.substring(0, fpsString.length - 4);
-      console.log(fpsString, fps);
     });
-    console.log(fps);
 
     let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
 

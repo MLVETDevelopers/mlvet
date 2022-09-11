@@ -2,32 +2,42 @@
 
 import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import { Dispatch, RefObject, SetStateAction, useMemo, useState } from 'react';
+import React, {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useMemo,
+  useState,
+} from 'react';
+import { EditWordState } from 'renderer/store/sharedHelpers';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { WordMouseHandler, DragState } from './WordDragManager';
+import { DragState, WordMouseHandler } from './WordDragManager';
 
-interface TakeGroupComponentProps {
-  takeGroup: TakeGroup;
-  chunkIndex: number;
-  onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
+export interface TranscriptionPassThroughProps {
   dragState: DragState;
   isWordBeingDragged: (wordIndex: number) => boolean;
-  mousePosition: MousePosition | null;
   mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
   setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
   cancelDrag: () => void;
-  editWord: any;
-  nowPlayingWordIndex: number | null;
-  transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
+  editWord: EditWordState;
   submitWordEdit: () => void;
-  selectionSet: Set<any>;
   otherSelectionSets: Record<ClientId, Set<number>>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
+}
+
+interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
+  takeGroup: TakeGroup;
+  chunkIndex: number;
+  onWordMouseDown: WordMouseHandler;
+  onWordMouseMove: (wordIndex: number) => void;
+  mousePosition: MousePosition | null;
+  nowPlayingWordIndex: number | null;
+  selectionSet: Set<any>;
+  transcription: Transcription;
 }
 
 const TakeGroupComponent = ({
@@ -35,22 +45,12 @@ const TakeGroupComponent = ({
   chunkIndex,
   onWordMouseDown,
   onWordMouseMove,
-  dragState,
   isWordBeingDragged,
   mousePosition,
-  mouseThrottled,
-  dropBeforeIndex,
-  setDropBeforeIndex,
-  cancelDrag,
-  editWord,
   nowPlayingWordIndex,
-  transcription,
-  seekToWord,
-  submitWordEdit,
   selectionSet,
-  otherSelectionSets,
-  popoverWidth,
-  transcriptionBlockRef,
+  transcription,
+  ...passThroughProps
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
 
@@ -91,6 +91,8 @@ const TakeGroupComponent = ({
         .map((take) => take.length)
         .reduce((acc, curr) => acc + curr, 0);
 
+    console.log(takeWords, takeIndex, chunkIndex, transcriptionIndex);
+
     return (
       <TakeComponent
         key={`take-${takeGroup.id}-${takeIndex}`}
@@ -101,23 +103,13 @@ const TakeGroupComponent = ({
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
         onWordMouseMove={onWordMouseMove}
-        dragState={dragState}
         isWordBeingDragged={isWordBeingDragged}
         mousePosition={mousePosition}
-        mouseThrottled={mouseThrottled}
-        dropBeforeIndex={dropBeforeIndex}
-        setDropBeforeIndex={setDropBeforeIndex}
-        cancelDrag={cancelDrag}
-        editWord={editWord}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        seekToWord={seekToWord}
-        submitWordEdit={submitWordEdit}
         selectionSet={selectionSet}
-        otherSelectionSets={otherSelectionSets}
         transcriptionIndex={transcriptionIndex}
-        popoverWidth={popoverWidth}
-        transcriptionBlockRef={transcriptionBlockRef}
+        {...passThroughProps}
       />
     );
   });
@@ -134,4 +126,4 @@ const TakeGroupComponent = ({
   );
 };
 
-export default TakeGroupComponent;
+export default React.memo(TakeGroupComponent);

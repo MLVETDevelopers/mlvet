@@ -16,6 +16,7 @@ const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
     borderStyle: 'solid',
     borderWidth: '0px',
     borderLeftWidth: '2px',
+    borderTopWidth: '2px',
     paddingLeft: '10px',
     borderColor: isTakeGroupOpened && isActive ? '#FFB355' : '#ABA9A9',
     opacity: isActive ? 1 : 0.5,
@@ -26,6 +27,10 @@ const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
       borderColor: '#FFB355',
       cursor: 'pointer',
       opacity: isActive ? 1 : 0.8,
+    },
+
+    '&:last-child': {
+      borderBottomWidth: '2px',
     },
   });
 

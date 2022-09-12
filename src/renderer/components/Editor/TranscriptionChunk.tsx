@@ -1,33 +1,22 @@
 import { MousePosition } from '@react-hook/mouse-position';
-import { ClientId } from 'collabTypes/collabShadowTypes';
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import React from 'react';
 import { isTakeGroup } from 'renderer/utils/takeDetection';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
-import TakeGroupComponent from './TakeGroupComponent';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import TakeGroupComponent, {
+  TranscriptionPassThroughProps,
+} from './TakeGroupComponent';
+import { WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
-interface TranscriptionChunkProps {
+interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
   chunk: Word | TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
+  onWordMouseMove: (wordIndex: number) => void;
   mousePosition: MousePosition | null;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
-  editWord: any;
   nowPlayingWordIndex: number | null;
-  transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
-  submitWordEdit: () => void;
   selectionSet: Set<number>;
-  otherSelectionSets: Record<ClientId, Set<number>>;
-  popoverWidth: number;
-  transcriptionBlockRef: RefObject<HTMLElement>;
+  transcription: Transcription;
 }
 
 const TranscriptionChunk = ({
@@ -35,22 +24,11 @@ const TranscriptionChunk = ({
   chunkIndex,
   onWordMouseDown,
   onWordMouseMove,
-  dragState,
-  isWordBeingDragged,
   mousePosition,
-  mouseThrottled,
-  dropBeforeIndex,
-  setDropBeforeIndex,
-  cancelDrag,
-  editWord,
   nowPlayingWordIndex,
-  transcription,
-  seekToWord,
-  submitWordEdit,
   selectionSet,
-  otherSelectionSets,
-  popoverWidth,
-  transcriptionBlockRef,
+  transcription,
+  ...passThroughProps
 }: TranscriptionChunkProps) => {
   return isTakeGroup(chunk) ? (
     <TakeGroupComponent
@@ -58,48 +36,34 @@ const TranscriptionChunk = ({
       chunkIndex={chunkIndex}
       onWordMouseDown={onWordMouseDown}
       onWordMouseMove={onWordMouseMove}
-      dragState={dragState}
-      isWordBeingDragged={isWordBeingDragged}
       mousePosition={mousePosition}
-      mouseThrottled={mouseThrottled}
-      dropBeforeIndex={dropBeforeIndex}
-      setDropBeforeIndex={setDropBeforeIndex}
-      cancelDrag={cancelDrag}
-      editWord={editWord}
       nowPlayingWordIndex={nowPlayingWordIndex}
-      transcription={transcription}
-      seekToWord={seekToWord}
-      submitWordEdit={submitWordEdit}
       selectionSet={selectionSet}
-      otherSelectionSets={otherSelectionSets}
-      popoverWidth={popoverWidth}
-      transcriptionBlockRef={transcriptionBlockRef}
+      transcription={transcription}
+      {...passThroughProps}
     />
   ) : (
     <WordOuterComponent
       word={chunk as Word}
+      prevWord={chunkIndex > 0 ? transcription.words[chunkIndex - 1] : null}
+      nextWord={
+        chunkIndex < transcription.words.length - 1
+          ? transcription.words[chunkIndex + 1]
+          : null
+      }
       index={chunkIndex}
-      transcription={transcription}
-      seekToWord={seekToWord}
-      selectionSet={selectionSet}
-      otherSelectionSets={otherSelectionSets}
-      onWordMouseDown={onWordMouseDown}
-      onWordMouseMove={onWordMouseMove}
-      dragState={dragState}
-      isWordBeingDragged={isWordBeingDragged}
+      isSelected={selectionSet.has(chunkIndex)}
+      isPrevWordSelected={selectionSet.has(chunkIndex - 1)}
+      isNextWordSelected={selectionSet.has(chunkIndex + 1)}
+      onMouseDown={onWordMouseDown}
+      onMouseMove={onWordMouseMove}
       mouse={mousePosition}
-      mouseThrottled={mouseThrottled}
-      dropBeforeIndex={dropBeforeIndex}
-      setDropBeforeIndex={setDropBeforeIndex}
-      cancelDrag={cancelDrag}
-      submitWordEdit={submitWordEdit}
-      editWord={editWord}
-      nowPlayingWordIndex={nowPlayingWordIndex}
+      isPlaying={nowPlayingWordIndex === chunkIndex}
       isInInactiveTake={false}
-      popoverWidth={popoverWidth}
-      transcriptionBlockRef={transcriptionBlockRef}
+      transcriptionLength={transcription.words.length}
+      {...passThroughProps}
     />
   );
 };
 
-export default TranscriptionChunk;
+export default React.memo(TranscriptionChunk);

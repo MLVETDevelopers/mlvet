@@ -91,8 +91,6 @@ const TakeGroupComponent = ({
         .map((take) => take.length)
         .reduce((acc, curr) => acc + curr, 0);
 
-    console.log(takeWords, takeIndex, chunkIndex, transcriptionIndex);
-
     return (
       <TakeComponent
         key={`take-${takeGroup.id}-${takeIndex}`}

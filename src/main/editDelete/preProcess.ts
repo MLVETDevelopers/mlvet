@@ -27,20 +27,6 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
   takeInfo: null,
 });
 
-const calculateBufferDurationBefore: (
-  word: Word,
-  prevWord: Word | null
-) => number = (word, prevWord) => {
-  if (prevWord === null) {
-    return word.startTime;
-  }
-  const prevWordEndTime = prevWord.startTime + prevWord.duration;
-  const gapTime = word.startTime - prevWordEndTime;
-
-  // Half the gap used by this word, half by the previous word.
-  return roundToMs(gapTime / 2);
-};
-
 const calculateBufferDurationAfter: (
   word: Word,
   nextWord: Word | null,
@@ -53,24 +39,17 @@ const calculateBufferDurationAfter: (
   }
   const gapTime = nextWord.startTime - wordEndTime;
 
-  // Half the gap used by this word, half by the next word.
-  return roundToMs(gapTime / 2);
+  return roundToMs(gapTime);
 };
 
 /**
- * Adds silence buffers before and after words.
- * For words in the middle of the transcript, the buffers are halved with the words
- * either side. For start/end words, they get the whole buffer to the start or end.
+ * Adds silence buffers after words.
+ * For end words, they get the whole buffer to the end.
  */
 const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   (totalDuration) => (word, i, words) => {
-    const isFirstWord = i === 0;
     const isLastWord = i === words.length - 1;
 
-    const bufferDurationBefore = calculateBufferDurationBefore(
-      word,
-      isFirstWord ? null : words[i - 1]
-    );
     const bufferDurationAfter = calculateBufferDurationAfter(
       word,
       isLastWord ? null : words[i + 1],
@@ -79,7 +58,6 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
 
     return {
       ...word,
-      bufferDurationBefore,
       bufferDurationAfter,
     };
   };

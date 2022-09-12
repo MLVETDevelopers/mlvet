@@ -44,12 +44,14 @@ const calculateBufferDurationAfter: (
 
 /**
  * Adds silence buffers after words.
- * For end words, they get the whole buffer to the end.
+ * Only the first word gets a buffer before it.
  */
 const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   (totalDuration) => (word, i, words) => {
+    const isFirstWord = i === 0;
     const isLastWord = i === words.length - 1;
 
+    const bufferDurationBefore = isFirstWord ? word.startTime : 0;
     const bufferDurationAfter = calculateBufferDurationAfter(
       word,
       isLastWord ? null : words[i + 1],
@@ -58,6 +60,7 @@ const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
 
     return {
       ...word,
+      bufferDurationBefore,
       bufferDurationAfter,
     };
   };

@@ -12,10 +12,6 @@ import WordOuterComponent from './WordOuterComponent';
 
 const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
   styled(Box)({
-    border: 'true',
-    borderStyle: 'solid',
-    borderWidth: '0px',
-    borderLeftWidth: '2px',
     paddingLeft: '10px',
     borderColor: isTakeGroupOpened && isActive ? '#FFB355' : '#ABA9A9',
     opacity: isActive ? 1 : 0.5,

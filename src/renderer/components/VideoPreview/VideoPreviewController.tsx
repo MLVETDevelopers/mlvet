@@ -8,8 +8,10 @@ import {
 } from 'react';
 import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import store from 'renderer/store/store';
+import { videoPaused } from 'renderer/store/playback/actions';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
 import VideoPreview, { VideoPreviewRef } from '.';
@@ -57,9 +59,8 @@ const VideoPreviewControllerBase = (
   const videoPreviewRef = useRef<VideoPreviewRef>(null);
 
   const currentProject = useSelector(
-    (store: ApplicationStore) => store?.currentProject
+    (appStore: ApplicationStore) => appStore?.currentProject
   );
-
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
@@ -96,6 +97,7 @@ const VideoPreviewControllerBase = (
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
+    store.dispatch(videoPaused(false));
   };
 
   // Called on every frame (by timer setInterval)
@@ -179,10 +181,10 @@ const VideoPreviewControllerBase = (
       if (clockRef.current.time >= outputVideoLength.current) {
         setPlaybackTime(0);
       }
-
       startTimer();
       videoPreviewRef?.current?.play();
       setIsPlaying(true);
+      store.dispatch(videoPaused(true));
     }
   };
 

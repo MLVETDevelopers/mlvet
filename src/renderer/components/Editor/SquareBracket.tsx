@@ -1,28 +1,24 @@
-import styled from '@emotion/styled';
 import { Box } from '@mui/system';
+import { useState } from 'react';
+import SquareBracketHover from './SquareBracketHover';
 
 interface Props {
   isLast: boolean;
 }
 
-const SquareBracketBackground = styled(Box)({
-  height: 'inherit',
-  width: '8px',
-  opacity: 0,
-  borderRadius: '8px',
-  backgroundColor: '#FFB355',
-
-  // positioning
-  position: 'absolute',
-  left: '17px',
-
-  '&:hover': {
-    opacity: 0.5,
-  },
-});
-
 const SquareBracket = ({ isLast }: Props) => {
   const bottomWidth = isLast ? '2px' : '0px';
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
   return (
     <Box
       id="squareBracket"
@@ -36,8 +32,10 @@ const SquareBracket = ({ isLast }: Props) => {
         borderTopWidth: '2px',
         borderBottomWidth: bottomWidth,
       }}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
     >
-      <SquareBracketBackground id="squareBracketBackground" />
+      <SquareBracketHover isLast={isLast} isHoveredOver={isHovering} />
     </Box>
   );
 };

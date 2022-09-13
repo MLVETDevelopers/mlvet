@@ -6,15 +6,18 @@ interface Props {
 }
 
 const SquareBracketBackground = styled(Box)({
-  height: '100%',
-  width: '16px',
+  height: 'inherit',
+  width: '8px',
   opacity: 0,
+  borderRadius: '8px',
+  backgroundColor: '#FFB355',
+
+  // positioning
+  position: 'absolute',
+  left: '17px',
 
   '&:hover': {
     opacity: 0.5,
-    backgroundColor: '#FFB355',
-    borderRadius: '8px',
-    borderWidth: '10px',
   },
 });
 

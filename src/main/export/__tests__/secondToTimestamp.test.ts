@@ -26,7 +26,7 @@ describe('Test second to time stamp function', () => {
 
     const outputMillisec = secondToEDLTimestamp(inputMillisec, 30);
 
-    const expectedTimestamp = '00:00:10:13';
+    const expectedTimestamp = '00:00:10:12';
 
     expect(outputMillisec).toEqual(expectedTimestamp);
   });

@@ -13,7 +13,6 @@ import React, {
 } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
-import SquareBracket from './SquareBracket';
 import TakeComponent from './TakeComponent';
 import { DragState, WordMouseHandler } from './WordDragManager';
 
@@ -105,7 +104,6 @@ const TakeGroupComponent = ({
 
     return (
       <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
-        <SquareBracket isLast={takeIndex === takeWordsPerTake.length - 1} />
         <TakeComponent
           key={`take-${takeGroup.id}-${takeIndex}`}
           takeWords={takeWords}
@@ -121,6 +119,7 @@ const TakeGroupComponent = ({
           transcription={transcription}
           selectionSet={selectionSet}
           transcriptionIndex={transcriptionIndex}
+          isLast={takeIndex === takeWordsPerTake.length - 1}
           {...passThroughProps}
         />
       </CustomRowStack>

@@ -160,7 +160,9 @@ const TakeComponent = ({
                     isNextWordSelected={selectionSet.has(wordIndex + 1)}
                     onMouseDown={onWordMouseDown}
                     onMouseMove={onWordMouseMove}
-                    isInInactiveTake={!(isActive || isTakeGroupOpened)}
+                    isInInactiveTake={
+                      !(isActive || isTakeGroupOpened) && !isFirstTimeOpen
+                    }
                     transcriptionLength={words.length}
                     {...passThroughProps}
                   />

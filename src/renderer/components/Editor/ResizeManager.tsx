@@ -1,4 +1,4 @@
-import {
+import React, {
   Dispatch,
   ReactElement,
   RefObject,
@@ -141,4 +141,4 @@ const ResizeManager = ({
   );
 };
 
-export default ResizeManager;
+export default React.memo(ResizeManager);

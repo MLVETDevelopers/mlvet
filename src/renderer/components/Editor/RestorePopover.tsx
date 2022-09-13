@@ -5,7 +5,7 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { RefObject } from 'react';
+import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
 import useKeypress from 'renderer/utils/hooks';
 
@@ -74,4 +74,4 @@ const RestorePopover = ({
   );
 };
 
-export default RestorePopover;
+export default React.memo(RestorePopover);

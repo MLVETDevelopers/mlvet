@@ -49,7 +49,6 @@ const ProjectPage = () => {
         pause,
         seekForward,
         seekBack,
-        seekToWord,
         setPlaybackTime
       ) => (
         <ResizeManager
@@ -92,10 +91,10 @@ const ProjectPage = () => {
                     <TranscriptionBlock
                       transcription={currentProject.transcription}
                       nowPlayingWordIndex={nowPlayingWordIndex}
-                      seekToWord={seekToWord}
                       blockWidth={
                         window.innerWidth - videoPreviewContainerWidth
                       }
+                      setPlaybackTime={setPlaybackTime}
                     />
                   )}
                 </Stack>

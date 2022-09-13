@@ -31,7 +31,7 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
   styled('div')({
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
-    color: colors.white,
+    color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
     margin: '2px 0',
     borderRadius: '7px',

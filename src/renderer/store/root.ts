@@ -13,6 +13,7 @@ import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import updatePlaybackPauseReducer from './playback/reducer';
+import updateSpacePressedReducer from './spacebar/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
-  pausePlay: updatePlaybackPauseReducer,
+  isVideoPaused: updatePlaybackPauseReducer,
+  isSpacePressed: updateSpacePressedReducer,
 });
 
 export default rootReducer;

@@ -34,6 +34,7 @@ export interface ApplicationStore {
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
   isVideoPaused: boolean;
+  isSpacePressed: boolean;
 }
 
 /**
@@ -58,4 +59,5 @@ export const initialStore: ApplicationStore = {
   collab: null,
   opQueue: [],
   isVideoPaused: true,
+  isSpacePressed: false,
 };

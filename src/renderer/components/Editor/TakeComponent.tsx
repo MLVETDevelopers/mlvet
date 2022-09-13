@@ -18,10 +18,14 @@ const CustomRowStack = styled(CustomStack)({
   alignItems: 'center',
 });
 
-const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
+const makeTakeWrapper = (
+  isTakeGroupOpened: boolean,
+  isActive: boolean,
+  isFirstTimeOpen: boolean
+) =>
   styled(Box)({
     borderColor: isTakeGroupOpened && isActive ? '#FFB355' : '#ABA9A9',
-    opacity: isActive ? 1 : 0.5,
+    opacity: isActive || isFirstTimeOpen ? 1 : 0.5,
     position: 'relative',
     left: '20px',
 
@@ -90,8 +94,8 @@ const TakeComponent = ({
   }, [dispatch, takeWords, setIsTakeGroupOpened]);
 
   const TakeWrapper = useMemo(
-    () => makeTakeWrapper(isTakeGroupOpened, isActive),
-    [isTakeGroupOpened, isActive]
+    () => makeTakeWrapper(isTakeGroupOpened, isActive, isFirstTimeOpen),
+    [isTakeGroupOpened, isActive, isFirstTimeOpen]
   );
 
   const onClick = useCallback(() => {

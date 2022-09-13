@@ -42,14 +42,6 @@ const extractThumbnail: ExtractThumbnail = (
 
       reject(stderr);
     });
-
-    command.on('codecData', (data) => {
-      const fpsString = data.video_details[6];
-      const details = {
-        fps: <number>fpsString.substring(0, fpsString.length - 4),
-      };
-      console.log(JSON.stringify(data.video_details));
-    });
   });
 };
 

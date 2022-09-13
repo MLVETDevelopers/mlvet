@@ -25,3 +25,8 @@ export const getExportFilePath: (
 
   return dialogResponse.filePath as string;
 };
+
+export const fracFpsToDec: (fracFps: string) => number = (fracFps) => {
+  const nums = fracFps.split('/').map((item: string) => +item); // get the numbers (separated by / ), and convert to numbers.
+  return nums[0] / nums[1];
+};

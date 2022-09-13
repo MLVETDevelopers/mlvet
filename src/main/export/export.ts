@@ -2,29 +2,25 @@
 import { BrowserWindow } from 'electron';
 import { writeFileSync } from 'fs';
 import path, { join } from 'path';
-import ffmpeg from 'fluent-ffmpeg';
+import ffprobe from 'ffprobe';
+import ffprobeStatic from 'ffprobe-static';
 import { secondToEDLTimestamp, padZeros } from '../timeUtils';
 import { RuntimeProject, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
+import { fracFpsToDec } from '../handlers/helpers/exportUtils';
 
 export const constructEDL: (
   title: string,
   transcription: Transcription,
   source: string | null,
   mainWindow: BrowserWindow | null
-) => string = (title, transcription, source, mainWindow) => {
+) => Promise<string> = async (title, transcription, source, mainWindow) => {
   if (!source) {
     throw Error('No Video Source');
   } else {
-    let fps = 30;
-
-    // get fps
-    ffmpeg(source).on('codecData', (data) => {
-      const fpsString = data.video_details[6];
-      fps = <number>fpsString.substring(0, fpsString.length - 4);
-    });
-
+    const videoData = await ffprobe(source, { path: ffprobeStatic.path });
+    const fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
     let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
 
     const cuts = convertTranscriptToCuts(transcription);
@@ -56,7 +52,6 @@ export const constructEDL: (
         return `${edlEntry}        ${editStart} ${editEnd} ${timelineStart} ${timelineEnd}\n* FROM CLIP NAME: ${source}\n\n`;
       }, timeline)
       .join('');
-
     return output;
   }
 };
@@ -76,15 +71,17 @@ export const exportEDL: (
   );
 
   if (project.transcription) {
-    writeFileSync(
-      join(exportDir, `${exportFilename}.edl`),
-      constructEDL(
-        project.name,
-        project.transcription,
-        project.mediaFilePath,
-        mainWindow
-      )
-    );
+    // eslint-disable-next-line promise/catch-or-return
+    constructEDL(
+      project.name,
+      project.transcription,
+      project.mediaFilePath,
+      mainWindow
+    )
+      // eslint-disable-next-line promise/always-return
+      .then((edl) => {
+        writeFileSync(join(exportDir, `${exportFilename}.edl`), edl);
+      });
     mainWindow?.webContents.send(
       'finish-export',
       project,

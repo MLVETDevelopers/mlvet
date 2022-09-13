@@ -97,7 +97,7 @@ const VideoPreviewControllerBase = (
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
-    store.dispatch(videoPaused(false));
+    store.dispatch(videoPaused(true));
   };
 
   // Called on every frame (by timer setInterval)
@@ -184,7 +184,7 @@ const VideoPreviewControllerBase = (
       startTimer();
       videoPreviewRef?.current?.play();
       setIsPlaying(true);
-      store.dispatch(videoPaused(true));
+      store.dispatch(videoPaused(false));
     }
   };
 

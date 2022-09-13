@@ -132,7 +132,7 @@ const TakeGroupComponent = ({
   return (
     <CustomColumnStack sx={{ marginTop: '10px', marginBottom: '10px' }}>
       <CustomRowStack sx={{ justifyContent: 'flex-end' }}>
-        <BlockIcon />
+        {!isFirstTimeOpen && isTakeGroupOpened && <BlockIcon />}
       </CustomRowStack>
       {takes}
     </CustomColumnStack>

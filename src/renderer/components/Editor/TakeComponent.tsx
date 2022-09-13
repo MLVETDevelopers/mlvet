@@ -92,7 +92,7 @@ const TakeComponent = ({
   return (
     <>
       <TakeWrapper className="take" onClick={onClick}>
-        {isTakeGroupOpened && (
+        {/* {isTakeGroupOpened && (
           <Avatar
             onClick={onSelectTake}
             sx={{
@@ -131,9 +131,7 @@ const TakeComponent = ({
           >
             {takeIndex + 1}
           </Avatar>
-        )}
-        {isTakeGroupOpened || isActive ? (
-          <>
+        )} */}
             {takeWords.map((word, index, words) => {
               const wordIndex = transcriptionIndex + index;
               return (

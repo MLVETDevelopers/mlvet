@@ -7,7 +7,8 @@ interface Props {
 }
 
 const SquareBracket = ({ isLast }: Props) => {
-  const bottomWidth = isLast ? '2px' : '0px';
+  // const bottomWidth = isLast ? '2px' : '0px';
+  const bottomWidth = '2px';
 
   const [isHovering, setIsHovering] = useState(false);
 

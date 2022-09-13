@@ -1,6 +1,6 @@
 /* eslint-disable no-plusplus */
 import { BrowserWindow } from 'electron';
-import { writeFileSync } from 'fs';
+import { existsSync, writeFileSync } from 'fs';
 import path, { join } from 'path';
 import ffprobe from 'ffprobe';
 import ffprobeStatic from 'ffprobe-static';
@@ -19,8 +19,12 @@ export const constructEDL: (
   if (!source) {
     throw Error('No Video Source');
   } else {
-    const videoData = await ffprobe(source, { path: ffprobeStatic.path });
-    const fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
+    let fps = 30;
+    if (existsSync(source)) {
+      const videoData = await ffprobe(source, { path: ffprobeStatic.path });
+      fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
+    }
+
     let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
 
     const cuts = convertTranscriptToCuts(transcription);

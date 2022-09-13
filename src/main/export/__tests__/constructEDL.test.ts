@@ -2,7 +2,7 @@ import { Transcription } from '../../../sharedTypes';
 import { constructEDL } from '../export';
 
 describe('Test exporting', () => {
-  it('should produce expected EDL (merging words, if no cuts) after EDL construction', () => {
+  it('should produce expected EDL (merging words, if no cuts) after EDL construction', async () => {
     /*
     For EDL Export Testing, we strictly use /t because /t and a bunch of spaces are strictly different things.
 
@@ -45,7 +45,7 @@ describe('Test exporting', () => {
 
     const mediaFilePath = 'PLACEHOLDER_PATH';
 
-    const outputEDL = constructEDL(
+    const outputEDL = await constructEDL(
       'PLACEHOLDER SEQUENCE NAME',
       transcription,
       mediaFilePath,
@@ -61,7 +61,7 @@ describe('Test exporting', () => {
     expect(outputEDL).toEqual(expectedEDL);
   });
 
-  it('should produce expected EDL (with cuts) after EDL construction', () => {
+  it('should produce expected EDL (with cuts) after EDL construction', async () => {
     const transcription: Transcription = {
       duration: 100,
       outputDuration: 100,
@@ -98,7 +98,7 @@ describe('Test exporting', () => {
 
     const mediaFilePath = 'PLACEHOLDER_PATH';
 
-    const outputEDL = constructEDL(
+    const outputEDL = await constructEDL(
       'PLACEHOLDER SEQUENCE NAME',
       transcription,
       mediaFilePath,

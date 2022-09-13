@@ -134,7 +134,10 @@ const TakeComponent = ({
                   {takeIndex + 1}
                 </Avatar>
               )}
-              <SquareBracket isLast={isLast} />
+              <SquareBracket
+                isLast={isLast}
+                isTakeGroupOpened={isTakeGroupOpened}
+              />
               {takeWords.map((word, index, words) => {
                 const wordIndex = transcriptionIndex + index;
                 return (

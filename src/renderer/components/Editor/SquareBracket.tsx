@@ -1,12 +1,14 @@
 import { Box } from '@mui/system';
 import { useState } from 'react';
+import colors from 'renderer/colors';
 import SquareBracketHover from './SquareBracketHover';
 
 interface Props {
   isLast: boolean;
+  isTakeGroupOpened: boolean;
 }
 
-const SquareBracket = ({ isLast }: Props) => {
+const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
   // const bottomWidth = isLast ? '2px' : '0px';
   const bottomWidth = '2px';
 
@@ -27,7 +29,7 @@ const SquareBracket = ({ isLast }: Props) => {
         height: '60px',
         width: '15px',
         borderStyle: 'solid',
-        borderColor: '#FFB355',
+        borderColor: isTakeGroupOpened ? '#FFB355' : colors.grey[500],
         borderWidth: '0px',
         borderLeftWidth: '2px',
         borderTopWidth: '2px',

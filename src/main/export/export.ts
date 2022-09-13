@@ -19,13 +19,14 @@ export const constructEDL: (
   if (!source) {
     throw Error('No Video Source');
   } else {
-    let fps = 30;
+    let fps = 30; // default to a safe 30fps.
     if (existsSync(source)) {
       const videoData = await ffprobe(source, { path: ffprobeStatic.path });
       fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
     }
 
     let output = `TITLE: ${title}\nFCM: NON-DROP FRAME\n\n`;
+    // this can be technically incorrect in some rare cases, but it doesn't affect functionality
 
     const cuts = convertTranscriptToCuts(transcription);
     const entries = cuts.length;

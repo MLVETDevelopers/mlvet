@@ -18,6 +18,10 @@ export const secondToEDLTimestamp: (num: number, fps: number) => string = (
 
   const date = new Date(num * 1000);
   const frame = Math.floor((edlFps * date.getMilliseconds()) / 1000);
+  /**
+   * For the frame gap problem, making timestamps round down 1 frame while having the
+   * input duration round 1 up frame fills in microgaps cleanly.
+   */
 
   const timestamp = date.toISOString().slice(11, 20).replace('.', ':');
   return timestamp.concat(padZeros(frame, 2));

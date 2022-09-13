@@ -101,49 +101,28 @@ const TakeComponent = ({
   return (
     <>
       <TakeWrapper className="take" onClick={onClick}>
-        {/* {isTakeGroupOpened && (
-          <Avatar
-            onClick={onSelectTake}
-            sx={{
-              height: 22,
-              width: 22,
-              fontSize: 12,
-              color: '#1D201F',
-              backgroundColor: isActive ? '#FFB355' : '#ABA9A9',
-              display: 'flex',
-              position: 'absolute',
-              left: '-30px',
-              transform: 'translateY(2px)',
-              cursor: 'pointer',
-            }}
-          >
-            {takeIndex + 1}
-          </Avatar>
-        )}
-
-        {!isTakeGroupOpened && isActive && (
-          <Avatar
-            onClick={onSelectTake}
-            sx={{
-              height: 22,
-              width: 22,
-              fontSize: 12,
-              color: '#fff',
-              background: 'none',
-              display: 'flex',
-              position: 'absolute',
-              left: '-30px',
-              cursor: 'pointer',
-              transform: 'translateY(2px)',
-              opacity: 0.5,
-            }}
-          >
-            {takeIndex + 1}
-          </Avatar>
-        )} */}
         <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
           {isTakeGroupOpened || isActive ? (
             <>
+              {isTakeGroupOpened && (
+                <Avatar
+                  onClick={onSelectTake}
+                  sx={{
+                    height: 22,
+                    width: 22,
+                    fontSize: 12,
+                    color: '#1D201F',
+                    backgroundColor: isActive ? '#FFB355' : '#ABA9A9',
+                    display: 'flex',
+                    position: 'absolute',
+                    left: '-30px',
+                    transform: 'translateY(2px)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {takeIndex + 1}
+                </Avatar>
+              )}
               <SquareBracket isLast={isLast} />
               {takeWords.map((word, index, words) => {
                 const wordIndex = transcriptionIndex + index;

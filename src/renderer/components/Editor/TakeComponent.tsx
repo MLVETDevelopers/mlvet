@@ -132,32 +132,37 @@ const TakeComponent = ({
             {takeIndex + 1}
           </Avatar>
         )} */}
-            {takeWords.map((word, index, words) => {
-              const wordIndex = transcriptionIndex + index;
-              return (
-                <WordOuterComponent
-                  key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
-                  word={word}
-                  prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
-                  nextWord={
-                    wordIndex < words.length - 1 ? words[wordIndex + 1] : null
-                  }
-                  index={wordIndex}
-                  mouse={mousePosition}
-                  isPlaying={nowPlayingWordIndex === wordIndex}
-                  isSelected={selectionSet.has(wordIndex)}
-                  isPrevWordSelected={selectionSet.has(wordIndex - 1)}
-                  isNextWordSelected={selectionSet.has(wordIndex + 1)}
-                  onMouseDown={onWordMouseDown}
-                  onMouseMove={onWordMouseMove}
-                  isInInactiveTake={!isActive || !isTakeGroupOpened}
-                  transcriptionLength={words.length}
-                  {...passThroughProps}
-                />
-              );
-            })}
-          </>
-        ) : null}
+        <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
+          {isTakeGroupOpened || isActive ? (
+            <>
+              <SquareBracket isLast={isLast} />
+              {takeWords.map((word, index, words) => {
+                const wordIndex = transcriptionIndex + index;
+                return (
+                  <WordOuterComponent
+                    key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
+                    word={word}
+                    prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
+                    nextWord={
+                      wordIndex < words.length - 1 ? words[wordIndex + 1] : null
+                    }
+                    index={wordIndex}
+                    mouse={mousePosition}
+                    isPlaying={nowPlayingWordIndex === wordIndex}
+                    isSelected={selectionSet.has(wordIndex)}
+                    isPrevWordSelected={selectionSet.has(wordIndex - 1)}
+                    isNextWordSelected={selectionSet.has(wordIndex + 1)}
+                    onMouseDown={onWordMouseDown}
+                    onMouseMove={onWordMouseMove}
+                    isInInactiveTake={!isActive || !isTakeGroupOpened}
+                    transcriptionLength={words.length}
+                    {...passThroughProps}
+                  />
+                );
+              })}
+            </>
+          ) : null}
+        </CustomRowStack>
       </TakeWrapper>
     </>
   );

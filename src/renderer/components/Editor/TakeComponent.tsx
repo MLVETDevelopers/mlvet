@@ -61,6 +61,8 @@ interface TakeComponentProps extends TakePassThroughProps {
   onWordMouseMove: (wordIndex: number) => void;
   transcriptionIndex: number;
   isLast: boolean;
+  isFirstTimeOpen: boolean;
+  setIsFirstTimeOpen: (isFirstTimeOpen: boolean) => void;
 }
 
 const TakeComponent = ({
@@ -76,6 +78,8 @@ const TakeComponent = ({
   onWordMouseMove,
   transcriptionIndex,
   isLast,
+  isFirstTimeOpen,
+  setIsFirstTimeOpen,
   ...passThroughProps
 }: TakeComponentProps) => {
   const dispatch = useDispatch();
@@ -95,8 +99,15 @@ const TakeComponent = ({
       setIsTakeGroupOpened(true);
     } else {
       onSelectTake();
+      setIsFirstTimeOpen(false);
     }
-  }, [isActive, isTakeGroupOpened, setIsTakeGroupOpened, onSelectTake]);
+  }, [
+    isActive,
+    isTakeGroupOpened,
+    setIsTakeGroupOpened,
+    onSelectTake,
+    setIsFirstTimeOpen,
+  ]);
 
   return (
     <>
@@ -104,7 +115,7 @@ const TakeComponent = ({
         <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
           {isTakeGroupOpened || isActive ? (
             <>
-              {isTakeGroupOpened && (
+              {!isFirstTimeOpen && isTakeGroupOpened && (
                 <Avatar
                   onClick={onSelectTake}
                   sx={{

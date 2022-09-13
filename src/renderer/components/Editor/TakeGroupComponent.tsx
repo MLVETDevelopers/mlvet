@@ -63,7 +63,8 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -120,6 +121,8 @@ const TakeGroupComponent = ({
           selectionSet={selectionSet}
           transcriptionIndex={transcriptionIndex}
           isLast={takeIndex === takeWordsPerTake.length - 1}
+          isFirstTimeOpen={isFirstTimeOpen}
+          setIsFirstTimeOpen={setIsFirstTimeOpen}
           {...passThroughProps}
         />
       </CustomRowStack>

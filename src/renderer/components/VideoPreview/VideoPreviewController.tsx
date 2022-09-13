@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import store from 'renderer/store/store';
 import { videoPaused } from 'renderer/store/playback/actions';

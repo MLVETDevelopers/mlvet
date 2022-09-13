@@ -17,7 +17,7 @@ export const secondToEDLTimestamp: (num: number, fps: number) => string = (
   const edlFps = Math.max(fps, 30);
 
   const date = new Date(num * 1000);
-  const frame = Math.round((edlFps * date.getMilliseconds()) / 1000);
+  const frame = Math.floor((edlFps * date.getMilliseconds()) / 1000);
 
   const timestamp = date.toISOString().slice(11, 20).replace('.', ':');
   return timestamp.concat(padZeros(frame, 2));

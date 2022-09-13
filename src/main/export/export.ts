@@ -43,7 +43,14 @@ export const constructEDL: (
         )}  AX       AA/V  C`;
 
         const editStart = secondToEDLTimestamp(cut.startTime, fps);
-        const editEnd = secondToEDLTimestamp(cut.startTime + cut.duration, fps);
+        const editEnd = secondToEDLTimestamp(
+          cut.startTime + cut.duration + 1 / fps,
+          fps
+        );
+        /**
+         * Addressed the gap problem by rounding up 1 frame per cut, it will be overwritten in case there is no rounding error,
+         * so this will only work to fill in microgaps. LMK if a less jank solution is wanted.
+         */
 
         timeline.start = timeline.end;
         timeline.end = timeline.start + cut.duration;

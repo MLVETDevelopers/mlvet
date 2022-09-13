@@ -60,6 +60,7 @@ interface TakeComponentProps extends TakePassThroughProps {
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: (wordIndex: number) => void;
   transcriptionIndex: number;
+  isLast: boolean;
 }
 
 const TakeComponent = ({
@@ -74,6 +75,7 @@ const TakeComponent = ({
   onWordMouseDown,
   onWordMouseMove,
   transcriptionIndex,
+  isLast,
   ...passThroughProps
 }: TakeComponentProps) => {
   const dispatch = useDispatch();

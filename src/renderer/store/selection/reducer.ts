@@ -1,22 +1,32 @@
 import { Reducer } from 'redux';
-import { rangeToIndices } from 'renderer/utils/range';
-import { IndexRange } from '../../../sharedTypes';
+import { rangesToIndices } from 'renderer/utils/range';
 import {
   SELECTION_RANGE_ADDED,
   SELECTION_RANGE_REMOVED,
   SELECTION_CLEARED,
   SELECTION_RANGE_TOGGLED,
-  SELECTION_RANGE_SET_TO,
+  SELECTION_RANGES_SET_TO,
+  SelectionRangeAddedPayload,
+  SelectionRangeRemovedPayload,
+  SelectionRangeToggledPayload,
+  SelectionRangesSetToPayload,
+  SelectionIndicesSetToPayload,
+  SelectionClearedPayload,
+  SELECTION_INDICES_SET_TO,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
+import { extractSelection, updateSelection } from './helpers';
 
 const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
   selection = initialStore.selection,
   action
 ) => {
   if (action.type === SELECTION_RANGE_ADDED) {
-    const { startIndex, endIndex } = action.payload as IndexRange;
+    const { range, clientId } = action.payload as SelectionRangeAddedPayload;
+    const { startIndex, endIndex } = range;
+
+    const currentSelection = extractSelection(selection, clientId);
 
     /**
      * Selection is stored in redux as an array because redux
@@ -24,33 +34,43 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
      * convert it back. O(n) with respect to length of transcription which is the same as
      * the degenerate "select everything" case anyway
      */
-    const selectionSet = new Set(selection);
+    const selectionSet = new Set(currentSelection);
 
     for (let index = startIndex; index < endIndex; index += 1) {
       selectionSet.add(index);
     }
 
-    return Array.from(selectionSet);
+    const newSelection = Array.from(selectionSet);
+
+    return updateSelection(clientId, selection, newSelection);
   }
 
   if (action.type === SELECTION_RANGE_REMOVED) {
-    const { startIndex, endIndex } = action.payload as IndexRange;
+    const { range, clientId } = action.payload as SelectionRangeRemovedPayload;
+    const { startIndex, endIndex } = range;
+
+    const currentSelection = extractSelection(selection, clientId);
 
     // Same caveats as for SELECTION_RANGE_ADDED
-    const selectionSet = new Set(selection);
+    const selectionSet = new Set(currentSelection);
 
     for (let index = startIndex; index < endIndex; index += 1) {
       selectionSet.delete(index);
     }
 
-    return Array.from(selectionSet);
+    const newSelection = Array.from(selectionSet);
+
+    return updateSelection(clientId, selection, newSelection);
   }
 
   if (action.type === SELECTION_RANGE_TOGGLED) {
-    const { startIndex, endIndex } = action.payload as IndexRange;
+    const { range, clientId } = action.payload as SelectionRangeToggledPayload;
+    const { startIndex, endIndex } = range;
+
+    const currentSelection = extractSelection(selection, clientId);
 
     // Same caveats as for SELECTION_RANGE_ADDED
-    const selectionSet = new Set(selection);
+    const selectionSet = new Set(currentSelection);
 
     for (let index = startIndex; index < endIndex; index += 1) {
       if (selectionSet.has(index)) {
@@ -60,18 +80,31 @@ const selectionReducer: Reducer<ApplicationStore['selection'], Action<any>> = (
       }
     }
 
-    return Array.from(selectionSet);
+    const newSelection = Array.from(selectionSet);
+
+    return updateSelection(clientId, selection, newSelection);
   }
 
-  if (action.type === SELECTION_RANGE_SET_TO) {
-    const range = action.payload as IndexRange;
+  if (action.type === SELECTION_RANGES_SET_TO) {
+    const { ranges, clientId } = action.payload as SelectionRangesSetToPayload;
 
     // Build the selection from scratch out of the single range that was given
-    return rangeToIndices(range);
+    const newSelection = Array.from(rangesToIndices(ranges));
+
+    return updateSelection(clientId, selection, newSelection);
+  }
+
+  if (action.type === SELECTION_INDICES_SET_TO) {
+    const { indices, clientId } =
+      action.payload as SelectionIndicesSetToPayload;
+
+    return updateSelection(clientId, selection, indices);
   }
 
   if (action.type === SELECTION_CLEARED) {
-    return [] as number[];
+    const { clientId } = action.payload as SelectionClearedPayload;
+
+    return updateSelection(clientId, selection, []);
   }
 
   return selection;

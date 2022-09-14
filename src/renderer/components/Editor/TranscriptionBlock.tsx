@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -14,6 +14,7 @@ import {
   isTakeGroup,
 } from 'renderer/utils/takeDetection';
 import { mapWithAccumulator } from 'renderer/utils/list';
+import { ClientId } from 'collabTypes/collabShadowTypes';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import WordDragManager from './WordDragManager';
@@ -47,15 +48,15 @@ const TranscriptionBox = styled(Box)({
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
-  seekToWord: (wordIndex: number) => void;
   blockWidth: number;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TranscriptionBlock = ({
-  seekToWord,
   transcription,
   nowPlayingWordIndex,
   blockWidth,
+  setPlaybackTime,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
@@ -68,14 +69,26 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
-  const selectionArray = useSelector(
-    (store: ApplicationStore) => store.selection
+  const ownSelectionArray = useSelector(
+    (store: ApplicationStore) => store.selection.self
   );
 
-  const selectionSet = useMemo(
-    () => (editWord === null ? new Set(selectionArray) : new Set()),
-    [selectionArray, editWord]
+  const ownSelectionSet = useMemo(
+    () => (editWord === null ? new Set(ownSelectionArray) : new Set<number>()),
+    [ownSelectionArray, editWord]
   );
+
+  const otherSelections = useSelector(
+    (store: ApplicationStore) => store.selection.others
+  );
+
+  const otherSelectionSets = useMemo(() => {
+    const sets: Record<ClientId, Set<number>> = {};
+    Object.keys(otherSelections).forEach((clientId) => {
+      sets[clientId] = new Set(otherSelections[clientId]);
+    });
+    return sets;
+  }, [otherSelections]);
 
   const dispatch = useDispatch();
 
@@ -161,11 +174,12 @@ const TranscriptionBlock = ({
                       editWord={editWord}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       transcription={transcription}
-                      seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
-                      selectionSet={selectionSet}
+                      selectionSet={ownSelectionSet}
+                      otherSelectionSets={otherSelectionSets}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
+                      setPlaybackTime={setPlaybackTime}
                     />
                   ),
                   acc: isTakeGroup(chunk)
@@ -186,4 +200,4 @@ const TranscriptionBlock = ({
   );
 };
 
-export default TranscriptionBlock;
+export default React.memo(TranscriptionBlock);

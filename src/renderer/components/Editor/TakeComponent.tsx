@@ -4,7 +4,9 @@ import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
-import { RefObject, useMemo } from 'react';
+import React, { RefObject, useCallback, useMemo } from 'react';
+import { ClientId } from 'collabTypes/collabShadowTypes';
+import { EditWordState } from 'renderer/store/sharedHelpers';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 
@@ -27,30 +29,34 @@ const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
     },
   });
 
-interface TakeComponentProps {
+interface TakePassThroughProps {
+  transcription: Transcription;
+  dragState: DragState; // current state of ANY drag (null if no word being dragged)
+  dropBeforeIndex: number | null;
+  setDropBeforeIndex: (index: number) => void;
+  cancelDrag: () => void;
+  submitWordEdit: () => void;
+  popoverWidth: number;
+  transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
+  otherSelectionSets: Record<ClientId, Set<number>>;
+  isWordBeingDragged: (wordIndex: number) => boolean;
+  mouseThrottled: MousePosition | null;
+  editWord: EditWordState;
+}
+
+interface TakeComponentProps extends TakePassThroughProps {
   takeWords: Word[];
   takeIndex: number;
   isActive: boolean;
   isTakeGroupOpened: boolean;
   setIsTakeGroupOpened: (isOpen: boolean) => void;
-  transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
   mousePosition: MousePosition | null;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
-  submitWordEdit: () => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selectionSet: Set<number>;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  editWord: any;
+  onWordMouseMove: (wordIndex: number) => void;
   transcriptionIndex: number;
-  popoverWidth: number;
-  transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const TakeComponent = ({
@@ -59,44 +65,33 @@ const TakeComponent = ({
   isActive,
   isTakeGroupOpened,
   setIsTakeGroupOpened,
-  transcription,
-  seekToWord,
-  dragState,
   mousePosition,
-  dropBeforeIndex,
-  setDropBeforeIndex,
-  cancelDrag,
-  submitWordEdit,
   nowPlayingWordIndex,
   selectionSet,
   onWordMouseDown,
   onWordMouseMove,
-  isWordBeingDragged,
-  mouseThrottled,
-  editWord,
   transcriptionIndex,
-  popoverWidth,
-  transcriptionBlockRef,
+  ...passThroughProps
 }: TakeComponentProps) => {
   const dispatch = useDispatch();
 
-  const onSelectTake = () => {
+  const onSelectTake = useCallback(() => {
     dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
     setIsTakeGroupOpened(false);
-  };
+  }, [dispatch, takeWords, setIsTakeGroupOpened]);
 
   const TakeWrapper = useMemo(
     () => makeTakeWrapper(isTakeGroupOpened, isActive),
     [isTakeGroupOpened, isActive]
   );
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     if (isActive && !isTakeGroupOpened) {
       setIsTakeGroupOpened(true);
     } else {
       onSelectTake();
     }
-  };
+  }, [isActive, isTakeGroupOpened, setIsTakeGroupOpened, onSelectTake]);
 
   return (
     <>
@@ -143,31 +138,30 @@ const TakeComponent = ({
         )}
         {isTakeGroupOpened || isActive ? (
           <>
-            {takeWords.map((word, index) => (
-              <WordOuterComponent
-                key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
-                word={word}
-                index={transcriptionIndex + index}
-                transcription={transcription}
-                seekToWord={seekToWord}
-                dragState={dragState}
-                mouse={mousePosition}
-                mouseThrottled={mouseThrottled}
-                dropBeforeIndex={dropBeforeIndex}
-                setDropBeforeIndex={setDropBeforeIndex}
-                cancelDrag={cancelDrag}
-                submitWordEdit={submitWordEdit}
-                nowPlayingWordIndex={nowPlayingWordIndex}
-                selectionSet={selectionSet}
-                onWordMouseDown={onWordMouseDown}
-                onWordMouseMove={onWordMouseMove}
-                isWordBeingDragged={isWordBeingDragged}
-                editWord={editWord}
-                isInInactiveTake={!isActive || !isTakeGroupOpened}
-                popoverWidth={popoverWidth}
-                transcriptionBlockRef={transcriptionBlockRef}
-              />
-            ))}
+            {takeWords.map((word, index, words) => {
+              const wordIndex = transcriptionIndex + index;
+              return (
+                <WordOuterComponent
+                  key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
+                  word={word}
+                  prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
+                  nextWord={
+                    wordIndex < words.length - 1 ? words[wordIndex + 1] : null
+                  }
+                  index={wordIndex}
+                  mouse={mousePosition}
+                  isPlaying={nowPlayingWordIndex === wordIndex}
+                  isSelected={selectionSet.has(wordIndex)}
+                  isPrevWordSelected={selectionSet.has(wordIndex - 1)}
+                  isNextWordSelected={selectionSet.has(wordIndex + 1)}
+                  onMouseDown={onWordMouseDown}
+                  onMouseMove={onWordMouseMove}
+                  isInInactiveTake={!isActive || !isTakeGroupOpened}
+                  transcriptionLength={words.length}
+                  {...passThroughProps}
+                />
+              );
+            })}
           </>
         ) : null}
       </TakeWrapper>
@@ -175,4 +169,4 @@ const TakeComponent = ({
   );
 };
 
-export default TakeComponent;
+export default React.memo(TakeComponent);

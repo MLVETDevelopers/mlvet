@@ -1,30 +1,43 @@
 import { Box } from '@mui/material';
-import { RefObject, useRef, useState } from 'react';
+import React, {
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import colors from 'renderer/colors';
-import { Transcription, Word } from 'sharedTypes';
+import { Word } from 'sharedTypes';
 import {
   getOriginalWords,
   restoreOriginalSection,
 } from 'renderer/editor/restore';
+import { getColourForIndex } from 'renderer/utils/ui';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { useSelector } from 'react-redux';
 import RestorePopover from './RestorePopover';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
 interface Props {
-  transcription: Transcription;
   word: Word;
+  prevWord: Word | null;
+  nextWord: Word | null;
   index: number;
   isSelected: boolean;
+  selectedByClientWithIndex: number | null;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const EditMarker = ({
-  transcription,
   word,
+  prevWord,
+  nextWord,
   index,
   isSelected,
   popoverWidth,
   transcriptionBlockRef,
+  selectedByClientWithIndex,
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
   const [popperText, setPopperText] = useState<string | null>(null);
@@ -34,32 +47,55 @@ const EditMarker = ({
   const isInOriginalPos = word.originalIndex === index;
 
   // word index has changed but still in the same relative position
-  const hasNotMoved =
-    index !== 0
-      ? transcription.words[index - 1].originalIndex === word.originalIndex - 1
-      : transcription.words[index + 1].originalIndex === word.originalIndex + 1;
+  const hasNotMoved = useMemo(
+    () =>
+      prevWord === null
+        ? nextWord?.originalIndex === word.originalIndex + 1
+        : prevWord?.originalIndex === word.originalIndex - 1,
+    [prevWord, nextWord, word]
+  );
 
   // preventing two markers from being next to each other
-  const hasNoNeighbourMarker =
-    index !== 0 ? !transcription.words[index - 1].deleted : true;
+  const hasNoNeighbourMarker = useMemo(
+    () => prevWord === null || !prevWord.deleted,
+    [prevWord]
+  );
 
   const notPasted = word.pasteKey === 0;
 
-  const getOriginalText = () => {
-    const originalWords = getOriginalWords(index, transcription.words);
+  const words = useSelector(
+    (store: ApplicationStore) =>
+      store.currentProject?.transcription?.words ?? []
+  );
+
+  const getOriginalText = useCallback(() => {
+    const originalWords = getOriginalWords(index, words);
     const originalText = originalWords.map((w) => w.word).join(' ');
 
     return originalText;
-  };
+  }, [index, words]);
 
-  const onMarkerClick = () => {
+  const onMarkerClick = useCallback(() => {
     setPopperToggled(true);
     setPopperText(getOriginalText());
-  };
+  }, [setPopperToggled, setPopperText, getOriginalText]);
 
-  return (isInOriginalPos || hasNotMoved) &&
-    hasNoNeighbourMarker &&
-    notPasted ? (
+  const background = useMemo(() => {
+    if (isSelected) {
+      return `${colors.blue[500]}cc`;
+    }
+    if (selectedByClientWithIndex !== null) {
+      return `${getColourForIndex(selectedByClientWithIndex)}cc`;
+    }
+    return 'none';
+  }, [isSelected, selectedByClientWithIndex]);
+
+  const isShowingPopover = useMemo(
+    () => (isInOriginalPos || hasNotMoved) && hasNoNeighbourMarker && notPasted,
+    [isInOriginalPos, hasNotMoved, hasNoNeighbourMarker, notPasted]
+  );
+
+  return isShowingPopover ? (
     <>
       {popperToggled && (
         <RestorePopover
@@ -75,7 +111,7 @@ const EditMarker = ({
       )}
       <Box
         sx={{
-          background: isSelected ? `${colors.blue[500]}cc` : 'none',
+          background,
           transform: 'translateY(-6.5px)',
           cursor: 'pointer',
         }}
@@ -88,4 +124,4 @@ const EditMarker = ({
   ) : null;
 };
 
-export default EditMarker;
+export default React.memo(EditMarker);

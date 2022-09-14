@@ -1,7 +1,15 @@
+import {
+  CollabClientInitialState,
+  CollabClientSessionState,
+} from 'renderer/store/collab/helpers';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
+import { OpQueueItem } from './opQueue/helpers';
+import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
+
+export type EditWordState = { index: number; text: string } | null;
 
 /**
  * The schema for the root-level application / redux store, containing the global app state.
@@ -14,13 +22,17 @@ export interface ApplicationStore {
   exportIo: ExportIo;
   clipboard: Word[];
   // Array of numbers corresponding to indices of words within the transcription
-  selection: number[];
+  selection: SelectionState;
   shortcutsOpened: boolean;
   isUpdateTranscriptionAPIKeyOpened: boolean;
   // Index of word currently being edited, otherwise null
-  editWord: { index: number; text: string } | null;
+  editWord: EditWordState;
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
+  // Collab session state
+  collab: CollabClientSessionState | CollabClientInitialState | null;
+  // Op queue session state for pending actions when in a collab session
+  opQueue: OpQueueItem[];
 }
 
 /**
@@ -34,9 +46,14 @@ export const initialStore: ApplicationStore = {
   undoStack: { stack: [], index: 0 },
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
-  selection: [],
+  selection: {
+    self: [],
+    others: {},
+  },
   shortcutsOpened: false,
   isUpdateTranscriptionAPIKeyOpened: false,
   editWord: null,
   isShowingConfidenceUnderlines: false,
+  collab: null,
+  opQueue: [],
 };

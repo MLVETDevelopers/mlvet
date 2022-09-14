@@ -11,6 +11,8 @@ import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
+import CollabController from 'renderer/components/Collab/CollabController';
+import { COLLAB_ENABLED } from 'renderer/config';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -47,7 +49,6 @@ const ProjectPage = () => {
         pause,
         seekForward,
         seekBack,
-        seekToWord,
         setPlaybackTime
       ) => (
         <ResizeManager
@@ -68,6 +69,7 @@ const ProjectPage = () => {
                 seekForward={seekForward}
                 seekBack={seekBack}
               />
+              {COLLAB_ENABLED && <CollabController />}
 
               <Stack
                 id="project-page-layout-container"
@@ -89,10 +91,10 @@ const ProjectPage = () => {
                     <TranscriptionBlock
                       transcription={currentProject.transcription}
                       nowPlayingWordIndex={nowPlayingWordIndex}
-                      seekToWord={seekToWord}
                       blockWidth={
                         window.innerWidth - videoPreviewContainerWidth
                       }
+                      setPlaybackTime={setPlaybackTime}
                     />
                   )}
                 </Stack>

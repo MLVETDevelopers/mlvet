@@ -9,8 +9,7 @@ interface Props {
 }
 
 const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
-  // const bottomWidth = isLast ? '2px' : '0px';
-  const bottomWidth = '2px';
+  const bottomWidth = isLast || !isTakeGroupOpened ? '2px' : '0px';
 
   const [isHovering, setIsHovering] = useState(false);
 

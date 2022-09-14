@@ -1,11 +1,10 @@
 import { Action } from '../action';
 
-export const VIDEO_PAUSED = 'VIDEO_PAUSED';
-export const SPACE_PRESSED = 'SPACE_PRESSED';
+export const VIDEO_PLAYING = 'VIDEO_PLAYING';
 
-export const videoPaused: (isVideoPaused: boolean) => Action<boolean> = (
-  isVideoPaused
+export const videoPlaying: (isVideoPlaying: boolean) => Action<boolean> = (
+  isVideoPlaying
 ) => ({
-  type: VIDEO_PAUSED,
-  payload: isVideoPaused,
+  type: VIDEO_PLAYING,
+  payload: isVideoPlaying,
 });

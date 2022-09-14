@@ -1,17 +1,17 @@
 import { Reducer } from 'redux';
 import { Action } from '../action';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
-import { VIDEO_PAUSED } from './actions';
+import { VIDEO_PLAYING } from './actions';
 
 const updatePlaybackPauseReducer: Reducer<
-  ApplicationStore['isVideoPaused'],
+  ApplicationStore['isVideoPlaying'],
   Action<boolean>
-> = (isVideoPaused = initialStore.isVideoPaused, action) => {
-  if (action.type === VIDEO_PAUSED) {
+> = (isVideoPlaying = initialStore.isVideoPlaying, action) => {
+  if (action.type === VIDEO_PLAYING) {
     return action.payload as boolean;
   }
 
-  return isVideoPaused;
+  return isVideoPlaying;
 };
 
 export default updatePlaybackPauseReducer;

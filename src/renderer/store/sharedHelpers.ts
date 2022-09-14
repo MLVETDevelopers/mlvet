@@ -33,7 +33,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
-  isVideoPaused: boolean;
+  isVideoPlaying: boolean;
 }
 
 /**
@@ -57,5 +57,5 @@ export const initialStore: ApplicationStore = {
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
-  isVideoPaused: true,
+  isVideoPlaying: false,
 };

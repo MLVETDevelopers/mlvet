@@ -1,7 +1,5 @@
 import fs from 'fs';
 import { WaveFile } from 'wavefile';
-// import { setLogLevel, createModel, getSoname } from '../../vosk';
-// import * as hello from '../../vosk/hello';
 import { Readable } from 'stream';
 import createVosky from '../../vosk/vosky';
 

@@ -2,8 +2,7 @@ import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
 import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import togglePlayPause from 'renderer/editor/togglePlayPause';
 import colors from '../../colors';
 
 const VideoControllerBox = styled(Box)({
@@ -74,7 +73,7 @@ const VideoController = ({
       <IconButton onClick={seekBack}>
         <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
-      <IconButton onClick={onClickPlayPause}>
+      <IconButton onClick={togglePlayPause}>
         <TogglePlayButton isPlaying={isPlaying} />
       </IconButton>
       <IconButton onClick={seekForward}>

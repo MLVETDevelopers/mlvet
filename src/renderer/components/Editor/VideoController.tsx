@@ -68,14 +68,6 @@ const VideoController = ({
 
   const timeDisplay = useMemo(() => secondToTimestampUI(time), [time]);
 
-  const spacePressed = useSelector(
-    (store: ApplicationStore) => store.isSpacePressed
-  );
-  useEffect(() => {
-    onClickPlayPause();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [spacePressed]);
-
   return (
     <VideoControllerBox>
       <TimeDisplay>{timeDisplay}</TimeDisplay>

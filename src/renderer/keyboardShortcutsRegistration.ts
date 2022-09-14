@@ -7,9 +7,7 @@
 import { OperatingSystems } from 'sharedTypes';
 import { copyText, cutText, pasteText } from './editor/clipboard';
 import { selectAllWords } from './editor/selection';
-import store from './store/store';
 import ipc from './ipc';
-import { spacePressed } from './store/spacebar/actions';
 
 /**
  * Each key represents pressing Ctrl plus that key.
@@ -30,11 +28,6 @@ const registerKeyboardHandlers: () => Promise<void> = async () => {
   }
 
   window.onkeydown = (event: KeyboardEvent) => {
-    if (event.key === ' ') {
-      const state = store.getState().isSpacePressed;
-      store.dispatch(spacePressed(!state));
-    }
-
     if (!event.ctrlKey) {
       return;
     }

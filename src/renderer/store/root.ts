@@ -13,7 +13,6 @@ import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import updatePlaybackPauseReducer from './playback/reducer';
-import updateSpacePressedReducer from './spacebar/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -30,7 +29,6 @@ const rootReducer = combineReducers({
   collab: collabReducer,
   opQueue: opQueueReducer,
   isVideoPaused: updatePlaybackPauseReducer,
-  isSpacePressed: updateSpacePressedReducer,
 });
 
 export default rootReducer;

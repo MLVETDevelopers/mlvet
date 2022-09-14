@@ -18,6 +18,9 @@ function mockGetSentenceSimilarity(
   if (sentenceOne === 'All ok?' && sentenceTwo === 'test.') {
     return 0.4;
   }
+  if (sentenceOne === 'All ok?' && sentenceTwo === 'assessment.') {
+    return 0.4;
+  }
   if (sentenceOne === 'test.' && sentenceTwo === 'assessment.') {
     return 0.8;
   }

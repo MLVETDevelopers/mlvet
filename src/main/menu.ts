@@ -176,6 +176,14 @@ export default class MenuBuilder {
         },
         enabled: false, // by default, gets updated when a project is entered
       },
+      {
+        id: 'playPause',
+        label: 'Play Or Pause Video',
+        accelerator: 'Space',
+        click: () => {
+          this.mainWindow.webContents.send('toggle-play-pause');
+        },
+      },
     ];
   }
 

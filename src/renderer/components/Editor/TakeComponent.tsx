@@ -90,8 +90,10 @@ const TakeComponent = ({
 
   const onSelectTake = useCallback(() => {
     dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
-    setIsTakeGroupOpened(false);
-  }, [dispatch, takeWords, setIsTakeGroupOpened]);
+    if (!isFirstTimeOpen) {
+      setIsTakeGroupOpened(false);
+    }
+  }, [dispatch, takeWords, isFirstTimeOpen, setIsTakeGroupOpened]);
 
   const TakeWrapper = useMemo(
     () => makeTakeWrapper(isTakeGroupOpened, isActive, isFirstTimeOpen),

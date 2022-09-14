@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Avatar, Box, Stack } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';

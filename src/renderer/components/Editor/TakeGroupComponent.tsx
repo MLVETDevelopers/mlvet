@@ -74,10 +74,6 @@ const TakeGroupComponent = ({
     [transcription, takeGroup]
   );
 
-  if (isFirstTimeOpen) {
-    takeGroup.activeTakeIndex = -1;
-  }
-
   /**
    * Word[][] where each inner array contains the list of words in a particular take
    */

@@ -10,8 +10,6 @@ import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
-import store from 'renderer/store/store';
-import { videoPaused } from 'renderer/store/playback/actions';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
 import VideoPreview, { VideoPreviewRef } from '.';
@@ -59,7 +57,10 @@ const VideoPreviewControllerBase = (
   const videoPreviewRef = useRef<VideoPreviewRef>(null);
 
   const currentProject = useSelector(
-    (appStore: ApplicationStore) => appStore?.currentProject
+    (store: ApplicationStore) => store?.currentProject
+  );
+  const playState = useSelector(
+    (store: ApplicationStore) => store.isVideoPlaying
   );
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
@@ -97,7 +98,6 @@ const VideoPreviewControllerBase = (
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
-    store.dispatch(videoPaused(true));
   };
 
   // Called on every frame (by timer setInterval)
@@ -184,7 +184,6 @@ const VideoPreviewControllerBase = (
       startTimer();
       videoPreviewRef?.current?.play();
       setIsPlaying(true);
-      store.dispatch(videoPaused(false));
     }
   };
 
@@ -226,6 +225,15 @@ const VideoPreviewControllerBase = (
       )
     );
   }, [currentProject?.mediaFilePath]);
+
+  useEffect(() => {
+    if (playState) {
+      play();
+    } else {
+      pause();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playState]);
 
   return (
     <VideoPreview

@@ -14,6 +14,7 @@ import openShortcuts from './navigation/openShortcuts';
 import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionAPIKey';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
+import editWord from './editor/editWord';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -31,6 +32,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-edit-word': editWord,
   'initiate-merge-words': mergeWords,
   'initiate-split-word': splitWord,
   'initiate-undo': performUndo,

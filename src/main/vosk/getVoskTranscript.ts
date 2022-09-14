@@ -39,7 +39,7 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
 
   const voskRecognizer = vosky.createRecognizer(model, 16000);
 
-  voskRecognizer.setMaxAlternatives(1); // reduced from 10
+  voskRecognizer.setMaxAlternatives(4); // reduced from 10
   voskRecognizer.setWords(true);
   voskRecognizer.setPartialWords(true); // what is this idek
 
@@ -51,32 +51,34 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
 
   const wavData = wav.data as WaveData;
 
-  const acceptWaveform = () => {
-    return new Promise<void>((resolve, reject) => {
-      const readStream = fs.createReadStream(filePath, { encoding: 'utf-8' });
+  // const acceptWaveform = () => {
+  //   return new Promise<void>((resolve, reject) => {
+  //     const readStream = fs.createReadStream(filePath, { encoding: 'utf-8' });
 
-      readStream.on('data', (chunk) => {
-        voskRecognizer.acceptWaveformAsString(chunk.toString());
-      });
+  //     readStream.on('data', (chunk) => {
+  //       voskRecognizer.acceptWaveformAsString(chunk.toString());
+  //     });
 
-      readStream.on('error', (e) => {
-        reject(e);
-      });
+  //     readStream.on('error', (e) => {
+  //       reject(e);
+  //     });
 
-      readStream.on('end', () => {
-        resolve();
-      });
-    });
-  };
+  //     readStream.on('end', () => {
+  //       resolve();
+  //     });
+  //   });
+  // };
 
-  await acceptWaveform();
+  // await acceptWaveform();
 
-  // try {
-  //   voskRecognizer.acceptWaveformAsString(wav.toBase64());
-  // } catch (e) {
-  //   console.log(e);
-  //   voskRecognizer.acceptWaveformAsString(audioBuffer.toString('utf8'));
-  // }
+  try {
+    voskRecognizer.acceptWaveform(audioBuffer.toString('hex'));
+  } catch (e) {
+    console.log('=========================================================');
+    console.log(e);
+    console.log('=========================================================');
+    voskRecognizer.acceptWaveformAsString(audioBuffer.toString('hex'));
+  }
 
   const transcript: string = JSON.stringify(
     voskRecognizer.finalResult(),

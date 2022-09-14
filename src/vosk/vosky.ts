@@ -61,6 +61,7 @@ interface Recognizer {
   setWords: (words: boolean) => void;
   setPartialWords: (partialWords: boolean) => void;
   setSpkModel: (spkModel: SpeakerModel) => void;
+  acceptWaveform: (waveform: Buffer) => boolean;
   acceptWaveformAsString: (waveform: string | Buffer) => boolean;
   acceptWaveformAsFloatArr: (
     waveform: number[] | Buffer | Float32Array
@@ -74,20 +75,30 @@ interface Recognizer {
 }
 
 const getDLLDir = () => {
+  // Path is different in dev than in production
+  const prodPath = process.env.NODE_ENV === 'development' ? '.' : '../.';
+
+  const baseDllPath = path.join(
+    __dirname,
+    '../../.',
+    prodPath,
+    'assets/vosk',
+    'lib'
+  );
+
   let dllDir;
   if (os.platform() === PLATFORMS.WINDOWS) {
     // Update path to load dependent dlls
     const currentPath = process.env.Path;
-    const dllDirectory = path.resolve(
-      path.join(__dirname, 'lib', 'win-x86_64')
-    );
+
+    const dllDirectory = path.resolve(path.join(baseDllPath, 'win-x86_64'));
     process.env.Path = currentPath + path.delimiter + dllDirectory;
 
-    dllDir = path.join(__dirname, 'lib', 'win-x86_64', 'libvosk.dll');
+    dllDir = path.join(baseDllPath, 'win-x86_64', 'libvosk.dll');
   } else if (os.platform() === PLATFORMS.MAC) {
-    dllDir = path.join(__dirname, 'lib', 'osx-universal', 'libvosk.dylib');
+    dllDir = path.join(baseDllPath, 'osx-universal', 'libvosk.dylib');
   } else {
-    dllDir = path.join(__dirname, 'lib', 'linux-x86_64', 'libvosk.so');
+    dllDir = path.join(baseDllPath, 'linux-x86_64', 'libvosk.so');
   }
   return dllDir;
 };

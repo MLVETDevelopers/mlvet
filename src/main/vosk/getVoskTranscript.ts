@@ -39,9 +39,8 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
 
   const voskRecognizer = vosky.createRecognizer(model, 16000);
 
-  voskRecognizer.setMaxAlternatives(4); // reduced from 10
+  voskRecognizer.setMaxAlternatives(2); // reduced from 10
   voskRecognizer.setWords(true);
-  voskRecognizer.setPartialWords(true); // what is this idek
 
   const audioBuffer = fs.readFileSync(filePath);
 
@@ -72,12 +71,12 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
   // await acceptWaveform();
 
   try {
-    voskRecognizer.acceptWaveform(audioBuffer.toString('hex'));
+    voskRecognizer.acceptWaveformAsString(audioBuffer);
   } catch (e) {
     console.log('=========================================================');
     console.log(e);
     console.log('=========================================================');
-    voskRecognizer.acceptWaveformAsString(audioBuffer.toString('hex'));
+    voskRecognizer.acceptWaveformAsShortArr(audioBuffer);
   }
 
   const transcript: string = JSON.stringify(

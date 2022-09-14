@@ -63,10 +63,8 @@ interface Recognizer {
   setSpkModel: (spkModel: SpeakerModel) => void;
   acceptWaveform: (waveform: Buffer) => boolean;
   acceptWaveformAsString: (waveform: string | Buffer) => boolean;
-  acceptWaveformAsFloatArr: (
-    waveform: number[] | Buffer | Float32Array
-  ) => boolean;
-  acceptWaveformAsShortArr: (waveform: number[] | Buffer) => boolean;
+  acceptWaveformAsFloatArr: (waveform: Buffer) => boolean;
+  acceptWaveformAsShortArr: (waveform: Buffer) => boolean;
   resultString: () => string;
   result: () => Result;
   finalResult: () => Result;
@@ -163,7 +161,7 @@ const vosky = () => {
   const recognizerAcceptWaveformString = libvosk.func(
     'vosk_recognizer_accept_waveform',
     'bool',
-    [recognizerPointer, 'string', 'int']
+    [recognizerPointer, 'char *', 'int']
   );
   const recognizerAcceptWaveformFloatArr = libvosk.func(
     'vosk_recognizer_accept_waveform_f',
@@ -360,6 +358,14 @@ const vosky = () => {
       return recognizerAcceptWaveformString(handle, data, data.length);
     };
 
+    const acceptWaveform = (data: Buffer) => {
+      return recognizerAcceptWaveformString(
+        handle,
+        data.toString('base64'),
+        data.byteLength
+      );
+    };
+
     /**
      * Accept voice data
      *
@@ -368,9 +374,7 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsFloatArr = (
-      data: number[] | Float32Array | Buffer
-    ) => {
+    const acceptWaveformAsFloatArr = (data: Buffer) => {
       return recognizerAcceptWaveformFloatArr(handle, data, data.length);
     };
 
@@ -382,8 +386,8 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsShortArr = (data: number[] | Buffer) => {
-      return recognizerAcceptWaveformShortArr(handle, data, data.length);
+    const acceptWaveformAsShortArr = (data: Buffer) => {
+      return recognizerAcceptWaveformShortArr(handle, data, data.byteLength);
     };
 
     /** Returns speech recognition result in a string
@@ -470,6 +474,7 @@ const vosky = () => {
       setWords,
       setPartialWords,
       setSpkModel,
+      acceptWaveform,
       acceptWaveformAsString,
       acceptWaveformAsFloatArr,
       acceptWaveformAsShortArr,

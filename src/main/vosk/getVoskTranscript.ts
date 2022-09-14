@@ -70,25 +70,16 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
 
   // await acceptWaveform();
 
-  try {
-    voskRecognizer.acceptWaveformAsString(audioBuffer);
-  } catch (e) {
-    console.log('=========================================================');
-    console.log(e);
-    console.log('=========================================================');
-    voskRecognizer.acceptWaveformAsShortArr(audioBuffer);
-  }
+  // voskRecognizer.setPartialWords(true);
 
-  const transcript: string = JSON.stringify(
-    voskRecognizer.finalResult(),
-    null,
-    4
-  );
+  voskRecognizer.acceptWaveform(audioBuffer);
+
+  const result = JSON.parse(voskRecognizer.resultString());
+
+  const transcript: string = JSON.stringify(result, null, 4);
 
   voskRecognizer.free();
   model.free();
-
-  console.log(transcript);
 
   return transcript;
 };

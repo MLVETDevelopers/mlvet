@@ -62,9 +62,6 @@ interface Recognizer {
   setPartialWords: (partialWords: boolean) => void;
   setSpkModel: (spkModel: SpeakerModel) => void;
   acceptWaveform: (waveform: Buffer) => boolean;
-  acceptWaveformAsString: (waveform: string | Buffer) => boolean;
-  acceptWaveformAsFloatArr: (waveform: Buffer) => boolean;
-  acceptWaveformAsShortArr: (waveform: Buffer) => boolean;
   resultString: () => string;
   result: () => Result;
   finalResult: () => Result;
@@ -113,6 +110,9 @@ const vosky = () => {
   koffi.opaque('VoskRecognizer');
   const recognizerPointer = koffi.pointer('void');
 
+  koffi.opaque('data');
+  const dataBuffer = koffi.pointer('void');
+
   const setLogLevelDebug = libvosk.func('vosk_set_log_level', 'void', ['int']);
 
   const newModel = libvosk.func('vosk_model_new', modelPointer, ['string']);
@@ -158,20 +158,10 @@ const vosky = () => {
     'void',
     [recognizerPointer, spkModelPointer]
   );
-  const recognizerAcceptWaveformString = libvosk.func(
+  const recognizerAcceptWaveform = libvosk.func(
     'vosk_recognizer_accept_waveform',
     'bool',
-    [recognizerPointer, 'char *', 'int']
-  );
-  const recognizerAcceptWaveformFloatArr = libvosk.func(
-    'vosk_recognizer_accept_waveform_f',
-    'bool',
-    [recognizerPointer, 'float *', 'int']
-  );
-  const recognizerAcceptWaveformShortArr = libvosk.func(
-    'vosk_recognizer_accept_waveform_s',
-    'bool',
-    [recognizerPointer, 'short *', 'int']
+    [recognizerPointer, dataBuffer, 'int']
   );
   const recognizerResult = libvosk.func('vosk_recognizer_result', 'string', [
     recognizerPointer,
@@ -354,40 +344,8 @@ const vosky = () => {
      * @param {Buffer} data audio data in PCM 16-bit mono format
      * @returns true if silence is occured and you can retrieve a new utterance with result method
      */
-    const acceptWaveformAsString = (data: string | Buffer) => {
-      return recognizerAcceptWaveformString(handle, data, data.length);
-    };
-
     const acceptWaveform = (data: Buffer) => {
-      return recognizerAcceptWaveformString(
-        handle,
-        data.toString('base64'),
-        data.byteLength
-      );
-    };
-
-    /**
-     * Accept voice data
-     *
-     * accept and process new chunk of voice data
-     *
-     * @param {Buffer} data audio data in PCM 16-bit mono format
-     * @returns true if silence is occured and you can retrieve a new utterance with result method
-     */
-    const acceptWaveformAsFloatArr = (data: Buffer) => {
-      return recognizerAcceptWaveformFloatArr(handle, data, data.length);
-    };
-
-    /**
-     * Accept voice data
-     *
-     * accept and process new chunk of voice data
-     *
-     * @param {Buffer} data audio data in PCM 16-bit mono format
-     * @returns true if silence is occured and you can retrieve a new utterance with result method
-     */
-    const acceptWaveformAsShortArr = (data: Buffer) => {
-      return recognizerAcceptWaveformShortArr(handle, data, data.byteLength);
+      return recognizerAcceptWaveform(handle, data, data.length);
     };
 
     /** Returns speech recognition result in a string
@@ -475,9 +433,6 @@ const vosky = () => {
       setPartialWords,
       setSpkModel,
       acceptWaveform,
-      acceptWaveformAsString,
-      acceptWaveformAsFloatArr,
-      acceptWaveformAsShortArr,
       resultString,
       result,
       partialResult,

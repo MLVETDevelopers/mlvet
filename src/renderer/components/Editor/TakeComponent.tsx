@@ -10,13 +10,7 @@ import { EditWordState } from 'renderer/store/sharedHelpers';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
-
-const CustomStack = styled(Stack)({ width: '100%' });
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
+import { CustomRowStack } from '../CustomStacks';
 
 const makeTakeWrapper = (
   isTakeGroupOpened: boolean,

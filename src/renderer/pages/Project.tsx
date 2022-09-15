@@ -13,6 +13,8 @@ import Scrubber from 'renderer/components/Scrubber';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
+import { PrimaryButton } from 'renderer/components/Blocks/Buttons';
+import ipc from 'renderer/ipc';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -29,6 +31,9 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+  const openUserFeedback = () => {
+    ipc.openExternalLink('https://forms.gle/YNozsPZxF4kxSuud8');
+  };
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
@@ -61,6 +66,12 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
+              <PrimaryButton
+                onClick={openUserFeedback}
+                sx={{ position: 'absolute', bottom: '20px', right: '20px' }}
+              >
+                Feedback
+              </PrimaryButton>
               <VideoController
                 time={time}
                 isPlaying={isPlaying}
@@ -69,6 +80,7 @@ const ProjectPage = () => {
                 seekForward={seekForward}
                 seekBack={seekBack}
               />
+
               {COLLAB_ENABLED && <CollabController />}
 
               <Stack

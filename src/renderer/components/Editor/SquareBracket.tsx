@@ -28,7 +28,7 @@ const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
         height: '60px',
         width: '15px',
         borderStyle: 'solid',
-        borderColor: isTakeGroupOpened ? '#FFB355' : colors.grey[500],
+        borderColor: isTakeGroupOpened ? colors.yellow[500] : colors.grey[500],
         borderWidth: '0px',
         borderLeftWidth: '2px',
         borderTopWidth: '2px',

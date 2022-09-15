@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import colors from 'renderer/colors';
 
 interface BracketProps {
   isHoveredOver: boolean;
@@ -23,7 +24,7 @@ const VerticalBracketBackground = ({ isHoveredOver }: BracketProps) => {
         width: '8px',
         opacity: opacityValue,
         borderRadius: '8px',
-        backgroundColor: '#FFB355',
+        backgroundColor: colors.yellow[500],
 
         // positioning
         position: 'relative',
@@ -58,7 +59,7 @@ const HorizontalBracketBackground = ({
         width: '18px',
         opacity: opacityValue,
         borderRadius: '8px',
-        backgroundColor: '#FFB355',
+        backgroundColor: colors.yellow[500],
 
         // positioning
         position: 'relative',

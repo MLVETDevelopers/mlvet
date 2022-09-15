@@ -7,6 +7,7 @@ import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import React, { RefObject, useCallback, useMemo } from 'react';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
+import colors from 'renderer/colors';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -24,13 +25,14 @@ const makeTakeWrapper = (
   isFirstTimeOpen: boolean
 ) =>
   styled(Box)({
-    borderColor: isTakeGroupOpened && isActive ? '#FFB355' : '#ABA9A9',
+    borderColor:
+      isTakeGroupOpened && isActive ? colors.yellow[500] : colors.grey[400],
     opacity: isActive || isFirstTimeOpen ? 1 : 0.5,
     position: 'relative',
     left: '20px',
 
     '&:hover': {
-      borderColor: '#FFB355',
+      borderColor: colors.yellow[500],
       cursor: 'pointer',
       opacity: isActive ? 1 : 0.8,
     },
@@ -129,7 +131,9 @@ const TakeComponent = ({
                     width: 22,
                     fontSize: 12,
                     color: '#1D201F',
-                    backgroundColor: isActive ? '#FFB355' : '#ABA9A9',
+                    backgroundColor: isActive
+                      ? colors.yellow[500]
+                      : colors.grey[400],
                     display: 'flex',
                     position: 'absolute',
                     left: '-30px',

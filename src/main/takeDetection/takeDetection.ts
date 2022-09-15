@@ -109,5 +109,3 @@ export function findTakes(
   }
   return takeGroups;
 }
-
-export default getSimilarityScore;

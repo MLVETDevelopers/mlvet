@@ -23,21 +23,9 @@ export const copyText = () => {
   }
 
   const ranges = getSelectionRanges();
-  let clipboard = ranges.flatMap((range) =>
+  const clipboard = ranges.flatMap((range) =>
     words.slice(range.startIndex, range.endIndex)
   );
-
-  const firstWord = clipboard[0];
-  const lastWord = clipboard[clipboard.length - 1];
-
-  // Exclude pauses at the start or end of a selection from being copied
-  if (firstWord.word === null) {
-    clipboard = clipboard.slice(1);
-  }
-
-  if (lastWord.word === null) {
-    clipboard = clipboard.slice(0, clipboard.length - 1);
-  }
 
   dispatch(clipboardUpdated(clipboard));
 };

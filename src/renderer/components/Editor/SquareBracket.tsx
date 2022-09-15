@@ -18,7 +18,9 @@ const SquareBracket = ({
 }: Props) => {
   const bottomWidth = isLast || !isTakeGroupOpened ? '2px' : '0px';
 
-  const componentClassName = `squareBracket_${takeGroupId}_${takeIndex}`;
+  const componentClassName = ['squareBracket', takeGroupId, takeIndex].join(
+    '-'
+  );
   const componentSelector = '&:.'.concat('', componentClassName);
 
   const hoverCss = { '&:hover': { [componentSelector]: { opacity: 0.5 } } };

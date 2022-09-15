@@ -30,10 +30,6 @@ const VerticalBracketBackground = ({ isHoveredOver }: BracketProps) => {
         position: 'relative',
         left: '-5px',
         top: '-8px',
-
-        '&:hover': {
-          opacity: 0.5,
-        },
       }}
     />
   );

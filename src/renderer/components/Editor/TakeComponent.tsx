@@ -130,7 +130,7 @@ const TakeComponent = ({
                     height: 22,
                     width: 22,
                     fontSize: 12,
-                    color: '#1D201F',
+                    color: colors.grey[700],
                     backgroundColor: isActive
                       ? colors.yellow[500]
                       : colors.grey[400],

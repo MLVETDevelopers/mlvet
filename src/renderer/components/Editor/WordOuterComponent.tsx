@@ -1,37 +1,33 @@
 import { Box, styled } from '@mui/material';
 import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import { Fragment, RefObject, useMemo } from 'react';
+import React, { Fragment, RefObject, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { ApplicationStore } from 'renderer/store/sharedHelpers';
-import { Word, Transcription } from 'sharedTypes';
+import { ApplicationStore, EditWordState } from 'renderer/store/sharedHelpers';
+import { Word } from 'sharedTypes';
 import EditMarker from './EditMarker';
-import WordComponent from './WordComponent';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import WordComponent, { WordPassThroughProps } from './WordComponent';
+import { DragState } from './WordDragManager';
 import WordSpace from './WordSpace';
 
-interface WordOuterComponentProps {
+interface WordOuterComponentProps extends WordPassThroughProps {
   word: Word;
+  prevWord: Word | null;
+  nextWord: Word | null;
   index: number;
-  transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
-  selectionSet: Set<number>;
+  isSelected: boolean;
+  isPrevWordSelected: boolean;
+  isNextWordSelected: boolean;
   otherSelectionSets: Record<ClientId, Set<number>>;
-  onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
   dragState: DragState; // current state of ANY drag (null if no word being dragged)
   isWordBeingDragged: (wordIndex: number) => boolean;
   mouse: MousePosition | null;
   mouseThrottled: MousePosition | null;
   dropBeforeIndex: number | null;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
-  submitWordEdit: () => void;
-  editWord: any;
-  nowPlayingWordIndex: number | null;
-  isInInactiveTake: boolean;
+  editWord: EditWordState;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
+  transcriptionLength: number;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -43,33 +39,25 @@ const WordAndSpaceContainer = styled(Box)({
 const WordOuterComponent = ({
   word,
   index,
-  transcription,
-  seekToWord,
-  selectionSet,
+  prevWord,
+  nextWord,
+  isSelected,
+  isPrevWordSelected,
   otherSelectionSets,
-  onWordMouseDown,
-  onWordMouseMove,
   dragState,
   isWordBeingDragged,
   mouse,
   mouseThrottled,
   dropBeforeIndex,
-  setDropBeforeIndex,
-  cancelDrag,
-  submitWordEdit,
   editWord,
-  nowPlayingWordIndex,
-  isInInactiveTake,
   popoverWidth,
   transcriptionBlockRef,
+  isNextWordSelected,
+  transcriptionLength,
+  ...passThroughProps
 }: WordOuterComponentProps) => {
   const isShowingConfidenceUnderlines = useSelector(
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
-  );
-
-  const isSelected = useMemo(
-    () => selectionSet.has(index),
-    [selectionSet, index]
   );
 
   const collab = useSelector((store: ApplicationStore) => store.collab);
@@ -119,6 +107,16 @@ const WordOuterComponent = ({
       selectedByClientWithIndex,
     ]);
 
+  const confidence = useMemo(
+    () => (isShowingConfidenceUnderlines ? word.confidence ?? 1 : 1),
+    [isShowingConfidenceUnderlines, word]
+  );
+
+  const isBeingDragged = useMemo(
+    () => isWordBeingDragged(index),
+    [isWordBeingDragged, index]
+  );
+
   return (
     <WordAndSpaceContainer
       key={`container-${word.originalIndex}-${word.pasteKey}`}
@@ -126,8 +124,9 @@ const WordOuterComponent = ({
       {word.deleted ? (
         <EditMarker
           key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
-          transcription={transcription}
           word={word}
+          prevWord={prevWord}
+          nextWord={nextWord}
           index={index}
           isSelected={isSelected}
           selectedByClientWithIndex={selectedByClientWithIndex}
@@ -139,9 +138,7 @@ const WordOuterComponent = ({
           <WordSpace
             key={`space-${word.originalIndex}-${word.pasteKey}`}
             isDropMarkerActive={dragState !== null && dropBeforeIndex === index}
-            isBetweenHighlightedWords={
-              selectionSet.has(index - 1) && selectionSet.has(index)
-            }
+            isBetweenHighlightedWords={isSelected && isPrevWordSelected}
             highlightedByClientWithIndex={
               isSelectedByAnotherClientLeftCap
                 ? null
@@ -149,45 +146,33 @@ const WordOuterComponent = ({
             }
           />
           <WordComponent
-            key={`word-${word.originalIndex}-${word.pasteKey}`}
-            seekToWord={() => seekToWord(index)}
-            isPlaying={index === nowPlayingWordIndex}
+            text={word.word}
+            outputStartTime={word.outputStartTime}
+            confidence={confidence}
+            isBeingDragged={isBeingDragged}
+            mouse={isBeingDragged ? mouse : mouseThrottled}
+            isDropBeforeActive={dropBeforeIndex === index}
+            isDropAfterActive={dropBeforeIndex === index + 1}
+            isBeingEdited={editWord?.index === index}
+            editText={editWord?.text ?? null}
             isSelected={isSelected}
-            isSelectedLeftCap={
-              selectionSet.has(index) && !selectionSet.has(index - 1)
-            }
-            isSelectedRightCap={
-              selectionSet.has(index) && !selectionSet.has(index + 1)
-            }
             selectedByClientWithIndex={selectedByClientWithIndex}
             isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
             isSelectedByAnotherClientRightCap={
               isSelectedByAnotherClientRightCap
             }
-            text={word.word}
-            confidence={word.confidence ?? 1}
             index={index}
-            onMouseDown={onWordMouseDown(index)}
-            onMouseMove={() => onWordMouseMove(index)}
             dragState={dragState}
-            isBeingDragged={isWordBeingDragged(index)}
-            mouse={isWordBeingDragged(index) ? mouse : mouseThrottled}
-            isDropBeforeActive={dropBeforeIndex === index}
-            isDropAfterActive={dropBeforeIndex === index + 1}
-            setDropBeforeIndex={setDropBeforeIndex}
-            cancelDrag={cancelDrag}
-            submitWordEdit={submitWordEdit}
-            isBeingEdited={editWord?.index === index}
-            editText={editWord?.text ?? null}
-            isInInactiveTake={isInInactiveTake}
-            isShowingConfidenceUnderlines={isShowingConfidenceUnderlines}
+            key={`word-${word.originalIndex}-${word.pasteKey}`}
+            isSelectedLeftCap={isSelected && !isPrevWordSelected}
+            isSelectedRightCap={isSelected && !isNextWordSelected}
+            {...passThroughProps}
           />
-          {index === transcription.words.length - 1 && (
+          {index === transcriptionLength - 1 && (
             <WordSpace
               key="space-end"
               isDropMarkerActive={
-                dragState !== null &&
-                dropBeforeIndex === transcription.words.length
+                dragState !== null && dropBeforeIndex === transcriptionLength
               }
               isBetweenHighlightedWords={false}
               highlightedByClientWithIndex={null}
@@ -199,4 +184,4 @@ const WordOuterComponent = ({
   );
 };
 
-export default WordOuterComponent;
+export default React.memo(WordOuterComponent);

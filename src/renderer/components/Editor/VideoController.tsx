@@ -1,6 +1,7 @@
 import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
 import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
+import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
 
 const VideoControllerBox = styled(Box)({
@@ -15,16 +16,28 @@ const VideoControllerBox = styled(Box)({
   alignItems: 'center',
 });
 
+const TimeDisplay = styled(Box)({
+  backgroundColor: colors.grey[600],
+  fontWeight: 'regular',
+  fontSize: '24px',
+  borderRadius: '5px',
+  padding: '0 19px',
+  marginRight: '47px',
+  width: '152px',
+  textAlign: 'left',
+  fontFamily: '"Roboto Mono", monospace',
+});
+
 interface TogglePlayButtonProps {
   isPlaying: boolean;
 }
 
-const TogglePlayButton = ({ isPlaying }: TogglePlayButtonProps) => {
-  if (!isPlaying) {
-    return <PlayArrow sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+const TogglePlayButton = React.memo(({ isPlaying }: TogglePlayButtonProps) => {
+  if (isPlaying) {
+    return <Pause sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
   }
-  return <Pause sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
-};
+  return <PlayArrow sx={{ fontSize: '42px', color: colors.yellow[500] }} />;
+});
 
 interface Props {
   time: number;
@@ -43,31 +56,19 @@ const VideoController = ({
   seekForward,
   seekBack,
 }: Props) => {
-  const onClickPlayPause = () => {
+  const onClickPlayPause = useCallback(() => {
     if (isPlaying) {
       pause();
     } else {
       play();
     }
-  };
+  }, [pause, play, isPlaying]);
+
+  const timeDisplay = useMemo(() => secondToTimestampUI(time), [time]);
 
   return (
     <VideoControllerBox>
-      <div
-        style={{
-          backgroundColor: colors.grey[600],
-          fontWeight: 'regular',
-          fontSize: '24px',
-          borderRadius: '5px',
-          padding: '0 19px',
-          marginRight: '47px',
-          width: '152px',
-          textAlign: 'left',
-          fontFamily: '"Roboto Mono", monospace',
-        }}
-      >
-        {secondToTimestampUI(time)}
-      </div>
+      <TimeDisplay>{timeDisplay}</TimeDisplay>
       <IconButton onClick={seekBack}>
         <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
@@ -81,4 +82,4 @@ const VideoController = ({
   );
 };
 
-export default VideoController;
+export default React.memo(VideoController);

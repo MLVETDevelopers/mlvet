@@ -1,3 +1,4 @@
+import React from 'react';
 import colors from 'renderer/colors';
 import { getColourForIndex } from 'renderer/utils/ui';
 
@@ -38,4 +39,4 @@ const WordSpace = ({
   );
 };
 
-export default WordSpace;
+export default React.memo(WordSpace);

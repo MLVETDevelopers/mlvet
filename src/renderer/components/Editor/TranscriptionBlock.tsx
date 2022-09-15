@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
@@ -48,15 +48,15 @@ const TranscriptionBox = styled(Box)({
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
-  seekToWord: (wordIndex: number) => void;
   blockWidth: number;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TranscriptionBlock = ({
-  seekToWord,
   transcription,
   nowPlayingWordIndex,
   blockWidth,
+  setPlaybackTime,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
 
@@ -178,12 +178,12 @@ const TranscriptionBlock = ({
                       editWord={editWord}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       transcription={transcription}
-                      seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
                       selectionSet={ownSelectionSet}
                       otherSelectionSets={otherSelectionSets}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
+                      setPlaybackTime={setPlaybackTime}
                     />
                   ),
                   acc: isTakeGroup(chunk)
@@ -204,4 +204,4 @@ const TranscriptionBlock = ({
   );
 };
 
-export default TranscriptionBlock;
+export default React.memo(TranscriptionBlock);

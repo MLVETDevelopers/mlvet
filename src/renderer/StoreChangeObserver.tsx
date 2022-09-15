@@ -44,6 +44,10 @@ const StoreChangeObserver = () => {
     (store: ApplicationStore) => store.selection.self
   );
 
+  const isEditingWord = useSelector(
+    (store: ApplicationStore) => store.editWord?.index
+  );
+
   // Debounce the selection to limit network requests for sharing selection with other clients
   const [debouncedSelection, setDebouncedSelection] =
     useDebounce(selfSelection);
@@ -141,6 +145,14 @@ const StoreChangeObserver = () => {
       cutCopyDeleteEnabled
     );
   }, [clipboard, selfSelection]);
+
+  // Update edit word option in edit menu when selection is changed
+  useEffect(() => {
+    // Allow user to edit word if there is a single word selected and it is not already being edited
+    const editWordEnabled =
+      selfSelection.length === 1 && selfSelection[0] !== isEditingWord;
+    ipc.setEditWordEnabled(editWordEnabled);
+  }, [selfSelection, isEditingWord]);
 
   // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
   useEffect(() => {

@@ -1,44 +1,47 @@
+import { styled } from '@mui/material';
 import { Box } from '@mui/system';
-import { useState } from 'react';
 import colors from 'renderer/colors';
 import SquareBracketHover from './SquareBracketHover';
 
 interface Props {
   isLast: boolean;
   isTakeGroupOpened: boolean;
+  takeIndex: number;
+  takeGroupId: number;
 }
 
-const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
+const SquareBracket = ({
+  isLast,
+  isTakeGroupOpened,
+  takeIndex,
+  takeGroupId,
+}: Props) => {
   const bottomWidth = isLast || !isTakeGroupOpened ? '2px' : '0px';
 
-  const [isHovering, setIsHovering] = useState(false);
+  const componentClassName = `squareBracket_${takeGroupId}_${takeIndex}`;
+  const componentSelector = '&:.'.concat('', componentClassName);
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
-  };
+  const hoverCss = { '&:hover': { [componentSelector]: { opacity: 0.5 } } };
 
-  const handleMouseOut = () => {
-    setIsHovering(false);
-  };
+  console.log(hoverCss);
+
+  const SquareBracketBox = styled(Box)({
+    height: '60px',
+    width: '15px',
+    borderStyle: 'solid',
+    borderColor: isTakeGroupOpened ? colors.yellow[500] : colors.grey[500],
+    borderWidth: '0px',
+    borderLeftWidth: '2px',
+    borderTopWidth: '2px',
+    borderBottomWidth: bottomWidth,
+
+    ...hoverCss,
+  });
 
   return (
-    <Box
-      id="squareBracket"
-      sx={{
-        height: '60px',
-        width: '15px',
-        borderStyle: 'solid',
-        borderColor: isTakeGroupOpened ? colors.yellow[500] : colors.grey[500],
-        borderWidth: '0px',
-        borderLeftWidth: '2px',
-        borderTopWidth: '2px',
-        borderBottomWidth: bottomWidth,
-      }}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    >
-      <SquareBracketHover isLast={isLast} isHoveredOver={isHovering} />
-    </Box>
+    <SquareBracketBox>
+      <SquareBracketHover isLast={isLast} compClassName={componentClassName} />
+    </SquareBracketBox>
   );
 };
 

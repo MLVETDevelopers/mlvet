@@ -57,6 +57,7 @@ interface TakePassThroughProps {
 interface TakeComponentProps extends TakePassThroughProps {
   takeWords: Word[];
   takeIndex: number;
+  takeGroupId: number;
   isActive: boolean;
   isTakeGroupOpened: boolean;
   setIsTakeGroupOpened: (isOpen: boolean) => void;
@@ -74,6 +75,7 @@ interface TakeComponentProps extends TakePassThroughProps {
 const TakeComponent = ({
   takeWords,
   takeIndex,
+  takeGroupId,
   isActive,
   isTakeGroupOpened,
   setIsTakeGroupOpened,
@@ -147,6 +149,8 @@ const TakeComponent = ({
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}
+                takeIndex={takeIndex}
+                takeGroupId={takeGroupId}
               />
               {takeWords.map((word, index, words) => {
                 const wordIndex = transcriptionIndex + index;

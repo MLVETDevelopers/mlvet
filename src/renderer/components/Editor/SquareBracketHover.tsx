@@ -1,28 +1,26 @@
 import { Box } from '@mui/material';
 import colors from 'renderer/colors';
 
-interface BracketProps {
-  isHoveredOver: boolean;
-}
-
-interface Props extends BracketProps {
+interface Props {
   isLast: boolean;
+  compClassName: string;
 }
 
-interface HorizontalBracketProps extends BracketProps, Props {
+interface VerticleBracketProps {
+  compClassName: string;
+}
+interface HorizontalBracketProps extends Props {
   top: boolean;
 }
 
-const VerticalBracketBackground = ({ isHoveredOver }: BracketProps) => {
-  const opacityValue = isHoveredOver ? 0.5 : 0;
-
+const VerticalBracketBackground = ({ compClassName }: VerticleBracketProps) => {
   return (
     <Box
-      id="squareBracketBackground"
+      className={compClassName}
       sx={{
         height: 'inherit',
         width: '8px',
-        opacity: opacityValue,
+        opacity: 0,
         borderRadius: '8px',
         backgroundColor: colors.yellow[500],
 
@@ -37,8 +35,8 @@ const VerticalBracketBackground = ({ isHoveredOver }: BracketProps) => {
 
 const HorizontalBracketBackground = ({
   top,
-  isHoveredOver,
   isLast,
+  compClassName,
 }: HorizontalBracketProps) => {
   const bottomPixelOffset = isLast ? '14px' : '12px';
   const topBottomPosition = top
@@ -46,14 +44,14 @@ const HorizontalBracketBackground = ({
     : { bottom: bottomPixelOffset };
   const idName = top ? 'topBracketBackground' : 'bottomBacketBackground';
 
-  const opacityValue = isHoveredOver ? 0.5 : 0;
   return (
     <Box
+      className={compClassName}
       id={idName}
       sx={{
         height: '8px',
         width: '18px',
-        opacity: opacityValue,
+        opacity: 0,
         borderRadius: '8px',
         backgroundColor: colors.yellow[500],
 
@@ -66,19 +64,19 @@ const HorizontalBracketBackground = ({
   );
 };
 
-const SquareBracketHover = ({ isLast, isHoveredOver }: Props) => {
+const SquareBracketHover = ({ isLast, compClassName }: Props) => {
   return (
     <>
       <HorizontalBracketBackground
         top
-        isHoveredOver={isHoveredOver}
         isLast={isLast}
+        compClassName={compClassName}
       />
-      <VerticalBracketBackground isHoveredOver={isHoveredOver} />
+      <VerticalBracketBackground compClassName={compClassName} />
       <HorizontalBracketBackground
         top={false}
-        isHoveredOver={isHoveredOver}
         isLast={isLast}
+        compClassName={compClassName}
       />
     </>
   );

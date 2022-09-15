@@ -120,4 +120,21 @@ describe('findTakes should correctly identify different take groups', () => {
       },
     ]);
   });
+
+  it('should correctly identifi take group for long sentences', () => {
+    const wordList = makeWords(
+      'This is a random sentence. First test sentence. Second test sentence. Third test sentence. First test sentence. Second test sentence. Third test sentence. Another random sentence. Test sentence v2-1. Test sentence v2-2.'.split(
+        ' '
+      )
+    );
+    const takes: InjectableTakeGroup[] = findTakes(wordList, 0.9);
+    expect(takes).toEqual([
+      {
+        takes: [
+          { wordRange: { startIndex: 5, endIndex: 14 } },
+          { wordRange: { startIndex: 14, endIndex: 23 } },
+        ],
+      },
+    ]);
+  });
 });

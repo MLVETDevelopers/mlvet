@@ -55,6 +55,9 @@ contextBridge.exposeInMainWorld('electron', {
   setConfidenceLinesEnabled: (menuItemEnabled) =>
     ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
 
+  setEditWordEnabled: (editEnabled) =>
+    ipcRenderer.invoke('set-edit-word-enabled', editEnabled),
+
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),
 

@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useRef,
   useMemo,
-  useState,
   useCallback,
 } from 'react';
 import { MousePosition } from '@react-hook/mouse-position';
@@ -12,7 +11,6 @@ import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
   editWordFinished,
-  editWordStarted,
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
@@ -123,10 +121,6 @@ const WordComponent = ({
     }
   }, [isBeingEdited, inputRef]);
 
-  // For handling receiving double-clicks on a word
-  const [awaitingSecondClick, setAwaitingSecondClick] =
-    useState<boolean>(false);
-
   const ref = useRef<HTMLDivElement>(null);
 
   const { xPosition, yPosition, halfWidth, height, mouseX, mouseY } =
@@ -203,26 +197,11 @@ const WordComponent = ({
     index,
   ]);
 
-  const startEditing = useCallback(() => {
-    dispatch(editWordStarted(index, text));
-  }, [dispatch, index, text]);
-
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (isInInactiveTake) {
         return;
       }
-
-      if (awaitingSecondClick) {
-        startEditing();
-        return;
-      }
-
-      setAwaitingSecondClick(true);
-      const DOUBLE_CLICK_THRESHOLD = 500; // ms
-      setTimeout(() => {
-        setAwaitingSecondClick(false);
-      }, DOUBLE_CLICK_THRESHOLD);
 
       setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
       handleSelectWord(event, index);
@@ -231,15 +210,7 @@ const WordComponent = ({
       // which would clear the selection
       event.stopPropagation();
     },
-    [
-      isInInactiveTake,
-      awaitingSecondClick,
-      startEditing,
-      setAwaitingSecondClick,
-      setPlaybackTime,
-      outputStartTime,
-      index,
-    ]
+    [isInInactiveTake, setPlaybackTime, outputStartTime, index]
   );
 
   const highlightStyles: React.CSSProperties = useMemo(

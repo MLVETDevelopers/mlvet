@@ -3,20 +3,15 @@ import colors from 'renderer/colors';
 
 interface Props {
   isLast: boolean;
-  compClassName: string;
-}
-
-interface VerticleBracketProps {
-  compClassName: string;
 }
 interface HorizontalBracketProps extends Props {
   top: boolean;
 }
 
-const VerticalBracketBackground = ({ compClassName }: VerticleBracketProps) => {
+const VerticalBracketBackground = () => {
   return (
     <Box
-      className={compClassName}
+      className="squareBracket"
       sx={{
         height: 'inherit',
         width: '8px',
@@ -36,7 +31,6 @@ const VerticalBracketBackground = ({ compClassName }: VerticleBracketProps) => {
 const HorizontalBracketBackground = ({
   top,
   isLast,
-  compClassName,
 }: HorizontalBracketProps) => {
   const bottomPixelOffset = isLast ? '14px' : '12px';
   const topBottomPosition = top
@@ -46,7 +40,8 @@ const HorizontalBracketBackground = ({
 
   return (
     <Box
-      className={compClassName}
+      // className={compClassName}
+      className="squareBracket"
       id={idName}
       sx={{
         height: '8px',
@@ -64,20 +59,12 @@ const HorizontalBracketBackground = ({
   );
 };
 
-const SquareBracketHover = ({ isLast, compClassName }: Props) => {
+const SquareBracketHover = ({ isLast }: Props) => {
   return (
     <>
-      <HorizontalBracketBackground
-        top
-        isLast={isLast}
-        compClassName={compClassName}
-      />
-      <VerticalBracketBackground compClassName={compClassName} />
-      <HorizontalBracketBackground
-        top={false}
-        isLast={isLast}
-        compClassName={compClassName}
-      />
+      <HorizontalBracketBackground top isLast={isLast} />
+      <VerticalBracketBackground />
+      <HorizontalBracketBackground top={false} isLast={isLast} />
     </>
   );
 };

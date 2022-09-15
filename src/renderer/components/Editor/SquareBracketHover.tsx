@@ -40,7 +40,6 @@ const HorizontalBracketBackground = ({
 
   return (
     <Box
-      // className={compClassName}
       className="squareBracket"
       id={idName}
       sx={{

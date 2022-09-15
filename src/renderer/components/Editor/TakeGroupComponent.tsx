@@ -104,28 +104,26 @@ const TakeGroupComponent = ({
         .reduce((acc, curr) => acc + curr, 0);
 
     return (
-      <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
-        <TakeComponent
-          key={`take-${takeGroup.id}-${takeIndex}`}
-          takeWords={takeWords}
-          takeIndex={takeIndex}
-          isActive={takeIndex === takeGroup.activeTakeIndex}
-          isTakeGroupOpened={isTakeGroupOpened}
-          setIsTakeGroupOpened={setIsTakeGroupOpened}
-          onWordMouseDown={onWordMouseDown}
-          onWordMouseMove={onWordMouseMove}
-          isWordBeingDragged={isWordBeingDragged}
-          mousePosition={mousePosition}
-          nowPlayingWordIndex={nowPlayingWordIndex}
-          transcription={transcription}
-          selectionSet={selectionSet}
-          transcriptionIndex={transcriptionIndex}
-          isLast={takeIndex === takeWordsPerTake.length - 1}
-          isFirstTimeOpen={isFirstTimeOpen}
-          setIsFirstTimeOpen={setIsFirstTimeOpen}
-          {...passThroughProps}
-        />
-      </CustomRowStack>
+      <TakeComponent
+        key={`take-${takeGroup.id}-${takeIndex}`}
+        takeWords={takeWords}
+        takeIndex={takeIndex}
+        isActive={takeIndex === takeGroup.activeTakeIndex}
+        isTakeGroupOpened={isTakeGroupOpened}
+        setIsTakeGroupOpened={setIsTakeGroupOpened}
+        onWordMouseDown={onWordMouseDown}
+        onWordMouseMove={onWordMouseMove}
+        isWordBeingDragged={isWordBeingDragged}
+        mousePosition={mousePosition}
+        nowPlayingWordIndex={nowPlayingWordIndex}
+        transcription={transcription}
+        selectionSet={selectionSet}
+        transcriptionIndex={transcriptionIndex}
+        isLast={takeIndex === takeWordsPerTake.length - 1}
+        isFirstTimeOpen={isFirstTimeOpen}
+        setIsFirstTimeOpen={setIsFirstTimeOpen}
+        {...passThroughProps}
+      />
     );
   });
 

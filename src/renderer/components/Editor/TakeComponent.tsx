@@ -149,8 +149,6 @@ const TakeComponent = ({
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}
-                takeIndex={takeIndex}
-                takeGroupId={takeGroupId}
               />
               {takeWords.map((word, index, words) => {
                 const wordIndex = transcriptionIndex + index;

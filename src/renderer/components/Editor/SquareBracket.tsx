@@ -6,26 +6,10 @@ import SquareBracketHover from './SquareBracketHover';
 interface Props {
   isLast: boolean;
   isTakeGroupOpened: boolean;
-  takeIndex: number;
-  takeGroupId: number;
 }
 
-const SquareBracket = ({
-  isLast,
-  isTakeGroupOpened,
-  takeIndex,
-  takeGroupId,
-}: Props) => {
+const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
   const bottomWidth = isLast || !isTakeGroupOpened ? '2px' : '0px';
-
-  const componentClassName = ['squareBracket', takeGroupId, takeIndex].join(
-    '-'
-  );
-  const componentSelector = '&:.'.concat('', componentClassName);
-
-  const hoverCss = { '&:hover': { [componentSelector]: { opacity: 0.5 } } };
-
-  console.log(hoverCss);
 
   const SquareBracketBox = styled(Box)({
     height: '60px',
@@ -37,12 +21,16 @@ const SquareBracket = ({
     borderTopWidth: '2px',
     borderBottomWidth: bottomWidth,
 
-    ...hoverCss,
+    '&:hover': {
+      '.squareBracket': {
+        opacity: 0.5,
+      },
+    },
   });
 
   return (
     <SquareBracketBox>
-      <SquareBracketHover isLast={isLast} compClassName={componentClassName} />
+      <SquareBracketHover isLast={isLast} />
     </SquareBracketBox>
   );
 };

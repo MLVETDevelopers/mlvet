@@ -154,6 +154,11 @@ const StoreChangeObserver = () => {
     ipc.setEditWordEnabled(editWordEnabled);
   }, [selfSelection, isEditingWord]);
 
+  useEffect(() => {
+    const selectSentenceEnabled = selfSelection.length > 0;
+    ipc.setSelectSentenceEnabled(selectSentenceEnabled);
+  }, [selfSelection]);
+
   // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
   useEffect(() => {
     dispatchBroadcast(selectionIndicesSetTo(debouncedSelection));

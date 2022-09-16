@@ -141,6 +141,16 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-select-all');
         },
       },
+      {
+        id: 'selectSentence',
+        label: 'Select Current Sentence',
+        accelerator: 'CmdOrCtrl+Shift+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-sentence');
+        },
+        enabled: false, // initially disabled, becomes enabled when there is a sentence to select
+      },
     ];
   }
 

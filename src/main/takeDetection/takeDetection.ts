@@ -29,12 +29,7 @@ export function findSentences(words: Word[]): Sentence[] {
       );
     }
 
-    if (
-      word.word.includes('.') ||
-      word.word.includes('?') ||
-      word.word.includes('!') ||
-      idx === words.length - 1
-    ) {
+    if (['.', '?', '!'].some(word.word.includes) || idx === words.length - 1) {
       currentSentence.endIndex = idx + 1;
       sentences.push(currentSentence);
       currentSentence = {

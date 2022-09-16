@@ -101,6 +101,8 @@ declare global {
 
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
+      setSelectSentenceEnabled: (enabled: boolean) => void;
+
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;

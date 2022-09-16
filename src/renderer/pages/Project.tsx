@@ -15,6 +15,7 @@ import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import { PrimaryButton } from 'renderer/components/Blocks/Buttons';
 import ipc from 'renderer/ipc';
+import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -32,7 +33,7 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.exportIo
   );
   const openUserFeedback = () => {
-    ipc.openExternalLink('https://forms.gle/YNozsPZxF4kxSuud8');
+    ipc.openExternalLink(URL_USER_FEEDBACK_FORM);
   };
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);

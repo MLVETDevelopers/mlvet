@@ -1,4 +1,4 @@
-import { IndexRange, TakeGroup, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Word } from '../../sharedTypes';
 import { mapInRanges } from '../../sharedUtils';
 
 export interface InjectableTake {

@@ -1,26 +1,13 @@
 /* eslint-disable react/no-array-index-key */
 
-import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useMemo,
-  useState,
-} from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 
 export interface TranscriptionPassThroughProps {
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
   editWord: EditWordState;
   submitWordEdit: () => void;
   otherSelectionSets: Record<ClientId, Set<number>>;
@@ -34,7 +21,6 @@ interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<any>;
   transcription: Transcription;
@@ -45,8 +31,6 @@ const TakeGroupComponent = ({
   chunkIndex,
   onWordMouseDown,
   onWordMouseMove,
-  isWordBeingDragged,
-  mousePosition,
   nowPlayingWordIndex,
   selectionSet,
   transcription,
@@ -103,8 +87,6 @@ const TakeGroupComponent = ({
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
         onWordMouseMove={onWordMouseMove}
-        isWordBeingDragged={isWordBeingDragged}
-        mousePosition={mousePosition}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
         selectionSet={selectionSet}

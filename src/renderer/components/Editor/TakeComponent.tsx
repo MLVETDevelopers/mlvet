@@ -1,13 +1,12 @@
 import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
-import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { TakeInfo, Transcription, Word } from 'sharedTypes';
 import React, { RefObject, useCallback, useMemo } from 'react';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 
 const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
@@ -31,17 +30,11 @@ const makeTakeWrapper = (isTakeGroupOpened: boolean, isActive: boolean) =>
 
 interface TakePassThroughProps {
   transcription: Transcription;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
   submitWordEdit: () => void;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
   otherSelectionSets: Record<ClientId, Set<number>>;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
   editWord: EditWordState;
 }
 
@@ -51,7 +44,6 @@ interface TakeComponentProps extends TakePassThroughProps {
   isActive: boolean;
   isTakeGroupOpened: boolean;
   setIsTakeGroupOpened: (isOpen: boolean) => void;
-  mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<number>;
   onWordMouseDown: WordMouseHandler;
@@ -65,7 +57,6 @@ const TakeComponent = ({
   isActive,
   isTakeGroupOpened,
   setIsTakeGroupOpened,
-  mousePosition,
   nowPlayingWordIndex,
   selectionSet,
   onWordMouseDown,
@@ -149,7 +140,6 @@ const TakeComponent = ({
                     wordIndex < words.length - 1 ? words[wordIndex + 1] : null
                   }
                   index={wordIndex}
-                  mouse={mousePosition}
                   isPlaying={nowPlayingWordIndex === wordIndex}
                   isSelected={selectionSet.has(wordIndex)}
                   isPrevWordSelected={selectionSet.has(wordIndex - 1)}

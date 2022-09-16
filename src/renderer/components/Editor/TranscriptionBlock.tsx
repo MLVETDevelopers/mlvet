@@ -17,7 +17,7 @@ import { mapWithAccumulator } from 'renderer/utils/list';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
-import WordDragManager from './WordDragManager';
+import DragSelectManager from './DragSelectManager';
 import {
   selectionCleared,
   selectionRangeAdded,
@@ -133,18 +133,8 @@ const TranscriptionBlock = ({
   );
 
   return (
-    <WordDragManager clearSelection={clearSelection}>
-      {(
-        onWordMouseDown,
-        onWordMouseMove,
-        dragState,
-        isWordBeingDragged,
-        mouse,
-        mouseThrottled,
-        dropBeforeIndex,
-        setDropBeforeIndex,
-        cancelDrag
-      ) => {
+    <DragSelectManager clearSelection={clearSelection}>
+      {(onWordMouseDown, onWordMouseMove) => {
         return (
           <TranscriptionBox id="transcription-content" ref={blockRef}>
             {mapWithAccumulator(
@@ -164,13 +154,6 @@ const TranscriptionBlock = ({
                       chunkIndex={acc}
                       onWordMouseDown={onWordMouseDown}
                       onWordMouseMove={onWordMouseMove}
-                      dragState={dragState}
-                      isWordBeingDragged={isWordBeingDragged}
-                      mousePosition={mouse}
-                      mouseThrottled={mouseThrottled}
-                      dropBeforeIndex={dropBeforeIndex}
-                      setDropBeforeIndex={setDropBeforeIndex}
-                      cancelDrag={cancelDrag}
                       editWord={editWord}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       transcription={transcription}
@@ -196,7 +179,7 @@ const TranscriptionBlock = ({
           </TranscriptionBox>
         );
       }}
-    </WordDragManager>
+    </DragSelectManager>
   );
 };
 

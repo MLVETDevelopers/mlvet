@@ -6,8 +6,6 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { MousePosition } from '@react-hook/mouse-position';
-import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
   editWordFinished,
@@ -19,13 +17,13 @@ import {
   getColourForIndex,
   getTextWidth,
 } from 'renderer/utils/ui';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
-const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
+const makeWordInner = (isInInactiveTake: boolean) =>
   styled('div')({
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
@@ -36,8 +34,7 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
 
     '&:hover': {
       color: colors.grey['000'],
-      background:
-        isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
+      background: isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
@@ -58,9 +55,7 @@ export interface WordPassThroughProps {
   isPlaying: boolean;
   onMouseDown: WordMouseHandler;
   onMouseMove: (index: number) => void;
-  cancelDrag: () => void;
   submitWordEdit: () => void;
-  setDropBeforeIndex: (index: number) => void;
   setPlaybackTime: (time: number) => void;
 }
 
@@ -74,11 +69,6 @@ interface Props extends WordPassThroughProps {
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
   text: string;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  isBeingDragged: boolean; // whether THIS word is currently being dragged
-  mouse: MousePosition | null;
-  isDropBeforeActive: boolean;
-  isDropAfterActive: boolean;
   isBeingEdited: boolean;
   editText: string | null;
   outputStartTime: number;
@@ -94,13 +84,6 @@ const WordComponent = ({
   text,
   onMouseDown,
   onMouseMove,
-  dragState,
-  isBeingDragged,
-  mouse,
-  isDropBeforeActive,
-  isDropAfterActive,
-  setDropBeforeIndex,
-  cancelDrag,
   submitWordEdit,
   isBeingEdited,
   editText,
@@ -122,80 +105,6 @@ const WordComponent = ({
   }, [isBeingEdited, inputRef]);
 
   const ref = useRef<HTMLDivElement>(null);
-
-  const { xPosition, yPosition, halfWidth, height, mouseX, mouseY } =
-    useMemo(() => {
-      const refRect = ref.current?.getBoundingClientRect();
-
-      return {
-        xPosition: refRect?.left ?? 0,
-        yPosition: refRect?.top ?? 0,
-        halfWidth: (ref.current?.offsetWidth ?? 0) / 2,
-        height: ref.current?.offsetHeight ?? 0,
-        mouseX: mouse?.clientX ?? 0,
-        mouseY: mouse?.clientY ?? 0,
-      };
-    }, [ref, mouse]);
-
-  useEffect(() => {
-    if (
-      isBeingDragged &&
-      ((mouse?.clientX ?? null) === null || (mouse?.clientY ?? null) === null)
-    ) {
-      cancelDrag();
-    }
-  }, [isBeingDragged, mouse, cancelDrag]);
-
-  const mouseInLeft = useMemo(
-    () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
-        }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
-  );
-
-  const mouseInRight = useMemo(
-    () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition + halfWidth,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
-        }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
-  );
-
-  useEffect(() => {
-    if (mouseInLeft && !isDropBeforeActive) {
-      setDropBeforeIndex(index);
-    } else if (mouseInRight && !isDropAfterActive) {
-      setDropBeforeIndex(index + 1);
-    }
-  }, [
-    mouseInLeft,
-    mouseInRight,
-    isDropBeforeActive,
-    isDropAfterActive,
-    setDropBeforeIndex,
-    index,
-  ]);
 
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -219,7 +128,7 @@ const WordComponent = ({
         if (isBeingEdited) {
           return {};
         }
-        if (isSelected || isBeingDragged) {
+        if (isSelected) {
           return {
             background: `${colors.blue[500]}cc`,
             color: colors.white,
@@ -276,7 +185,6 @@ const WordComponent = ({
     [
       isBeingEdited,
       isSelected,
-      isBeingDragged,
       isPlaying,
       isSelectedLeftCap,
       isSelectedRightCap,
@@ -287,26 +195,12 @@ const WordComponent = ({
     ]
   );
 
-  const dragStyles: React.CSSProperties = useMemo(
-    () =>
-      isBeingDragged
-        ? {
-            position: 'fixed',
-            left: mouseX + (dragState?.offset.x ?? 0),
-            top: mouseY + (dragState?.offset.y ?? 0),
-            zIndex: 100,
-          }
-        : {},
-    [isBeingDragged, mouseX, mouseY, dragState]
-  );
-
   const style = useMemo(
     () => ({
       ...defaultStyles,
       ...highlightStyles,
-      ...dragStyles,
     }),
-    [highlightStyles, dragStyles]
+    [highlightStyles]
   );
 
   const submitIfEnter = useCallback(
@@ -323,8 +217,8 @@ const WordComponent = ({
   );
 
   const WordInner = useMemo(
-    () => makeWordInner(dragState !== null, isInInactiveTake),
-    [dragState, isInInactiveTake]
+    () => makeWordInner(isInInactiveTake),
+    [isInInactiveTake]
   );
 
   const setEditText = useCallback(
@@ -367,7 +261,7 @@ const WordComponent = ({
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDownWrapped}
       onMouseMove={onMouseMoveWrapped}
-      style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
+      style={style}
     >
       {isBeingEdited ? (
         <TextField

@@ -22,8 +22,15 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
 ) => {
   const word = words[index];
 
+  // This should be guaranteed by 'isMergeSplitAllowed' so fail if it isn't
+  if (word.word === null) {
+    throw new Error(
+      `word.word cannot be null for a split. Received word: ${word}`
+    );
+  }
+
   // Number of words that the word will be split into
-  const wordCount = word.word.split(' ').length;
+  const wordCount = word.word.split(' ').length ?? 0;
 
   const range = {
     startIndex: index,

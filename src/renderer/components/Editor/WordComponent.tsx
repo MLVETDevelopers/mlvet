@@ -68,7 +68,7 @@ interface Props extends WordPassThroughProps {
   selectedByClientWithIndex: number | null;
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
-  text: string;
+  text: string | null;
   isBeingEdited: boolean;
   editText: string | null;
   outputStartTime: number;
@@ -254,6 +254,8 @@ const WordComponent = ({
     [onMouseEnter, index]
   );
 
+  const textOrUnderscore = text ?? '_';
+
   return (
     <WordInner
       ref={ref}
@@ -280,12 +282,12 @@ const WordComponent = ({
             },
           }}
           type="text"
-          value={editText ?? text}
+          value={editText ?? textOrUnderscore}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />
       ) : (
-        text
+        textOrUnderscore
       )}
     </WordInner>
   );

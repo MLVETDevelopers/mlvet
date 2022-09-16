@@ -34,7 +34,7 @@ export const isMergeSplitAllowed: (
   const hasAtLeastTwoWords = wordsToMerge.length > 1;
   const noSelectedWordsDeleted = wordsToMerge.every((word) => !word.deleted);
   const inOriginalOrder = isInOriginalOrder(words, range);
-  const isWordSplittable = firstWord.word.includes(' ');
+  const isWordSplittable = firstWord.word?.includes(' ') ?? false;
 
   return {
     merge: hasAtLeastTwoWords && noSelectedWordsDeleted && inOriginalOrder,

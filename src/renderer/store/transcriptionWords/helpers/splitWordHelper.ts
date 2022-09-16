@@ -21,6 +21,10 @@ export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
     return words;
   }
 
+  if (wordToSplit.word === null) {
+    return [wordToSplit];
+  }
+
   const splitWordsText = wordToSplit.word.split(' ');
 
   // Evenly split the duration of the word

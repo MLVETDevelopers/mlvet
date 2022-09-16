@@ -94,6 +94,10 @@ const TranscriptionBlock = ({
 
     const { index } = editWord;
 
+    if (transcription.words[index].word === null) {
+      return;
+    }
+
     // Clear the selection to start with - the word might be re-selected later
     dispatch(selectionCleared());
 

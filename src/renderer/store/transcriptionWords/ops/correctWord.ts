@@ -20,7 +20,7 @@ export const makeCorrectWord: (
       selectionRangeSetTo(rangeLengthOne(index)),
     ],
     undo: [
-      undoWordCorrected(index, prevText, prevConfidence ?? 1),
+      undoWordCorrected(index, prevText as string, prevConfidence ?? 1),
       selectionRangeSetTo(rangeLengthOne(index)),
     ],
   };

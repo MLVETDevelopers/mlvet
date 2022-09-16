@@ -1,3 +1,4 @@
+import { getLengthOfRange } from 'renderer/utils/range';
 import store from '../store/store';
 import { editWordStarted } from '../store/editWord/actions';
 
@@ -10,10 +11,19 @@ const editWord = () => {
   }
 
   const range = store.getState().selection.self;
-
-  // Assume that only one word is selected, thus there is only one range and start/end indexes are the same
   const { startIndex } = range;
   const { word } = words[startIndex];
+
+  // Ensure that exactly one word is selected
+  if (getLengthOfRange(range) !== 1) {
+    return;
+  }
+
+  // Don't allow editing the 'text' of pauses
+  if (word === null) {
+    return;
+  }
+
   dispatch(editWordStarted(startIndex, word));
 };
 

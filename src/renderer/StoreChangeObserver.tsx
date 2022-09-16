@@ -157,7 +157,7 @@ const StoreChangeObserver = () => {
   }, [selfSelection, editWordIndex]);
 
   useEffect(() => {
-    const selectSentenceEnabled = selfSelection.length > 0;
+    const selectSentenceEnabled = getLengthOfRange(selfSelection) > 0;
     ipc.setSelectSentenceEnabled(selectSentenceEnabled);
   }, [selfSelection]);
 

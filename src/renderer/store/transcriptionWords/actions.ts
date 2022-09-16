@@ -34,17 +34,17 @@ export const RESTORE_SECTION = 'RESTORE_SECTION';
 export const UNDO_RESTORE_SECTION = 'UNDO_RESTORE_SECTION';
 
 export const selectionDeleted: (
-  ranges: IndexRange[]
-) => Action<DeleteSelectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<DeleteSelectionPayload> = (range) => ({
   type: DELETE_SELECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const undoSelectionDeleted: (
-  ranges: IndexRange[]
-) => Action<UndoDeleteSelectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<UndoDeleteSelectionPayload> = (range) => ({
   type: UNDO_DELETE_SELECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const wordPasted: (
@@ -110,15 +110,15 @@ export const undoWordCorrected: (
 });
 
 export const sectionRestored: (
-  ranges: IndexRange[]
-) => Action<RestoreSectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<RestoreSectionPayload> = (range) => ({
   type: RESTORE_SECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const undoSectionRestored: (
-  ranges: IndexRange[]
-) => Action<UndoRestoreSectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<UndoRestoreSectionPayload> = (range) => ({
   type: UNDO_RESTORE_SECTION,
-  payload: { ranges },
+  payload: { range },
 });

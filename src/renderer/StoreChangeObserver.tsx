@@ -5,10 +5,10 @@ import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
 import { isMergeSplitAllowed } from './store/selection/helpers';
-import { indicesToRanges } from './utils/range';
 import { ApplicationPage } from './store/currentPage/helpers';
 import dispatchBroadcast from './collabClient/dispatchBroadcast';
-import { selectionIndicesSetTo } from './store/selection/actions';
+import { selectionRangeSetTo } from './store/selection/actions';
+import { getLengthOfRange } from './utils/range';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -44,7 +44,7 @@ const StoreChangeObserver = () => {
     (store: ApplicationStore) => store.selection.self
   );
 
-  const isEditingWord = useSelector(
+  const editWordIndex = useSelector(
     (store: ApplicationStore) => store.editWord?.index
   );
 
@@ -133,10 +133,11 @@ const StoreChangeObserver = () => {
 
   // Update clipboard options in edit menu when clipboard or selection is changed
   useEffect(() => {
-    const cutCopyDeleteEnabled = selfSelection.length > 0;
+    const cutCopyDeleteEnabled = getLengthOfRange(selfSelection) > 0;
 
     // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled = selfSelection.length > 0 && clipboard.length > 0;
+    const pasteEnabled =
+      getLengthOfRange(selfSelection) > 0 && clipboard.length > 0;
 
     ipc.setClipboardEnabled(
       cutCopyDeleteEnabled,
@@ -150,9 +151,10 @@ const StoreChangeObserver = () => {
   useEffect(() => {
     // Allow user to edit word if there is a single word selected and it is not already being edited
     const editWordEnabled =
-      selfSelection.length === 1 && selfSelection[0] !== isEditingWord;
+      getLengthOfRange(selfSelection) === 1 &&
+      selfSelection.startIndex !== editWordIndex;
     ipc.setEditWordEnabled(editWordEnabled);
-  }, [selfSelection, isEditingWord]);
+  }, [selfSelection, editWordIndex]);
 
   useEffect(() => {
     const selectSentenceEnabled = selfSelection.length > 0;
@@ -161,7 +163,7 @@ const StoreChangeObserver = () => {
 
   // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
   useEffect(() => {
-    dispatchBroadcast(selectionIndicesSetTo(debouncedSelection));
+    dispatchBroadcast(selectionRangeSetTo(debouncedSelection));
   }, [debouncedSelection]);
 
   // Update merge/split options in edit menu when selection is changed
@@ -171,10 +173,7 @@ const StoreChangeObserver = () => {
       return;
     }
 
-    const { merge, split } = isMergeSplitAllowed(
-      words,
-      indicesToRanges(selfSelection)
-    );
+    const { merge, split } = isMergeSplitAllowed(words, selfSelection);
 
     ipc.setMergeSplitEnabled(merge, split);
   }, [words, selfSelection]);

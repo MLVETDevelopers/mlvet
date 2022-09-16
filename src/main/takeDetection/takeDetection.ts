@@ -3,7 +3,7 @@ import {
   InjectableTake,
   InjectableTakeGroup,
 } from '../editDelete/injectTakeInfo';
-import { getSimilarityScore } from './sentenceSimilarity';
+import getSimilarityScore from './sentenceSimilarity';
 import { THRESHOLD } from './constants';
 
 export type Sentence = {
@@ -20,6 +20,10 @@ export function findSentences(words: Word[]): Sentence[] {
   };
   const sentences: Sentence[] = [];
   words.forEach((word, idx) => {
+    if (word.word === null) {
+      return;
+    }
+
     if (currentSentence.sentenceString === '') {
       currentSentence.sentenceString = word.word;
     } else {
@@ -39,7 +43,9 @@ export function findSentences(words: Word[]): Sentence[] {
       };
     }
   });
-  sentences[sentences.length - 1].endIndex = words.length;
+  if (sentences.length > 0) {
+    sentences[sentences.length - 1].endIndex = words.length;
+  }
   return sentences;
 }
 
@@ -233,5 +239,3 @@ export function findTakes(
 
   return takeGroups;
 }
-
-export default { getSimilarityScore };

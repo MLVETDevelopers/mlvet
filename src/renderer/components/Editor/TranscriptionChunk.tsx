@@ -1,11 +1,10 @@
-import { MousePosition } from '@react-hook/mouse-position';
 import React from 'react';
 import { isTakeGroup } from 'renderer/utils/takeDetection';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeGroupComponent, {
   TranscriptionPassThroughProps,
 } from './TakeGroupComponent';
-import { WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 
 interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
@@ -13,7 +12,6 @@ interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
   onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
   selectionSet: Set<number>;
   transcription: Transcription;
@@ -24,7 +22,6 @@ const TranscriptionChunk = ({
   chunkIndex,
   onWordMouseDown,
   onWordMouseMove,
-  mousePosition,
   nowPlayingWordIndex,
   selectionSet,
   transcription,
@@ -36,7 +33,6 @@ const TranscriptionChunk = ({
       chunkIndex={chunkIndex}
       onWordMouseDown={onWordMouseDown}
       onWordMouseMove={onWordMouseMove}
-      mousePosition={mousePosition}
       nowPlayingWordIndex={nowPlayingWordIndex}
       selectionSet={selectionSet}
       transcription={transcription}
@@ -57,7 +53,6 @@ const TranscriptionChunk = ({
       isNextWordSelected={selectionSet.has(chunkIndex + 1)}
       onMouseDown={onWordMouseDown}
       onMouseMove={onWordMouseMove}
-      mouse={mousePosition}
       isPlaying={nowPlayingWordIndex === chunkIndex}
       isInInactiveTake={false}
       transcriptionLength={transcription.words.length}

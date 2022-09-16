@@ -18,7 +18,7 @@ const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
 
 export const copyText = () => {
   const words = store.getState().currentProject?.transcription?.words;
-  if (words === undefined) {
+  if (words === undefined || words.length === 0) {
     return;
   }
 
@@ -26,6 +26,7 @@ export const copyText = () => {
   const clipboard = ranges.flatMap((range) =>
     words.slice(range.startIndex, range.endIndex)
   );
+
   dispatch(clipboardUpdated(clipboard));
 };
 

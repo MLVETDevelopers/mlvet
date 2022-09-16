@@ -21,7 +21,7 @@ export const makeCorrectWord: (
       selectionRangeAdded(rangeLengthOne(index)),
     ],
     undo: [
-      undoWordCorrected(index, prevText, prevConfidence ?? 1),
+      undoWordCorrected(index, prevText as string, prevConfidence ?? 1),
       selectionCleared(),
       selectionRangeAdded(rangeLengthOne(index)),
     ],

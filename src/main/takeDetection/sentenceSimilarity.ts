@@ -5,7 +5,7 @@
  * @param {string} str2 Second string to match
  * @returns Number between 0 and 1, with 0 being a low match score.
  */
-export const getSimilarityScore = (str1: string, str2: string): number => {
+const getSimilarityScore = (str1: string, str2: string): number => {
   const str1LowerCase = str1.toLowerCase();
   const str2LowerCase = str2.toLowerCase();
   const substringLength = 2;

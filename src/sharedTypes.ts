@@ -69,8 +69,8 @@ export interface CloudConfig {
 }
 
 export interface Word {
-  // Text content of the word
-  word: string;
+  // Text content of the word - null if it's just a "pause"
+  word: string | null;
   // Start time in the original transcript
   startTime: number;
   // Duration in the original transcript

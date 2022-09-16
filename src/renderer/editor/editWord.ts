@@ -16,6 +16,12 @@ const editWord = () => {
   // Assume that only one word is selected, thus there is only one range and start/end indexes are the same
   const index = ranges[0].startIndex;
   const { word } = words[index];
+
+  // Don't allow editing the 'text' of pauses
+  if (word === null) {
+    return;
+  }
+
   dispatch(editWordStarted(index, word));
 };
 

@@ -106,12 +106,10 @@ it('output duration should be updated after deleting words', () => {
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
@@ -194,24 +192,20 @@ it('output duration should be the same as original when deleting and straight af
   transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
   const undoOutput = transcriptionReducer(transcript, {
     type: UNDO_DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
@@ -256,12 +250,10 @@ it('output duration should be 0 after deleting all words', () => {
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 0,
-          endIndex: 4,
-        },
-      ],
+      range: {
+        startIndex: 0,
+        endIndex: 4,
+      },
     },
   });
 
@@ -312,12 +304,10 @@ it('output duration should calculated from last non deleted word (not always las
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 2,
-          endIndex: 4,
-        },
-      ],
+      range: {
+        startIndex: 2,
+        endIndex: 4,
+      },
     },
   });
 

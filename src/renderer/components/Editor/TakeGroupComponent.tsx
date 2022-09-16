@@ -108,7 +108,6 @@ const TakeGroupComponent = ({
         key={`take-${takeGroup.id}-${takeIndex}`}
         takeWords={takeWords}
         takeIndex={takeIndex}
-        takeGroupId={takeGroup.id}
         isActive={takeIndex === takeGroup.activeTakeIndex}
         isTakeGroupOpened={isTakeGroupOpened}
         setIsTakeGroupOpened={setIsTakeGroupOpened}

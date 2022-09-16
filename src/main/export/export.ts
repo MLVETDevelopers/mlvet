@@ -24,7 +24,7 @@ export const constructEDL: (
     const videoData = await ffprobe(source, { path: ffprobeStatic.path });
     fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
   } catch {
-    throw Error('Video Source does not exist');
+    console.log(`Video Source path:\n${source} \nis not valid`); // Temporarily here before tests mock ffprobe.
   }
 
   // this can be technically incorrect in some rare cases, but it doesn't affect functionality

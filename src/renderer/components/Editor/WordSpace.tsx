@@ -3,20 +3,15 @@ import colors from 'renderer/colors';
 import { getColourForIndex } from 'renderer/utils/ui';
 
 interface Props {
-  isDropMarkerActive: boolean;
   isBetweenHighlightedWords: boolean;
   highlightedByClientWithIndex: number | null;
 }
 
 const WordSpace = ({
-  isDropMarkerActive,
   isBetweenHighlightedWords,
   highlightedByClientWithIndex,
 }: Props) => {
   const background: string = (() => {
-    if (isDropMarkerActive) {
-      return colors.yellow[500];
-    }
     if (isBetweenHighlightedWords) {
       return `${colors.blue[500]}cc`;
     }
@@ -32,7 +27,7 @@ const WordSpace = ({
         display: 'inline-block',
         background,
         height: '24px',
-        width: `${isDropMarkerActive ? '2.4px' : '1px'}`,
+        width: '1px',
         borderRadius: '1px',
       }}
     />

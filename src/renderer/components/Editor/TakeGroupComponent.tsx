@@ -5,7 +5,7 @@ import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { WordMouseHandler } from './DragSelectManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 
 export interface TranscriptionPassThroughProps {
   editWord: EditWordState;
@@ -14,13 +14,21 @@ export interface TranscriptionPassThroughProps {
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
+  partialSelectState: PartialSelectState | null;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseEnter: (wordIndex: number) => void;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
   transcription: Transcription;

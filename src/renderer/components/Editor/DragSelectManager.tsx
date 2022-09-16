@@ -12,8 +12,8 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import { IndexRange } from 'sharedTypes';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { areRangesEqual } from 'renderer/utils/range';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { areRangesEqual } from 'renderer/utils/range';
 import { selectionRangeSetTo } from '../../store/selection/actions';
 import { MouseButton } from '../../utils/input';
 
@@ -25,7 +25,15 @@ export type WordMouseHandler = CurriedByWordIndex<
 
 export type RenderTranscription = (
   onWordMouseDown: WordMouseHandler,
-  onWordMouseEnter: (wordIndex: number) => void
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void,
+  partialSelectState: PartialSelectState | null,
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >,
+  isMouseDown: boolean
 ) => JSX.Element;
 
 interface Props {
@@ -36,14 +44,25 @@ interface Props {
   children: RenderTranscription;
 }
 
+export interface PartialSelectState {
+  wordIndex: number;
+  anchorLetterIndex: number;
+  currentLetterIndex: number;
+}
+
 const DragSelectManager = ({ clearSelection, children }: Props) => {
+  const [partialSelectState, setPartialSelectState] =
+    useState<PartialSelectState | null>(null);
+
+  const [isMouseDown, setMouseDown] = useState<boolean>(false);
+
   const containerRef = useContext(ContainerRefContext);
 
-  const dispatch = useDispatch();
-
-  const ownSelection = useSelector(
+  const selection = useSelector(
     (state: ApplicationStore) => state.selection.self
   );
+
+  const dispatch = useDispatch();
 
   // Index of the word that the drag-select action started from
   const [dragSelectAnchor, setDragSelectAnchor] = useState<number | null>(null);
@@ -51,8 +70,10 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
   // Handle mouse-up events on the overall page using the container ref
   useEffect(() => {
     if (containerRef !== null && containerRef.current !== null) {
-      containerRef.current.onmouseup = () =>
+      containerRef.current.onmouseup = () => {
         clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
+        setMouseDown(false);
+      };
     }
   }, [containerRef, clearSelection, dragSelectAnchor, setDragSelectAnchor]);
 
@@ -64,14 +85,19 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
         return;
       }
 
+      setMouseDown(true);
+
       // Start a drag-select action
       setDragSelectAnchor(wordIndex);
     },
     [setDragSelectAnchor]
   );
 
-  const onWordMouseEnter: (wordIndex: number) => void = useCallback(
-    (wordIndex) => {
+  const onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void = useCallback(
+    (wordIndex) => () => {
       if (dragSelectAnchor === null) {
         return;
       }
@@ -81,19 +107,32 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
         endIndex: Math.max(wordIndex, dragSelectAnchor) + 1,
       };
 
-      // Don't update if nothing changed
-      if (areRangesEqual(range, ownSelection)) {
+      if (areRangesEqual(range, selection)) {
         return;
       }
 
       dispatch(selectionRangeSetTo(range));
     },
-    [dragSelectAnchor, dispatch, ownSelection]
+    [dragSelectAnchor, dispatch, selection]
   );
 
   const childrenRendered = useMemo(
-    () => children(onWordMouseDown, onWordMouseEnter),
-    [onWordMouseDown, onWordMouseEnter, children]
+    () =>
+      children(
+        onWordMouseDown,
+        onWordMouseEnter,
+        partialSelectState,
+        setPartialSelectState,
+        isMouseDown
+      ),
+    [
+      onWordMouseDown,
+      onWordMouseEnter,
+      partialSelectState,
+      setPartialSelectState,
+      isMouseDown,
+      children,
+    ]
   );
 
   return (

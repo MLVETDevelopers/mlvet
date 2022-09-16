@@ -1,7 +1,7 @@
 import { IndexRange, Word } from '../../../sharedTypes';
 
 export interface DeleteSelectionPayload {
-  ranges: IndexRange[];
+  range: IndexRange;
 }
 
 export interface PasteWordsPayload {
@@ -9,7 +9,7 @@ export interface PasteWordsPayload {
   clipboard: Word[];
 }
 export interface RestoreSectionPayload {
-  ranges: IndexRange[];
+  range: IndexRange;
 }
 
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;

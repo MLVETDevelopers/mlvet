@@ -4,7 +4,7 @@ import {
   undoWordSplit,
 } from 'renderer/store/transcriptionWords/actions';
 import { Word } from '../../../../sharedTypes';
-import { selectionCleared, selectionRangeAdded } from '../../selection/actions';
+import { selectionRangeSetTo } from '../../selection/actions';
 import { Op } from '../../undoStack/helpers';
 import { SplitWordPayload, UndoSplitWordPayload } from '../opPayloads';
 
@@ -31,11 +31,7 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
   };
 
   return {
-    do: [wordSplit(index), selectionCleared(), selectionRangeAdded(range)],
-    undo: [
-      undoWordSplit(range),
-      selectionCleared(),
-      selectionRangeAdded(rangeLengthOne(index)),
-    ],
+    do: [wordSplit(index), selectionRangeSetTo(range)],
+    undo: [undoWordSplit(range), selectionRangeSetTo(rangeLengthOne(index))],
   };
 };

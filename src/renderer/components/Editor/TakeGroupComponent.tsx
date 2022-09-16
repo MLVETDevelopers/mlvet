@@ -3,14 +3,14 @@
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import { WordMouseHandler } from './DragSelectManager';
 
 export interface TranscriptionPassThroughProps {
   editWord: EditWordState;
   submitWordEdit: () => void;
-  otherSelectionSets: Record<ClientId, Set<number>>;
+  otherSelections: Record<ClientId, IndexRange>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
@@ -20,9 +20,9 @@ interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
+  onWordMouseEnter: (wordIndex: number) => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selection: IndexRange;
   transcription: Transcription;
 }
 
@@ -30,9 +30,9 @@ const TakeGroupComponent = ({
   takeGroup,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
+  onWordMouseEnter,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
@@ -86,10 +86,10 @@ const TakeGroupComponent = ({
         isTakeGroupOpened={isTakeGroupOpened}
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
-        onWordMouseMove={onWordMouseMove}
+        onWordMouseEnter={onWordMouseEnter}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        selectionSet={selectionSet}
+        selection={selection}
         transcriptionIndex={transcriptionIndex}
         {...passThroughProps}
       />

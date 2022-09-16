@@ -1,6 +1,5 @@
 import store from '../store/store';
 import { editWordStarted } from '../store/editWord/actions';
-import { getSelectionRanges } from './selection';
 
 const { dispatch } = store;
 
@@ -9,14 +8,13 @@ const editWord = () => {
   if (words === undefined) {
     return;
   }
-  const ranges = getSelectionRanges();
-  if (ranges.length === 0) {
-    return;
-  }
+
+  const range = store.getState().selection.self;
+
   // Assume that only one word is selected, thus there is only one range and start/end indexes are the same
-  const index = ranges[0].startIndex;
-  const { word } = words[index];
-  dispatch(editWordStarted(index, word));
+  const { startIndex } = range;
+  const { word } = words[startIndex];
+  dispatch(editWordStarted(startIndex, word));
 };
 
 export default editWord;

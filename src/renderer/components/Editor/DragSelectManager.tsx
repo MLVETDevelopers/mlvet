@@ -9,11 +9,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IndexRange } from 'sharedTypes';
-import { useDebounceCallback } from '@react-hook/debounce';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
-import { selectionRangesSetTo } from '../../store/selection/actions';
+import { areRangesEqual } from 'renderer/utils/range';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { selectionRangeSetTo } from '../../store/selection/actions';
 import { MouseButton } from '../../utils/input';
 
 export type CurriedByWordIndex<T> = (wordIndex: number) => T;
@@ -24,7 +25,7 @@ export type WordMouseHandler = CurriedByWordIndex<
 
 export type RenderTranscription = (
   onWordMouseDown: WordMouseHandler,
-  onWordMouseMove: (wordIndex: number) => void
+  onWordMouseEnter: (wordIndex: number) => void
 ) => JSX.Element;
 
 interface Props {
@@ -39,6 +40,10 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
   const containerRef = useContext(ContainerRefContext);
 
   const dispatch = useDispatch();
+
+  const ownSelection = useSelector(
+    (state: ApplicationStore) => state.selection.self
+  );
 
   // Index of the word that the drag-select action started from
   const [dragSelectAnchor, setDragSelectAnchor] = useState<number | null>(null);
@@ -65,7 +70,7 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
     [setDragSelectAnchor]
   );
 
-  const onWordMouseMove: (wordIndex: number) => void = useCallback(
+  const onWordMouseEnter: (wordIndex: number) => void = useCallback(
     (wordIndex) => {
       if (dragSelectAnchor === null) {
         return;
@@ -76,16 +81,19 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
         endIndex: Math.max(wordIndex, dragSelectAnchor) + 1,
       };
 
-      dispatch(selectionRangesSetTo([range]));
+      // Don't update if nothing changed
+      if (areRangesEqual(range, ownSelection)) {
+        return;
+      }
+
+      dispatch(selectionRangeSetTo(range));
     },
-    [dragSelectAnchor, dispatch]
+    [dragSelectAnchor, dispatch, ownSelection]
   );
 
-  const onWordMouseMoveDebounced = useDebounceCallback(onWordMouseMove, 10);
-
   const childrenRendered = useMemo(
-    () => children(onWordMouseDown, onWordMouseMoveDebounced),
-    [onWordMouseDown, onWordMouseMoveDebounced, children]
+    () => children(onWordMouseDown, onWordMouseEnter),
+    [onWordMouseDown, onWordMouseEnter, children]
   );
 
   return (

@@ -1,8 +1,9 @@
 import { AssertionError } from 'assert';
-import { Word } from 'sharedTypes';
-import { InjectableTakeGroup } from 'main/editDelete/injectTakeInfo';
+import { Word } from '../../../sharedTypes';
+import { makeBasicWord } from '../../../sharedUtils';
+import { InjectableTakeGroup } from '../../editDelete/injectTakeInfo';
 import { findSentences, Sentence, findTakes } from '../takeDetection';
-import getSimilarityScore from '../sentenceSimilarity';
+import { getSimilarityScore } from '../sentenceSimilarity';
 
 function mockGetSentenceSimilarity(
   sentenceOne: string,
@@ -11,16 +12,19 @@ function mockGetSentenceSimilarity(
   if (sentenceOne === 'Hello world!' && sentenceTwo === 'Hi there.') {
     return 0.8;
   }
-  if (sentenceOne === 'Hi there.' && sentenceTwo === 'All ok?') {
+  if (sentenceOne === 'Hello world!' && sentenceTwo === 'All ok?') {
     return 0.2;
   }
   if (sentenceOne === 'All ok?' && sentenceTwo === 'test.') {
     return 0.4;
   }
+  if (sentenceOne === 'All ok?' && sentenceTwo === 'assessment.') {
+    return 0.4;
+  }
   if (sentenceOne === 'test.' && sentenceTwo === 'assessment.') {
     return 0.8;
   }
-  if (sentenceOne === 'assessment.' && sentenceTwo === 'exam') {
+  if (sentenceOne === 'test.' && sentenceTwo === 'exam') {
     return 0.8;
   }
   throw new AssertionError();
@@ -31,127 +35,17 @@ const mockedSentenceSim = getSimilarityScore as jest.Mocked<
   typeof getSimilarityScore
 >;
 
+const makeWords = (words: string[]): Word[] => {
+  return words.map((word) => {
+    return makeBasicWord({ word });
+  });
+};
+
 describe('findSentences should return a list of Sentence objects based on punctuation and findTakes should correctly identify different takes', () => {
   it('should produce expected sentences when given a list of words', () => {
-    const wordList: Word[] = [
-      {
-        word: 'Hello',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'world!',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'Hi',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'there.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'All',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'ok?',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'test.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'assessment.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'exam',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-    ];
+    const wordList = makeWords(
+      'Hello world! Hi there. All ok? test. assessment. exam'.split(' ')
+    );
     const sentences: Sentence[] = findSentences(wordList);
 
     expect(sentences).toEqual([
@@ -188,128 +82,12 @@ describe('findSentences should return a list of Sentence objects based on punctu
     ]);
   });
   it('should correctly identify takes based on similarity threshold and consecutiveness and produce expected outupts', () => {
-    const wordList: Word[] = [
-      {
-        word: 'Hello',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'world!',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'Hi',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'there.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'All',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'ok?',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'test.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'assessment.',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-      {
-        word: 'exam',
-        duration: 1,
-        startTime: 0,
-        outputStartTime: 0,
-        originalIndex: 0,
-        pasteKey: 0,
-        bufferDurationBefore: 0,
-        bufferDurationAfter: 0,
-        deleted: false,
-        confidence: 1,
-        takeInfo: null,
-      },
-    ];
-
     (mockedSentenceSim as jest.Mock).mockImplementation(
       mockGetSentenceSimilarity
+    );
+
+    const wordList = makeWords(
+      'Hello world! Hi there. All ok? test. assessment. exam'.split(' ')
     );
     const takes: InjectableTakeGroup[] = findTakes(wordList, 0.7);
     expect(takes).toEqual([

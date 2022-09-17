@@ -13,15 +13,14 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
   range
 ) => {
   const prefix = words.slice(0, range.startIndex);
+  const wordsToMerge = words.slice(range.startIndex, range.endIndex);
   const suffix = words.slice(range.endIndex);
 
   const firstWord = words[range.startIndex];
   const lastWord = words[range.endIndex - 1];
 
-  const wordsToMerge = words.slice(range.startIndex, range.endIndex);
-
   // Sanity check
-  if (!isMergeSplitAllowed(words, [range]).merge) {
+  if (!isMergeSplitAllowed(words, range).merge) {
     return words;
   }
 

@@ -2,12 +2,12 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
-import { rangeLengthOne } from 'renderer/utils/range';
+import { emptyRange, rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,
   getTakeGroupLength,
@@ -20,7 +20,7 @@ import colors from '../../colors';
 import DragSelectManager from './DragSelectManager';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from '../../store/selection/actions';
 import TranscriptionChunk from './TranscriptionChunk';
 
@@ -69,26 +69,21 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
-  const ownSelectionArray = useSelector(
-    (store: ApplicationStore) => store.selection.self
+  const selection = useSelector((store: ApplicationStore) => store.selection);
+
+  const ownSelection = useMemo(
+    () => (editWord === null ? selection.self : emptyRange()),
+    [selection, editWord]
   );
 
-  const ownSelectionSet = useMemo(
-    () => (editWord === null ? new Set(ownSelectionArray) : new Set<number>()),
-    [ownSelectionArray, editWord]
-  );
-
-  const otherSelections = useSelector(
-    (store: ApplicationStore) => store.selection.others
-  );
-
-  const otherSelectionSets = useMemo(() => {
-    const sets: Record<ClientId, Set<number>> = {};
-    Object.keys(otherSelections).forEach((clientId) => {
-      sets[clientId] = new Set(otherSelections[clientId]);
+  const otherSelections = useMemo(() => {
+    const selections: Record<ClientId, IndexRange> = {};
+    Object.keys(selection.others).forEach((clientId) => {
+      selections[clientId] = selection.others[clientId];
     });
-    return sets;
-  }, [otherSelections]);
+
+    return selections;
+  }, [selection]);
 
   const dispatch = useDispatch();
 
@@ -108,11 +103,11 @@ const TranscriptionBlock = ({
 
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
-      dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
+      dispatchOp(makeDeleteSelection(rangeLengthOne(index)));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
-      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+      dispatch(selectionRangeSetTo(rangeLengthOne(index)));
     }
 
     // Mark the edit as over
@@ -138,7 +133,7 @@ const TranscriptionBlock = ({
 
   return (
     <DragSelectManager clearSelection={clearSelection}>
-      {(onWordMouseDown, onWordMouseMove) => {
+      {(onWordMouseDown, onWordMouseEnter) => {
         return (
           <TranscriptionBox id="transcription-content" ref={blockRef}>
             {mapWithAccumulator(
@@ -157,13 +152,13 @@ const TranscriptionBlock = ({
                       chunk={chunk}
                       chunkIndex={acc}
                       onWordMouseDown={onWordMouseDown}
-                      onWordMouseMove={onWordMouseMove}
+                      onWordMouseEnter={onWordMouseEnter}
                       editWord={editWord}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       transcription={transcription}
                       submitWordEdit={submitWordEdit}
-                      selectionSet={ownSelectionSet}
-                      otherSelectionSets={otherSelectionSets}
+                      selection={ownSelection}
+                      otherSelections={otherSelections}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                       setPlaybackTime={setPlaybackTime}

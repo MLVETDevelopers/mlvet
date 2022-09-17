@@ -54,7 +54,7 @@ export interface WordPassThroughProps {
   isInInactiveTake: boolean;
   isPlaying: boolean;
   onMouseDown: WordMouseHandler;
-  onMouseMove: (index: number) => void;
+  onMouseEnter: (index: number) => void;
   submitWordEdit: () => void;
   setPlaybackTime: (time: number) => void;
 }
@@ -83,7 +83,7 @@ const WordComponent = ({
   isSelectedRightCap,
   text,
   onMouseDown,
-  onMouseMove,
+  onMouseEnter,
   submitWordEdit,
   isBeingEdited,
   editText,
@@ -113,8 +113,7 @@ const WordComponent = ({
       }
 
       setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
-
-      handleSelectWord(event, index);
+      handleSelectWord(index);
 
       // Prevent event from being received by the transcription block and therefore intercepted,
       // which would clear the selection
@@ -250,9 +249,9 @@ const WordComponent = ({
     [isInInactiveTake, index, onMouseDown, ref]
   );
 
-  const onMouseMoveWrapped = useCallback(
-    () => onMouseMove(index),
-    [onMouseMove, index]
+  const onMouseEnterWrapped = useCallback(
+    () => onMouseEnter(index),
+    [onMouseEnter, index]
   );
 
   const textOrUnderscore = text ?? '_';
@@ -263,7 +262,7 @@ const WordComponent = ({
       onClick={onClick}
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDownWrapped}
-      onMouseMove={onMouseMoveWrapped}
+      onMouseEnter={onMouseEnterWrapped}
       style={style}
     >
       {isBeingEdited ? (

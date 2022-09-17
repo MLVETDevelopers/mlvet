@@ -1,10 +1,7 @@
 import { Action } from '../action';
 import {
   SelectionClearedPayload,
-  SelectionRangeAddedPayload,
-  SelectionRangeRemovedPayload,
-  SelectionRangesSetToPayload,
-  SelectionRangeToggledPayload,
+  SelectionRangeSetToPayload,
 } from '../selection/actions';
 import {
   CorrectWordPayload,
@@ -21,10 +18,7 @@ import {
 
 // Selection payloads can be applied to any op do or undo
 export type SelectionPayload =
-  | SelectionRangeAddedPayload
-  | SelectionRangeRemovedPayload
-  | SelectionRangeToggledPayload
-  | SelectionRangesSetToPayload
+  | SelectionRangeSetToPayload
   | SelectionClearedPayload;
 
 /**

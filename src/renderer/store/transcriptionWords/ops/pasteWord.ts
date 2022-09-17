@@ -6,7 +6,7 @@ import {
 } from 'renderer/store/transcriptionWords/actions';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from 'renderer/store/selection/actions';
 import { PasteWordsPayload, UndoPasteWordsPayload } from '../opPayloads';
 
@@ -19,8 +19,7 @@ export const makePasteWord: (
   return {
     do: [
       wordPasted(pasteTo, clipboard),
-      selectionCleared(),
-      selectionRangeAdded({
+      selectionRangeSetTo({
         startIndex: pasteTo + 1,
         endIndex: pasteTo + clipboard.length + 1,
       }),

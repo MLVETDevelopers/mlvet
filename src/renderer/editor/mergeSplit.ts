@@ -4,7 +4,6 @@ import { makeMergeWords } from 'renderer/store/transcriptionWords/ops/mergeWords
 import { makeSplitWord } from 'renderer/store/transcriptionWords/ops/splitWord';
 import { Word } from 'sharedTypes';
 import store from '../store/store';
-import { getSelectionRanges } from './selection';
 
 const getWords: () => Word[] = () => {
   return store.getState().currentProject?.transcription?.words ?? [];
@@ -12,24 +11,24 @@ const getWords: () => Word[] = () => {
 
 export const mergeWords: () => void = () => {
   const words = getWords();
-  const ranges = getSelectionRanges();
+  const range = store.getState().selection.self;
 
   // sanity check
-  if (!isMergeSplitAllowed(words, ranges).merge) {
+  if (!isMergeSplitAllowed(words, range).merge) {
     return;
   }
 
-  dispatchOp(makeMergeWords(words, ranges[0]));
+  dispatchOp(makeMergeWords(words, range));
 };
 
 export const splitWord: () => void = () => {
   const words = getWords();
-  const ranges = getSelectionRanges();
+  const range = store.getState().selection.self;
 
   // sanity check
-  if (!isMergeSplitAllowed(words, ranges).split) {
+  if (!isMergeSplitAllowed(words, range).split) {
     return;
   }
 
-  dispatchOp(makeSplitWord(words, ranges[0].startIndex));
+  dispatchOp(makeSplitWord(words, range.startIndex));
 };

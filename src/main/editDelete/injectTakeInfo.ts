@@ -1,5 +1,5 @@
+import { mapInRange } from '../../sharedUtils';
 import { IndexRange, TakeGroup, Word } from '../../sharedTypes';
-import { mapInRanges } from '../../sharedUtils';
 
 export interface InjectableTake {
   wordRange: IndexRange;
@@ -39,13 +39,13 @@ const injectTakeInfo: (
     takeGroup.takes.forEach((take, takeIndex) => {
       const { wordRange } = take;
 
-      wordsCopy = mapInRanges(
+      wordsCopy = mapInRange(
         wordsCopy,
         (word) => ({
           ...word,
           takeInfo: { takeGroupId: takeGroupIndex, takeIndex },
         }),
-        [wordRange]
+        wordRange
       );
     });
   });

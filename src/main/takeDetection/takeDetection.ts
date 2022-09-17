@@ -3,7 +3,7 @@ import {
   InjectableTake,
   InjectableTakeGroup,
 } from '../editDelete/injectTakeInfo';
-import { getSimilarityScore } from './sentenceSimilarity';
+import getSimilarityScore from './sentenceSimilarity';
 import { THRESHOLD } from './constants';
 
 export type Sentence = {
@@ -20,6 +20,10 @@ export function findSentences(words: Word[]): Sentence[] {
   };
   const sentences: Sentence[] = [];
   words.forEach((word, idx) => {
+    if (word.word === null) {
+      return;
+    }
+
     if (currentSentence.sentenceString === '') {
       currentSentence.sentenceString = word.word;
     } else {
@@ -44,7 +48,9 @@ export function findSentences(words: Word[]): Sentence[] {
       };
     }
   });
-  sentences[sentences.length - 1].endIndex = words.length;
+  if (sentences.length > 0) {
+    sentences[sentences.length - 1].endIndex = words.length;
+  }
   return sentences;
 }
 
@@ -70,11 +76,13 @@ const newTakeGroup = (
 };
 
 const startDetection = (
+  currentSentenceIdx: number,
   potentialTakeLen: number,
   potentialTakeStartIdxs: number[],
   sentences: Sentence[],
   threshold: number
 ): {
+  isSimilarTake: boolean;
   updatedCurrentSentenceIdx: number;
   updatedPotentialTakeStartIdxs: number[];
 } => {
@@ -106,22 +114,15 @@ const startDetection = (
       // if sentence in the chunk is not similar, discard all chunks to the right
       if (nextSimilarity < threshold) {
         const potentialTakeStartIdxsLen = updatedPotentialTakeStartIdxs.length;
-        const chunksToDiscard =
-          potentialTakeStartIdxsLen - updatedPotentialTakeStartIdxs[j];
+        const chunksToDiscard = potentialTakeStartIdxsLen - j;
         const chunksLeft = potentialTakeStartIdxsLen - chunksToDiscard;
 
         // if only the first chunk left, reset
         if (chunksLeft === 1) {
-          // if potential take greater then two, re-start from the first sentence in the second chunk
-          if (potentialTakeStartIdxsLen > 2) {
-            updatedCurrentSentenceIdx =
-              updatedPotentialTakeStartIdxs[j] + i - 1;
-          } else {
-            // else start from the failed sentence
-            updatedCurrentSentenceIdx = updatedPotentialTakeStartIdxs[j] + i;
-          }
-
+          // start from the sentence in second group
+          updatedCurrentSentenceIdx = updatedPotentialTakeStartIdxs[j];
           isSimilarTake = false;
+
           break;
         }
 
@@ -135,9 +136,14 @@ const startDetection = (
 
   if (isSimilarTake)
     updatedCurrentSentenceIdx =
-      potentialTakeLen * updatedPotentialTakeStartIdxs.length;
+      potentialTakeLen * updatedPotentialTakeStartIdxs.length +
+      currentSentenceIdx;
 
-  return { updatedCurrentSentenceIdx, updatedPotentialTakeStartIdxs };
+  return {
+    isSimilarTake,
+    updatedCurrentSentenceIdx,
+    updatedPotentialTakeStartIdxs,
+  };
 };
 
 export function findTakes(
@@ -160,11 +166,11 @@ export function findTakes(
 
     let nextSentenceIdx = currentSentenceIdx + 1;
     const maxRemainingTakesIdx =
-      Math.round((sentences.length - currentSentenceIdx) / 2) +
+      Math.floor((sentences.length - currentSentenceIdx) / 2) +
       currentSentenceIdx;
 
     // search for any similar sentence start from current first sentence
-    while (nextSentenceIdx < maxRemainingTakesIdx || potentialTakeLen > 0) {
+    while (nextSentenceIdx <= maxRemainingTakesIdx || potentialTakeLen > 0) {
       // if remaining sentences can't make valid take
       if (
         nextSentenceIdx > maxSentenceIdx ||
@@ -172,11 +178,12 @@ export function findTakes(
       )
         break;
 
-      const isSimilar =
-        getSimilarityScore(
-          sentences[currentSentenceIdx].sentenceString,
-          sentences[nextSentenceIdx].sentenceString
-        ) > threshold;
+      const s1 = sentences[currentSentenceIdx].sentenceString;
+      const s2 = sentences[nextSentenceIdx].sentenceString;
+
+      const s = getSimilarityScore(s1, s2);
+
+      const isSimilar = s > threshold;
 
       // if already found potential take
       // but next sentence at potential take index is not similar
@@ -197,21 +204,28 @@ export function findTakes(
     if (potentialTakeStartIdxs.length > 1) {
       if (potentialTakeLen > 1) {
         // start detection after find all potential take start index
-        const { updatedCurrentSentenceIdx, updatedPotentialTakeStartIdxs } =
-          startDetection(
-            potentialTakeLen,
-            potentialTakeStartIdxs,
-            sentences,
-            threshold
-          );
-
-        takeGroups.push(
-          newTakeGroup(
-            updatedPotentialTakeStartIdxs,
-            potentialTakeLen,
-            sentences
-          )
+        const {
+          isSimilarTake,
+          updatedCurrentSentenceIdx,
+          updatedPotentialTakeStartIdxs,
+        } = startDetection(
+          currentSentenceIdx,
+          potentialTakeLen,
+          potentialTakeStartIdxs,
+          sentences,
+          threshold
         );
+
+        if (isSimilarTake) {
+          takeGroups.push(
+            newTakeGroup(
+              updatedPotentialTakeStartIdxs,
+              potentialTakeLen,
+              sentences
+            )
+          );
+        }
+
         currentSentenceIdx = updatedCurrentSentenceIdx;
       } else {
         takeGroups.push(
@@ -230,5 +244,3 @@ export function findTakes(
 
   return takeGroups;
 }
-
-export default { getSimilarityScore };

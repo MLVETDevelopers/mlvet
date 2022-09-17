@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -13,8 +13,8 @@ import Scrubber from 'renderer/components/Scrubber';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
-import { PrimaryButton } from 'renderer/components/Blocks/Buttons';
 import ipc from 'renderer/ipc';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 
@@ -67,12 +67,13 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <PrimaryButton
+              <IconButton
+                color="primary"
                 onClick={openUserFeedback}
-                sx={{ position: 'absolute', bottom: '20px', right: '20px' }}
+                sx={{ position: 'absolute', marginTop: '5px', right: '20px' }}
               >
-                Feedback
-              </PrimaryButton>
+                <RateReviewIcon fontSize="large" />
+              </IconButton>
               <VideoController
                 time={time}
                 isPlaying={isPlaying}

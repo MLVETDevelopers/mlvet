@@ -1,7 +1,4 @@
-import {
-  SelectionIndices,
-  SelectionState,
-} from 'renderer/store/selection/helpers';
+import { SelectionState } from 'renderer/store/selection/helpers';
 import {
   RuntimeProject,
   ProjectMetadata,
@@ -68,23 +65,21 @@ export const findDefaultEngineConfig = (
 
 /**
  * Maps the values of a list using a given map function,
- * but only for those values within specified ranges.
+ * but only for those values within a specified range.
  * Values outside of the given indices will be unaltered.
  * @returns the mapped list
  */
-export const mapInRanges: <T>(
+export const mapInRange: <T>(
   list: T[],
   mapCallback: MapCallback<T, T>,
-  ranges: IndexRange[]
-) => T[] = (list, mapCallback, ranges) => {
+  range: IndexRange
+) => T[] = (list, mapCallback, range) => {
   const listNew = [...list];
 
-  ranges.forEach((range) => {
-    const { startIndex, endIndex } = range;
-    for (let i = startIndex; i < endIndex; i += 1) {
-      listNew[i] = mapCallback(list[i], i, list);
-    }
-  });
+  const { startIndex, endIndex } = range;
+  for (let i = startIndex; i < endIndex; i += 1) {
+    listNew[i] = mapCallback(list[i], i, list);
+  }
 
   return listNew;
 };
@@ -109,9 +104,9 @@ export const makeBasicWord: (override: Partial<Word>) => Word = (override) => ({
   ...override,
 });
 
-export const makeSelfSelection: (
-  selection: SelectionIndices
-) => SelectionState = (selection) => ({
+export const makeSelfSelection: (selection: IndexRange) => SelectionState = (
+  selection
+) => ({
   self: selection,
   others: {},
 });

@@ -17,8 +17,12 @@ export const splitWord: (words: Word[], wordIndex: number) => Word[] = (
   const wordToSplit = words[wordIndex];
 
   // Sanity check
-  if (!isMergeSplitAllowed(words, [rangeLengthOne(wordIndex)]).split) {
+  if (!isMergeSplitAllowed(words, rangeLengthOne(wordIndex)).split) {
     return words;
+  }
+
+  if (wordToSplit.word === null) {
+    return [wordToSplit];
   }
 
   const splitWordsText = wordToSplit.word.split(' ');

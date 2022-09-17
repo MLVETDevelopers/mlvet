@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import { Avatar, Box, Stack } from '@mui/material';
-import { MousePosition } from '@react-hook/mouse-position';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
-import { TakeInfo, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
 import React, { RefObject, useCallback, useMemo } from 'react';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { isIndexInRange } from 'renderer/utils/range';
+import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
 
@@ -40,17 +40,11 @@ const makeTakeWrapper = (
 
 interface TakePassThroughProps {
   transcription: Transcription;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
   submitWordEdit: () => void;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
-  otherSelectionSets: Record<ClientId, Set<number>>;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
+  otherSelections: Record<ClientId, IndexRange>;
   editWord: EditWordState;
 }
 
@@ -60,11 +54,10 @@ interface TakeComponentProps extends TakePassThroughProps {
   isActive: boolean;
   isTakeGroupOpened: boolean;
   setIsTakeGroupOpened: (isOpen: boolean) => void;
-  mousePosition: MousePosition | null;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<number>;
+  selection: IndexRange;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
+  onWordMouseEnter: (wordIndex: number) => void;
   transcriptionIndex: number;
   isLast: boolean;
   isFirstTimeOpen: boolean;
@@ -77,11 +70,10 @@ const TakeComponent = ({
   isActive,
   isTakeGroupOpened,
   setIsTakeGroupOpened,
-  mousePosition,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   onWordMouseDown,
-  onWordMouseMove,
+  onWordMouseEnter,
   transcriptionIndex,
   isLast,
   isFirstTimeOpen,
@@ -159,13 +151,18 @@ const TakeComponent = ({
                       wordIndex < words.length - 1 ? words[wordIndex + 1] : null
                     }
                     index={wordIndex}
-                    mouse={mousePosition}
                     isPlaying={nowPlayingWordIndex === wordIndex}
-                    isSelected={selectionSet.has(wordIndex)}
-                    isPrevWordSelected={selectionSet.has(wordIndex - 1)}
-                    isNextWordSelected={selectionSet.has(wordIndex + 1)}
+                    isPrevWordSelected={isIndexInRange(
+                      selection,
+                      wordIndex - 1
+                    )}
+                    isSelected={isIndexInRange(selection, wordIndex)}
+                    isNextWordSelected={isIndexInRange(
+                      selection,
+                      wordIndex + 1
+                    )}
                     onMouseDown={onWordMouseDown}
-                    onMouseMove={onWordMouseMove}
+                    onMouseEnter={onWordMouseEnter}
                     isInInactiveTake={
                       !(isActive || isTakeGroupOpened) && !isFirstTimeOpen
                     }

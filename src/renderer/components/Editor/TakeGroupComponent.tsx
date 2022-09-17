@@ -1,29 +1,16 @@
 /* eslint-disable react/no-array-index-key */
 
-import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useMemo,
-  useState,
-} from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 
 export interface TranscriptionPassThroughProps {
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
   editWord: EditWordState;
   submitWordEdit: () => void;
-  otherSelectionSets: Record<ClientId, Set<number>>;
+  otherSelections: Record<ClientId, IndexRange>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
@@ -33,10 +20,9 @@ interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
+  onWordMouseEnter: (wordIndex: number) => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selection: IndexRange;
   transcription: Transcription;
 }
 
@@ -44,11 +30,9 @@ const TakeGroupComponent = ({
   takeGroup,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
-  isWordBeingDragged,
-  mousePosition,
+  onWordMouseEnter,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
@@ -102,12 +86,10 @@ const TakeGroupComponent = ({
         isTakeGroupOpened={isTakeGroupOpened}
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
-        onWordMouseMove={onWordMouseMove}
-        isWordBeingDragged={isWordBeingDragged}
-        mousePosition={mousePosition}
+        onWordMouseEnter={onWordMouseEnter}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        selectionSet={selectionSet}
+        selection={selection}
         transcriptionIndex={transcriptionIndex}
         {...passThroughProps}
       />

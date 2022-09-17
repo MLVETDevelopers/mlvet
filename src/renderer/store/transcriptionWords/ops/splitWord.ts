@@ -4,7 +4,7 @@ import {
   undoWordSplit,
 } from 'renderer/store/transcriptionWords/actions';
 import { Word } from '../../../../sharedTypes';
-import { selectionCleared, selectionRangeAdded } from '../../selection/actions';
+import { selectionRangeSetTo } from '../../selection/actions';
 import { Op } from '../../undoStack/helpers';
 import { SplitWordPayload, UndoSplitWordPayload } from '../opPayloads';
 
@@ -22,8 +22,15 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
 ) => {
   const word = words[index];
 
+  // This should be guaranteed by 'isMergeSplitAllowed' so fail if it isn't
+  if (word.word === null) {
+    throw new Error(
+      `word.word cannot be null for a split. Received word: ${word}`
+    );
+  }
+
   // Number of words that the word will be split into
-  const wordCount = word.word.split(' ').length;
+  const wordCount = word.word.split(' ').length ?? 0;
 
   const range = {
     startIndex: index,
@@ -31,11 +38,7 @@ export const makeSplitWord: (words: Word[], index: number) => SplitWordOp = (
   };
 
   return {
-    do: [wordSplit(index), selectionCleared(), selectionRangeAdded(range)],
-    undo: [
-      undoWordSplit(range),
-      selectionCleared(),
-      selectionRangeAdded(rangeLengthOne(index)),
-    ],
+    do: [wordSplit(index), selectionRangeSetTo(range)],
+    undo: [undoWordSplit(range), selectionRangeSetTo(rangeLengthOne(index))],
   };
 };

@@ -83,6 +83,8 @@ declare global {
 
       setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
 
+      setEditWordEnabled: (editEnabled: boolean) => void;
+
       setExportEnabled: (exportEnabled: boolean) => void;
 
       setFileRepresentation: (

@@ -4,7 +4,7 @@ import {
   undoWordsMerged,
 } from 'renderer/store/transcriptionWords/actions';
 import { IndexRange, Word } from '../../../../sharedTypes';
-import { selectionCleared, selectionRangeAdded } from '../../selection/actions';
+import { selectionRangeSetTo } from '../../selection/actions';
 import { Op } from '../../undoStack/helpers';
 import { MergeWordsPayload, UndoMergeWordsPayload } from '../opPayloads';
 
@@ -26,13 +26,11 @@ export const makeMergeWords: (
   return {
     do: [
       wordsMerged(range),
-      selectionCleared(),
-      selectionRangeAdded(rangeLengthOne(range.startIndex)),
+      selectionRangeSetTo(rangeLengthOne(range.startIndex)),
     ],
     undo: [
       undoWordsMerged(range.startIndex, originalWords),
-      selectionCleared(),
-      selectionRangeAdded(range),
+      selectionRangeSetTo(range),
     ],
   };
 };

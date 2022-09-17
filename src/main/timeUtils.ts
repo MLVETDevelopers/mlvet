@@ -7,6 +7,7 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 };
 
 // 00:00:00:00
+// Hour:Min:Sec:Frame
 export const secondToEDLTimestamp: (num: number, fps: number) => string = (
   num,
   fps

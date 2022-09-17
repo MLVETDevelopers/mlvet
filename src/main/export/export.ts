@@ -2,14 +2,25 @@
 import { BrowserWindow } from 'electron';
 import * as promises from 'fs/promises';
 import path, { join } from 'path';
-import ffprobe from 'ffprobe';
-import ffprobeStatic from 'ffprobe-static';
+import ffmpeg from 'fluent-ffmpeg';
 import { constants } from 'fs';
+import { ffprobePath } from '../ffUtils';
 import { secondToEDLTimestamp, padZeros } from '../timeUtils';
 import { RuntimeProject, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
 import { fracFpsToDec } from '../handlers/helpers/exportUtils';
+
+export const getFps: (source: string) => Promise<number> = (source: string) => {
+  ffmpeg.setFfprobePath(ffprobePath);
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(source, (err, data) => {
+      if (data.streams[0].r_frame_rate)
+        resolve(fracFpsToDec(data.streams[0].r_frame_rate));
+      reject(err);
+    });
+  });
+};
 
 export const constructEDL: (
   title: string,
@@ -21,8 +32,7 @@ export const constructEDL: (
   if (!source) throw Error('Video Source does not exist');
   try {
     await promises.access(source, constants.R_OK);
-    const videoData = await ffprobe(source, { path: ffprobeStatic.path });
-    fps = fracFpsToDec(videoData.streams[0].avg_frame_rate);
+    fps = await getFps(source);
   } catch {
     console.log(`Video Source path:\n${source} \nis not valid`); // Temporarily here before tests mock ffprobe.
   }
@@ -47,10 +57,6 @@ export const constructEDL: (
 
       const editStart = secondToEDLTimestamp(cut.startTime, fps);
 
-      /**
-       * Addressed the gap problem by rounding up 1 frame per cut, it will be overwritten in case there is no rounding error,
-       * so this will only work to fill in microgaps. LMK if a less jank solution is wanted.
-       */
       const editEnd = secondToEDLTimestamp(
         cut.startTime + cut.duration + 1 / fps,
         fps

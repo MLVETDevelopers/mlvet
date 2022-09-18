@@ -13,14 +13,6 @@ const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
 
   const [isHovering, setIsHovering] = useState(false);
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseOut = () => {
-    setIsHovering(false);
-  };
-
   return (
     <Box
       id="squareBracket"
@@ -34,8 +26,8 @@ const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
         borderTopWidth: '2px',
         borderBottomWidth: bottomWidth,
       }}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
+      onMouseOver={() => setIsHovering(true)}
+      onMouseOut={() => setIsHovering(false)}
     >
       <SquareBracketHover isLast={isLast} isHoveredOver={isHovering} />
     </Box>

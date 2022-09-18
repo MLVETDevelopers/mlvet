@@ -1,11 +1,22 @@
 /* eslint-disable react/no-array-index-key */
-
+import styled from '@emotion/styled';
+import BlockIcon from '@mui/icons-material/Block';
+import { Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import { WordMouseHandler } from './DragSelectManager';
+
+const CustomStack = styled(Stack)({ width: '100%' });
+
+const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
+
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
 export interface TranscriptionPassThroughProps {
   editWord: EditWordState;
@@ -36,7 +47,8 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -75,8 +87,6 @@ const TakeGroupComponent = ({
         .map((take) => take.length)
         .reduce((acc, curr) => acc + curr, 0);
 
-    console.log(takeWords, takeIndex, chunkIndex, transcriptionIndex);
-
     return (
       <TakeComponent
         key={`take-${takeGroup.id}-${takeIndex}`}
@@ -91,20 +101,21 @@ const TakeGroupComponent = ({
         transcription={transcription}
         selection={selection}
         transcriptionIndex={transcriptionIndex}
+        isLast={takeIndex === takeWordsPerTake.length - 1}
+        isFirstTimeOpen={isFirstTimeOpen}
+        setIsFirstTimeOpen={setIsFirstTimeOpen}
         {...passThroughProps}
       />
     );
   });
 
   return (
-    <div
-      style={{
-        marginTop: '10px',
-        marginBottom: '10px',
-      }}
-    >
+    <CustomColumnStack sx={{ marginTop: '10px', marginBottom: '10px' }}>
+      <CustomRowStack sx={{ justifyContent: 'flex-end' }}>
+        {!isFirstTimeOpen && isTakeGroupOpened && <BlockIcon />}
+      </CustomRowStack>
       {takes}
-    </div>
+    </CustomColumnStack>
   );
 };
 

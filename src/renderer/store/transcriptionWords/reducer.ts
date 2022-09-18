@@ -1,7 +1,7 @@
 import { Reducer } from 'react';
 import { mapInRange } from 'sharedUtils';
 import { Word } from 'sharedTypes';
-import { rangeLengthOne } from 'renderer/utils/range';
+import { getLengthOfRange, rangeLengthOne } from 'renderer/utils/range';
 import { markWordDeleted } from 'renderer/utils/words';
 import { Action } from '../action';
 import { mergeWords } from './helpers/mergeWordsHelper';
@@ -78,11 +78,13 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
 
     const suffix = words.slice(endIndex);
 
-    return mapInRange(
-      [...prefix, ...wordsToPaste, ...suffix],
-      markWordDeleted,
-      range
-    );
+    return getLengthOfRange(range) > 1
+      ? mapInRange(
+          [...prefix, ...wordsToPaste, ...suffix],
+          markWordDeleted,
+          range
+        )
+      : [...prefix, ...wordsToPaste, ...suffix];
   }
 
   if (action.type === UNDO_PASTE_WORD) {

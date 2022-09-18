@@ -49,7 +49,6 @@ export const pasteText: () => void = () => {
   if (clipboard.length > 0) {
     pasteWord(range, clipboard);
   }
-  console.log(range, clipboard.length, clipboard);
 
   // TODO(chloe): should also seek to the start of the pasted text.
 };

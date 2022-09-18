@@ -18,34 +18,14 @@ export const makePasteWord: (
 ) => PasteWordsOp = (range, clipboard) => {
   const { endIndex } = range;
 
-  return getLengthOfRange(range) > 1
-    ? {
-        do: [
-          selectionDeleted(range),
-          wordPasted(range, clipboard),
-          selectionRangeSetTo({
-            startIndex: endIndex,
-            endIndex: endIndex + clipboard.length,
-          }),
-        ],
-        undo: [
-          undoWordPasted(range, clipboard.length),
-          undoSelectionDeleted(range),
-          selectionRangeSetTo(range),
-        ],
-      }
-    : {
-        do: [
-          wordPasted(range, clipboard),
-          selectionRangeSetTo({
-            startIndex: endIndex,
-            endIndex: endIndex + clipboard.length,
-          }),
-        ],
-        undo: [
-          undoWordPasted(range, clipboard.length),
-          undoSelectionDeleted(range),
-          selectionRangeSetTo(range),
-        ],
-      };
+  return {
+    do: [
+      wordPasted(range, clipboard),
+      selectionRangeSetTo({
+        startIndex: endIndex,
+        endIndex: endIndex + clipboard.length,
+      }),
+    ],
+    undo: [undoWordPasted(range, clipboard.length), selectionRangeSetTo(range)],
+  };
 };

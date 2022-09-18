@@ -1,22 +1,22 @@
 /* eslint-disable no-plusplus */
 import { BrowserWindow } from 'electron';
-import * as promises from 'fs/promises';
+import { access, writeFile } from 'fs/promises';
 import path, { join } from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import { constants } from 'fs';
 import { ffprobePath } from '../ffUtils';
-import { secondToEDLTimestamp, padZeros } from '../timeUtils';
+import { secondToEdlTimestamp, padZeros } from '../timeUtils';
 import { RuntimeProject, Transcription } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
-import { fracFpsToDec } from '../handlers/helpers/exportUtils';
+import { fracToInt } from '../handlers/helpers/exportUtils';
 
 export const getFps: (source: string) => Promise<number> = (source: string) => {
   ffmpeg.setFfprobePath(ffprobePath);
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(source, (err, data) => {
       if (data.streams[0].r_frame_rate)
-        resolve(fracFpsToDec(data.streams[0].r_frame_rate));
+        resolve(fracToInt(data.streams[0].r_frame_rate));
       reject(err);
     });
   });
@@ -31,7 +31,7 @@ export const constructEDL: (
   let fps = 30; // default to a safe 30fps.
   if (!source) throw Error('Video Source does not exist');
   try {
-    await promises.access(source, constants.R_OK);
+    await access(source, constants.R_OK);
     fps = await getFps(source);
   } catch {
     console.log(`Video Source path:\n${source} \nis not valid`); // Temporarily here before tests mock ffprobe.
@@ -55,9 +55,9 @@ export const constructEDL: (
         Math.max(Math.floor(Math.log10(entries)) + 1, 3)
       )}  AX       AA/V  C`;
 
-      const editStart = secondToEDLTimestamp(cut.startTime, fps);
+      const editStart = secondToEdlTimestamp(cut.startTime, fps);
 
-      const editEnd = secondToEDLTimestamp(
+      const editEnd = secondToEdlTimestamp(
         cut.startTime + cut.duration + 1 / fps,
         fps
       );
@@ -65,8 +65,8 @@ export const constructEDL: (
       timeline.start = timeline.end;
       timeline.end += cut.duration;
 
-      const timelineStart = secondToEDLTimestamp(timeline.start, fps);
-      const timelineEnd = secondToEDLTimestamp(timeline.end, fps);
+      const timelineStart = secondToEdlTimestamp(timeline.start, fps);
+      const timelineEnd = secondToEdlTimestamp(timeline.end, fps);
 
       mainWindow?.webContents.send('export-progress-update', i / entries);
 
@@ -98,7 +98,7 @@ export const exportEDL: (
       mainWindow
     );
 
-    promises.writeFile(join(exportDir, `${exportFilename}.edl`), edl);
+    writeFile(join(exportDir, `${exportFilename}.edl`), edl);
     mainWindow?.webContents.send(
       'finish-export',
       project,

@@ -8,7 +8,7 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 
 // 00:00:00:00
 // Hour:Min:Sec:Frame
-export const secondToEDLTimestamp: (num: number, fps: number) => string = (
+export const secondToEdlTimestamp: (num: number, fps: number) => string = (
   num,
   fps
 ) => {
@@ -23,13 +23,16 @@ export const secondToEDLTimestamp: (num: number, fps: number) => string = (
    * For the frame gap problem, making timestamps round down 1 frame while having the
    * input duration round 1 up frame fills in microgaps cleanly.
    */
-  const frame = Math.floor((edlFps * date.getMilliseconds()) / 1000);
+  const frameNumber = Math.floor((edlFps * date.getMilliseconds()) / 1000);
 
-  const timestamp = `${padZeros(date.getUTCHours(), 2)}:${padZeros(
+  const [hours, minutes, seconds, frame] = [
+    date.getUTCHours(),
     date.getMinutes(),
-    2
-  )}:${padZeros(date.getSeconds(), 2)}:`;
-  return timestamp.concat(padZeros(frame, 2));
+    date.getSeconds(),
+    frameNumber,
+  ].map((value) => padZeros(value, 2));
+
+  return [hours, minutes, seconds, frame].join(':');
 };
 
 export const secondToTimestampUI = (

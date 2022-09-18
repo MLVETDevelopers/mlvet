@@ -1,4 +1,3 @@
-import { getLengthOfRange } from 'renderer/utils/range';
 import { Word } from '../../sharedTypes';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
@@ -10,9 +9,13 @@ const { dispatch } = store;
 
 const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
   const { currentProject } = store.getState();
+  const wordIndexRange = {
+    startIndex: afterWordIndex,
+    endIndex: afterWordIndex,
+  }; // Need to convert number to index, to conform to param type.
 
   if (currentProject && currentProject.transcription) {
-    dispatchOp(makePasteWord(afterWordIndex, clipboard));
+    dispatchOp(makePasteWord(wordIndexRange, clipboard));
   }
 };
 

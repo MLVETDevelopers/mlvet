@@ -3,11 +3,8 @@ import { IndexRange, Word } from 'sharedTypes';
 import {
   wordPasted,
   undoWordPasted,
-  selectionDeleted,
-  undoSelectionDeleted,
 } from 'renderer/store/transcriptionWords/actions';
 import { selectionRangeSetTo } from 'renderer/store/selection/actions';
-import { getLengthOfRange } from 'renderer/utils/range';
 import { PasteWordsPayload, UndoPasteWordsPayload } from '../opPayloads';
 
 export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;

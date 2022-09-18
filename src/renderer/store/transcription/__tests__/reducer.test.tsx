@@ -358,7 +358,10 @@ it('output duration should updated after copying and pasting new text', () => {
   const output = transcriptionReducer(transcript, {
     type: PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range: {
+        startIndex: 3,
+        endIndex: 4,
+      },
       clipboard: [
         makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
         makeBasicWordSequential(
@@ -422,10 +425,14 @@ it('output duration should stay the same after copying and straight away undoing
     ],
   };
 
+  const range = {
+    startIndex: 3,
+    endIndex: 4,
+  };
   transcriptionReducer(transcript, {
     type: PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range,
       clipboard: [
         makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
         makeBasicWordSequential(
@@ -446,7 +453,10 @@ it('output duration should stay the same after copying and straight away undoing
   const output = transcriptionReducer(transcript, {
     type: UNDO_PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range: {
+        startIndex: 3,
+        endIndex: 4,
+      },
       clipboardLength: 2,
     },
   });

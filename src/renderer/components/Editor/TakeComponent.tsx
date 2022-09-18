@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Avatar, Box, Stack } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
@@ -11,13 +11,7 @@ import { isIndexInRange } from 'renderer/utils/range';
 import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
-
-const CustomStack = styled(Stack)({ width: '100%' });
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
+import { CustomRowStack } from '../CustomStacks';
 
 const makeTakeWrapper = (
   isTakeGroupOpened: boolean,

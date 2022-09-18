@@ -2,7 +2,6 @@ import {
   Box,
   IconButton,
   Link,
-  Stack,
   styled,
   TextField,
   Typography,
@@ -14,6 +13,11 @@ import useKeypress from 'renderer/utils/hooks';
 import { TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
+import {
+  CustomStack,
+  CustomColumnStack,
+  CustomRowStack,
+} from '../CustomStacks';
 
 const { openExternalLink, storeCloudCredentials, readDefaultEngineConfig } =
   ipc;
@@ -24,15 +28,6 @@ interface Props {
   nextView: (() => void) | null;
   projectName: string;
 }
-
-const CustomStack = styled(Stack)({ width: '100%' });
-
-const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],

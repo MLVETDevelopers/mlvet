@@ -27,6 +27,12 @@ export const getExportFilePath: (
 };
 
 export const fracToInt: (fracFps: string) => number = (fracFps) => {
+  /**
+   * Converts a string of the forma "a/b" for integers a,b
+   * and outputs the rounded value, evaluating it as a fraction
+   * e.g. "5997/100" -> 60
+   *
+   */
   const [numerator, denominator] = fracFps.split('/').map(Number); // get the numbers (separated by / ), and convert to numbers.
   return Math.round(numerator / denominator);
 };

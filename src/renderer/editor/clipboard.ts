@@ -46,7 +46,12 @@ export const pasteText: () => void = () => {
   const { clipboard } = store.getState();
 
   // Paste after the last word in the selection
-  const { endIndex } = range;
+  const { startIndex, endIndex } = range;
+
+  if (clipboard.length && endIndex - startIndex > 1) {
+    // only replace if you're highlighting more than one word.
+    dispatchOp(makeDeleteSelection(range));
+  }
 
   // End index is exclusive, so subtract one to get the actual word to paste after
   pasteWord(endIndex - 1, clipboard);

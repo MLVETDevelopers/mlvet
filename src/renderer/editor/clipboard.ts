@@ -1,3 +1,4 @@
+import { getLengthOfRange } from 'renderer/utils/range';
 import { Word } from '../../sharedTypes';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
@@ -45,16 +46,10 @@ export const pasteText: () => void = () => {
   const range = store.getState().selection.self;
   const { clipboard } = store.getState();
 
-  // Paste after the last word in the selection
-  const { startIndex, endIndex } = range;
-
-  if (clipboard.length && endIndex - startIndex > 1) {
-    // only replace if you're highlighting more than one word.
-    dispatchOp(makeDeleteSelection(range));
+  if (clipboard.length > 0) {
+    pasteWord(range, clipboard);
   }
-
-  // End index is exclusive, so subtract one to get the actual word to paste after
-  pasteWord(endIndex - 1, clipboard);
+  console.log(range, clipboard.length, clipboard);
 
   // TODO(chloe): should also seek to the start of the pasted text.
 };

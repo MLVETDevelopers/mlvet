@@ -59,9 +59,10 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   }
 
   if (action.type === PASTE_WORD) {
-    const { startIndex, clipboard } = action.payload as PasteWordsPayload;
+    const { range, clipboard } = action.payload as PasteWordsPayload;
+    const { endIndex } = range;
 
-    const prefix = words.slice(0, startIndex + 1);
+    const prefix = words.slice(0, endIndex);
 
     // Paste key must be unique for all pasted words - that is, no two pasted words should ever have the same paste key.
     // We force this invariant by finding the highest paste key in the entire transcription to this point, and then
@@ -75,19 +76,29 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
       pasteKey: highestExistingPasteKey + index + 1,
     }));
 
-    const suffix = words.slice(startIndex + 1);
+    const suffix = words.slice(endIndex);
 
-    return [...prefix, ...wordsToPaste, ...suffix];
+    return mapInRange(
+      [...prefix, ...wordsToPaste, ...suffix],
+      markWordDeleted,
+      range
+    );
   }
 
   if (action.type === UNDO_PASTE_WORD) {
-    const { startIndex, clipboardLength } =
-      action.payload as UndoPasteWordsPayload;
+    const { range, clipboardLength } = action.payload as UndoPasteWordsPayload;
+
+    const { startIndex } = range;
+
+    const markUndeleted = (word: Word) => ({
+      ...word,
+      deleted: false,
+    });
 
     const prefix = words.slice(0, startIndex + 1);
     const suffix = words.slice(startIndex + clipboardLength + 1);
 
-    return [...prefix, ...suffix];
+    return mapInRange([...prefix, ...suffix], markUndeleted, range);
   }
 
   // Doing a MERGE_WORDS action is identical to undoing a SPLIT_WORD action

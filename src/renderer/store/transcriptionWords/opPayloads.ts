@@ -5,7 +5,7 @@ export interface DeleteSelectionPayload {
 }
 
 export interface PasteWordsPayload {
-  startIndex: number;
+  range: IndexRange;
   clipboard: Word[];
 }
 export interface RestoreSectionPayload {
@@ -15,7 +15,7 @@ export interface RestoreSectionPayload {
 export type UndoDeleteSelectionPayload = DeleteSelectionPayload;
 
 export interface UndoPasteWordsPayload {
-  startIndex: number;
+  range: IndexRange;
   clipboardLength: number;
 }
 

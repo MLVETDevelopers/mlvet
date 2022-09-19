@@ -6,44 +6,83 @@ import koffi from 'koffi';
 import {
   Model,
   PartialResults,
+  platformPaths,
   PLATFORMS,
   Recognizer,
   Result,
   SpeakerModel,
 } from './helpers';
+import fs from 'fs';
 
-const getDLLDir = () => {
+let libvosk: any;
+
+const getBaseDLLPath = () => {
   // Path is different in dev than in production
   const prodPath =
     process.env.NODE_ENV === 'development'
       ? '../../release/app/node_modules/vosk/'
       : '../../../vosk';
 
-  const baseDllPath = path.join(__dirname, prodPath, 'lib');
+  return path.join(__dirname, prodPath, 'lib');
+};
 
-  console.log('baseDLLPath', baseDllPath);
+const getDLLDir = () => {
+  const baseDLLPath = getBaseDLLPath();
 
   let dllDir;
   if (os.platform() === PLATFORMS.WINDOWS) {
-    // Update path to load dependent dlls
-    const currentPath = process.env.Path;
-
-    const dllDirectory = path.resolve(path.join(baseDllPath, 'win-x86_64'));
-    process.env.Path = currentPath + path.delimiter + dllDirectory;
-
-    dllDir = path.join(baseDllPath, 'win-x86_64', 'libvosk.dll');
+    dllDir = path.join(baseDLLPath, platformPaths.WINDOWS, 'libvosk.dll');
   } else if (os.platform() === PLATFORMS.MAC) {
-    dllDir = path.join(baseDllPath, 'osx-universal', 'libvosk.dylib');
+    dllDir = path.join(baseDLLPath, platformPaths.MAC, 'libvosk.dylib');
   } else {
-    dllDir = path.join(baseDllPath, 'linux-x86_64', 'libvosk.so');
+    dllDir = path.join(baseDLLPath, platformPaths.LINUX, 'libvosk.so');
   }
+
+  if (!fs.existsSync(dllDir)) {
+    throw new Error(`DLL could not be found at path '${dllDir}'`);
+  }
+
   return dllDir;
 };
 
-const vosky = () => {
-  const dllDir = getDLLDir();
+const appendPATHStr = (currentPATHStr: string, newPath: string) => {
+  return currentPATHStr + path.delimiter + newPath;
+};
 
-  const libvosk = koffi.load(dllDir);
+const updatePathWithDLLs = (dllPath: string, callback: () => void) => {
+  let currentPath = process.env.Path as string;
+
+  const dllDirectory = path.resolve(dllPath);
+  currentPath = appendPATHStr(currentPath, path.join(dllDirectory));
+
+  fs.promises.readdir(dllDirectory).then((winDllFiles) => {
+    for (const file of winDllFiles) {
+      currentPath = appendPATHStr(currentPath, path.join(dllDirectory, file));
+    }
+    process.env.Path = currentPath;
+    callback();
+  });
+};
+
+const dllDir = getDLLDir();
+
+if (os.platform() === PLATFORMS.WINDOWS) {
+  // Update PATH to load dependent dlls
+  const baseDLLPath = getBaseDLLPath();
+  const windowsDLLPath = path.join(baseDLLPath, platformPaths.WINDOWS);
+  updatePathWithDLLs(windowsDLLPath, () => {
+    console.log(process.env.Path);
+    libvosk = koffi.load(dllDir);
+  });
+} else {
+  libvosk = koffi.load(dllDir);
+}
+
+const vosky = () => {
+  // const dllDir = getDLLDir();
+
+  // console.log(process.env.Path);
+  // const libvosk = koffi.load(dllDir);
 
   koffi.opaque('VoskModel');
   const modelPointer = koffi.pointer('void');

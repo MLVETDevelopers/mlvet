@@ -4,6 +4,12 @@ export const PLATFORMS = {
   MAC: 'darwin',
 };
 
+export const platformPaths = {
+  WINDOWS: 'win-x86_64',
+  MAC: 'osx-universal',
+  LINUX: 'linux-x86_64',
+};
+
 export interface WordResult {
   // The confidence rate in the detection. 0 For unlikely, and 1 for totally accurate
   conf: number;

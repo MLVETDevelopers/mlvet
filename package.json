@@ -68,6 +68,10 @@
     "extraResources": [
       "./assets/**",
       {
+        "from": "release/app/node_modules/vosk/",
+        "to": "vosk/"
+      },
+      {
         "from": "node_modules/ffmpeg-static/",
         "to": "ffmpeg-static/"
       },

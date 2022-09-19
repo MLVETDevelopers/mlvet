@@ -3,83 +3,25 @@
 import * as os from 'os';
 import path from 'path';
 import koffi from 'koffi';
-
-const PLATFORMS = {
-  WINDOWS: 'win32',
-  LINUX: 'linux',
-  MAC: 'darwin',
-};
-
-interface WordResult {
-  // The confidence rate in the detection. 0 For unlikely, and 1 for totally accurate
-  conf: number;
-  // The start of the timeframe when the word is pronounced in seconds
-  start: number;
-  // The end of the timeframe when the word is pronounced in seconds
-  end: number;
-  // The word detected
-  word: string;
-}
-
-interface RecognitionResults {
-  // Details about the words that have been detected
-  result: WordResult[];
-  // The complete sentence that have been detected
-  text: string;
-}
-
-interface SpeakerResults {
-  // A floating vector representing speaker identity.
-  // It is usually about 128 numbers which uniquely represent speaker voice
-  spk: number[];
-  // The number of frames used to extract speaker vector.
-  // The more frames you have the more reliable is speaker vector
-  spk_frames: number;
-}
-
-type Result = (SpeakerResults & RecognitionResults) | RecognitionResults;
-
-interface PartialResults {
-  // The partial sentence that have been detected until now
-  partial: string;
-}
-
-interface Model {
-  handle: any;
-  free: () => void;
-}
-
-interface SpeakerModel {
-  handle: any;
-  free: () => void;
-}
-
-interface Recognizer {
-  handle: any;
-  free: () => void;
-  setMaxAlternatives: (maxAlternatives: number) => void;
-  setWords: (words: boolean) => void;
-  setPartialWords: (partialWords: boolean) => void;
-  setSpkModel: (spkModel: SpeakerModel) => void;
-  acceptWaveform: (waveform: Buffer) => boolean;
-  resultString: () => string;
-  result: () => Result;
-  finalResult: () => Result;
-  partialResult: () => PartialResults;
-  reset: () => void;
-}
+import {
+  Model,
+  PartialResults,
+  PLATFORMS,
+  Recognizer,
+  Result,
+  SpeakerModel,
+} from './helpers';
 
 const getDLLDir = () => {
   // Path is different in dev than in production
-  const prodPath = process.env.NODE_ENV === 'development' ? '.' : '../.';
+  const prodPath =
+    process.env.NODE_ENV === 'development'
+      ? '../../release/app/node_modules/vosk/'
+      : '../../../vosk';
 
-  const baseDllPath = path.join(
-    __dirname,
-    '../../.',
-    prodPath,
-    'assets/vosk',
-    'lib'
-  );
+  const baseDllPath = path.join(__dirname, prodPath, 'lib');
+
+  console.log('baseDLLPath', baseDllPath);
 
   let dllDir;
   if (os.platform() === PLATFORMS.WINDOWS) {

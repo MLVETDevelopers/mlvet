@@ -10,7 +10,6 @@ import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 import CancelProjectModal from './CancelProjectModal';
 import ipc from '../../ipc';
-import TranscriptionChoiceView from './TranscriptionChoiceView';
 
 const { requireCloudConfig } = ipc;
 
@@ -35,7 +34,7 @@ interface Props {
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
   const [currentView, setCurrentView] = useState<number>(0);
   const [projectName, setProjectName] = useState<string>('');
-  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(true);
+  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -67,17 +66,12 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
     if (isCloudConfigRequired) {
       return [
         NewProjectView,
-        TranscriptionChoiceView,
+        CloudConfigView,
         ImportMediaView,
         RunTranscriptionView,
       ];
     }
-    return [
-      NewProjectView,
-      TranscriptionChoiceView,
-      ImportMediaView,
-      RunTranscriptionView,
-    ];
+    return [NewProjectView, ImportMediaView, RunTranscriptionView];
   }, [isCloudConfigRequired]);
 
   useEffect(() => {
@@ -116,15 +110,6 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
             nextView={nextView}
             projectName={projectName}
             setProjectName={setProjectName}
-          />
-        );
-      case TranscriptionChoiceView:
-        return (
-          <TranscriptionChoiceView
-            prevView={prevView}
-            closeModal={showCancelProject}
-            nextView={nextView}
-            projectName={projectName}
           />
         );
       case CloudConfigView:

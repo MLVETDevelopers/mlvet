@@ -60,9 +60,6 @@ export const findDefaultEngineConfig = (
     case TranscriptionEngine.ASSEMBLYAI: {
       return cloudConfig.ASSEMBLYAI;
     }
-    case TranscriptionEngine.VOSK: {
-      return cloudConfig.VOSK;
-    }
     default: {
       return cloudConfig.DUMMY;
     }

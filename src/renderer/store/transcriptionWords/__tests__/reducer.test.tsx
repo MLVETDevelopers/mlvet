@@ -42,12 +42,10 @@ describe('Transcription words reducer', () => {
       {
         type: DELETE_SELECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 1,
-              endIndex: 3,
-            },
-          ],
+          range: {
+            startIndex: 1,
+            endIndex: 3,
+          },
         },
       }
     );
@@ -73,12 +71,10 @@ describe('Transcription words reducer', () => {
       {
         type: UNDO_DELETE_SELECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 2,
-              endIndex: 5,
-            },
-          ],
+          range: {
+            startIndex: 2,
+            endIndex: 5,
+          },
         },
       }
     );
@@ -86,76 +82,6 @@ describe('Transcription words reducer', () => {
     expect(output).toEqual([
       makeBasicWordSequential(0, 'a'),
       makeBasicWordSequential(1, 'b'),
-      makeBasicWordSequential(2, 'c'),
-      makeBasicWordSequential(3, 'd'),
-      makeBasicWordSequential(4, 'e'),
-    ]);
-  });
-
-  it('should handle deletions for non-contiguous ranges', () => {
-    const output = transcriptionWordsReducer(
-      [
-        makeBasicWordSequential(0, 'a'),
-        makeBasicWordSequential(1, 'b'),
-        makeBasicWordSequential(2, 'c'),
-        makeBasicWordSequential(3, 'd'),
-        makeBasicWordSequential(4, 'e'),
-      ],
-      {
-        type: DELETE_SELECTION,
-        payload: {
-          ranges: [
-            {
-              startIndex: 0,
-              endIndex: 2,
-            },
-            {
-              startIndex: 3,
-              endIndex: 4,
-            },
-          ],
-        },
-      }
-    );
-
-    expect(output).toEqual([
-      makeBasicWordSequential(0, 'a', true),
-      makeBasicWordSequential(1, 'b', true),
-      makeBasicWordSequential(2, 'c'),
-      makeBasicWordSequential(3, 'd', true),
-      makeBasicWordSequential(4, 'e'),
-    ]);
-  });
-
-  it('should handle deletions being undone for non-contiguous ranges', () => {
-    const output = transcriptionWordsReducer(
-      [
-        makeBasicWordSequential(0, 'a', true),
-        makeBasicWordSequential(1, 'b', true),
-        makeBasicWordSequential(2, 'c'),
-        makeBasicWordSequential(3, 'd', true),
-        makeBasicWordSequential(4, 'e', true),
-      ],
-      {
-        type: UNDO_DELETE_SELECTION,
-        payload: {
-          ranges: [
-            {
-              startIndex: 0,
-              endIndex: 1,
-            },
-            {
-              startIndex: 3,
-              endIndex: 5,
-            },
-          ],
-        },
-      }
-    );
-
-    expect(output).toEqual([
-      makeBasicWordSequential(0, 'a'),
-      makeBasicWordSequential(1, 'b', true),
       makeBasicWordSequential(2, 'c'),
       makeBasicWordSequential(3, 'd'),
       makeBasicWordSequential(4, 'e'),
@@ -466,12 +392,10 @@ describe('Transcription words reducer', () => {
       {
         type: RESTORE_SECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 1,
-              endIndex: 3,
-            },
-          ],
+          range: {
+            startIndex: 1,
+            endIndex: 3,
+          },
         },
       }
     );
@@ -497,24 +421,20 @@ describe('Transcription words reducer', () => {
     const restoredWords = transcriptionWordsReducer(words, {
       type: RESTORE_SECTION,
       payload: {
-        ranges: [
-          {
-            startIndex: 1,
-            endIndex: 3,
-          },
-        ],
+        range: {
+          startIndex: 1,
+          endIndex: 3,
+        },
       },
     });
 
     const output = transcriptionWordsReducer(restoredWords, {
       type: UNDO_RESTORE_SECTION,
       payload: {
-        ranges: [
-          {
-            startIndex: 1,
-            endIndex: 3,
-          },
-        ],
+        range: {
+          startIndex: 1,
+          endIndex: 3,
+        },
       },
     });
 
@@ -533,12 +453,10 @@ describe('Transcription words reducer', () => {
       {
         type: RESTORE_SECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 4,
-              endIndex: 5,
-            },
-          ],
+          range: {
+            startIndex: 4,
+            endIndex: 5,
+          },
         },
       }
     );
@@ -564,12 +482,10 @@ describe('Transcription words reducer', () => {
       {
         type: RESTORE_SECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 0,
-              endIndex: 1,
-            },
-          ],
+          range: {
+            startIndex: 0,
+            endIndex: 1,
+          },
         },
       }
     );
@@ -595,12 +511,10 @@ describe('Transcription words reducer', () => {
       {
         type: RESTORE_SECTION,
         payload: {
-          ranges: [
-            {
-              startIndex: 0,
-              endIndex: 3,
-            },
-          ],
+          range: {
+            startIndex: 0,
+            endIndex: 3,
+          },
         },
       }
     );

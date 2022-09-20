@@ -25,7 +25,7 @@ const punctuate: (
     const silenceDuration = endTime - word.startTime - word.duration;
 
     if (index === 0) {
-      words[index].word = capitalizeFirstLetter(words[index].word);
+      words[index].word = capitalizeFirstLetter(words[index].word ?? '');
     }
 
     const thresholds: Thresholds = calculateThresholds(averageSilenceDuration);
@@ -38,7 +38,9 @@ const punctuate: (
     } else {
       punctuation = '.';
       if (!isLastWord) {
-        words[index + 1].word = capitalizeFirstLetter(words[index + 1].word);
+        words[index + 1].word = capitalizeFirstLetter(
+          words[index + 1].word ?? ''
+        );
       }
     }
 

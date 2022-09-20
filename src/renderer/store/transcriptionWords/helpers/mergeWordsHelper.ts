@@ -13,20 +13,22 @@ export const mergeWords: (words: Word[], range: IndexRange) => Word[] = (
   range
 ) => {
   const prefix = words.slice(0, range.startIndex);
+  const wordsToMerge = words.slice(range.startIndex, range.endIndex);
   const suffix = words.slice(range.endIndex);
 
   const firstWord = words[range.startIndex];
   const lastWord = words[range.endIndex - 1];
 
-  const wordsToMerge = words.slice(range.startIndex, range.endIndex);
-
   // Sanity check
-  if (!isMergeSplitAllowed(words, [range]).merge) {
+  if (!isMergeSplitAllowed(words, range).merge) {
     return words;
   }
 
   // Resulting text of the merged words
-  const mergedText = wordsToMerge.map((word) => word.word).join(' ');
+  const mergedText = wordsToMerge
+    .filter((word) => word.word !== null)
+    .map((word) => word.word)
+    .join(' ');
 
   // Combined inner durations of all the inner words
   const innerDuration = wordsToMerge.reduce((durationSoFar, word, index) => {

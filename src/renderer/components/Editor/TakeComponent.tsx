@@ -8,7 +8,7 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
 import { isIndexInRange } from 'renderer/utils/range';
-import { WordMouseHandler } from './DragSelectManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
 import { CustomRowStack } from '../CustomStacks';
@@ -40,6 +40,11 @@ interface TakePassThroughProps {
   setPlaybackTime: (time: number) => void;
   otherSelections: Record<ClientId, IndexRange>;
   editWord: EditWordState;
+  partialSelectState: PartialSelectState | null;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface TakeComponentProps extends TakePassThroughProps {
@@ -51,7 +56,10 @@ interface TakeComponentProps extends TakePassThroughProps {
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseEnter: (wordIndex: number) => void;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   transcriptionIndex: number;
   isLast: boolean;
   isFirstTimeOpen: boolean;

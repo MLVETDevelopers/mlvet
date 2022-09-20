@@ -11,9 +11,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
+import UngroupTakesModal from './UngroupTakesModal';
 import { DragState, WordMouseHandler } from './WordDragManager';
 
 const CustomStack = styled(Stack)({ width: '100%' });
@@ -23,6 +25,18 @@ const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
 const CustomRowStack = styled(CustomStack)({
   flexDirection: 'row',
   alignItems: 'center',
+});
+
+const UngroupTakes = styled(BlockIcon)({
+  display: 'flex',
+  position: 'absolute',
+  left: '-10px',
+  marginTop: '45px',
+  color: colors.grey[500],
+
+  '&:hover': {
+    color: colors.grey[300],
+  },
 });
 
 export interface TranscriptionPassThroughProps {
@@ -65,6 +79,23 @@ const TakeGroupComponent = ({
 }: TakeGroupComponentProps) => {
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
   const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
+  const [showUngroupModal, setShowUngroupModal] = useState(false);
+
+  const ungroupTakesModalOpen = () => {
+    transcription.takeGroups = transcription.takeGroups.filter(
+      (tg) => tg.id !== takeGroup.id
+    );
+
+    setShowUngroupModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowUngroupModal(false);
+  };
+
+  const ungroupTakes = () => {
+    handleModalClose();
+  };
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -130,12 +161,29 @@ const TakeGroupComponent = ({
   });
 
   return (
-    <CustomColumnStack sx={{ marginTop: '10px', marginBottom: '10px' }}>
-      <CustomRowStack sx={{ justifyContent: 'flex-end' }}>
-        {!isFirstTimeOpen && isTakeGroupOpened && <BlockIcon />}
-      </CustomRowStack>
-      {takes}
-    </CustomColumnStack>
+    <>
+      <CustomColumnStack
+        sx={{
+          marginTop: '10px',
+          marginBottom: !isFirstTimeOpen && isTakeGroupOpened ? '45px' : '15px',
+        }}
+      >
+        {takes}
+        <CustomRowStack
+          position="relative"
+          sx={{ justifyContent: 'flex-start' }}
+        >
+          {!isFirstTimeOpen && isTakeGroupOpened && (
+            <UngroupTakes onClick={ungroupTakesModalOpen} />
+          )}
+        </CustomRowStack>
+      </CustomColumnStack>
+      <UngroupTakesModal
+        isOpen={showUngroupModal}
+        closeModal={handleModalClose}
+        ungroupTakes={ungroupTakes}
+      />
+    </>
   );
 };
 

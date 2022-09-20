@@ -10,6 +10,7 @@ import { EditWordState } from 'renderer/store/sharedHelpers';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
+import colors from '../../colors';
 
 const CustomStack = styled(Stack)({ width: '100%' });
 
@@ -128,8 +129,10 @@ const TakeComponent = ({
                     height: 22,
                     width: 22,
                     fontSize: 12,
-                    color: '#1D201F',
-                    backgroundColor: isActive ? '#FFB355' : '#ABA9A9',
+                    color: colors.grey[700],
+                    backgroundColor: isActive
+                      ? colors.yellow[500]
+                      : colors.grey[400],
                     display: 'flex',
                     position: 'absolute',
                     left: '-30px',

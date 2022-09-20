@@ -1,7 +1,7 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
-import getVoskTranscript from 'vosk';
+import getVoskTranscript from '../../../../vosk';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
 
@@ -15,8 +15,8 @@ const transcribeWithVosk = async (audioFilePath: string) => {
   const modelName = 'vosk-model-en-us-0.22';
   const modelPath = path.join(
     __dirname,
-    '../../../.',
-    `assets/voskModel/${modelName}`
+    '../../../../../assets/voskModel',
+    modelName
   );
 
   if (!fs.existsSync(modelPath)) {

@@ -3,7 +3,6 @@ import { RuntimeProject, TranscriptionEngine } from '../../../sharedTypes';
 import { TranscriptionFunction } from '../helpers/transcribeTypes';
 import dummyTranscribeFunction from '../helpers/transcriptionEngines/dummyTranscribeFunction';
 import assemblyAiTranscribeFunction from '../helpers/transcriptionEngines/assemblyAiTranscribeFunction';
-import voskTranscribeFunction from '../helpers/transcriptionEngines/voskTranscribeFunction';
 
 const getTranscriptionFunction: Record<
   TranscriptionEngine,
@@ -12,7 +11,6 @@ const getTranscriptionFunction: Record<
   // Add the enum - function mapping for a transcription engine here
   [TranscriptionEngine.DUMMY]: dummyTranscribeFunction,
   [TranscriptionEngine.ASSEMBLYAI]: assemblyAiTranscribeFunction,
-  [TranscriptionEngine.VOSK]: voskTranscribeFunction,
 };
 
 type Transcribe = (

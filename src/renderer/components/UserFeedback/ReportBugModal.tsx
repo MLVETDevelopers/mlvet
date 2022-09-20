@@ -5,6 +5,7 @@ import {
   styled,
   Modal,
   TextField,
+  Snackbar,
 } from '@mui/material';
 import { useState } from 'react';
 import colors from 'renderer/colors';
@@ -47,6 +48,7 @@ interface Props {
 const ReportBugModal = ({ open, onClose }: Props) => {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const handleBugTitleInput = (value: string) => {
     setBugTitle(value);
@@ -66,6 +68,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
     setBugTitle('');
     setBugDescription('');
     onClose();
+    setShowSnackbar(true);
   };
 
   return (
@@ -105,6 +108,13 @@ const ReportBugModal = ({ open, onClose }: Props) => {
           </CustomStack>
         </CustomModalInner>
       </CustomModal>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={showSnackbar}
+        autoHideDuration={2000}
+        onClose={() => setShowSnackbar(false)}
+        message="Your bug report has been submitted!"
+      />
     </div>
   );
 };

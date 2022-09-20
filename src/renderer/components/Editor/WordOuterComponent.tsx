@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore, EditWordState } from 'renderer/store/sharedHelpers';
 import { isIndexInRange } from 'renderer/utils/range';
 import { IndexRange, Word } from 'sharedTypes';
+import { PartialSelectState } from './DragSelectManager';
 import EditMarker from './EditMarker';
 import WordComponent, { WordPassThroughProps } from './WordComponent';
 import WordSpace from './WordSpace';
@@ -22,6 +23,7 @@ interface WordOuterComponentProps extends WordPassThroughProps {
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   transcriptionLength: number;
+  partialSelectState: PartialSelectState | null;
 }
 
 const WordAndSpaceContainer = styled(Box)({
@@ -43,6 +45,7 @@ const WordOuterComponent = ({
   transcriptionBlockRef,
   isNextWordSelected,
   transcriptionLength,
+  partialSelectState,
   ...passThroughProps
 }: WordOuterComponentProps) => {
   const isShowingConfidenceUnderlines = useSelector(
@@ -136,6 +139,8 @@ const WordOuterComponent = ({
             isBeingEdited={editWord?.index === index}
             editText={editWord?.text ?? null}
             isSelected={isSelected}
+            isPrevWordSelected={isPrevWordSelected}
+            isNextWordSelected={isNextWordSelected}
             selectedByClientWithIndex={selectedByClientWithIndex}
             isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
             isSelectedByAnotherClientRightCap={
@@ -145,6 +150,11 @@ const WordOuterComponent = ({
             key={`word-${word.originalIndex}-${word.pasteKey}`}
             isSelectedLeftCap={isSelected && !isPrevWordSelected}
             isSelectedRightCap={isSelected && !isNextWordSelected}
+            partialSelectState={
+              partialSelectState?.wordIndex === index
+                ? partialSelectState
+                : null
+            }
             {...passThroughProps}
           />
           {index === transcriptionLength - 1 && (

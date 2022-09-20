@@ -13,6 +13,9 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from 'renderer/components/Blocks/Buttons';
+import ipc from '../../ipc';
+
+const { reportBug } = ipc;
 
 const CustomStack = styled(Stack)`
   width: 100%;
@@ -65,6 +68,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   };
 
   const onSubmit = () => {
+    reportBug(bugTitle, bugDescription);
     setBugTitle('');
     setBugDescription('');
     onClose();

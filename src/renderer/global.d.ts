@@ -121,6 +121,8 @@ declare global {
       returnToHome: (project: RuntimeProject) => Promise<number>;
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;
+
+      reportBug: (title: string, body: string) => null;
       // END GENERATED CODE
 
       on: (

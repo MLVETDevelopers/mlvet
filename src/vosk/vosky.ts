@@ -46,7 +46,7 @@ const getDLLDir = () => {
 };
 
 const appendPATHStr = (currentPATHStr: string, newPath: string) => {
-  return currentPATHStr + path.delimiter + newPath;
+  return newPath + path.delimiter + currentPATHStr;
 };
 
 const updatePathWithDLLs = (dllPath: string, callback: () => void) => {

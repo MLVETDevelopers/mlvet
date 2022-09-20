@@ -133,7 +133,13 @@ const TranscriptionBlock = ({
 
   return (
     <DragSelectManager clearSelection={clearSelection}>
-      {(onWordMouseDown, onWordMouseEnter) => {
+      {(
+        onWordMouseDown,
+        onWordMouseEnter,
+        partialSelectState,
+        setPartialSelectState,
+        isMouseDown
+      ) => {
         return (
           <TranscriptionBox id="transcription-content" ref={blockRef}>
             {mapWithAccumulator(
@@ -162,6 +168,9 @@ const TranscriptionBlock = ({
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                       setPlaybackTime={setPlaybackTime}
+                      partialSelectState={partialSelectState}
+                      setPartialSelectState={setPartialSelectState}
+                      isMouseDown={isMouseDown}
                     />
                   ),
                   acc: isTakeGroup(chunk)

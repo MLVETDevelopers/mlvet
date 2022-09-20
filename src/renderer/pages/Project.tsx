@@ -67,13 +67,26 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <IconButton
-                color="primary"
-                onClick={openUserFeedback}
-                sx={{ position: 'absolute', marginTop: '5px', right: '20px' }}
+              <div
+                style={{
+                  position: 'absolute',
+                  marginTop: '15px',
+                  right: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  fontSize: '8px',
+                }}
               >
-                <RateReviewIcon fontSize="large" />
-              </IconButton>
+                <IconButton
+                  color="primary"
+                  onClick={openUserFeedback}
+                  sx={{ padding: '0' }}
+                >
+                  <RateReviewIcon fontSize="medium" />
+                </IconButton>
+                Feedback
+              </div>
+
               <VideoController
                 time={time}
                 isPlaying={isPlaying}

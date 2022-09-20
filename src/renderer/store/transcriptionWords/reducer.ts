@@ -2,7 +2,7 @@ import { Reducer } from 'react';
 import { mapInRange } from 'sharedUtils';
 import { Word } from 'sharedTypes';
 import { getLengthOfRange, rangeLengthOne } from 'renderer/utils/range';
-import { markWordDeleted } from 'renderer/utils/words';
+import { markWordDeleted, markWordUndeleted } from 'renderer/utils/words';
 import { Action } from '../action';
 import { mergeWords } from './helpers/mergeWordsHelper';
 import { splitWord } from './helpers/splitWordHelper';
@@ -60,9 +60,15 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
 
   if (action.type === PASTE_WORD) {
     const { range, clipboard } = action.payload as PasteWordsPayload;
-    const { endIndex } = range;
+    const { startIndex, endIndex } = range;
 
-    const prefix = words.slice(0, endIndex);
+    const prefix = words.slice(0, startIndex);
+
+    const wordsToReplace = words.slice(startIndex, endIndex);
+    const replacedWords =
+      getLengthOfRange(range) > 1
+        ? wordsToReplace.map(markWordDeleted)
+        : wordsToReplace;
 
     // Paste key must be unique for all pasted words - that is, no two pasted words should ever have the same paste key.
     // We force this invariant by finding the highest paste key in the entire transcription to this point, and then
@@ -78,29 +84,20 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
 
     const suffix = words.slice(endIndex);
 
-    return getLengthOfRange(range) > 1
-      ? mapInRange(
-          [...prefix, ...wordsToPaste, ...suffix],
-          markWordDeleted,
-          range
-        )
-      : [...prefix, ...wordsToPaste, ...suffix];
+    return [...prefix, ...replacedWords, ...wordsToPaste, ...suffix];
   }
 
   if (action.type === UNDO_PASTE_WORD) {
     const { range, clipboardLength } = action.payload as UndoPasteWordsPayload;
+    const { startIndex, endIndex } = range;
 
-    const { startIndex } = range;
+    const prefix = words.slice(0, startIndex);
+    const replacedWords = words
+      .slice(startIndex, endIndex)
+      .map(markWordUndeleted);
+    const suffix = words.slice(endIndex + clipboardLength);
 
-    const markUndeleted = (word: Word) => ({
-      ...word,
-      deleted: false,
-    });
-
-    const prefix = words.slice(0, startIndex + 1);
-    const suffix = words.slice(startIndex + clipboardLength + 1);
-
-    return mapInRange([...prefix, ...suffix], markUndeleted, range);
+    return [...prefix, ...replacedWords, ...suffix];
   }
 
   // Doing a MERGE_WORDS action is identical to undoing a SPLIT_WORD action

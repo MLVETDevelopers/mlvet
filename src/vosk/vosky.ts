@@ -3,6 +3,7 @@
 import * as os from 'os';
 import path from 'path';
 import koffi from 'koffi';
+import fs from 'fs';
 import {
   Model,
   PartialResults,
@@ -12,9 +13,6 @@ import {
   Result,
   SpeakerModel,
 } from './helpers';
-import fs from 'fs';
-
-let libvosk: any;
 
 const getBaseDLLPath = () => {
   // Path is different in dev than in production
@@ -49,40 +47,23 @@ const appendPATHStr = (currentPATHStr: string, newPath: string) => {
   return newPath + path.delimiter + currentPATHStr;
 };
 
-const updatePathWithDLLs = (dllPath: string, callback: () => void) => {
+const updatePathWithDLLs = (dllPath: string) => {
   let currentPath = process.env.Path as string;
 
   const dllDirectory = path.resolve(dllPath);
   currentPath = appendPATHStr(currentPath, path.join(dllDirectory));
 
-  fs.promises.readdir(dllDirectory).then((winDllFiles) => {
-    for (const file of winDllFiles) {
-      currentPath = appendPATHStr(currentPath, path.join(dllDirectory, file));
-    }
-    process.env.Path = currentPath;
-    callback();
-  });
+  process.env.Path = currentPath;
 };
 
-const dllDir = getDLLDir();
-
-if (os.platform() === PLATFORMS.WINDOWS) {
-  // Update PATH to load dependent dlls
-  const baseDLLPath = getBaseDLLPath();
-  const windowsDLLPath = path.join(baseDLLPath, platformPaths.WINDOWS);
-  updatePathWithDLLs(windowsDLLPath, () => {
-    console.log(process.env.Path);
-    libvosk = koffi.load(dllDir);
-  });
-} else {
-  libvosk = koffi.load(dllDir);
-}
-
 const vosky = () => {
-  // const dllDir = getDLLDir();
+  const dllDir = getDLLDir();
+  if (os.platform() === PLATFORMS.WINDOWS) {
+    // Update PATH to load dependent dlls
+    updatePathWithDLLs(dllDir);
+  }
 
-  // console.log(process.env.Path);
-  // const libvosk = koffi.load(dllDir);
+  const libvosk = koffi.load(dllDir);
 
   koffi.opaque('VoskModel');
   const modelPointer = koffi.pointer('void');

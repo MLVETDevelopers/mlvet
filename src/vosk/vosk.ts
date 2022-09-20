@@ -12,7 +12,7 @@ import {
 } from './helpers';
 import { getDLLDir, updatePathWithDLLs } from './util';
 
-const vosky = () => {
+const vosk = () => {
   const dllDir = getDLLDir();
   if (os.platform() === PLATFORMS.WINDOWS) {
     // Update PATH to load dependent dlls
@@ -362,4 +362,4 @@ const vosky = () => {
   return { setLogLevel, createModel, createSpeakerModel, createRecognizer };
 };
 
-export default vosky;
+export default vosk;

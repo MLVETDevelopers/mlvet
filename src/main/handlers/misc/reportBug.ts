@@ -46,8 +46,6 @@ const reportBug = async (title: string, body: string) => {
     body,
     labels: [BUG_REPORT_LABEL],
   });
-
-  console.log(title, body, 'hello world');
 };
 
 export default reportBug;

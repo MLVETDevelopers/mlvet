@@ -1,60 +1,16 @@
 /* eslint-disable max-classes-per-file */
 
-import * as os from 'os';
-import path from 'path';
+import os from 'os';
 import koffi from 'koffi';
-import fs from 'fs';
 import {
   Model,
   PartialResults,
-  platformPaths,
   PLATFORMS,
   Recognizer,
   Result,
   SpeakerModel,
 } from './helpers';
-
-const getBaseDLLPath = () => {
-  // Path is different in dev than in production
-  const prodPath =
-    process.env.NODE_ENV === 'development'
-      ? '../../release/app/node_modules/vosk/'
-      : '../../../vosk';
-
-  return path.join(__dirname, prodPath, 'lib');
-};
-
-const getDLLDir = () => {
-  const baseDLLPath = getBaseDLLPath();
-
-  let dllDir;
-  if (os.platform() === PLATFORMS.WINDOWS) {
-    dllDir = path.join(baseDLLPath, platformPaths.WINDOWS, 'libvosk.dll');
-  } else if (os.platform() === PLATFORMS.MAC) {
-    dllDir = path.join(baseDLLPath, platformPaths.MAC, 'libvosk.dylib');
-  } else {
-    dllDir = path.join(baseDLLPath, platformPaths.LINUX, 'libvosk.so');
-  }
-
-  if (!fs.existsSync(dllDir)) {
-    throw new Error(`DLL could not be found at path '${dllDir}'`);
-  }
-
-  return dllDir;
-};
-
-const appendPATHStr = (currentPATHStr: string, newPath: string) => {
-  return newPath + path.delimiter + currentPATHStr;
-};
-
-const updatePathWithDLLs = (dllFilePath: string) => {
-  let currentPath = process.env.Path as string;
-
-  const dllDirectory = path.dirname(dllFilePath);
-  currentPath = appendPATHStr(currentPath, path.join(dllDirectory));
-
-  process.env.Path = currentPath;
-};
+import { getDLLDir, updatePathWithDLLs } from './util';
 
 const vosky = () => {
   const dllDir = getDLLDir();

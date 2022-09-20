@@ -47,10 +47,10 @@ const appendPATHStr = (currentPATHStr: string, newPath: string) => {
   return newPath + path.delimiter + currentPATHStr;
 };
 
-const updatePathWithDLLs = (dllPath: string) => {
+const updatePathWithDLLs = (dllFilePath: string) => {
   let currentPath = process.env.Path as string;
 
-  const dllDirectory = path.resolve(dllPath);
+  const dllDirectory = path.dirname(dllFilePath);
   currentPath = appendPATHStr(currentPath, path.join(dllDirectory));
 
   process.env.Path = currentPath;

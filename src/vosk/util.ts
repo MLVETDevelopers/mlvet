@@ -7,8 +7,8 @@ export const getBaseDLLPath = () => {
   // Path is different in dev than in production
   const prodPath =
     process.env.NODE_ENV === 'development'
-      ? '../../release/app/node_modules/vosk/'
-      : '../../../vosk';
+      ? '../../assets/voskDLLs'
+      : '../../../assets/voskDLLs';
 
   return path.join(__dirname, prodPath, 'lib');
 };

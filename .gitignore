@@ -38,3 +38,4 @@ assets/thumbnails/thumbnail.png
 experiments/**/assets
 
 **/voskModel/**
+**/voskDLLs/**

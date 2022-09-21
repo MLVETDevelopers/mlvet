@@ -25,7 +25,7 @@ const CustomRowStack = styled(CustomStack)({
 const UngroupTakes = styled(BlockIcon)({
   display: 'flex',
   position: 'absolute',
-  left: '-35px',
+  left: '-46px',
   marginTop: '40px',
   width: '22px',
   height: '22px',

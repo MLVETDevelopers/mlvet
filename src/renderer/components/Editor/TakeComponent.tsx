@@ -122,7 +122,7 @@ const TakeComponent = ({
         backgroundColor: isActive ? colors.yellow[500] : colors.grey[400],
         display: 'flex',
         position: 'absolute',
-        left: '-18px',
+        left: '-30px',
         top: '9px',
         transform: 'translateY(2px)',
         cursor: 'pointer',
@@ -158,7 +158,7 @@ const TakeComponent = ({
     <>
       <TakeWrapper className="take" onClick={onClick}>
         <CustomRowStack
-          sx={{ justifyContent: 'flex-start', paddingLeft: '9px' }}
+          sx={{ justifyContent: 'flex-start', paddingLeft: '4px' }}
         >
           {isTakeGroupOpened || isActive ? (
             <>

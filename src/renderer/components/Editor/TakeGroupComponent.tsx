@@ -14,7 +14,6 @@ import React, {
 import { useDispatch } from 'react-redux';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import store from 'renderer/store/store';
 import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';

@@ -1,42 +1,47 @@
 /* eslint-disable react/no-array-index-key */
-
-import { MousePosition } from '@react-hook/mouse-position';
+import styled from '@emotion/styled';
+import BlockIcon from '@mui/icons-material/Block';
+import { Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useMemo,
-  useState,
-} from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
+
+const CustomStack = styled(Stack)({ width: '100%' });
+
+const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
+
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
 
 export interface TranscriptionPassThroughProps {
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
   editWord: EditWordState;
   submitWordEdit: () => void;
-  otherSelectionSets: Record<ClientId, Set<number>>;
+  otherSelections: Record<ClientId, IndexRange>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
+  partialSelectState: PartialSelectState | null;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selection: IndexRange;
   transcription: Transcription;
 }
 
@@ -44,15 +49,14 @@ const TakeGroupComponent = ({
   takeGroup,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
-  isWordBeingDragged,
-  mousePosition,
+  onWordMouseEnter,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -91,8 +95,6 @@ const TakeGroupComponent = ({
         .map((take) => take.length)
         .reduce((acc, curr) => acc + curr, 0);
 
-    console.log(takeWords, takeIndex, chunkIndex, transcriptionIndex);
-
     return (
       <TakeComponent
         key={`take-${takeGroup.id}-${takeIndex}`}
@@ -102,27 +104,26 @@ const TakeGroupComponent = ({
         isTakeGroupOpened={isTakeGroupOpened}
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
-        onWordMouseMove={onWordMouseMove}
-        isWordBeingDragged={isWordBeingDragged}
-        mousePosition={mousePosition}
+        onWordMouseEnter={onWordMouseEnter}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        selectionSet={selectionSet}
+        selection={selection}
         transcriptionIndex={transcriptionIndex}
+        isLast={takeIndex === takeWordsPerTake.length - 1}
+        isFirstTimeOpen={isFirstTimeOpen}
+        setIsFirstTimeOpen={setIsFirstTimeOpen}
         {...passThroughProps}
       />
     );
   });
 
   return (
-    <div
-      style={{
-        marginTop: '10px',
-        marginBottom: '10px',
-      }}
-    >
+    <CustomColumnStack sx={{ marginTop: '10px', marginBottom: '10px' }}>
+      <CustomRowStack sx={{ justifyContent: 'flex-end' }}>
+        {!isFirstTimeOpen && isTakeGroupOpened && <BlockIcon />}
+      </CustomRowStack>
       {takes}
-    </div>
+    </CustomColumnStack>
   );
 };
 

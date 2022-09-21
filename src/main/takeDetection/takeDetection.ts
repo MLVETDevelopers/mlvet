@@ -1,8 +1,8 @@
-import { Word, IndexRange } from 'sharedTypes';
+import { Word } from '../../sharedTypes';
 import {
   InjectableTake,
   InjectableTakeGroup,
-} from 'main/editDelete/injectTakeInfo';
+} from '../editDelete/injectTakeInfo';
 import getSimilarityScore from './sentenceSimilarity';
 import { THRESHOLD } from './constants';
 
@@ -20,6 +20,10 @@ export function findSentences(words: Word[]): Sentence[] {
   };
   const sentences: Sentence[] = [];
   words.forEach((word, idx) => {
+    if (word.word === null) {
+      return;
+    }
+
     if (currentSentence.sentenceString === '') {
       currentSentence.sentenceString = word.word;
     } else {
@@ -44,61 +48,199 @@ export function findSentences(words: Word[]): Sentence[] {
       };
     }
   });
-  sentences[sentences.length - 1].endIndex = words.length;
+  if (sentences.length > 0) {
+    sentences[sentences.length - 1].endIndex = words.length;
+  }
   return sentences;
 }
 
-function newTakeGroup(
-  sentenceOne: Sentence,
-  sentenceTwo: Sentence
-): InjectableTakeGroup {
-  const newGroup: InjectableTakeGroup = { takes: [] };
-  let nextTakeRange: IndexRange = {
-    startIndex: sentenceOne.startIndex as number,
-    endIndex: sentenceOne.endIndex as number,
-  };
-  let nextTake: InjectableTake = { wordRange: nextTakeRange };
-  newGroup.takes.push(nextTake);
-  nextTakeRange = {
-    startIndex: sentenceTwo.startIndex as number,
-    endIndex: sentenceTwo.endIndex as number,
-  };
-  nextTake = { wordRange: nextTakeRange };
-  newGroup.takes.push(nextTake);
-  return newGroup;
-}
+const newTakeGroup = (
+  potentialTakeStartIdxs: number[],
+  potentialTakeLen: number,
+  sentences: Sentence[]
+): InjectableTakeGroup => {
+  // if all the sentence in potential take are similar, add them to takeGroups
+  const takes = potentialTakeStartIdxs.map((startIdx) => {
+    const takeStartSentence = sentences[startIdx];
+    const takeEndSentence = sentences[startIdx + potentialTakeLen - 1];
 
-export function findTakes(words: Word[], threshold = THRESHOLD): InjectableTakeGroup[] {
-  const takeGroups: InjectableTakeGroup[] = [];
-  const sentences: Sentence[] = findSentences(words);
-  for (let i = 0; i < sentences.length - 1; i += 1) {
-    const similarity: number = getSimilarityScore(
-      sentences[i].sentenceString,
-      sentences[i + 1].sentenceString
-    );
-    if (similarity > threshold) {
-      if (takeGroups.length !== 0) {
-        const lastTake: IndexRange = takeGroups.at(-1)?.takes.at(-1)
-          ?.wordRange as IndexRange;
-        if (
-          lastTake.startIndex === sentences[i].startIndex &&
-          lastTake.endIndex === sentences[i].endIndex
-        ) {
-          const nextTakeRange: IndexRange = {
-            startIndex: sentences[i + 1].startIndex as number,
-            endIndex: sentences[i + 1].endIndex as number,
-          };
-          const nextTake: InjectableTake = { wordRange: nextTakeRange };
-          takeGroups.at(-1)?.takes.push(nextTake);
-        } else {
-          takeGroups.push(newTakeGroup(sentences[i], sentences[i + 1]));
+    return {
+      wordRange: {
+        startIndex: takeStartSentence.startIndex as number,
+        endIndex: takeEndSentence.endIndex as number,
+      },
+    } as InjectableTake;
+  });
+
+  return { takes };
+};
+
+const startDetection = (
+  currentSentenceIdx: number,
+  potentialTakeLen: number,
+  potentialTakeStartIdxs: number[],
+  sentences: Sentence[],
+  threshold: number
+): {
+  isSimilarTake: boolean;
+  updatedCurrentSentenceIdx: number;
+  updatedPotentialTakeStartIdxs: number[];
+} => {
+  // not constructive, and potential take before this sentence is valid
+  // assume sentences in potential take are similar
+  let isSimilarTake = true;
+  let updatedCurrentSentenceIdx = 0;
+  const updatedPotentialTakeStartIdxs = potentialTakeStartIdxs;
+
+  // compare sentences within the potential take length, start from the second sentence
+  for (let i = 1; i < potentialTakeLen; i += 1) {
+    // if sentence is not similar, discard potential take and restart
+    if (!isSimilarTake) {
+      break;
+    }
+
+    // compute the next sentence's index in the first take group
+    // as reference to compare the rest
+    const nextSentenceIdxToCompare = updatedPotentialTakeStartIdxs[0] + i;
+
+    // compare sentence in first potential take chunk with every other potential take chunk
+    // compare the next sentence each time
+    for (let j = 1; j < updatedPotentialTakeStartIdxs.length; j += 1) {
+      const nextSimilarity = getSimilarityScore(
+        sentences[nextSentenceIdxToCompare].sentenceString,
+        sentences[updatedPotentialTakeStartIdxs[j] + i].sentenceString
+      );
+
+      // if sentence in the chunk is not similar, discard all chunks to the right
+      if (nextSimilarity < threshold) {
+        const potentialTakeStartIdxsLen = updatedPotentialTakeStartIdxs.length;
+        const chunksToDiscard = potentialTakeStartIdxsLen - j;
+        const chunksLeft = potentialTakeStartIdxsLen - chunksToDiscard;
+
+        // if only the first chunk left, reset
+        if (chunksLeft === 1) {
+          // start from the sentence in second group
+          updatedCurrentSentenceIdx = updatedPotentialTakeStartIdxs[j];
+          isSimilarTake = false;
+
+          break;
         }
-      } else {
-        takeGroups.push(newTakeGroup(sentences[i], sentences[i + 1]));
+
+        // discard chunks to the right
+        for (let k = 0; k < chunksToDiscard; k += 1) {
+          updatedPotentialTakeStartIdxs.pop();
+        }
       }
     }
   }
+
+  if (isSimilarTake)
+    updatedCurrentSentenceIdx =
+      potentialTakeLen * updatedPotentialTakeStartIdxs.length +
+      currentSentenceIdx;
+
+  return {
+    isSimilarTake,
+    updatedCurrentSentenceIdx,
+    updatedPotentialTakeStartIdxs,
+  };
+};
+
+export function findTakes(
+  words: Word[],
+  threshold = THRESHOLD
+): InjectableTakeGroup[] {
+  const sentences: Sentence[] = findSentences(words);
+  const takeGroups: InjectableTakeGroup[] = [];
+
+  let currentSentenceIdx = 0;
+  let potentialTakeLen = 0;
+  const maxSentenceIdx = sentences.length - 1;
+  const potentialTakeStartIdxs: number[] = [];
+
+  do {
+    potentialTakeLen = 0;
+    potentialTakeStartIdxs.length = 0;
+    // set first sentence as potential take
+    potentialTakeStartIdxs.push(currentSentenceIdx);
+
+    let nextSentenceIdx = currentSentenceIdx + 1;
+    const maxRemainingTakesIdx =
+      Math.floor((sentences.length - currentSentenceIdx) / 2) +
+      currentSentenceIdx;
+
+    // search for any similar sentence start from current first sentence
+    while (nextSentenceIdx <= maxRemainingTakesIdx || potentialTakeLen > 0) {
+      // if remaining sentences can't make valid take
+      if (
+        nextSentenceIdx > maxSentenceIdx ||
+        nextSentenceIdx + potentialTakeLen - 1 > maxSentenceIdx
+      )
+        break;
+
+      const s1 = sentences[currentSentenceIdx].sentenceString;
+      const s2 = sentences[nextSentenceIdx].sentenceString;
+
+      const s = getSimilarityScore(s1, s2);
+
+      const isSimilar = s > threshold;
+
+      // if already found potential take
+      // but next sentence at potential take index is not similar
+      if (potentialTakeLen > 0 && !isSimilar) break;
+
+      if (isSimilar) {
+        if (potentialTakeLen === 0) {
+          potentialTakeLen = nextSentenceIdx - currentSentenceIdx;
+        }
+
+        potentialTakeStartIdxs.push(nextSentenceIdx);
+        nextSentenceIdx += potentialTakeLen;
+      } else {
+        nextSentenceIdx += 1;
+      }
+    }
+
+    if (potentialTakeStartIdxs.length > 1) {
+      if (potentialTakeLen > 1) {
+        // start detection after find all potential take start index
+        const {
+          isSimilarTake,
+          updatedCurrentSentenceIdx,
+          updatedPotentialTakeStartIdxs,
+        } = startDetection(
+          currentSentenceIdx,
+          potentialTakeLen,
+          potentialTakeStartIdxs,
+          sentences,
+          threshold
+        );
+
+        if (isSimilarTake) {
+          takeGroups.push(
+            newTakeGroup(
+              updatedPotentialTakeStartIdxs,
+              potentialTakeLen,
+              sentences
+            )
+          );
+        }
+
+        currentSentenceIdx = updatedCurrentSentenceIdx;
+      } else {
+        takeGroups.push(
+          newTakeGroup(potentialTakeStartIdxs, potentialTakeLen, sentences)
+        );
+        currentSentenceIdx = potentialTakeLen * potentialTakeStartIdxs.length;
+      }
+    } else {
+      currentSentenceIdx += 1;
+    }
+  } while (
+    potentialTakeStartIdxs[potentialTakeStartIdxs.length - 1] +
+      potentialTakeLen !==
+    sentences.length
+  );
+
   return takeGroups;
 }
-
-export default { getSimilarityScore };

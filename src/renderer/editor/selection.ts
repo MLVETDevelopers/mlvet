@@ -1,4 +1,5 @@
 import { rangeLengthOne } from 'renderer/utils/range';
+import { Word } from 'sharedTypes';
 import { checkSentenceEnd } from '../../sharedUtils';
 import { selectionRangeSetTo } from '../store/selection/actions';
 import store from '../store/store';
@@ -35,16 +36,23 @@ export const selectSentence: () => void = () => {
     return;
   }
   let { startIndex, endIndex } = store.getState().selection.self;
-  endIndex -= 1; // Account for the fact that the selection is exclusive of the end index
-  startIndex -= 1; // Move past the current word to account for the edge case of selecting a sentence end word
-  let startWord = currentProject.transcription.words[startIndex];
-  while (!(checkSentenceEnd(startWord) && startWord.deleted === false)) {
+
+  let startWord: Word;
+  do {
     startIndex -= 1;
+    if (startIndex < 0) {
+      break;
+    }
     startWord = currentProject.transcription.words[startIndex];
-  }
+  } while (!checkSentenceEnd(startWord) || startWord.deleted);
+
+  endIndex -= 1; // Account for the fact that the selection is exclusive of the end index
   let endWord = currentProject.transcription.words[endIndex];
-  while (!(checkSentenceEnd(endWord) && startWord.deleted === false)) {
+  while (!(checkSentenceEnd(endWord) && endWord.deleted === false)) {
     endIndex += 1;
+    if (endIndex >= currentProject.transcription.words.length) {
+      break;
+    }
     endWord = currentProject.transcription.words[endIndex];
   }
   dispatch(

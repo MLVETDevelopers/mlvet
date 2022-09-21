@@ -133,7 +133,7 @@ export const isInInactiveTake: (
 export const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-export const checkSentenceEnd = (word: Word): boolean => {
+export const checkSentenceEnd: (word: Word) => boolean = (word) => {
   if (word.word === null) {
     return false;
   }

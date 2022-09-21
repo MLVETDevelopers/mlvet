@@ -34,6 +34,8 @@ export interface ApplicationStore {
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
   isVideoPlaying: boolean;
+  playbackTime: number;
+  playLastUpdate: Date;
 }
 
 /**
@@ -58,4 +60,6 @@ export const initialStore: ApplicationStore = {
   collab: null,
   opQueue: [],
   isVideoPlaying: false,
+  playbackTime: 0,
+  playLastUpdate: new Date(),
 };

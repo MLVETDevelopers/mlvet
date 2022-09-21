@@ -6,8 +6,6 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { MousePosition } from '@react-hook/mouse-position';
-import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
   editWordFinished,
@@ -18,18 +16,23 @@ import {
   getCanvasFont,
   getColourForIndex,
   getTextWidth,
+  letterIndexAtXPosition,
 } from 'renderer/utils/ui';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
+import WordPartialHighlight from './WordPartialHighlight';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
-const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
+const makeWordInner = (
+  isInInactiveTake: boolean,
+  partialSelectState: PartialSelectState | null
+) =>
   styled('div')({
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
-    color: colors.white,
+    color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
     margin: '2px 0',
     borderRadius: '7px',
@@ -37,13 +40,16 @@ const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
     '&:hover': {
       color: colors.grey['000'],
       background:
-        isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
+        isInInactiveTake || partialSelectState !== null
+          ? 'none'
+          : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
 
 const defaultStyles: React.CSSProperties = {
   zIndex: 0,
+  position: 'relative',
 };
 
 // thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
@@ -57,11 +63,16 @@ export interface WordPassThroughProps {
   isInInactiveTake: boolean;
   isPlaying: boolean;
   onMouseDown: WordMouseHandler;
-  onMouseMove: (index: number) => void;
-  cancelDrag: () => void;
+  onMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   submitWordEdit: () => void;
-  setDropBeforeIndex: (index: number) => void;
   setPlaybackTime: (time: number) => void;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface Props extends WordPassThroughProps {
@@ -73,15 +84,13 @@ interface Props extends WordPassThroughProps {
   selectedByClientWithIndex: number | null;
   isSelectedByAnotherClientLeftCap: boolean;
   isSelectedByAnotherClientRightCap: boolean;
-  text: string;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  isBeingDragged: boolean; // whether THIS word is currently being dragged
-  mouse: MousePosition | null;
-  isDropBeforeActive: boolean;
-  isDropAfterActive: boolean;
+  text: string | null;
   isBeingEdited: boolean;
   editText: string | null;
   outputStartTime: number;
+  isPrevWordSelected: boolean;
+  isNextWordSelected: boolean;
+  partialSelectState: PartialSelectState | null;
 }
 
 const WordComponent = ({
@@ -93,14 +102,7 @@ const WordComponent = ({
   isSelectedRightCap,
   text,
   onMouseDown,
-  onMouseMove,
-  dragState,
-  isBeingDragged,
-  mouse,
-  isDropBeforeActive,
-  isDropAfterActive,
-  setDropBeforeIndex,
-  cancelDrag,
+  onMouseEnter,
   submitWordEdit,
   isBeingEdited,
   editText,
@@ -110,7 +112,22 @@ const WordComponent = ({
   isSelectedByAnotherClientRightCap,
   setPlaybackTime,
   outputStartTime,
+  isPrevWordSelected,
+  isNextWordSelected,
+  partialSelectState,
+  setPartialSelectState,
+  isMouseDown,
 }: Props) => {
+  useEffect(() => {
+    setPartialSelectState((prevState) => {
+      if (isPrevWordSelected && isNextWordSelected) {
+        return null;
+      }
+
+      return prevState;
+    });
+  }, [setPartialSelectState, isPrevWordSelected, isNextWordSelected]);
+
   const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -123,80 +140,6 @@ const WordComponent = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const { xPosition, yPosition, halfWidth, height, mouseX, mouseY } =
-    useMemo(() => {
-      const refRect = ref.current?.getBoundingClientRect();
-
-      return {
-        xPosition: refRect?.left ?? 0,
-        yPosition: refRect?.top ?? 0,
-        halfWidth: (ref.current?.offsetWidth ?? 0) / 2,
-        height: ref.current?.offsetHeight ?? 0,
-        mouseX: mouse?.clientX ?? 0,
-        mouseY: mouse?.clientY ?? 0,
-      };
-    }, [ref, mouse]);
-
-  useEffect(() => {
-    if (
-      isBeingDragged &&
-      ((mouse?.clientX ?? null) === null || (mouse?.clientY ?? null) === null)
-    ) {
-      cancelDrag();
-    }
-  }, [isBeingDragged, mouse, cancelDrag]);
-
-  const mouseInLeft = useMemo(
-    () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
-        }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
-  );
-
-  const mouseInRight = useMemo(
-    () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition + halfWidth,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
-        }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
-  );
-
-  useEffect(() => {
-    if (mouseInLeft && !isDropBeforeActive) {
-      setDropBeforeIndex(index);
-    } else if (mouseInRight && !isDropAfterActive) {
-      setDropBeforeIndex(index + 1);
-    }
-  }, [
-    mouseInLeft,
-    mouseInRight,
-    isDropBeforeActive,
-    isDropAfterActive,
-    setDropBeforeIndex,
-    index,
-  ]);
-
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (isInInactiveTake) {
@@ -204,7 +147,7 @@ const WordComponent = ({
       }
 
       setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
-      handleSelectWord(event, index);
+      handleSelectWord(index);
 
       // Prevent event from being received by the transcription block and therefore intercepted,
       // which would clear the selection
@@ -216,10 +159,10 @@ const WordComponent = ({
   const highlightStyles: React.CSSProperties = useMemo(
     () =>
       (() => {
-        if (isBeingEdited) {
+        if (isBeingEdited || partialSelectState !== null) {
           return {};
         }
-        if (isSelected || isBeingDragged) {
+        if (isSelected) {
           return {
             background: `${colors.blue[500]}cc`,
             color: colors.white,
@@ -276,7 +219,6 @@ const WordComponent = ({
     [
       isBeingEdited,
       isSelected,
-      isBeingDragged,
       isPlaying,
       isSelectedLeftCap,
       isSelectedRightCap,
@@ -284,29 +226,16 @@ const WordComponent = ({
       isSelectedByAnotherClientRightCap,
       selectedByClientWithIndex,
       confidence,
+      partialSelectState,
     ]
-  );
-
-  const dragStyles: React.CSSProperties = useMemo(
-    () =>
-      isBeingDragged
-        ? {
-            position: 'fixed',
-            left: mouseX + (dragState?.offset.x ?? 0),
-            top: mouseY + (dragState?.offset.y ?? 0),
-            zIndex: 100,
-          }
-        : {},
-    [isBeingDragged, mouseX, mouseY, dragState]
   );
 
   const style = useMemo(
     () => ({
       ...defaultStyles,
       ...highlightStyles,
-      ...dragStyles,
     }),
-    [highlightStyles, dragStyles]
+    [highlightStyles]
   );
 
   const submitIfEnter = useCallback(
@@ -323,8 +252,8 @@ const WordComponent = ({
   );
 
   const WordInner = useMemo(
-    () => makeWordInner(dragState !== null, isInInactiveTake),
-    [dragState, isInInactiveTake]
+    () => makeWordInner(isInInactiveTake, partialSelectState),
+    [isInInactiveTake, partialSelectState]
   );
 
   const setEditText = useCallback(
@@ -340,8 +269,12 @@ const WordComponent = ({
       if (isBeingEdited) {
         event.stopPropagation();
       }
+
+      // Fill out selection to entire word
+      // TODO(chloe): put this in the drag manager
+      setPartialSelectState(null);
     },
-    [isBeingEdited]
+    [isBeingEdited, setPartialSelectState]
   );
 
   const onMouseDownWrapped = useCallback(
@@ -355,10 +288,82 @@ const WordComponent = ({
     [isInInactiveTake, index, onMouseDown, ref]
   );
 
-  const onMouseMoveWrapped = useCallback(
-    () => onMouseMove(index),
-    [onMouseMove, index]
+  const updatePartialSelect = useCallback(
+    (event: React.MouseEvent) => {
+      if (!isMouseDown) {
+        return;
+      }
+
+      if ((isPrevWordSelected && isNextWordSelected) || !isSelected) {
+        return;
+      }
+
+      const wordXPosition = ref.current?.getBoundingClientRect().left ?? 0;
+      const mouseXPosition = event.clientX;
+      const xOffset = mouseXPosition - wordXPosition;
+
+      const letterIndex = letterIndexAtXPosition(
+        text ?? '',
+        xOffset,
+        getCanvasFont(ref?.current) ?? ''
+      );
+
+      if (letterIndex === null) {
+        return;
+      }
+
+      setPartialSelectState((prevState) => {
+        let anchor = letterIndex;
+        if (prevState?.wordIndex === index) {
+          anchor = prevState.anchorLetterIndex;
+        } else if (isPrevWordSelected) {
+          anchor = 0;
+        } else if (isNextWordSelected) {
+          anchor = text?.length ?? 0;
+        }
+
+        return {
+          wordIndex: index,
+          anchorLetterIndex: anchor,
+          currentLetterIndex: letterIndex,
+        };
+      });
+    },
+    [
+      ref,
+      isPrevWordSelected,
+      isNextWordSelected,
+      setPartialSelectState,
+      isSelected,
+      index,
+      text,
+      isMouseDown,
+    ]
   );
+
+  const onMouseMove = useCallback(
+    (event: React.MouseEvent) => {
+      updatePartialSelect(event);
+      onMouseEnter(index, isSelected)(event);
+    },
+    [updatePartialSelect, onMouseEnter, index, isSelected]
+  );
+
+  const textOrUnderscore = text ?? '_';
+
+  const textWithPartialSelectionBackground =
+    !(partialSelectState?.wordIndex === index) || !isSelected ? (
+      textOrUnderscore
+    ) : (
+      <>
+        {textOrUnderscore}
+        <WordPartialHighlight
+          wordRef={ref}
+          text={text ?? ''}
+          partialSelectState={partialSelectState}
+        />
+      </>
+    );
 
   return (
     <WordInner
@@ -366,8 +371,9 @@ const WordComponent = ({
       onClick={onClick}
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDownWrapped}
-      onMouseMove={onMouseMoveWrapped}
-      style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
+      onMouseEnter={onMouseMove}
+      onMouseMove={onMouseMove}
+      style={style}
     >
       {isBeingEdited ? (
         <TextField
@@ -379,19 +385,19 @@ const WordComponent = ({
               width: Math.max(
                 MIN_EDIT_WIDTH,
                 getTextWidth(
-                  editText ?? '',
+                  editText ?? text ?? '',
                   getCanvasFont(inputRef?.current)
                 ) ?? 0
               ),
             },
           }}
           type="text"
-          value={editText ?? text}
+          value={editText ?? textOrUnderscore}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />
       ) : (
-        text
+        textWithPartialSelectionBackground
       )}
     </WordInner>
   );

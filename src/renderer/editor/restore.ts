@@ -1,12 +1,13 @@
 import dispatchOp from 'renderer/store/dispatchOp';
 import { IndexRange, Word } from 'sharedTypes';
 import { makeRestoreSection } from 'renderer/store/transcriptionWords/ops/restoreSection';
+import { getLengthOfRange } from 'renderer/utils/range';
 import store from '../store/store';
 
 /* Takes a start Index and find the index of the last word that is in the original transcription sequence
  * Returns an Index Range containing the start index and end index +1 of the section to be restored
  */
-export const getRestoreIndexRange: (
+export const getRestoreRange: (
   startIndex: number,
   words: Word[]
 ) => IndexRange = (startIndex, words) => {
@@ -44,11 +45,11 @@ export const getOriginalWords: (startIndex: number, words: Word[]) => Word[] = (
   startIndex,
   words
 ) => {
-  const restoreIndexRange = getRestoreIndexRange(startIndex, words);
+  const restoreIndexRange = getRestoreRange(startIndex, words);
 
   const originalWords = [...words].splice(
     restoreIndexRange.startIndex,
-    restoreIndexRange.endIndex - restoreIndexRange.startIndex
+    getLengthOfRange(restoreIndexRange)
   );
 
   return originalWords;
@@ -61,6 +62,6 @@ export const restoreOriginalSection: (startIndex: number) => void = (
   startIndex
 ) => {
   const words = store.getState().currentProject?.transcription?.words ?? [];
-  const indexRange = getRestoreIndexRange(startIndex, words);
-  dispatchOp(makeRestoreSection([indexRange]));
+  const range = getRestoreRange(startIndex, words);
+  dispatchOp(makeRestoreSection(range));
 };

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -11,21 +11,13 @@ import { RuntimeProject } from '../../../sharedTypes';
 import SelectMediaBlock from './SelectMediaBlock';
 import MediaDisplayOnImport from './MediaDisplayOnImport';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
+import { CustomColumnStack, CustomRowStack } from '../CustomStacks';
 
 interface Props {
   prevView: () => void;
   closeModal: () => void;
   nextView: () => void;
 }
-
-const CustomStack = styled(Stack)({ width: '100%' });
-
-const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],

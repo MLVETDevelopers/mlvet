@@ -1,21 +1,23 @@
-import { MousePosition } from '@react-hook/mouse-position';
 import React from 'react';
 import { isTakeGroup } from 'renderer/utils/takeDetection';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
+import { isIndexInRange } from 'renderer/utils/range';
 import TakeGroupComponent, {
   TranscriptionPassThroughProps,
 } from './TakeGroupComponent';
-import { WordMouseHandler } from './WordDragManager';
+import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 
 interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
   chunk: Word | TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<number>;
+  selection: IndexRange;
   transcription: Transcription;
 }
 
@@ -23,10 +25,9 @@ const TranscriptionChunk = ({
   chunk,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
-  mousePosition,
+  onWordMouseEnter,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   transcription,
   ...passThroughProps
 }: TranscriptionChunkProps) => {
@@ -35,10 +36,9 @@ const TranscriptionChunk = ({
       takeGroup={chunk as TakeGroup}
       chunkIndex={chunkIndex}
       onWordMouseDown={onWordMouseDown}
-      onWordMouseMove={onWordMouseMove}
-      mousePosition={mousePosition}
+      onWordMouseEnter={onWordMouseEnter}
       nowPlayingWordIndex={nowPlayingWordIndex}
-      selectionSet={selectionSet}
+      selection={selection}
       transcription={transcription}
       {...passThroughProps}
     />
@@ -52,12 +52,11 @@ const TranscriptionChunk = ({
           : null
       }
       index={chunkIndex}
-      isSelected={selectionSet.has(chunkIndex)}
-      isPrevWordSelected={selectionSet.has(chunkIndex - 1)}
-      isNextWordSelected={selectionSet.has(chunkIndex + 1)}
+      isPrevWordSelected={isIndexInRange(selection, chunkIndex - 1)}
+      isSelected={isIndexInRange(selection, chunkIndex)}
+      isNextWordSelected={isIndexInRange(selection, chunkIndex + 1)}
       onMouseDown={onWordMouseDown}
-      onMouseMove={onWordMouseMove}
-      mouse={mousePosition}
+      onMouseEnter={onWordMouseEnter}
       isPlaying={nowPlayingWordIndex === chunkIndex}
       isInInactiveTake={false}
       transcriptionLength={transcription.words.length}

@@ -1,7 +1,4 @@
-import {
-  getOriginalWords,
-  getRestoreIndexRange,
-} from 'renderer/editor/restore';
+import { getOriginalWords, getRestoreRange } from 'renderer/editor/restore';
 import { Word } from 'sharedTypes';
 
 const makeBasicWordSequential: (
@@ -23,7 +20,7 @@ const makeBasicWordSequential: (
   takeInfo: null,
 });
 
-describe('getRestoreIndexRange', () => {
+describe('getRestoreRange', () => {
   it('should return original text index range', () => {
     const words = [
       makeBasicWordSequential(0, 'a'),
@@ -33,7 +30,7 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e'),
     ];
 
-    const indexRange = getRestoreIndexRange(1, words);
+    const indexRange = getRestoreRange(1, words);
 
     expect(indexRange).toEqual({ startIndex: 1, endIndex: 4 });
   });
@@ -47,7 +44,7 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e'),
     ];
 
-    const indexRange = getRestoreIndexRange(1, words);
+    const indexRange = getRestoreRange(1, words);
 
     expect(indexRange).toEqual({ startIndex: 1, endIndex: 2 });
   });
@@ -61,7 +58,7 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e', true),
     ];
 
-    const indexRange = getRestoreIndexRange(4, words);
+    const indexRange = getRestoreRange(4, words);
 
     expect(indexRange).toEqual({ startIndex: 4, endIndex: 5 });
   });
@@ -75,7 +72,7 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e', true),
     ];
 
-    const indexRange = getRestoreIndexRange(1, words);
+    const indexRange = getRestoreRange(1, words);
 
     expect(indexRange).toEqual({ startIndex: 1, endIndex: 3 });
   });
@@ -89,7 +86,7 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e', true),
     ];
 
-    const indexRange = getRestoreIndexRange(0, words);
+    const indexRange = getRestoreRange(0, words);
 
     expect(indexRange).toEqual({ startIndex: 0, endIndex: 5 });
   });
@@ -105,10 +102,10 @@ describe('getRestoreIndexRange', () => {
       makeBasicWordSequential(4, 'e'),
     ];
 
-    const indexRangeBeforeCopy = getRestoreIndexRange(0, words);
+    const indexRangeBeforeCopy = getRestoreRange(0, words);
     expect(indexRangeBeforeCopy).toEqual({ startIndex: 0, endIndex: 2 });
 
-    const indexRangeAfterCopy = getRestoreIndexRange(4, words);
+    const indexRangeAfterCopy = getRestoreRange(4, words);
     expect(indexRangeAfterCopy).toEqual({ startIndex: 4, endIndex: 6 });
   });
 });

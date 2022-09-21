@@ -3,7 +3,7 @@ import { Word } from 'sharedTypes';
 import { rangeLengthOne } from 'renderer/utils/range';
 import { CorrectWordPayload, UndoCorrectWordPayload } from '../opPayloads';
 import { wordCorrected, undoWordCorrected } from '../actions';
-import { selectionCleared, selectionRangeAdded } from '../../selection/actions';
+import { selectionRangeSetTo } from '../../selection/actions';
 
 export type CorrectWordOp = Op<CorrectWordPayload, UndoCorrectWordPayload>;
 
@@ -17,13 +17,11 @@ export const makeCorrectWord: (
   return {
     do: [
       wordCorrected(index, newText),
-      selectionCleared(),
-      selectionRangeAdded(rangeLengthOne(index)),
+      selectionRangeSetTo(rangeLengthOne(index)),
     ],
     undo: [
-      undoWordCorrected(index, prevText, prevConfidence ?? 1),
-      selectionCleared(),
-      selectionRangeAdded(rangeLengthOne(index)),
+      undoWordCorrected(index, prevText as string, prevConfidence ?? 1),
+      selectionRangeSetTo(rangeLengthOne(index)),
     ],
   };
 };

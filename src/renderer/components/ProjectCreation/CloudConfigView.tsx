@@ -2,7 +2,6 @@ import {
   Box,
   IconButton,
   Link,
-  Stack,
   styled,
   TextField,
   Typography,
@@ -11,9 +10,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
 import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
+import { URL_ASSEMBLYAI_SIGNUP } from '../../../constants';
 import { TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
+import {
+  CustomStack,
+  CustomColumnStack,
+  CustomRowStack,
+} from '../CustomStacks';
 
 const { openExternalLink, storeCloudCredentials, readDefaultEngineConfig } =
   ipc;
@@ -24,15 +29,6 @@ interface Props {
   nextView: (() => void) | null;
   projectName: string;
 }
-
-const CustomStack = styled(Stack)({ width: '100%' });
-
-const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],
@@ -109,9 +105,7 @@ const CloudConfigView = ({
   );
 
   const handleHelpClick: () => void = () => {
-    openExternalLink(
-      'https://app.assemblyai.com/signup?_ga=2.64947567.1548607132.1661819143-2080070454.1661819143'
-    );
+    openExternalLink(URL_ASSEMBLYAI_SIGNUP);
   };
 
   useKeypress(saveCloudCredentials, !isAwaitingApiKey, [

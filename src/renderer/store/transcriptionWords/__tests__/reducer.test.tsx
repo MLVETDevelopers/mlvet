@@ -89,6 +89,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle words being pasted', () => {
+    const range = {
+      startIndex: 2,
+      endIndex: 3,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -103,7 +107,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          range,
           clipboard: [
             makeBasicWordSequential(5, 'f'),
             makeBasicWordSequential(6, 'g'),
@@ -129,6 +133,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle words that were already pasted, being pasted again', () => {
+    const range = {
+      startIndex: 2,
+      endIndex: 3,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -146,7 +154,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          range,
           clipboard: [
             makeBasicWordSequential(5, 'f'),
             makeBasicWordSequential(6, 'g'),
@@ -175,6 +183,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle words being pasted even when some of the words on the clipboard were deleted', () => {
+    const range = {
+      startIndex: 2,
+      endIndex: 3,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -189,7 +201,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          range,
           clipboard: [
             makeBasicWordSequential(5, 'f'),
             makeBasicWordSequential(6, 'g', true),
@@ -215,6 +227,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle words being pasted just after the start of the transcription', () => {
+    const range = {
+      startIndex: 0,
+      endIndex: 1,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -229,7 +245,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 0,
+          range,
           clipboard: [
             makeBasicWordSequential(5, 'f'),
             makeBasicWordSequential(6, 'g'),
@@ -255,6 +271,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle words being pasted to the end of the transcription', () => {
+    const range = {
+      startIndex: 7,
+      endIndex: 8,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -269,7 +289,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 7,
+          range,
           clipboard: [
             makeBasicWordSequential(3, 'd'),
             makeBasicWordSequential(4, 'e'),
@@ -295,6 +315,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle a paste being undone', () => {
+    const range = {
+      startIndex: 1,
+      endIndex: 2,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -308,7 +332,7 @@ describe('Transcription words reducer', () => {
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 1,
+          range,
           clipboardLength: 2,
         },
       }
@@ -324,6 +348,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle a paste being undone with various words deleted', () => {
+    const range = {
+      startIndex: 1,
+      endIndex: 2,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a', true),
@@ -337,7 +365,7 @@ describe('Transcription words reducer', () => {
       {
         type: UNDO_PASTE_WORD,
         payload: {
-          startIndex: 1,
+          range,
           clipboardLength: 2,
         },
       }
@@ -353,6 +381,10 @@ describe('Transcription words reducer', () => {
   });
 
   it('should handle a paste of multiple words with the same original index', () => {
+    const range = {
+      startIndex: 2,
+      endIndex: 3,
+    };
     const output = transcriptionWordsReducer(
       [
         makeBasicWordSequential(0, 'a'),
@@ -362,7 +394,7 @@ describe('Transcription words reducer', () => {
       {
         type: PASTE_WORD,
         payload: {
-          startIndex: 2,
+          range,
           clipboard: [
             makeBasicWordSequential(0, 'a'),
             makeBasicWordSequential(0, 'a', false, 1),

@@ -1,29 +1,28 @@
 import { Op } from 'renderer/store/undoStack/helpers';
-import { Word } from 'sharedTypes';
+import { IndexRange, Word } from 'sharedTypes';
 import {
   wordPasted,
   undoWordPasted,
 } from 'renderer/store/transcriptionWords/actions';
-import {
-  selectionCleared,
-  selectionRangeSetTo,
-} from 'renderer/store/selection/actions';
+import { selectionRangeSetTo } from 'renderer/store/selection/actions';
 import { PasteWordsPayload, UndoPasteWordsPayload } from '../opPayloads';
 
 export type PasteWordsOp = Op<PasteWordsPayload, UndoPasteWordsPayload>;
 
 export const makePasteWord: (
-  pasteTo: number,
+  range: IndexRange,
   clipboard: Word[]
-) => PasteWordsOp = (pasteTo, clipboard) => {
+) => PasteWordsOp = (range, clipboard) => {
+  const { endIndex } = range;
+
   return {
     do: [
-      wordPasted(pasteTo, clipboard),
+      wordPasted(range, clipboard),
       selectionRangeSetTo({
-        startIndex: pasteTo + 1,
-        endIndex: pasteTo + clipboard.length + 1,
+        startIndex: endIndex,
+        endIndex: endIndex + clipboard.length,
       }),
     ],
-    undo: [undoWordPasted(pasteTo, clipboard.length), selectionCleared()],
+    undo: [undoWordPasted(range, clipboard.length), selectionRangeSetTo(range)],
   };
 };

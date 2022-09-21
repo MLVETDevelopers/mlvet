@@ -1,4 +1,4 @@
-import { Word } from '../../sharedTypes';
+import { IndexRange, Word } from '../../sharedTypes';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
 import dispatchOp from '../store/dispatchOp';
@@ -7,11 +7,11 @@ import { makePasteWord } from '../store/transcriptionWords/ops/pasteWord';
 
 const { dispatch } = store;
 
-const pasteWord = (afterWordIndex: number, clipboard: Word[]) => {
+const pasteWord = (replaceRange: IndexRange, clipboard: Word[]) => {
   const { currentProject } = store.getState();
 
   if (currentProject && currentProject.transcription) {
-    dispatchOp(makePasteWord(afterWordIndex, clipboard));
+    dispatchOp(makePasteWord(replaceRange, clipboard));
   }
 };
 
@@ -45,11 +45,9 @@ export const pasteText: () => void = () => {
   const range = store.getState().selection.self;
   const { clipboard } = store.getState();
 
-  // Paste after the last word in the selection
-  const { endIndex } = range;
-
-  // End index is exclusive, so subtract one to get the actual word to paste after
-  pasteWord(endIndex - 1, clipboard);
+  if (clipboard.length > 0) {
+    pasteWord(range, clipboard);
+  }
 
   // TODO(chloe): should also seek to the start of the pasted text.
 };

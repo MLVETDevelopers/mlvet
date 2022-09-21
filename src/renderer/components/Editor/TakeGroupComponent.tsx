@@ -11,8 +11,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
+import store from 'renderer/store/store';
+import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
@@ -77,15 +80,13 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
+  const [takeDissolved, setTakeDissolved] = useState(false);
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
   const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
   const [showUngroupModal, setShowUngroupModal] = useState(false);
+  const dispatch = useDispatch();
 
   const ungroupTakesModalOpen = () => {
-    transcription.takeGroups = transcription.takeGroups.filter(
-      (tg) => tg.id !== takeGroup.id
-    );
-
     setShowUngroupModal(true);
   };
 
@@ -94,6 +95,8 @@ const TakeGroupComponent = ({
   };
 
   const ungroupTakes = () => {
+    dispatch(deleteTakeGroup(takeGroup.id));
+    setTakeDissolved(true);
     handleModalClose();
   };
 
@@ -162,27 +165,34 @@ const TakeGroupComponent = ({
 
   return (
     <>
-      <CustomColumnStack
-        sx={{
-          marginTop: '10px',
-          marginBottom: !isFirstTimeOpen && isTakeGroupOpened ? '45px' : '15px',
-        }}
-      >
-        {takes}
-        <CustomRowStack
-          position="relative"
-          sx={{ justifyContent: 'flex-start' }}
-        >
-          {!isFirstTimeOpen && isTakeGroupOpened && (
-            <UngroupTakes onClick={ungroupTakesModalOpen} />
-          )}
-        </CustomRowStack>
-      </CustomColumnStack>
-      <UngroupTakesModal
-        isOpen={showUngroupModal}
-        closeModal={handleModalClose}
-        ungroupTakes={ungroupTakes}
-      />
+      {!takeDissolved ? (
+        <>
+          <CustomColumnStack
+            sx={{
+              marginTop: '10px',
+              marginBottom:
+                !isFirstTimeOpen && isTakeGroupOpened ? '45px' : '15px',
+            }}
+          >
+            {takes}
+            <CustomRowStack
+              position="relative"
+              sx={{ justifyContent: 'flex-start' }}
+            >
+              {!isFirstTimeOpen && isTakeGroupOpened && (
+                <UngroupTakes onClick={ungroupTakesModalOpen} />
+              )}
+            </CustomRowStack>
+          </CustomColumnStack>
+          <UngroupTakesModal
+            isOpen={showUngroupModal}
+            closeModal={handleModalClose}
+            ungroupTakes={ungroupTakes}
+          />
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

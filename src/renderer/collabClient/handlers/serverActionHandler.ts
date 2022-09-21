@@ -8,21 +8,12 @@ import { Action } from 'renderer/store/action';
 import dispatchOp from 'renderer/store/dispatchOp';
 import {
   SELECTION_CLEARED,
-  SELECTION_RANGE_ADDED,
-  SELECTION_RANGE_REMOVED,
-  SELECTION_RANGES_SET_TO,
-  SELECTION_RANGE_TOGGLED,
+  SELECTION_RANGE_SET_TO,
 } from 'renderer/store/selection/actions';
 import { MapCallback } from 'sharedTypes';
 import { ServerMessageHandler } from '../types';
 
-const selectionActionTypes = [
-  SELECTION_RANGE_ADDED,
-  SELECTION_RANGE_REMOVED,
-  SELECTION_RANGES_SET_TO,
-  SELECTION_RANGE_TOGGLED,
-  SELECTION_CLEARED,
-];
+const selectionActionTypes = [SELECTION_CLEARED, SELECTION_RANGE_SET_TO];
 
 // Injects client IDs into any selection actions
 const injectClientId: (

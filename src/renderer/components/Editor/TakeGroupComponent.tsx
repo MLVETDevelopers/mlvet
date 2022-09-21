@@ -2,23 +2,16 @@
 import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
 import { Stack } from '@mui/material';
-import { MousePosition } from '@react-hook/mouse-position';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useMemo,
-  useState,
-} from 'react';
+import React, { RefObject, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
-import { DragState, WordMouseHandler } from './WordDragManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 
 const CustomStack = styled(Stack)({ width: '100%' });
 
@@ -42,28 +35,29 @@ const UngroupTakes = styled(BlockIcon)({
 });
 
 export interface TranscriptionPassThroughProps {
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
   editWord: EditWordState;
   submitWordEdit: () => void;
-  otherSelectionSets: Record<ClientId, Set<number>>;
+  otherSelections: Record<ClientId, IndexRange>;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
   setPlaybackTime: (time: number) => void;
+  partialSelectState: PartialSelectState | null;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: (wordIndex: number) => void;
-  mousePosition: MousePosition | null;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
-  selectionSet: Set<any>;
+  selection: IndexRange;
   transcription: Transcription;
 }
 
@@ -71,11 +65,9 @@ const TakeGroupComponent = ({
   takeGroup,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
-  isWordBeingDragged,
-  mousePosition,
+  onWordMouseEnter,
   nowPlayingWordIndex,
-  selectionSet,
+  selection,
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
@@ -137,28 +129,24 @@ const TakeGroupComponent = ({
         .reduce((acc, curr) => acc + curr, 0);
 
     return (
-      <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
-        <TakeComponent
-          key={`take-${takeGroup.id}-${takeIndex}`}
-          takeWords={takeWords}
-          takeIndex={takeIndex}
-          isActive={takeIndex === takeGroup.activeTakeIndex}
-          isTakeGroupOpened={isTakeGroupOpened}
-          setIsTakeGroupOpened={setIsTakeGroupOpened}
-          onWordMouseDown={onWordMouseDown}
-          onWordMouseMove={onWordMouseMove}
-          isWordBeingDragged={isWordBeingDragged}
-          mousePosition={mousePosition}
-          nowPlayingWordIndex={nowPlayingWordIndex}
-          transcription={transcription}
-          selectionSet={selectionSet}
-          transcriptionIndex={transcriptionIndex}
-          isLast={takeIndex === takeWordsPerTake.length - 1}
-          isFirstTimeOpen={isFirstTimeOpen}
-          setIsFirstTimeOpen={setIsFirstTimeOpen}
-          {...passThroughProps}
-        />
-      </CustomRowStack>
+      <TakeComponent
+        key={`take-${takeGroup.id}-${takeIndex}`}
+        takeWords={takeWords}
+        takeIndex={takeIndex}
+        isActive={takeIndex === takeGroup.activeTakeIndex}
+        isTakeGroupOpened={isTakeGroupOpened}
+        setIsTakeGroupOpened={setIsTakeGroupOpened}
+        onWordMouseDown={onWordMouseDown}
+        onWordMouseEnter={onWordMouseEnter}
+        nowPlayingWordIndex={nowPlayingWordIndex}
+        transcription={transcription}
+        selection={selection}
+        transcriptionIndex={transcriptionIndex}
+        isLast={takeIndex === takeWordsPerTake.length - 1}
+        isFirstTimeOpen={isFirstTimeOpen}
+        setIsFirstTimeOpen={setIsFirstTimeOpen}
+        {...passThroughProps}
+      />
     );
   });
 

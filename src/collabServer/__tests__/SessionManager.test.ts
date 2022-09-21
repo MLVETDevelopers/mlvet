@@ -243,7 +243,7 @@ describe('SessionManager', () => {
     expect(guestSocketSpy).toBeCalledTimes(0);
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+    const ops = [makeDeleteSelection(rangeLengthOne(0))];
 
     sessionManager.handleClientAction(actionId, ops, guestId, session.id);
 
@@ -261,7 +261,7 @@ describe('SessionManager', () => {
     expect(hostSocketSpy).toBeCalledTimes(0);
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+    const ops = [makeDeleteSelection(rangeLengthOne(0))];
 
     sessionManager.handleClientAction(actionId, ops, guestId, session.id);
 
@@ -291,7 +291,7 @@ describe('SessionManager', () => {
     });
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+    const ops = [makeDeleteSelection(rangeLengthOne(0))];
 
     expect(guestSocketSpy).toBeCalledTimes(0);
 
@@ -312,7 +312,7 @@ describe('SessionManager', () => {
 
     const firstActionId = 'abc';
     const secondActionId = 'def';
-    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+    const ops = [makeDeleteSelection(rangeLengthOne(0))];
 
     // Guest pushes an action, it gets accepted
     sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);
@@ -349,7 +349,7 @@ describe('SessionManager', () => {
 
     const firstActionId = 'abc';
     const secondActionId = 'def';
-    const ops = [makeDeleteSelection([rangeLengthOne(0)])];
+    const ops = [makeDeleteSelection(rangeLengthOne(0))];
 
     // Guest pushes an action, it gets accepted
     sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);

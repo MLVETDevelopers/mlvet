@@ -7,12 +7,32 @@ export const integerDivide: (a: number, b: number) => number = (a, b) => {
 };
 
 // 00:00:00:00
-export const secondToTimestamp: (num: number) => string = (num) => {
+// Hour:Min:Sec:Frame
+export const secondToEdlTimestamp: (num: number, fps: number) => string = (
+  num,
+  fps
+) => {
   if (num < 0) {
     throw new Error('Negative Input');
   }
+  const edlFps = Math.max(fps, 30);
 
-  return new Date(num * 1000).toISOString().slice(11, 22).replace('.', ':');
+  const date = new Date(num * 1000);
+
+  /**
+   * For the frame gap problem, making timestamps round down 1 frame while having the
+   * input duration round 1 up frame fills in microgaps cleanly.
+   */
+  const frameNumber = Math.floor((edlFps * date.getMilliseconds()) / 1000);
+
+  const [hours, minutes, seconds, frame] = [
+    date.getUTCHours(),
+    date.getMinutes(),
+    date.getSeconds(),
+    frameNumber,
+  ].map((value) => padZeros(value, 2));
+
+  return [hours, minutes, seconds, frame].join(':');
 };
 
 export const secondToTimestampUI = (

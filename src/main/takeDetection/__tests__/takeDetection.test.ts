@@ -3,7 +3,7 @@ import { Word } from '../../../sharedTypes';
 import { makeBasicWord } from '../../../sharedUtils';
 import { InjectableTakeGroup } from '../../editDelete/injectTakeInfo';
 import { findSentences, Sentence, findTakes } from '../takeDetection';
-import { getSimilarityScore } from '../sentenceSimilarity';
+import getSimilarityScore from '../sentenceSimilarity';
 
 function mockGetSentenceSimilarity(
   sentenceOne: string,
@@ -16,6 +16,9 @@ function mockGetSentenceSimilarity(
     return 0.2;
   }
   if (sentenceOne === 'All ok?' && sentenceTwo === 'test.') {
+    return 0.4;
+  }
+  if (sentenceOne === 'All ok?' && sentenceTwo === 'assessment.') {
     return 0.4;
   }
   if (sentenceOne === 'test.' && sentenceTwo === 'assessment.') {

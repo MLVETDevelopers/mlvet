@@ -1,4 +1,4 @@
-import { Box, styled, Stack, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,26 +20,14 @@ import {
 import MediaDisplayTranscribeProgress from './MediaDisplayTranscribeProgress';
 import ipc from '../../ipc';
 import { PrimaryButton } from '../Blocks/Buttons';
+import { CustomColumnStack, CustomRowStack } from '../CustomStacks';
 
 const { extractAudio } = ipc;
 
 const { requestTranscription, getFileNameWithExtension } = ipc;
 
-const CustomStack = styled(Stack)({
-  width: '100%',
-});
-
 const processTranscription = async (project: RuntimeProject) =>
   requestTranscription(project);
-
-const CustomColumnStack = styled(CustomStack)({
-  flexDirection: 'column',
-});
-
-const CustomRowStack = styled(CustomStack)({
-  flexDirection: 'row',
-  alignItems: 'center',
-});
 
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],

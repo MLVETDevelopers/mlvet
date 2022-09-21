@@ -147,6 +147,15 @@ export default class MenuBuilder {
   buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
     return [
       {
+        id: 'editWord',
+        label: 'Edit Word',
+        accelerator: 'E',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-edit-word');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
+      {
         id: 'mergeWords',
         label: 'Merge Words',
         accelerator: 'CommandOrControl+L', // 'M' already taken by window 'minimize'

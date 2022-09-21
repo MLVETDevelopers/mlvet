@@ -35,7 +35,7 @@ export interface ApplicationStore {
   opQueue: OpQueueItem[];
   isVideoPlaying: boolean;
   playbackTime: number;
-  playLastUpdate: Date;
+  playbackLastUpdate: Date;
 }
 
 /**
@@ -61,5 +61,5 @@ export const initialStore: ApplicationStore = {
   opQueue: [],
   isVideoPlaying: false,
   playbackTime: 0,
-  playLastUpdate: new Date(),
+  playbackLastUpdate: new Date(),
 };

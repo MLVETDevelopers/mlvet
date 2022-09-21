@@ -74,7 +74,7 @@ const ProjectPage = () => {
                   right: '20px',
                   display: 'flex',
                   flexDirection: 'column',
-                  fontSize: '8px',
+                  fontSize: '12px',
                 }}
               >
                 <IconButton

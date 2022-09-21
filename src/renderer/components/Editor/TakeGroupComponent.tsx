@@ -25,8 +25,10 @@ const CustomRowStack = styled(CustomStack)({
 const UngroupTakes = styled(BlockIcon)({
   display: 'flex',
   position: 'absolute',
-  left: '-10px',
-  marginTop: '45px',
+  left: '-35px',
+  marginTop: '40px',
+  width: '22px',
+  height: '22px',
   color: colors.grey[500],
 
   '&:hover': {
@@ -158,7 +160,7 @@ const TakeGroupComponent = ({
             sx={{
               marginTop: '10px',
               marginBottom:
-                !isFirstTimeOpen && isTakeGroupOpened ? '45px' : '15px',
+                !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
             }}
           >
             {takes}

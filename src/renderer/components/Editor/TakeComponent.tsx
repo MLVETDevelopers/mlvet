@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, Stack } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
@@ -23,7 +23,7 @@ const makeTakeWrapper = (
       isTakeGroupOpened && isActive ? colors.yellow[500] : colors.grey[400],
     opacity: isActive || isFirstTimeOpen ? 1 : 0.5,
     position: 'relative',
-    left: '20px',
+    left: '-16px',
 
     '&:hover': {
       borderColor: colors.yellow[500],
@@ -111,68 +111,65 @@ const TakeComponent = ({
     setIsFirstTimeOpen,
   ]);
 
+  const NumberedButton = (
+    <Avatar
+      onClick={onSelectTake}
+      sx={{
+        height: 20,
+        width: 20,
+        fontSize: 12,
+        color: colors.grey[700],
+        backgroundColor: isActive ? colors.yellow[500] : colors.grey[400],
+        display: 'flex',
+        position: 'absolute',
+        left: '-18px',
+        top: '9px',
+        transform: 'translateY(2px)',
+        cursor: 'pointer',
+      }}
+    >
+      {takeIndex + 1}
+    </Avatar>
+  );
+
+  const TakeWords = takeWords.map((word, index, words) => {
+    const wordIndex = transcriptionIndex + index;
+    return (
+      <WordOuterComponent
+        key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
+        word={word}
+        prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
+        nextWord={wordIndex < words.length - 1 ? words[wordIndex + 1] : null}
+        index={wordIndex}
+        isPlaying={nowPlayingWordIndex === wordIndex}
+        isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
+        isSelected={isIndexInRange(selection, wordIndex)}
+        isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+        onMouseDown={onWordMouseDown}
+        onMouseEnter={onWordMouseEnter}
+        isInInactiveTake={!(isActive || isTakeGroupOpened) && !isFirstTimeOpen}
+        transcriptionLength={words.length}
+        {...passThroughProps}
+      />
+    );
+  });
+
   return (
     <>
       <TakeWrapper className="take" onClick={onClick}>
-        <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
+        <CustomRowStack
+          sx={{ justifyContent: 'flex-start', paddingLeft: '9px' }}
+        >
           {isTakeGroupOpened || isActive ? (
             <>
-              {!isFirstTimeOpen && isTakeGroupOpened && (
-                <Avatar
-                  onClick={onSelectTake}
-                  sx={{
-                    height: 22,
-                    width: 22,
-                    fontSize: 12,
-                    color: colors.grey[700],
-                    backgroundColor: isActive
-                      ? colors.yellow[500]
-                      : colors.grey[400],
-                    display: 'flex',
-                    position: 'absolute',
-                    left: '-30px',
-                    transform: 'translateY(2px)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {takeIndex + 1}
-                </Avatar>
-              )}
+              {!isFirstTimeOpen && isTakeGroupOpened && NumberedButton}
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}
               />
-              {takeWords.map((word, index, words) => {
-                const wordIndex = transcriptionIndex + index;
-                return (
-                  <WordOuterComponent
-                    key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
-                    word={word}
-                    prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
-                    nextWord={
-                      wordIndex < words.length - 1 ? words[wordIndex + 1] : null
-                    }
-                    index={wordIndex}
-                    isPlaying={nowPlayingWordIndex === wordIndex}
-                    isPrevWordSelected={isIndexInRange(
-                      selection,
-                      wordIndex - 1
-                    )}
-                    isSelected={isIndexInRange(selection, wordIndex)}
-                    isNextWordSelected={isIndexInRange(
-                      selection,
-                      wordIndex + 1
-                    )}
-                    onMouseDown={onWordMouseDown}
-                    onMouseEnter={onWordMouseEnter}
-                    isInInactiveTake={
-                      !(isActive || isTakeGroupOpened) && !isFirstTimeOpen
-                    }
-                    transcriptionLength={words.length}
-                    {...passThroughProps}
-                  />
-                );
-              })}
+              <CustomRowStack position="absolute" left="16px">
+                {TakeWords}
+              </CustomRowStack>
             </>
           ) : null}
         </CustomRowStack>

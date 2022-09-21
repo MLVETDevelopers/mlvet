@@ -21,15 +21,15 @@ const VerticalBracketBackground = ({ isHoveredOver }: BracketProps) => {
       id="squareBracketBackground"
       sx={{
         height: 'inherit',
-        width: '8px',
+        width: '6px',
         opacity: opacityValue,
         borderRadius: '8px',
         backgroundColor: colors.yellow[500],
 
         // positioning
         position: 'relative',
-        left: '-5px',
-        top: '-8px',
+        left: '-4px',
+        top: '-7px',
       }}
     />
   );
@@ -40,7 +40,7 @@ const HorizontalBracketBackground = ({
   isHoveredOver,
   isLast,
 }: HorizontalBracketProps) => {
-  const bottomPixelOffset = isLast ? '14px' : '12px';
+  const bottomPixelOffset = isLast ? '12px' : '10px';
   const topBottomPosition = top
     ? { top: '-4px' }
     : { bottom: bottomPixelOffset };
@@ -51,8 +51,8 @@ const HorizontalBracketBackground = ({
     <Box
       id={idName}
       sx={{
-        height: '8px',
-        width: '18px',
+        height: '6px',
+        width: '13px',
         opacity: opacityValue,
         borderRadius: '8px',
         backgroundColor: colors.yellow[500],

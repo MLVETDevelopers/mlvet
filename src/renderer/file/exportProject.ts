@@ -1,5 +1,4 @@
 import ipc from 'renderer/ipc';
-import { finishExport, startExport } from 'renderer/store/exportIo/actions';
 import store from 'renderer/store/store';
 import { ExportFormat } from '../../sharedTypes';
 
@@ -15,9 +14,7 @@ const exportProject: (exportFormat: ExportFormat) => Promise<void> = async (
   // Don't export if we don't have a project open
   if (currentProject === null) return;
 
-  // store.dispatch(startExport());
-  const filepath = await ipc.exportProject(exportFormat, currentProject);
-  // store.dispatch(finishExport(currentProject, filepath));
+  await ipc.exportProject(exportFormat, currentProject);
 };
 
 export default exportProject;

@@ -1,4 +1,4 @@
-import { ExportFormat, RuntimeProject } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import { Action } from '../action';
 
 export const START_EXPORT = 'START_EXPORT';

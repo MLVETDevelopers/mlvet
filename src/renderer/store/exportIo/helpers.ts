@@ -1,5 +1,3 @@
-import { ExportFormat } from '../../../sharedTypes';
-
 /**
  * All input/output user actions states
  * Import / Export progress states

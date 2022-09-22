@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from '@react-hook/debounce';
 import { checkSentenceEnd } from 'sharedUtils';
-import { check } from 'prettier';
-import { Word } from 'sharedTypes';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';

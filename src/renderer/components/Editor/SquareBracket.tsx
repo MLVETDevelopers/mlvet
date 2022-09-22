@@ -6,9 +6,10 @@ import SquareBracketHover from './SquareBracketHover';
 interface Props {
   isLast: boolean;
   isTakeGroupOpened: boolean;
+  takeHeight: number;
 }
 
-const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
+const SquareBracket = ({ isLast, isTakeGroupOpened, takeHeight }: Props) => {
   const bottomWidth = isLast || !isTakeGroupOpened ? '2px' : '0px';
 
   const [isHovering, setIsHovering] = useState(false);
@@ -17,7 +18,7 @@ const SquareBracket = ({ isLast, isTakeGroupOpened }: Props) => {
     <Box
       id="squareBracket"
       sx={{
-        height: '40px',
+        height: takeHeight + 15,
         width: '8px',
         borderStyle: 'solid',
         borderColor: isTakeGroupOpened ? colors.yellow[500] : colors.grey[500],

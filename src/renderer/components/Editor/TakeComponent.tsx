@@ -3,7 +3,16 @@ import { Avatar, Box, Stack } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
-import React, { RefObject, useCallback, useMemo } from 'react';
+import React, {
+  createRef,
+  RefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
@@ -82,6 +91,9 @@ const TakeComponent = ({
   setIsFirstTimeOpen,
   ...passThroughProps
 }: TakeComponentProps) => {
+  const [currentTakeHeight, setCurrentTakeHeight] = useState<number>(0);
+  const takeRef = useRef<HTMLDivElement>(null);
+
   const dispatch = useDispatch();
 
   const onSelectTake = useCallback(() => {
@@ -123,7 +135,6 @@ const TakeComponent = ({
         display: 'flex',
         position: 'absolute',
         left: '-30px',
-        top: '9px',
         transform: 'translateY(2px)',
         cursor: 'pointer',
       }}
@@ -154,11 +165,17 @@ const TakeComponent = ({
     );
   });
 
+  useLayoutEffect(() => {
+    if (takeRef && takeRef.current?.clientHeight) {
+      setCurrentTakeHeight(takeRef.current.clientHeight);
+    }
+  }, [takeRef.current?.clientHeight]);
+
   return (
     <>
       <TakeWrapper className="take" onClick={onClick}>
         <CustomRowStack
-          sx={{ justifyContent: 'flex-start', paddingLeft: '4px' }}
+          sx={{ justifyContent: 'flex-start', paddingLeft: '4px', gap: '4px' }}
         >
           {isTakeGroupOpened || isActive ? (
             <>
@@ -166,8 +183,9 @@ const TakeComponent = ({
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}
+                takeHeight={currentTakeHeight}
               />
-              <CustomRowStack position="absolute" left="16px">
+              <CustomRowStack flexWrap="wrap" ref={takeRef}>
                 {TakeWords}
               </CustomRowStack>
             </>

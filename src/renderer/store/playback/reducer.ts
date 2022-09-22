@@ -12,7 +12,7 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
     return {
       playbackPlaying: playState,
       playbackTime: playback.playbackTime,
-      playbackLastUpdated: playback.playbackLastUpdated,
+      playbackLastUpdated: new Date(),
     };
   }
 
@@ -21,16 +21,7 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
     return {
       playbackPlaying: playback.playbackPlaying,
       playbackTime: timeState,
-      playbackLastUpdated: playback.playbackLastUpdated,
-    };
-  }
-
-  if (action.type === VIDEO_SEEK) {
-    const timeState = action.payload as number;
-    return {
-      playbackPlaying: playback.playbackPlaying,
-      playbackTime: timeState,
-      playbackLastUpdated: playback.playbackLastUpdated,
+      playbackLastUpdated: new Date(),
     };
   }
 
@@ -40,12 +31,18 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
       return {
         playbackPlaying: playback.playbackPlaying,
         playbackTime: playback.playbackTime + timeState,
-        playbackLastUpdated: playback.playbackLastUpdated,
+        playbackLastUpdated: new Date(),
       };
     }
 
     if (playback.playbackPlaying) {
-      console.log('hello');
+      const timeDifference =
+        (new Date().getTime() - playback.playbackLastUpdated.getTime()) / 1000;
+      return {
+        playbackPlaying: playback.playbackPlaying,
+        playbackTime: playback.playbackTime + timeState + timeDifference,
+        playbackLastUpdated: new Date(),
+      };
     }
   }
 

@@ -1,7 +1,7 @@
 import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
 import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import togglePlayPause from 'renderer/editor/togglePlayPause';
 import colors from '../../colors';
 
@@ -43,30 +43,12 @@ const TogglePlayButton = React.memo(({ isPlaying }: TogglePlayButtonProps) => {
 interface Props {
   time: number;
   isPlaying: boolean;
-  play: () => void;
-  pause: () => void;
   seekForward: () => void;
   seekBack: () => void;
 }
 
-const VideoController = ({
-  time,
-  isPlaying,
-  play,
-  pause,
-  seekForward,
-  seekBack,
-}: Props) => {
-  const onClickPlayPause = useCallback(() => {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
-    }
-  }, [pause, play, isPlaying]);
-
+const VideoController = ({ time, isPlaying, seekForward, seekBack }: Props) => {
   const timeDisplay = useMemo(() => secondToTimestampUI(time), [time]);
-
   return (
     <VideoControllerBox>
       <TimeDisplay>{timeDisplay}</TimeDisplay>

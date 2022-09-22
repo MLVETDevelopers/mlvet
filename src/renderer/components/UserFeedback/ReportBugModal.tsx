@@ -68,7 +68,9 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   };
 
   const onSubmit = () => {
-    reportBug(bugTitle, bugDescription);
+    const status = reportBug(bugTitle, bugDescription);
+    console.log(status); // 200 is okay, -1 is not okay!
+
     setBugTitle('');
     setBugDescription('');
     onClose();

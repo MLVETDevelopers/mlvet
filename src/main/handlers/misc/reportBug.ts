@@ -47,8 +47,11 @@ const reportBug = async (title: string, body: string) => {
       body,
       labels: [BUG_REPORT_LABEL],
     });
+
+    return 200;
   } catch (e) {
     console.error(e);
+    return -1;
   }
 };
 

@@ -122,7 +122,7 @@ declare global {
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;
 
-      reportBug: (title: string, body: string) => null;
+      reportBug: (title: string, body: string) => Promise<number>;
       // END GENERATED CODE
 
       on: (

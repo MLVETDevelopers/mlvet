@@ -60,8 +60,13 @@ const VideoPreviewControllerBase = (
     (store: ApplicationStore) => store?.currentProject
   );
   const playState = useSelector(
-    (store: ApplicationStore) => store.isVideoPlaying
+    (store: ApplicationStore) => store.playback.playbackPlaying
   );
+
+  const timeState = useSelector(
+    (store: ApplicationStore) => store.playback.playbackTime
+  );
+
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
@@ -226,6 +231,7 @@ const VideoPreviewControllerBase = (
     );
   }, [currentProject?.mediaFilePath]);
 
+  // If the state of play/pause is changed, play/pause the video preview
   useEffect(() => {
     if (playState) {
       play();
@@ -234,6 +240,12 @@ const VideoPreviewControllerBase = (
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playState]);
+
+  // if the state of playback time is changed, set the time accordingly for video preview
+  useEffect(() => {
+    setPlaybackTime(timeState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeState]);
 
   return (
     <VideoPreview

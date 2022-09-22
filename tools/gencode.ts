@@ -117,13 +117,15 @@ const extractHandlersMetadata: () => Promise<
   GencodeIpcHandler[]
 > = async () => {
   // Load list of file paths in handlers directory, recursively visiting subfolders
-  const fileNames = (await recursivelyReadDirectory(HANDLERS_DIRECTORY)).map(
-    (filePath: string) => filePath.split(`${HANDLERS_DIRECTORY}/`)[1]
+  const filePaths = (await recursivelyReadDirectory(HANDLERS_DIRECTORY)).map(
+    (filePath: string) => {
+      return path.resolve(filePath);
+    }
   );
 
   const handlers = await Promise.all(
-    fileNames.map(async (fileName) => {
-      const filePath = path.join(HANDLERS_DIRECTORY, fileName);
+    filePaths.map(async (filePath) => {
+      const fileName = path.basename(filePath);
 
       const fileContents = await fs.readFile(filePath, { encoding: 'utf-8' });
 
@@ -146,7 +148,7 @@ const extractHandlersMetadata: () => Promise<
 
       if (handlerName === 'function') {
         throw new Error(
-          `Error in ${filePath} . Do not use 'export default function' syntax - instead, declare function as a const and export default the const.`
+          `Error in ${fileName} . Do not use 'export default function' syntax - instead, declare function as a const and export default the const.`
         );
       }
 
@@ -157,7 +159,7 @@ const extractHandlersMetadata: () => Promise<
 
       if (handlerTypeRegexMatch === null) {
         throw new Error(
-          `Error extracting type from handler in file ${filePath} . Handler type must be declared separately from handler, with matching name in PascalCase. See existing handlers for examples.`
+          `Error extracting type from handler in file ${fileName} . Handler type must be declared separately from handler, with matching name in PascalCase. See existing handlers for examples.`
         );
       }
 
@@ -175,7 +177,7 @@ const extractHandlersMetadata: () => Promise<
         handlerArgsRegexMatch.index === undefined
       ) {
         throw new Error(
-          `Error extracting arguments from handler function in file ${filePath} . Handler is incorrectly specified, see existing handlers for examples.`
+          `Error extracting arguments from handler function in file ${fileName} . Handler is incorrectly specified, see existing handlers for examples.`
         );
       }
 
@@ -240,10 +242,13 @@ const replaceBetweenTags: (
 const generateIpcBackEnd: (
   handlers: GencodeIpcHandler[]
 ) => Promise<void> = async (handlers) => {
+  const formattedHandlersDir = `${HANDLERS_DIRECTORY.replace(/\\/g, '/')}/`;
+
   const ipcImportCommands = handlers.map(({ filePath, handlerName }) => {
     const relativeFilePathNoExtension = filePath
       .split('.')[0]
-      .split(`${HANDLERS_DIRECTORY}/`)[1];
+      .replace(/\\/g, '/')
+      .split(formattedHandlersDir)[1];
     return `import ${handlerName} from './handlers/${relativeFilePathNoExtension}';`;
   });
 

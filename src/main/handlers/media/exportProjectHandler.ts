@@ -9,7 +9,11 @@ type ExportProject = (
   project: RuntimeProject
 ) => Promise<string>;
 
-const exportProject: ExportProject = async (exportFormat, ipcContext, project) => {
+const exportProject: ExportProject = async (
+  exportFormat,
+  ipcContext,
+  project
+) => {
   const { mainWindow } = ipcContext;
 
   const filePath = await getExportFilePath(exportFormat, mainWindow, project);

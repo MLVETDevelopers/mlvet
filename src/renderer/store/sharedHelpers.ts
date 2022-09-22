@@ -8,6 +8,7 @@ import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
+import { PlaybackState } from './playback/helpers';
 
 export type EditWordState = { index: number; text: string } | null;
 
@@ -33,9 +34,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
-  isVideoPlaying: boolean;
-  playbackTime: number;
-  playbackLastUpdate: Date;
+  playback: PlaybackState;
 }
 
 /**
@@ -59,7 +58,9 @@ export const initialStore: ApplicationStore = {
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
-  isVideoPlaying: false,
-  playbackTime: 0,
-  playbackLastUpdate: new Date(),
+  playback: {
+    playbackPlaying: false,
+    playbackTime: 0,
+    playbackLastUpdated: new Date(),
+  },
 };

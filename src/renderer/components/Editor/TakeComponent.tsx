@@ -1,13 +1,11 @@
 import styled from '@emotion/styled';
-import { Avatar, Box, Stack } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
 import React, {
-  createRef,
   RefObject,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,

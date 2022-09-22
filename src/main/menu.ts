@@ -184,6 +184,22 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('toggle-play-pause');
         },
       },
+      {
+        id: 'skipForward',
+        label: 'Skip forwards n seconds',
+        accelerator: 'Right',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-skip-forward');
+        },
+      },
+      {
+        id: 'skipBackward',
+        label: 'Skip backwards n seconds',
+        accelerator: 'Left',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-skip-backward');
+        },
+      },
     ];
   }
 

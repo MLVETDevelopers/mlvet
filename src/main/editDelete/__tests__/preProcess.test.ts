@@ -64,9 +64,10 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       words: [
         makeBasicWord({ word: 'first', startTime: 3, duration: 2 }),
         makeBasicWord({ word: 'second', startTime: 8, duration: 2 }),
+        makeBasicWord({ word: 'third', startTime: 10.1, duration: 0.9 }),
       ],
     };
-    const duration = 11;
+    const duration = 12;
 
     const maxThreshold = 0.5;
     const defaultThreshold = 0.2;
@@ -78,9 +79,11 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       defaultThreshold
     );
 
+    console.log(outputTranscript);
+
     expect(outputTranscript).toEqual({
-      duration: 11,
-      outputDuration: 11,
+      duration: 12,
+      outputDuration: 12,
       takeGroups: [],
       words: [
         makeBasicWord({
@@ -112,15 +115,24 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
           outputStartTime: 7.8,
           duration: 2,
           bufferDurationBefore: 0.2,
-          bufferDurationAfter: 0.2,
+          bufferDurationAfter: 0,
           originalIndex: 3,
         }),
         makeBasicWord({
-          word: null,
-          startTime: 10.2,
-          outputStartTime: 10.2,
-          duration: 0.8,
+          word: 'third',
+          startTime: 10.1,
+          outputStartTime: 10,
+          duration: 0.9,
+          bufferDurationBefore: 0.1,
+          bufferDurationAfter: 0.2,
           originalIndex: 4,
+        }),
+        makeBasicWord({
+          word: null,
+          startTime: 11.2,
+          outputStartTime: 11.2,
+          duration: 0.8,
+          originalIndex: 5,
         }),
       ],
     });

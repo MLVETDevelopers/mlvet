@@ -1,19 +1,20 @@
 /* eslint-disable import/prefer-default-export */
 
 import { BrowserWindow, dialog } from 'electron';
-import { RuntimeProject } from '../../../sharedTypes';
+import { RuntimeProject, ExportFormat } from '../../../sharedTypes';
 
 export const getExportFilePath: (
+  exportFormat: ExportFormat,
   mainWindow: BrowserWindow | null,
   project: RuntimeProject
-) => Promise<string> = async (mainWindow, project) => {
+) => Promise<string> = async (exportFormat, mainWindow, project) => {
   if (mainWindow === null) {
     throw new Error('Main window not defined');
   }
 
   const dialogResponse = await dialog.showSaveDialog(mainWindow, {
     defaultPath: project.projectFilePath ?? undefined,
-    filters: [{ name: '.edl Files', extensions: ['edl'] }],
+    filters: [{ name: `.${exportFormat} Files`, extensions: [exportFormat] }],
     buttonLabel: 'Export',
     title: 'Export Project',
     properties: ['createDirectory'],

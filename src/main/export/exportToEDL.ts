@@ -76,7 +76,7 @@ export const constructEDL: (
   return output;
 };
 
-export const exportEDL: (
+export const exportToEDL: (
   exportFilePath: string,
   mainWindow: BrowserWindow | null,
   project: RuntimeProject
@@ -107,4 +107,4 @@ export const exportEDL: (
   }
 };
 
-export default exportEDL;
+export default exportToEDL;

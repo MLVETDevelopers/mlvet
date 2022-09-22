@@ -99,11 +99,6 @@ export const exportToEDL: (
     );
 
     writeFile(join(exportDir, `${exportFilename}.edl`), edl);
-    mainWindow?.webContents.send(
-      'finish-export',
-      project,
-      project.projectFilePath
-    );
   }
 };
 

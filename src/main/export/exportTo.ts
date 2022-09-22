@@ -15,11 +15,23 @@ export const exportTo: (
   mainWindow,
   project
 ) => {
+  mainWindow?.webContents.send(
+    'export-start',
+    project,
+    project.projectFilePath
+  );
+
   if (exportFormat === ExportFormat.EDL) {
-    exportToEDL(exportFilePath, mainWindow, project);
+    await exportToEDL(exportFilePath, mainWindow, project);
   } else if (exportFormat === ExportFormat.MP4) {
-    exportToMp4(exportFilePath, mainWindow, project);
+    await exportToMp4(exportFilePath, mainWindow, project);
   }
+
+  mainWindow?.webContents.send(
+    'export-finish',
+    project,
+    project.projectFilePath
+  );
 };
 
 export default exportTo;

@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import { ExportFormat } from '../sharedTypes';
 import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
 
@@ -224,11 +225,19 @@ export default class MenuBuilder {
         enabled: false,
       },
       {
-        id: 'export',
-        label: 'Export Project',
+        id: 'exportEDL',
+        label: 'Export Project to EDL',
         accelerator: 'CommandOrControl+E',
         click: () => {
-          this.mainWindow.webContents.send('initiate-export-project');
+          this.mainWindow.webContents.send('initiate-export-project', ExportFormat.EDL);
+        },
+      },
+      {
+        id: 'exportMP4',
+        label: 'Export Project to MP4',
+        accelerator: 'CommandOrControl+Shift+E',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-export-project', ExportFormat.MP4);
         },
       },
       {

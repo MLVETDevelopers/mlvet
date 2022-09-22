@@ -87,10 +87,10 @@ const mergeTempCutVideos: (
       })
       .on('progress', (progress) => {
         const time = parseInt(progress.timemark.replace(/:/g, ''));
-        mainWindow?.webContents.send(
-          'export-progress-update',
-          time / totalTime
-        );
+        // mainWindow?.webContents.send(
+        //   'export-progress-update',
+        //   time / totalTime
+        // );
       })
       .on('end', (stdout: string, stderr: string) => {
         // if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
@@ -118,6 +118,7 @@ const deleteTempCutVideos: (
     tempCutVideoPaths.map((tempVideo, idx) => {
       unlink(tempVideo);
       // mainWindow?.webContents.send('export-progress-update', (idx + 1) * 2 / entries);
+      console.log('delete video success');
     })
   );
 };
@@ -152,24 +153,24 @@ export const exportToMp4: (
   if (project.transcription) {
     const cuts = convertTranscriptToCuts(project.transcription);
     const entries = cuts.length * 2;
-  
+
     const exportFileDir = path.dirname(exportFilePath);
     const tempFileDir = join(exportFileDir, `/temp`);
     mkdir(tempFileDir);
-  
+
     const tempCutVideoPaths = await Promise.all(
       allTempCutAllVideos(cuts, project.mediaFilePath, tempFileDir)
     );
-  
-    await mergeTempCutVideos(tempCutVideoPaths, exportFilePath, mainWindow);
-  
-    deleteTempCutFiles(tempCutVideoPaths, entries, mainWindow);
-
+    
+    // hard coded for now
     mainWindow?.webContents.send(
-      'finish-export',
-      project,
-      project.projectFilePath
+      'export-progress-update',
+      0.5
     );
+
+    await mergeTempCutVideos(tempCutVideoPaths, exportFilePath, mainWindow);
+
+    deleteTempCutFiles(tempCutVideoPaths, entries, mainWindow);
   }
 };
 

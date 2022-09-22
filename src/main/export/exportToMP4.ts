@@ -1,13 +1,11 @@
 import { BrowserWindow } from 'electron';
 import { unlink } from 'fs/promises';
 import path, { join } from 'path';
+import ffmpeg from 'fluent-ffmpeg';
 import { RuntimeProject, Cut } from '../../sharedTypes';
 import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
-import ffmpeg from 'fluent-ffmpeg';
 import { ffmpegPath } from '../ffUtils';
-
-// type ExportMp4 = (project: RuntimeProject) => Promise<string>;
 
 const createTempCutVideo: (
   inputPath: string,
@@ -31,15 +29,15 @@ const createTempCutVideo: (
       .setDuration(duration)
       .output(outputPath)
       .on('end', (stdout: string, stderr: string) => {
-        // if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        // if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
+        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
         console.log('cut video success');
         resolve(outputPath);
       })
       .on('error', (stdout: string, stderr: string) => {
-        // if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        // if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
+        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
         console.log('cut video error');
         reject(stderr);
@@ -54,25 +52,20 @@ const allTempCutAllVideos: (
   tempFileDir: string
 ) => Promise<string>[] = (cuts, source, tempFileDir) => {
   return cuts.map((cut, idx) => {
-    const tempCutVideo = createTempCutVideo(
+    return createTempCutVideo(
       source ?? 'FILE PATH NOT FOUND',
       tempFileDir,
       cut.startTime,
       cut.duration,
       idx
     );
-    // mainWindow?.webContents.send('export-progress-update', idx / entries);
-
-    return tempCutVideo;
   });
 };
 
 const mergeTempCutVideos: (
   inputPaths: string[],
-  outputPath: string,
-  mainWindow: BrowserWindow | null
-) => Promise<boolean> = (inputPaths, outputPath, mainWindow) => {
-  let totalTime = 0;
+  outputPath: string
+) => Promise<boolean> = (inputPaths, outputPath) => {
   const mergedTempCut = ffmpeg();
 
   inputPaths.forEach((inputPath) => {
@@ -82,66 +75,37 @@ const mergeTempCutVideos: (
   return new Promise((resolve, reject) => {
     mergedTempCut
       .mergeToFile(outputPath)
-      .on('codeData', (data) => {
-        totalTime = parseInt(data.duration.replace(/:/g, ''));
-      })
-      .on('progress', (progress) => {
-        const time = parseInt(progress.timemark.replace(/:/g, ''));
-        // mainWindow?.webContents.send(
-        //   'export-progress-update',
-        //   time / totalTime
-        // );
-      })
       .on('end', (stdout: string, stderr: string) => {
-        // if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        // if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
+        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
-        console.log('merge video success');
         resolve(true);
       })
       .on('error', (stdout: string, stderr: string) => {
-        // if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        // if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
+        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
+        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
-        console.log('merge video fail');
-        reject(false);
+        reject(stderr);
       });
   });
 };
 
-const deleteTempCutVideos: (
-  tempCutVideoPaths: string[],
-  entries: number,
-  mainWindow: BrowserWindow | null
-) => Promise<void[]> = (tempCutVideoPaths, entries, mainWindow) => {
+const deleteTempCutVideos: (tempCutVideoPaths: string[]) => Promise<void[]> = (
+  tempCutVideoPaths
+) => {
   return Promise.all(
-    tempCutVideoPaths.map((tempVideo, idx) => {
-      unlink(tempVideo);
-      // mainWindow?.webContents.send('export-progress-update', (idx + 1) * 2 / entries);
-      console.log('delete video success');
+    tempCutVideoPaths.map((tempVideo) => {
+      return unlink(tempVideo);
     })
   );
 };
 
-// const deleteTempDir: (
-//   tempCutVideoDir: string,
-//   entries: number,
-//   mainWindow: BrowserWindow | null
-// ) => Promise<void> = async (tempCutVideoDir, entries, mainWindow) => {
-//   return rmdir(tempCutVideoDir);
-// };
-
-const deleteTempCutFiles: (
-  tempCutVideoPaths: string[],
-  entries: number,
-  mainWindow: BrowserWindow | null
-) => void = async (tempCutVideoPaths, entries, mainWindow) => {
-  await deleteTempCutVideos(tempCutVideoPaths, entries, mainWindow).catch(
-    (error) => {
-      console.error(error);
-    }
-  );
-  // await deleteTempDir;
+const deleteTempCutFiles: (tempCutVideoPaths: string[]) => void = async (
+  tempCutVideoPaths
+) => {
+  await deleteTempCutVideos(tempCutVideoPaths).catch((error) => {
+    console.error(error);
+  });
 };
 
 export const exportToMp4: (
@@ -152,25 +116,21 @@ export const exportToMp4: (
   ffmpeg.setFfmpegPath(ffmpegPath);
   if (project.transcription) {
     const cuts = convertTranscriptToCuts(project.transcription);
-    const entries = cuts.length * 2;
 
     const exportFileDir = path.dirname(exportFilePath);
-    const tempFileDir = join(exportFileDir, `/temp`);
+    const tempFileDir = join(exportFileDir, '/temp');
     mkdir(tempFileDir);
 
     const tempCutVideoPaths = await Promise.all(
       allTempCutAllVideos(cuts, project.mediaFilePath, tempFileDir)
     );
-    
+
     // hard coded for now
-    mainWindow?.webContents.send(
-      'export-progress-update',
-      0.5
-    );
+    mainWindow?.webContents.send('export-progress-update', 0.5);
 
-    await mergeTempCutVideos(tempCutVideoPaths, exportFilePath, mainWindow);
+    await mergeTempCutVideos(tempCutVideoPaths, exportFilePath);
 
-    deleteTempCutFiles(tempCutVideoPaths, entries, mainWindow);
+    deleteTempCutFiles(tempCutVideoPaths);
   }
 };
 

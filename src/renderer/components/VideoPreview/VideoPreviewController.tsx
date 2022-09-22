@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
+import store from 'renderer/store/store';
+import { videoSeek } from 'renderer/store/playback/actions';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -57,14 +59,14 @@ const VideoPreviewControllerBase = (
   const videoPreviewRef = useRef<VideoPreviewRef>(null);
 
   const currentProject = useSelector(
-    (store: ApplicationStore) => store?.currentProject
+    (appStore: ApplicationStore) => appStore?.currentProject
   );
   const playState = useSelector(
-    (store: ApplicationStore) => store.playback.playbackPlaying
+    (appStore: ApplicationStore) => appStore.playback.playbackPlaying
   );
 
   const timeState = useSelector(
-    (store: ApplicationStore) => store.playback.playbackTime
+    (appStore: ApplicationStore) => appStore.playback.playbackTime
   );
 
   const cuts = useRef<Cut[]>([]);
@@ -232,11 +234,13 @@ const VideoPreviewControllerBase = (
   }, [currentProject?.mediaFilePath]);
 
   // If the state of play/pause is changed, play/pause the video preview
+  // if the video is paused, update the time in redux
   useEffect(() => {
     if (playState) {
       play();
     } else {
       pause();
+      store.dispatch(videoSeek(clockRef.current.time));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playState]);

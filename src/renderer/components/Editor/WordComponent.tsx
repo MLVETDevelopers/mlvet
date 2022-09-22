@@ -21,6 +21,8 @@ import {
   getColourForIndex,
   getTextWidth,
 } from 'renderer/utils/ui';
+import store from 'renderer/store/store';
+import { videoSeek } from 'renderer/store/playback/actions';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -225,6 +227,7 @@ const WordComponent = ({
       }, DOUBLE_CLICK_THRESHOLD);
 
       setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
+      store.dispatch(videoSeek(outputStartTime + 0.01));
       handleSelectWord(event, index);
 
       // Prevent event from being received by the transcription block and therefore intercepted,

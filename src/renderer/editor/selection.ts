@@ -45,7 +45,7 @@ export const selectSentence: () => void = () => {
 
   endIndex -= 1; // Account for the fact that the selection is exclusive of the end index
   let endWord: Word | undefined = currentProject.transcription.words[endIndex];
-  while (!(checkSentenceEnd(endWord) || endWord?.deleted)) {
+  while (!checkSentenceEnd(endWord) || endWord?.deleted) {
     endIndex += 1;
     endWord = currentProject.transcription.words[endIndex];
   }

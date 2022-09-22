@@ -64,8 +64,6 @@ const ProjectPage = () => {
               <VideoController
                 time={time}
                 isPlaying={isPlaying}
-                play={play}
-                pause={pause}
                 seekForward={seekForward}
                 seekBack={seekBack}
               />

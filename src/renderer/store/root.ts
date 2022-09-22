@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
-  isVideoPlaying: updatePlaybackPauseReducer,
+  playback: updatePlaybackPauseReducer,
 });
 
 export default rootReducer;

@@ -133,10 +133,17 @@ export const isInInactiveTake: (
 export const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-export const checkSentenceEnd: (word: Word) => boolean = (word) => {
+export const checkSentenceEnd: (word: Word | undefined) => boolean = (word) => {
+  // Case where word is undefined, i.e, we have traversed before the first word or after the last word.
+  // This is the end of a sentence
+  if (!word) {
+    return true;
+  }
+  // Case where word is null, i.e, a pause. This is not the end of a sentence.
   if (word.word === null) {
     return false;
   }
+  // Case where the word is a actual word. Return true if it includes . or ? or !
   return (
     word.word.includes('.') ||
     word.word.includes('?') ||

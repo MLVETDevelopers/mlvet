@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from '@react-hook/debounce';
+import { checkSentenceEnd } from 'sharedUtils';
+import { check } from 'prettier';
+import { Word } from 'sharedTypes';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
@@ -156,10 +159,25 @@ const StoreChangeObserver = () => {
     ipc.setEditWordEnabled(editWordEnabled);
   }, [selfSelection, editWordIndex]);
 
+  // Update select sentence option in edit menu when selection or transcription changes
   useEffect(() => {
-    const selectSentenceEnabled = getLengthOfRange(selfSelection) > 0;
-    ipc.setSelectSentenceEnabled(selectSentenceEnabled);
-  }, [selfSelection]);
+    // Disable the option if there is nothing selected
+    if (getLengthOfRange(selfSelection) === 0) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // Disable the option if a complete sentence is already selected
+    const startWord =
+      currentProject?.transcription?.words[selfSelection.startIndex - 1];
+    const endWord =
+      currentProject?.transcription?.words[selfSelection.endIndex - 1];
+    if (checkSentenceEnd(endWord) && checkSentenceEnd(startWord)) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // If all checks pass, enable the option
+    ipc.setSelectSentenceEnabled(true);
+  }, [currentProject?.transcription?.words, selfSelection]);
 
   // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
   useEffect(() => {

@@ -37,22 +37,16 @@ export const selectSentence: () => void = () => {
   }
   let { startIndex, endIndex } = store.getState().selection.self;
 
-  let startWord: Word;
+  let startWord: Word | undefined;
   do {
     startIndex -= 1;
-    if (startIndex < 0) {
-      break;
-    }
     startWord = currentProject.transcription.words[startIndex];
-  } while (!checkSentenceEnd(startWord) || startWord.deleted);
+  } while (!checkSentenceEnd(startWord) || startWord?.deleted);
 
   endIndex -= 1; // Account for the fact that the selection is exclusive of the end index
-  let endWord = currentProject.transcription.words[endIndex];
-  while (!(checkSentenceEnd(endWord) && endWord.deleted === false)) {
+  let endWord: Word | undefined = currentProject.transcription.words[endIndex];
+  while (!(checkSentenceEnd(endWord) || endWord?.deleted)) {
     endIndex += 1;
-    if (endIndex >= currentProject.transcription.words.length) {
-      break;
-    }
     endWord = currentProject.transcription.words[endIndex];
   }
   dispatch(

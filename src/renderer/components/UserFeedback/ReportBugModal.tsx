@@ -15,6 +15,8 @@ import {
 } from 'renderer/components/Blocks/Buttons';
 import ipc from '../../ipc';
 
+const STATUS_OK = 200;
+
 const { reportBug } = ipc;
 
 const CustomStack = styled(Stack)`
@@ -52,6 +54,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMesasge, setSnackbarMessage] = useState('');
 
   const handleBugTitleInput = (value: string) => {
     setBugTitle(value);
@@ -67,9 +70,14 @@ const ReportBugModal = ({ open, onClose }: Props) => {
     onClose();
   };
 
-  const onSubmit = () => {
-    const status = reportBug(bugTitle, bugDescription);
-    console.log(status); // 200 is okay, -1 is not okay!
+  const onSubmit = async () => {
+    const status = await reportBug(bugTitle, bugDescription);
+
+    setSnackbarMessage(
+      status === STATUS_OK
+        ? 'Your bug report has been submitted!'
+        : 'An error has occurred, please try again later.'
+    );
 
     setBugTitle('');
     setBugDescription('');
@@ -119,7 +127,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
         open={showSnackbar}
         autoHideDuration={2000}
         onClose={() => setShowSnackbar(false)}
-        message="Your bug report has been submitted!"
+        message={snackbarMesasge}
       />
     </div>
   );

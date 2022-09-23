@@ -89,10 +89,10 @@ const mergeTempCutVideos: (
   });
 };
 
-const deleteTempCutVideos: (tempCutVideoPaths: string[]) => Promise<void[]> = (
-  tempCutVideoPaths
-) => {
-  return Promise.all(
+const deleteTempCutVideos: (
+  tempCutVideoPaths: string[]
+) => Promise<void> = async (tempCutVideoPaths) => {
+  await Promise.all(
     tempCutVideoPaths.map((tempVideo) => {
       return unlink(tempVideo);
     })

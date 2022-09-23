@@ -61,12 +61,7 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <VideoController
-                time={time}
-                isPlaying={isPlaying}
-                seekForward={seekForward}
-                seekBack={seekBack}
-              />
+              <VideoController time={time} isPlaying={isPlaying} />
               {COLLAB_ENABLED && <CollabController />}
 
               <Stack

@@ -59,8 +59,8 @@ export const initialStore: ApplicationStore = {
   collab: null,
   opQueue: [],
   playback: {
-    playbackPlaying: false,
-    playbackTime: 0,
-    playbackLastUpdated: new Date(),
+    isPlaying: false,
+    time: 0,
+    lastUpdated: new Date(),
   },
 };

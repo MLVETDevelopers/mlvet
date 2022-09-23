@@ -6,7 +6,7 @@ import { styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from 'renderer/colors';
 import { getPercentage, roundToMs } from 'sharedUtils';
-import { videoSeek } from 'renderer/store/playback/actions';
+import { videoSeek, UpdatedTimeSeek } from 'renderer/store/playback/actions';
 import store from '../store/store';
 
 const Slider = styled(SliderUnstyled)({
@@ -94,7 +94,12 @@ const Scrubber = ({
     // not. If it is an array, we take the first value. This does however have a side effect
     // of the value being null, in this case, we just return the current timestamp.
     if (typeof newSliderValue === 'number') {
-      store.dispatch(videoSeek(sliderValueToSeconds(newSliderValue)));
+      store.dispatch(
+        videoSeek({
+          time: sliderValueToSeconds(newSliderValue),
+          lastUpdated: new Date(),
+        } as UpdatedTimeSeek)
+      );
       return sliderValueToSeconds(newSliderValue);
     }
 

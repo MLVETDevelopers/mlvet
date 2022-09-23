@@ -13,7 +13,7 @@ import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
 import store from 'renderer/store/store';
-import { videoSeek } from 'renderer/store/playback/actions';
+import { videoSeek, UpdatedTimeSeek } from 'renderer/store/playback/actions';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -62,11 +62,11 @@ const VideoPreviewControllerBase = (
     (appStore: ApplicationStore) => appStore?.currentProject
   );
   const playState = useSelector(
-    (appStore: ApplicationStore) => appStore.playback.playbackPlaying
+    (appStore: ApplicationStore) => appStore.playback.isPlaying
   );
 
   const timeState = useSelector(
-    (appStore: ApplicationStore) => appStore.playback.playbackTime
+    (appStore: ApplicationStore) => appStore.playback.time
   );
 
   const cuts = useRef<Cut[]>([]);
@@ -240,7 +240,12 @@ const VideoPreviewControllerBase = (
       play();
     } else {
       pause();
-      store.dispatch(videoSeek(clockRef.current.time));
+      store.dispatch(
+        videoSeek({
+          time: clockRef.current.time,
+          lastUpdated: new Date(),
+        } as UpdatedTimeSeek)
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playState]);

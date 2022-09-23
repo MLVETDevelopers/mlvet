@@ -1,5 +1,5 @@
 export interface PlaybackState {
-  playbackPlaying: boolean;
-  playbackTime: number;
-  playbackLastUpdated: Date;
+  isPlaying: boolean;
+  time: number;
+  lastUpdated: Date;
 }

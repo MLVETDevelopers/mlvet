@@ -4,21 +4,39 @@ export const VIDEO_PLAYING = 'VIDEO_PLAYING';
 export const VIDEO_SEEK = 'VIDEO_SEEK';
 export const VIDEO_SKIP = 'VIDEO_SKIP';
 
-export const videoPlaying: (playbackPlaying: boolean) => Action<boolean> = (
-  playbackPlaying
-) => ({
+export interface UpdatedPlaying {
+  isPlaying: boolean;
+  lastUpdated: Date;
+}
+
+export interface UpdatedTimeSeek {
+  time: number;
+  lastUpdated: Date;
+}
+
+export interface UpdatedTimeSkip {
+  addtime: number;
+  lastUpdated: Date;
+  maxDuration: number;
+}
+
+export const videoPlaying: (
+  playingState: UpdatedPlaying
+) => Action<UpdatedPlaying> = (playingState) => ({
   type: VIDEO_PLAYING,
-  payload: playbackPlaying,
+  payload: playingState,
 });
 
-export const videoSeek: (playbackTime: number) => Action<number> = (
-  playbackTime
-) => ({
+export const videoSeek: (
+  timeState: UpdatedTimeSeek
+) => Action<UpdatedTimeSeek> = (timeState) => ({
   type: VIDEO_SEEK,
-  payload: playbackTime,
+  payload: timeState,
 });
 
-export const videoSkip: (skipTime: number) => Action<number> = (skipTime) => ({
+export const videoSkip: (
+  timeState: UpdatedTimeSkip
+) => Action<UpdatedTimeSkip> = (timeState) => ({
   type: VIDEO_SKIP,
-  payload: skipTime,
+  payload: timeState,
 });

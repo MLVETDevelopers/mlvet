@@ -1,4 +1,4 @@
-const EditMarkerSvg = (): JSX.Element => {
+const PauseMarkerSvg = (): JSX.Element => {
   return (
     <svg
       width="30"
@@ -38,4 +38,4 @@ const EditMarkerSvg = (): JSX.Element => {
   );
 };
 
-export default EditMarkerSvg;
+export default PauseMarkerSvg;

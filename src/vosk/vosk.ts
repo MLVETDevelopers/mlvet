@@ -1,4 +1,11 @@
-/* eslint-disable max-classes-per-file */
+/**
+ * This file uses code from the Vosk NodeJS API v0.3.43
+ * https://github.com/alphacep/vosk-api
+ *
+ * The changes made were only to the TS/JS code and not the C++ code
+ * The changes made were to make the code work with Electron ^18.0.4
+ *
+ */
 
 import os from 'os';
 import koffi from 'koffi';

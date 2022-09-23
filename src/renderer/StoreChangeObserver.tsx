@@ -196,6 +196,7 @@ const StoreChangeObserver = () => {
       currentProject.projectFilePath
     ) {
       ipc.saveProject(currentProject);
+      ipc.setFileRepresentation(currentProject.projectFilePath, false); // Don't show a Save Prompt Dialog when closing.
     }
   }, [currentProject]);
 

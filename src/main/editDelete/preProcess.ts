@@ -39,7 +39,7 @@ const calculateBufferDurationBefore: (
   const prevWordEndTime = prevWord.startTime + prevWord.duration;
   const gapTime = word.startTime - prevWordEndTime;
 
-  // Half the gap used by this word, half by the previous word.
+  // If the gap is less than the buffer padding, then bufferDurationBefore will equal whatever the gap is
   if (gapTime <= bufferBeforePadding) {
     return roundToMs(gapTime);
   }
@@ -61,7 +61,7 @@ const calculateBufferDurationAfter: (
   const gapTime = nextWord.startTime - wordEndTime;
 
   if (gapTime <= bufferBeforePadding) {
-    return roundToMs(0);
+    return 0;
   }
 
   return roundToMs(gapTime - bufferBeforePadding);

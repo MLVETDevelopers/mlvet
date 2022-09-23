@@ -225,19 +225,25 @@ export default class MenuBuilder {
         enabled: false,
       },
       {
-        id: 'exportEDL',
+        id: 'exportEdl',
         label: 'Export Project to EDL',
         accelerator: 'CommandOrControl+E',
         click: () => {
-          this.mainWindow.webContents.send('initiate-export-project', ExportFormat.EDL);
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.EDL
+          );
         },
       },
       {
-        id: 'exportMP4',
+        id: 'exportMp4',
         label: 'Export Project to MP4',
         accelerator: 'CommandOrControl+Shift+E',
         click: () => {
-          this.mainWindow.webContents.send('initiate-export-project', ExportFormat.MP4);
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.MP4
+          );
         },
       },
       {

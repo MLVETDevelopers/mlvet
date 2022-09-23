@@ -17,7 +17,7 @@ export const exportTo: (
 ) => {
   mainWindow?.webContents.send(
     'export-start',
-    project,
+    project.id,
     project.projectFilePath
   );
 
@@ -27,11 +27,7 @@ export const exportTo: (
     await exportToMp4(exportFilePath, mainWindow, project);
   }
 
-  mainWindow?.webContents.send(
-    'export-finish',
-    project,
-    project.projectFilePath
-  );
+  mainWindow?.webContents.send('export-finish', project, exportFilePath);
 };
 
 export default exportTo;

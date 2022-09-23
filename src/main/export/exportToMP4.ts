@@ -32,7 +32,6 @@ const createTempCutVideo: (
         if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
         if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
 
-        console.log('cut video success');
         resolve(outputPath);
       })
       .on('error', (stdout: string, stderr: string) => {
@@ -100,9 +99,9 @@ const deleteTempCutVideos: (tempCutVideoPaths: string[]) => Promise<void[]> = (
   );
 };
 
-const deleteTempCutFiles: (tempCutVideoPaths: string[]) => void = async (
-  tempCutVideoPaths
-) => {
+const deleteTempCutFiles: (
+  tempCutVideoPaths: string[]
+) => Promise<void> = async (tempCutVideoPaths) => {
   await deleteTempCutVideos(tempCutVideoPaths).catch((error) => {
     console.error(error);
   });
@@ -114,24 +113,26 @@ export const exportToMp4: (
   project: RuntimeProject
 ) => Promise<void> = async (exportFilePath, mainWindow, project) => {
   ffmpeg.setFfmpegPath(ffmpegPath);
-  if (project.transcription) {
-    const cuts = convertTranscriptToCuts(project.transcription);
-
-    const exportFileDir = path.dirname(exportFilePath);
-    const tempFileDir = join(exportFileDir, '/temp');
-    mkdir(tempFileDir);
-
-    const tempCutVideoPaths = await Promise.all(
-      allTempCutAllVideos(cuts, project.mediaFilePath, tempFileDir)
-    );
-
-    // hard coded for now
-    mainWindow?.webContents.send('export-progress-update', 0.5);
-
-    await mergeTempCutVideos(tempCutVideoPaths, exportFilePath);
-
-    deleteTempCutFiles(tempCutVideoPaths);
+  if (project.transcription === null) {
+    return;
   }
+
+  const cuts = convertTranscriptToCuts(project.transcription);
+
+  const exportFileDir = path.dirname(exportFilePath);
+  const tempFileDir = join(exportFileDir, '/temp');
+  mkdir(tempFileDir);
+
+  const tempCutVideoPaths = await Promise.all(
+    allTempCutAllVideos(cuts, project.mediaFilePath, tempFileDir)
+  );
+
+  // hard coded for now
+  mainWindow?.webContents.send('export-progress-update', 0.5);
+
+  await mergeTempCutVideos(tempCutVideoPaths, exportFilePath);
+
+  await deleteTempCutFiles(tempCutVideoPaths);
 };
 
 export default exportToMp4;

@@ -12,6 +12,9 @@ import {
 } from './helpers';
 import { getDLLDir, updatePathWithDLLs } from './util';
 
+/**
+ * A facade for the vosk speech recognition API
+ */
 const vosk = () => {
   const dllDir = getDLLDir();
   if (os.platform() === OperatingSystems.WINDOWS) {

@@ -4,6 +4,9 @@ import fs from 'fs';
 import { OperatingSystems } from '../sharedTypes';
 import { operatingSystemDllFilePaths } from './helpers';
 
+/**
+ * Returns the path to the vosk DLL library for all OS's
+ */
 export const getBaseDLLPath = () => {
   // Path is different in dev than in production
   const prodPath =
@@ -14,6 +17,9 @@ export const getBaseDLLPath = () => {
   return path.join(__dirname, prodPath, 'lib');
 };
 
+/**
+ * Returns the path to the vosk DLL file for the current OS
+ */
 export const getDLLDir = () => {
   const baseDLLPath = getBaseDLLPath();
 
@@ -28,10 +34,17 @@ export const getDLLDir = () => {
   return dllDir;
 };
 
+/**
+ * Utility function for adding new paths/strings to the windows PATH environment variable
+ */
 export const appendPATHStr = (currentPATHStr: string, newPath: string) => {
   return newPath + path.delimiter + currentPATHStr;
 };
 
+/**
+ * Adds the path to the vosk DLL file to the windows PATH environment variable
+ * Note: new paths take precedence over old paths
+ */
 export const updatePathWithDLLs = (dllFilePath: string) => {
   let currentPath = process.env.Path as string;
 

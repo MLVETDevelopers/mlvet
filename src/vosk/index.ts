@@ -2,6 +2,9 @@ import fs from 'fs';
 import vosk from './vosk';
 import { checkWavFile } from './wavUtils';
 
+/**
+ * Returns a transcript of the audio file at the given path using the Vosk model at the given path
+ */
 const getVoskTranscript = async (modelPath: string, filePath: string) => {
   // Read in the wav audio file as a buffer
   const audioBuffer = fs.readFileSync(filePath);

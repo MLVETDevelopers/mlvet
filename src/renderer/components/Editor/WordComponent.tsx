@@ -22,6 +22,7 @@ import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
 import WordPartialHighlight from './WordPartialHighlight';
+import PauseMarker from './PauseMarker';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
@@ -91,6 +92,7 @@ interface Props extends WordPassThroughProps {
   isPrevWordSelected: boolean;
   isNextWordSelected: boolean;
   partialSelectState: PartialSelectState | null;
+  bufferedDuration: number;
 }
 
 const WordComponent = ({
@@ -117,6 +119,7 @@ const WordComponent = ({
   partialSelectState,
   setPartialSelectState,
   isMouseDown,
+  bufferedDuration,
 }: Props) => {
   useEffect(() => {
     setPartialSelectState((prevState) => {
@@ -349,14 +352,19 @@ const WordComponent = ({
     [updatePartialSelect, onMouseEnter, index, isSelected]
   );
 
-  const textOrUnderscore = text ?? '_';
+  const textOrPauseMarker = text ?? (
+    <PauseMarker
+      duration={bufferedDuration}
+      isHighlighted={isPlaying || isSelected}
+    />
+  );
 
   const textWithPartialSelectionBackground =
     !(partialSelectState?.wordIndex === index) || !isSelected ? (
-      textOrUnderscore
+      textOrPauseMarker
     ) : (
       <>
-        {textOrUnderscore}
+        {textOrPauseMarker}
         <WordPartialHighlight
           wordRef={ref}
           text={text ?? ''}
@@ -392,7 +400,7 @@ const WordComponent = ({
             },
           }}
           type="text"
-          value={editText ?? textOrUnderscore}
+          value={editText ?? text ?? ''}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />

@@ -118,9 +118,7 @@ const extractHandlersMetadata: () => Promise<
 > = async () => {
   // Load list of file paths in handlers directory, recursively visiting subfolders
   const filePaths = (await recursivelyReadDirectory(HANDLERS_DIRECTORY)).map(
-    (filePath: string) => {
-      return path.resolve(filePath);
-    }
+    (filePath) => path.resolve(filePath)
   );
 
   const handlers = await Promise.all(

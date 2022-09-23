@@ -79,8 +79,6 @@ describe('Test pre-processing JSON transcript into regular transcript', () => {
       defaultThreshold
     );
 
-    console.log(outputTranscript);
-
     expect(outputTranscript).toEqual({
       duration: 12,
       outputDuration: 12,

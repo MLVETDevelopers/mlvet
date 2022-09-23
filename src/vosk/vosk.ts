@@ -2,10 +2,10 @@
 
 import os from 'os';
 import koffi from 'koffi';
+import { OperatingSystems } from '../sharedTypes';
 import {
   Model,
   PartialResults,
-  PLATFORMS,
   Recognizer,
   Result,
   SpeakerModel,
@@ -14,7 +14,7 @@ import { getDLLDir, updatePathWithDLLs } from './util';
 
 const vosk = () => {
   const dllDir = getDLLDir();
-  if (os.platform() === PLATFORMS.WINDOWS) {
+  if (os.platform() === OperatingSystems.WINDOWS) {
     // Update PATH to load dependent dlls
     updatePathWithDLLs(dllDir);
   }

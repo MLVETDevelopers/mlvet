@@ -1,13 +1,12 @@
-export const PLATFORMS = {
-  WINDOWS: 'win32',
-  LINUX: 'linux',
-  MAC: 'darwin',
-};
+import path from 'path';
+import { OperatingSystems } from '../sharedTypes';
 
-export const platformPaths = {
-  WINDOWS: 'win-x86_64',
-  MAC: 'osx-universal',
-  LINUX: 'linux-x86_64',
+type OperatingSystemDllFilePath = Record<OperatingSystems, string>;
+
+export const operatingSystemDllFilePaths: OperatingSystemDllFilePath = {
+  [OperatingSystems.WINDOWS]: path.join('win-x86_64', 'libvosk.dll'),
+  [OperatingSystems.MACOS]: path.join('osx-universal', 'libvosk.dylib'),
+  [OperatingSystems.LINUX]: path.join('linux-x86_64', 'libvosk.so'),
 };
 
 export interface WordResult {
@@ -49,14 +48,9 @@ export interface Model {
   free: () => void;
 }
 
-export interface SpeakerModel {
-  handle: any;
-  free: () => void;
-}
+export type SpeakerModel = Model;
 
-export interface Recognizer {
-  handle: any;
-  free: () => void;
+export interface Recognizer extends Model {
   setMaxAlternatives: (maxAlternatives: number) => void;
   setWords: (words: boolean) => void;
   setPartialWords: (partialWords: boolean) => void;

@@ -36,7 +36,7 @@ const transcriptionAdaptor: (wordList: VoskWord[]) => JSONTranscription = (
     word: result.word,
     startTime: result.start,
     duration: result.end - result.start,
-    confidence: 0.6,
+    confidence: 1,
   })),
 });
 

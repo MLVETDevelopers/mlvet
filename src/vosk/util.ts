@@ -1,7 +1,8 @@
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
-import { PLATFORMS, platformPaths } from './helpers';
+import { OperatingSystems } from '../sharedTypes';
+import { operatingSystemDllFilePaths } from './helpers';
 
 export const getBaseDLLPath = () => {
   // Path is different in dev than in production
@@ -16,14 +17,9 @@ export const getBaseDLLPath = () => {
 export const getDLLDir = () => {
   const baseDLLPath = getBaseDLLPath();
 
-  let dllDir;
-  if (os.platform() === PLATFORMS.WINDOWS) {
-    dllDir = path.join(baseDLLPath, platformPaths.WINDOWS, 'libvosk.dll');
-  } else if (os.platform() === PLATFORMS.MAC) {
-    dllDir = path.join(baseDLLPath, platformPaths.MAC, 'libvosk.dylib');
-  } else {
-    dllDir = path.join(baseDLLPath, platformPaths.LINUX, 'libvosk.so');
-  }
+  const dllFilePath =
+    operatingSystemDllFilePaths[os.platform() as OperatingSystems];
+  const dllDir = path.join(baseDLLPath, dllFilePath);
 
   if (!fs.existsSync(dllDir)) {
     throw new Error(`DLL could not be found at path '${dllDir}'`);

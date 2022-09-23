@@ -6,7 +6,7 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import PlaybackManager from 'renderer/components/Editor/PlaybackManager';
 import ResizeManager from 'renderer/components/Editor/ResizeManager';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
@@ -15,6 +15,7 @@ import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import ipc from 'renderer/ipc';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import SearchBoxPopover from 'renderer/components/Editor/SearchBoxPopover';
 import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 
@@ -39,6 +40,8 @@ const ProjectPage = () => {
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+  // useState for findText
+  const [findText, setFindText] = useState<string>('');
 
   return (
     <PlaybackManager
@@ -109,6 +112,13 @@ const ProjectPage = () => {
                 }}
                 ref={projectPageLayoutRef}
               >
+                <Stack>
+                  <SearchBoxPopover
+                    transcription={currentProject.transcription}
+                    findText={findText}
+                    setFindText={setFindText}
+                  />
+                </Stack>
                 <Stack
                   id="transcription-container"
                   spacing={4}

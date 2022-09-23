@@ -15,6 +15,7 @@ const mockIpc = {
   setConfidenceLinesEnabled: async () => null,
   handleOsQuery: async () => null,
   requireCloudConfig: () => false,
+  saveProject: () => null,
 };
 
 const ipc = window.electron ?? mockIpc;

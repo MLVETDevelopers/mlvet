@@ -188,6 +188,17 @@ const StoreChangeObserver = () => {
     ipc.setConfidenceLinesEnabled(words !== null);
   }, [isShowingConfidenceUnderlines, words]);
 
+  // Autosave after currentProject changes.
+  useEffect(() => {
+    if (
+      currentProject &&
+      currentProject.transcription &&
+      currentProject.projectFilePath
+    ) {
+      ipc.saveProject(currentProject);
+    }
+  }, [currentProject]);
+
   // Component doesn't render anything
   return null;
 };

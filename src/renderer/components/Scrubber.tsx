@@ -6,7 +6,7 @@ import { styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import colors from 'renderer/colors';
 import { getPercentage, roundToMs } from 'sharedUtils';
-import { videoSeek, UpdatedTimeSeek } from 'renderer/store/playback/actions';
+import { videoSeek } from 'renderer/store/playback/actions';
 import store from '../store/store';
 
 const Slider = styled(SliderUnstyled)({
@@ -98,7 +98,7 @@ const Scrubber = ({
         videoSeek({
           time: sliderValueToSeconds(newSliderValue),
           lastUpdated: new Date(),
-        } as UpdatedTimeSeek)
+        })
       );
       return sliderValueToSeconds(newSliderValue);
     }

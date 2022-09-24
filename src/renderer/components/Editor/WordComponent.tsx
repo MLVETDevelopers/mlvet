@@ -22,7 +22,7 @@ import {
   getTextWidth,
 } from 'renderer/utils/ui';
 import store from 'renderer/store/store';
-import { videoSeek, UpdatedTimeSeek } from 'renderer/store/playback/actions';
+import { videoSeek } from 'renderer/store/playback/actions';
 import { DragState, WordMouseHandler } from './WordDragManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -231,7 +231,7 @@ const WordComponent = ({
         videoSeek({
           time: outputStartTime + 0.01,
           lastUpdated: new Date(),
-        } as UpdatedTimeSeek)
+        })
       );
       handleSelectWord(event, index);
 

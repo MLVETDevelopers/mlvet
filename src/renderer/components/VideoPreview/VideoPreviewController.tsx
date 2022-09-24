@@ -13,7 +13,7 @@ import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
 import store from 'renderer/store/store';
-import { videoSeek, UpdatedTimeSeek } from 'renderer/store/playback/actions';
+import { videoSeek } from 'renderer/store/playback/actions';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -244,7 +244,7 @@ const VideoPreviewControllerBase = (
         videoSeek({
           time: clockRef.current.time,
           lastUpdated: new Date(),
-        } as UpdatedTimeSeek)
+        })
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

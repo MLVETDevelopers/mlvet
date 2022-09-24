@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { clamp } from 'main/timeUtils';
 import { Action } from '../action';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import {
@@ -9,17 +10,6 @@ import {
   UpdatedTimeSeek,
   UpdatedTimeSkip,
 } from './actions';
-
-const correctTime = (inputTime: number, maxDuration: number) => {
-  let returnTime = inputTime;
-  if (inputTime < 0) {
-    returnTime = 0;
-  }
-  if (inputTime > maxDuration) {
-    returnTime = maxDuration;
-  }
-  return returnTime;
-};
 
 const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
   playback = initialStore.playback,
@@ -49,8 +39,9 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
     if (!playback.isPlaying) {
       return {
         isPlaying: playback.isPlaying,
-        time: correctTime(
+        time: clamp(
           playback.time + timeState.addtime,
+          0,
           timeState.maxDuration
         ),
         lastUpdated: timeState.lastUpdated,
@@ -59,14 +50,16 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
 
     if (playback.isPlaying) {
       const timeDifference =
-        (new Date().getTime() - playback.lastUpdated.getTime()) / 1000;
+        (timeState.lastUpdated.getTime() - playback.lastUpdated.getTime()) /
+        1000;
       return {
         isPlaying: playback.isPlaying,
-        time: correctTime(
+        time: clamp(
           playback.time + timeState.addtime + timeDifference,
+          0,
           timeState.maxDuration
         ),
-        lastUpdated: new Date(),
+        lastUpdated: timeState.lastUpdated,
       };
     }
   }

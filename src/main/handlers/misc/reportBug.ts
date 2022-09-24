@@ -1,26 +1,18 @@
 import fetch from 'node-fetch';
+import { BUG_REPORT_API_URL } from '../../../constants';
 
 const reportBug = async (title: string, body: string) => {
-  try {
-    await fetch(
-      'https://mlvet-bug-reporter-mlvet-bug-reporter-9xw6.vercel.app/api/reportBug',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // eslint-disable-next-line object-shorthand
-          title: title,
-          description: body,
-        }),
-      }
-    );
-    return 200;
-  } catch (e) {
-    console.error(e);
-    return -1;
-  }
+  const response = await fetch(BUG_REPORT_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      description: body,
+    }),
+  });
+  return response.status;
 };
 
 export default reportBug;

@@ -94,6 +94,15 @@ const ProjectPage = () => {
                   Feedback
                 </div>
 
+                <VideoController
+                  time={time}
+                  isPlaying={isPlaying}
+                  play={play}
+                  pause={pause}
+                  seekForward={seekForward}
+                  seekBack={seekBack}
+                />
+
                 {COLLAB_ENABLED && <CollabController />}
 
                 <Stack

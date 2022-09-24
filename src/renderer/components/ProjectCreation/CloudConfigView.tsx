@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import colors from 'renderer/colors';
 import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
+import { URL_ASSEMBLYAI_SIGNUP } from '../../../constants';
 import { TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
@@ -104,9 +105,7 @@ const CloudConfigView = ({
   );
 
   const handleHelpClick: () => void = () => {
-    openExternalLink(
-      'https://app.assemblyai.com/signup?_ga=2.64947567.1548607132.1661819143-2080070454.1661819143'
-    );
+    openExternalLink(URL_ASSEMBLYAI_SIGNUP);
   };
 
   useKeypress(saveCloudCredentials, !isAwaitingApiKey, [

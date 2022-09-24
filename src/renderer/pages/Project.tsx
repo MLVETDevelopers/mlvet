@@ -74,21 +74,25 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <IconButton
-                  color="primary"
-                  onClick={openUserFeedback}
-                  sx={{ position: 'absolute', marginTop: '5px', right: '20px' }}
+                <div
+                  style={{
+                    position: 'absolute',
+                    marginTop: '15px',
+                    right: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    fontSize: '12px',
+                  }}
                 >
-                  <RateReviewIcon fontSize="large" />
-                </IconButton>
-                <VideoController
-                  time={time}
-                  isPlaying={isPlaying}
-                  play={play}
-                  pause={pause}
-                  seekForward={seekForward}
-                  seekBack={seekBack}
-                />
+                  <IconButton
+                    color="primary"
+                    onClick={openUserFeedback}
+                    sx={{ padding: '0' }}
+                  >
+                    <RateReviewIcon fontSize="medium" />
+                  </IconButton>
+                  Feedback
+                </div>
 
                 {COLLAB_ENABLED && <CollabController />}
 

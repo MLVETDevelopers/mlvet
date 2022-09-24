@@ -25,3 +25,8 @@ export const getExportFilePath: (
 
   return dialogResponse.filePath as string;
 };
+
+export const fracToInt: (fracFps: string) => number = (fracFps) => {
+  const [numerator, denominator] = fracFps.split('/').map(Number); // get the numbers (separated by / ), and convert to numbers.
+  return Math.round(numerator / denominator);
+};

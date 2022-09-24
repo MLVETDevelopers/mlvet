@@ -48,19 +48,19 @@ export const undoSelectionDeleted: (
 });
 
 export const wordPasted: (
-  startIndex: number,
+  range: IndexRange,
   clipboard: Word[]
-) => Action<PasteWordsPayload> = (startIndex, clipboard) => ({
+) => Action<PasteWordsPayload> = (range, clipboard) => ({
   type: PASTE_WORD,
-  payload: { startIndex, clipboard },
+  payload: { range, clipboard },
 });
 
 export const undoWordPasted: (
-  startIndex: number,
+  range: IndexRange,
   clipboardLength: number
-) => Action<UndoPasteWordsPayload> = (startIndex, clipboardLength) => ({
+) => Action<UndoPasteWordsPayload> = (range, clipboardLength) => ({
   type: UNDO_PASTE_WORD,
-  payload: { startIndex, clipboardLength },
+  payload: { range, clipboardLength },
 });
 
 export const wordsMerged: (range: IndexRange) => Action<MergeWordsPayload> = (

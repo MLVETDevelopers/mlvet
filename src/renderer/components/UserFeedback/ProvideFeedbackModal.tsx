@@ -40,11 +40,11 @@ interface Props {
 }
 
 const ProvideFeedbackModal = ({ open, onClose }: Props) => {
-  const [reportBugDialog, setReportBugDialog] = useState(false);
+  const [isBugReportOpen, setBugReportOpen] = useState(false);
 
   const openReportBugDialog = () => {
     onClose();
-    setReportBugDialog(true);
+    setBugReportOpen(true);
   };
 
   const openFeedbackLink = () => {
@@ -55,8 +55,8 @@ const ProvideFeedbackModal = ({ open, onClose }: Props) => {
   return (
     <div>
       <ReportBugModal
-        open={reportBugDialog}
-        onClose={() => setReportBugDialog(false)}
+        open={isBugReportOpen}
+        onClose={() => setBugReportOpen(false)}
       />
       <CustomModal open={open} onClose={onClose}>
         <CustomModalInner>

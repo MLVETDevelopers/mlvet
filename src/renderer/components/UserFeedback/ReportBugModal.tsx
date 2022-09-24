@@ -54,7 +54,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMesasge, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleBugTitleInput = (value: string) => {
     setBugTitle(value);
@@ -127,7 +127,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
         open={showSnackbar}
         autoHideDuration={2000}
         onClose={() => setShowSnackbar(false)}
-        message={snackbarMesasge}
+        message={snackbarMessage}
       />
     </div>
   );

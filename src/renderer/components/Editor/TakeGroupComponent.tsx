@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
-import { Stack } from '@mui/material';
+import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -95,6 +95,12 @@ const TakeGroupComponent = ({
     handleModalClose();
   };
 
+  const clickAway = () => {
+    if (!isFirstTimeOpen) {
+      setIsTakeGroupOpened(false);
+    }
+  };
+
   const wordsInTakeGroup = useMemo(
     () =>
       transcription.words.filter(
@@ -155,29 +161,32 @@ const TakeGroupComponent = ({
   });
 
   return (
-    <>
-      <CustomColumnStack
-        sx={{
-          marginTop: '10px',
-          marginBottom: !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
-        }}
-      >
-        {takes}
-        <CustomRowStack
-          position="relative"
-          sx={{ justifyContent: 'flex-start' }}
+    <ClickAwayListener onClickAway={clickAway}>
+      <Box>
+        <CustomColumnStack
+          sx={{
+            marginTop: '10px',
+            marginBottom:
+              !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
+          }}
         >
-          {!isFirstTimeOpen && isTakeGroupOpened && (
-            <UngroupTakes onClick={ungroupTakesModalOpen} />
-          )}
-        </CustomRowStack>
-      </CustomColumnStack>
-      <UngroupTakesModal
-        isOpen={showUngroupModal}
-        closeModal={handleModalClose}
-        ungroupTakes={ungroupTakes}
-      />
-    </>
+          {takes}
+          <CustomRowStack
+            position="relative"
+            sx={{ justifyContent: 'flex-start' }}
+          >
+            {!isFirstTimeOpen && isTakeGroupOpened && (
+              <UngroupTakes onClick={ungroupTakesModalOpen} />
+            )}
+          </CustomRowStack>
+        </CustomColumnStack>
+        <UngroupTakesModal
+          isOpen={showUngroupModal}
+          closeModal={handleModalClose}
+          ungroupTakes={ungroupTakes}
+        />
+      </Box>
+    </ClickAwayListener>
   );
 };
 

@@ -176,30 +176,6 @@ export default class MenuBuilder {
         },
         enabled: false, // by default, gets updated when a project is entered
       },
-      {
-        id: 'playPause',
-        label: 'Play Or Pause Video',
-        accelerator: 'Space',
-        click: () => {
-          this.mainWindow.webContents.send('toggle-play-pause');
-        },
-      },
-      {
-        id: 'skipForward',
-        label: 'Skip forwards n seconds',
-        accelerator: 'Right',
-        click: () => {
-          this.mainWindow.webContents.send('initiate-skip-forward');
-        },
-      },
-      {
-        id: 'skipBackward',
-        label: 'Skip backwards n seconds',
-        accelerator: 'Left',
-        click: () => {
-          this.mainWindow.webContents.send('initiate-skip-backward');
-        },
-      },
     ];
   }
 
@@ -478,6 +454,36 @@ export default class MenuBuilder {
                   },
                 },
               ],
+      },
+      {
+        id: 'playback',
+        label: '&Playback',
+        submenu: [
+          {
+            id: 'playPause',
+            label: 'Play/Pause Video',
+            accelerator: 'Space',
+            click: () => {
+              this.mainWindow.webContents.send('toggle-play-pause');
+            },
+          },
+          {
+            id: 'skipForward',
+            label: 'Skip forwards 10 seconds',
+            accelerator: 'Right',
+            click: () => {
+              this.mainWindow.webContents.send('initiate-skip-forward');
+            },
+          },
+          {
+            id: 'skipBackward',
+            label: 'Skip backwards 10 seconds',
+            accelerator: 'Left',
+            click: () => {
+              this.mainWindow.webContents.send('initiate-skip-backward');
+            },
+          },
+        ],
       },
       {
         id: 'history',

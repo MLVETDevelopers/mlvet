@@ -167,7 +167,7 @@ const TakeComponent = ({
     if (takeRef && takeRef.current?.clientHeight) {
       setCurrentTakeHeight(takeRef.current.clientHeight);
     }
-  }, [takeRef.current?.clientHeight]);
+  }, [takeRef.current?.clientHeight, isTakeGroupOpened]);
 
   return (
     <>
@@ -183,9 +183,11 @@ const TakeComponent = ({
                 isTakeGroupOpened={isTakeGroupOpened}
                 takeHeight={currentTakeHeight}
               />
-              <CustomRowStack flexWrap="wrap" ref={takeRef}>
-                {TakeWords}
-              </CustomRowStack>
+              {isTakeGroupOpened || isActive ? (
+                <CustomRowStack flexWrap="wrap" ref={takeRef}>
+                  {TakeWords}
+                </CustomRowStack>
+              ) : null}
             </>
           ) : null}
         </CustomRowStack>

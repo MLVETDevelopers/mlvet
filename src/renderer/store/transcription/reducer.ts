@@ -68,6 +68,7 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
   if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
     // Update take groups first, so that updateOutputTimes uses the correct take groups
     const takeGroups = takeGroupsReducer(transcription.takeGroups, action);
+    console.log(takeGroups);
 
     return {
       ...transcription,

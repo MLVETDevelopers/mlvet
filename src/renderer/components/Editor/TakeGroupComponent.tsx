@@ -74,8 +74,12 @@ const TakeGroupComponent = ({
   ...passThroughProps
 }: TakeGroupComponentProps) => {
   const [takeDissolved, setTakeDissolved] = useState(false);
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
-  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
+    !takeGroup.takeSelected
+  );
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(
+    !takeGroup.takeSelected
+  );
   const [showUngroupModal, setShowUngroupModal] = useState(false);
   const dispatch = useDispatch();
 

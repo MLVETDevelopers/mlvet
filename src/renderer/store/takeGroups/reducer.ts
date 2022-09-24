@@ -15,7 +15,7 @@ const takeGroupsReducer: Reducer<TakeGroup[], Action<any>> = (
 
     return takeGroups.map((takeGroup) =>
       takeGroup.id === takeGroupId
-        ? { ...takeGroup, activeTakeIndex: takeIndex }
+        ? { ...takeGroup, activeTakeIndex: takeIndex, takeSelected: true }
         : takeGroup
     );
   }

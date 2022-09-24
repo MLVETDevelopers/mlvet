@@ -37,6 +37,9 @@ export const generateTranscriptionChunks = (
           activeTakeIndex:
             takeGroups.find((takeGroup) => takeGroup.id === 0)
               ?.activeTakeIndex ?? 0,
+          takeSelected:
+            takeGroups.find((takeGroup) => takeGroup.id === 0)?.takeSelected ??
+            false,
         },
       ];
     }
@@ -53,6 +56,9 @@ export const generateTranscriptionChunks = (
       activeTakeIndex:
         takeGroups.find((takeGroup) => takeGroup.id === numTakeGroups)
           ?.activeTakeIndex ?? 0,
+      takeSelected:
+        takeGroups.find((takeGroup) => takeGroup.id === numTakeGroups)
+          ?.takeSelected ?? false,
     });
 
     numTakeGroups += 1;

@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import { BrowserWindow, dialog } from 'electron';
+import path from 'path';
 import { RuntimeProject, ExportFormat } from '../../../sharedTypes';
 
 export const getExportFilePath: (
@@ -12,8 +13,17 @@ export const getExportFilePath: (
     throw new Error('Main window not defined');
   }
 
+  if (project.projectFilePath == null) {
+    throw new Error('Project file path not defined');
+  }
+
+  const defaultName = path.basename(
+    project.projectFilePath,
+    path.extname(project.projectFilePath)
+  );
+
   const dialogResponse = await dialog.showSaveDialog(mainWindow, {
-    defaultPath: project.projectFilePath ?? undefined,
+    defaultPath: defaultName,
     filters: [{ name: `.${exportFormat} Files`, extensions: [exportFormat] }],
     buttonLabel: 'Export',
     title: 'Export Project',

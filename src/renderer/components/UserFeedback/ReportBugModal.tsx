@@ -54,7 +54,8 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMesasge, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleBugTitleInput = (value: string) => {
     setBugTitle(value);
@@ -71,6 +72,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
   };
 
   const onSubmit = async () => {
+    setIsSubmitted(true);
     const status = await reportBug(bugTitle, bugDescription);
 
     setSnackbarMessage(
@@ -82,8 +84,11 @@ const ReportBugModal = ({ open, onClose }: Props) => {
     setBugTitle('');
     setBugDescription('');
     onClose();
+    setIsSubmitted(false);
     setShowSnackbar(true);
   };
+
+  const canSubmitBugReport = bugTitle && bugDescription && !isSubmitted;
 
   return (
     <div>
@@ -117,7 +122,9 @@ const ReportBugModal = ({ open, onClose }: Props) => {
               sx={{ paddingTop: '30px', alignItems: 'flex-end', gap: '32px' }}
             >
               <SecondaryButton onClick={onCloseBugModal}>Close</SecondaryButton>
-              <PrimaryButton onClick={onSubmit}>Submit</PrimaryButton>
+              <PrimaryButton onClick={onSubmit} disabled={!canSubmitBugReport}>
+                Submit
+              </PrimaryButton>
             </CustomRowStack>
           </CustomStack>
         </CustomModalInner>
@@ -127,7 +134,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
         open={showSnackbar}
         autoHideDuration={2000}
         onClose={() => setShowSnackbar(false)}
-        message={snackbarMesasge}
+        message={snackbarMessage}
       />
     </div>
   );

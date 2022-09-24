@@ -28,35 +28,66 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
   takeInfo: null,
 });
 
+const calculateBufferDurationBefore: (
+  word: Word,
+  prevWord: Word | null,
+  bufferBeforePadding: number
+) => number = (word, prevWord, bufferBeforePadding) => {
+  if (prevWord === null) {
+    return word.startTime;
+  }
+  const prevWordEndTime = prevWord.startTime + prevWord.duration;
+  const gapTime = word.startTime - prevWordEndTime;
+
+  // If the gap is less than the buffer padding, then bufferDurationBefore will equal whatever the gap is
+  if (gapTime <= bufferBeforePadding) {
+    return roundToMs(gapTime);
+  }
+
+  return roundToMs(bufferBeforePadding);
+};
+
 const calculateBufferDurationAfter: (
   word: Word,
   nextWord: Word | null,
-  totalDuration: number
-) => number = (word, nextWord, totalDuration) => {
+  totalDuration: number,
+  bufferBeforePadding: number
+) => number = (word, nextWord, totalDuration, bufferBeforePadding) => {
   const wordEndTime = word.startTime + word.duration;
 
   if (nextWord === null) {
-    return totalDuration - wordEndTime;
+    return roundToMs(totalDuration - wordEndTime);
   }
   const gapTime = nextWord.startTime - wordEndTime;
 
-  return roundToMs(gapTime);
+  if (gapTime <= bufferBeforePadding) {
+    return 0;
+  }
+
+  return roundToMs(gapTime - bufferBeforePadding);
 };
 
 /**
  * Adds silence buffers after words.
- * Only the first word gets a buffer before it.
+ * Buffer before is set to bufferBeforePadding (e.g. up to 0.2s)
+ * Only the first word gets the full length of the buffer before it.
  */
 const calculateBuffers: (totalDuration: number) => MapCallback<Word, Word> =
   (totalDuration) => (word, i, words) => {
     const isFirstWord = i === 0;
     const isLastWord = i === words.length - 1;
+    const bufferBeforePadding = 0.2;
 
-    const bufferDurationBefore = isFirstWord ? word.startTime : 0;
+    const bufferDurationBefore = calculateBufferDurationBefore(
+      word,
+      isFirstWord ? null : words[i - 1],
+      bufferBeforePadding
+    );
     const bufferDurationAfter = calculateBufferDurationAfter(
       word,
       isLastWord ? null : words[i + 1],
-      totalDuration
+      totalDuration,
+      bufferBeforePadding
     );
 
     return {
@@ -105,8 +136,8 @@ const injectPauses: (
       const bufferDiff = currentWord.bufferDurationBefore - defaultThreshold;
 
       pauseWordBefore = makePauseWord({
-        startTime: pauseWordStartTime,
-        duration: bufferDiff,
+        startTime: roundToMs(pauseWordStartTime),
+        duration: roundToMs(bufferDiff),
       });
     }
 
@@ -119,8 +150,8 @@ const injectPauses: (
       const bufferDiff = currentWord.bufferDurationAfter - defaultThreshold;
 
       pauseWordAfter = makePauseWord({
-        startTime: pauseWordStartTime,
-        duration: bufferDiff,
+        startTime: roundToMs(pauseWordStartTime),
+        duration: roundToMs(bufferDiff),
       });
     }
 

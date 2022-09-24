@@ -6,7 +6,7 @@ import SquareBracketHover from './SquareBracketHover';
 interface Props {
   isLast: boolean;
   isTakeGroupOpened: boolean;
-  takeHeight: number;
+  takeHeight: number; // height in px
 }
 
 const SquareBracket = ({ isLast, isTakeGroupOpened, takeHeight }: Props) => {

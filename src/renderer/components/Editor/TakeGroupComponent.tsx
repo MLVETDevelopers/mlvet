@@ -73,7 +73,6 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [takeDissolved, setTakeDissolved] = useState(false);
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
     !takeGroup.takeSelected
   );
@@ -93,7 +92,6 @@ const TakeGroupComponent = ({
 
   const ungroupTakes = () => {
     dispatch(deleteTakeGroup(takeGroup.id));
-    setTakeDissolved(true);
     handleModalClose();
   };
 
@@ -158,34 +156,27 @@ const TakeGroupComponent = ({
 
   return (
     <>
-      {!takeDissolved ? (
-        <>
-          <CustomColumnStack
-            sx={{
-              marginTop: '10px',
-              marginBottom:
-                !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
-            }}
-          >
-            {takes}
-            <CustomRowStack
-              position="relative"
-              sx={{ justifyContent: 'flex-start' }}
-            >
-              {!isFirstTimeOpen && isTakeGroupOpened && (
-                <UngroupTakes onClick={ungroupTakesModalOpen} />
-              )}
-            </CustomRowStack>
-          </CustomColumnStack>
-          <UngroupTakesModal
-            isOpen={showUngroupModal}
-            closeModal={handleModalClose}
-            ungroupTakes={ungroupTakes}
-          />
-        </>
-      ) : (
-        <></>
-      )}
+      <CustomColumnStack
+        sx={{
+          marginTop: '10px',
+          marginBottom: !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
+        }}
+      >
+        {takes}
+        <CustomRowStack
+          position="relative"
+          sx={{ justifyContent: 'flex-start' }}
+        >
+          {!isFirstTimeOpen && isTakeGroupOpened && (
+            <UngroupTakes onClick={ungroupTakesModalOpen} />
+          )}
+        </CustomRowStack>
+      </CustomColumnStack>
+      <UngroupTakesModal
+        isOpen={showUngroupModal}
+        closeModal={handleModalClose}
+        ungroupTakes={ungroupTakes}
+      />
     </>
   );
 };

@@ -121,25 +121,26 @@ const TakeComponent = ({
     setIsFirstTimeOpen,
   ]);
 
-  const NumberedButton = (
-    <Avatar
-      onClick={onSelectTake}
-      sx={{
-        height: 20,
-        width: 20,
-        fontSize: 12,
-        color: colors.grey[700],
-        backgroundColor: isActive ? colors.yellow[500] : colors.grey[400],
-        display: 'flex',
-        position: 'absolute',
-        left: '-30px',
-        transform: 'translateY(2px)',
-        cursor: 'pointer',
-      }}
-    >
-      {takeIndex + 1}
-    </Avatar>
-  );
+  const numberedButton =
+    !isFirstTimeOpen && isTakeGroupOpened ? (
+      <Avatar
+        onClick={onSelectTake}
+        sx={{
+          height: 20,
+          width: 20,
+          fontSize: 12,
+          color: colors.grey[700],
+          backgroundColor: isActive ? colors.yellow[500] : colors.grey[400],
+          display: 'flex',
+          position: 'absolute',
+          left: '-30px',
+          transform: 'translateY(2px)',
+          cursor: 'pointer',
+        }}
+      >
+        {takeIndex + 1}
+      </Avatar>
+    ) : null;
 
   const TakeWords = takeWords.map((word, index, words) => {
     const wordIndex = transcriptionIndex + index;
@@ -177,7 +178,7 @@ const TakeComponent = ({
         >
           {isTakeGroupOpened || isActive ? (
             <>
-              {!isFirstTimeOpen && isTakeGroupOpened && NumberedButton}
+              {numberedButton}
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}

@@ -119,7 +119,12 @@ export const exportToMp4: (
 
   const cuts = convertTranscriptToCuts(project.transcription);
 
-  const exportFileDir = path.dirname(exportFilePath);
+  let fixedExportFilePath = exportFilePath;
+  const extnName = path.extname(exportFilePath);
+
+  if (!extnName) fixedExportFilePath = path.join(exportFilePath, '.mp4');
+
+  const exportFileDir = path.dirname(fixedExportFilePath);
   const tempFileDir = join(exportFileDir, '/temp');
   mkdir(tempFileDir);
 
@@ -130,7 +135,7 @@ export const exportToMp4: (
   // hard coded for now
   mainWindow?.webContents.send('export-progress-update', 0.5);
 
-  await mergeTempCutVideos(tempCutVideoPaths, exportFilePath);
+  await mergeTempCutVideos(tempCutVideoPaths, fixedExportFilePath);
 
   await deleteTempCutFiles(tempCutVideoPaths);
 };

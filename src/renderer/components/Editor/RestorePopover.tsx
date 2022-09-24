@@ -2,6 +2,7 @@ import {
   Box,
   ClickAwayListener,
   Popper,
+  Stack,
   styled,
   Typography,
 } from '@mui/material';
@@ -57,7 +58,7 @@ const RestorePopover = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            height: 38,
+            height: 50,
             maxWidth: width,
             padding: '8px',
             borderRadius: '5px',
@@ -65,9 +66,17 @@ const RestorePopover = ({
             border: 0.5,
           }}
         >
-          <Typography style={{ color: colors.yellow[500] }} noWrap>
-            {text}
-          </Typography>
+          <Stack>
+            <Typography style={{ color: colors.yellow[500] }} noWrap>
+              {text}
+            </Typography>
+            <Typography
+              variant="caption"
+              style={{ color: colors.grey[400], fontStyle: 'italic' }}
+            >
+              Enter to restore
+            </Typography>
+          </Stack>
         </Box>
       </StyledPopper>
     </ClickAwayListener>

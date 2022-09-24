@@ -122,7 +122,7 @@ export const exportToMp4: (
   let fixedExportFilePath = exportFilePath;
   const extnName = path.extname(exportFilePath);
 
-  if (!extnName) fixedExportFilePath = path.join(exportFilePath, '.mp4');
+  if (!extnName) fixedExportFilePath = `${exportFilePath}.mp4`;
 
   const exportFileDir = path.dirname(fixedExportFilePath);
   const tempFileDir = join(exportFileDir, '/temp');

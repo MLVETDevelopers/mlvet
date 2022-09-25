@@ -13,7 +13,7 @@ const exportIoReducer: Reducer<ApplicationStore['exportIo'], Action<any>> = (
   }
 
   if (action.type === EXPORT_PROGRESS_UPDATE) {
-    return { exportProgress: action.payload } as ExportIo;
+    return { ...exportIo, exportProgress: action.payload } as ExportIo;
   }
 
   if (action.type === FINISH_EXPORT) {

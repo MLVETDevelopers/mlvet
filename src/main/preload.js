@@ -39,7 +39,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+  exportProject: (exportFormat, project) =>
+    ipcRenderer.invoke('export-project', exportFormat, project),
 
   extractThumbnail: (absolutePathToMediaFile, project) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),

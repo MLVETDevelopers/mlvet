@@ -1,5 +1,5 @@
 import { Transcription } from '../../../sharedTypes';
-import { constructEDL } from '../export';
+import { constructEDL } from '../exportToEDL';
 
 describe('Test exporting', () => {
   it('should produce expected EDL (merging words, if no cuts) after EDL construction', async () => {

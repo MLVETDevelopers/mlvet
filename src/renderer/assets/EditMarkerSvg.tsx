@@ -1,7 +1,9 @@
+import colors from 'renderer/colors';
+
 const EditMarkerSvg = (): JSX.Element => {
   return (
     <svg
-      width="5"
+      width="7"
       height="15"
       viewBox="0 0 5 12"
       fill="none"
@@ -12,11 +14,11 @@ const EditMarkerSvg = (): JSX.Element => {
         y1="3"
         x2="2.5"
         y2="15"
-        stroke="#FAFBFC"
+        stroke={colors.yellow[500]}
         strokeDasharray="2 2"
+        strokeWidth="2"
       />
-      <path d="M2.5 5L0.334936 1.25L4.66506 1.25L2.5 5Z" fill="#FAFBFC" />
-      <path d="M2.5 5L0.334936 1.25L4.66506 1.25L2.5 5Z" fill="#FAFBFC" />
+      <path d="M 2.5 5 L -1 -1 L 6 -1 L 2.5 5 Z" fill={colors.yellow[500]} />
     </svg>
   );
 };

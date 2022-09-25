@@ -62,5 +62,6 @@ export const initialStore: ApplicationStore = {
     isPlaying: false,
     time: 0,
     lastUpdated: new Date(),
+    rangeOverride: null,
   },
 };

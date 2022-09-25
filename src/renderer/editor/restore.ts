@@ -46,9 +46,9 @@ export const getOriginalWords: (startIndex: number, words: Word[]) => Word[] = (
 ) => {
   const restoreIndexRange = getRestoreIndexRange(startIndex, words);
 
-  const originalWords = [...words].splice(
+  const originalWords = words.slice(
     restoreIndexRange.startIndex,
-    restoreIndexRange.endIndex - restoreIndexRange.startIndex
+    restoreIndexRange.endIndex
   );
 
   return originalWords;

@@ -20,37 +20,35 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
 ) => {
   if (action.type === VIDEO_PLAYING) {
     const playState = action.payload as UpdatedPlaying;
+    const { isPlaying, lastUpdated } = playState;
+
     return {
-      isPlaying: playState.isPlaying,
-      time: playback.time,
-      lastUpdated: playState.lastUpdated,
-      rangeOverride: playback.rangeOverride,
+      ...playback,
+      isPlaying,
+      lastUpdated,
     };
   }
 
   if (action.type === VIDEO_SEEK) {
     const timeState = action.payload as UpdatedTimeSeek;
+    const { time, lastUpdated } = timeState;
+
     return {
-      isPlaying: playback.isPlaying,
-      time: timeState.time,
-      lastUpdated: timeState.lastUpdated,
-      rangeOverride: playback.rangeOverride,
+      ...playback,
+      time,
+      lastUpdated,
     };
   }
 
   if (action.type === VIDEO_SKIP) {
     const timeState = action.payload as UpdatedTimeSkip;
+    const { addtime, lastUpdated, maxDuration } = timeState;
 
     if (!playback.isPlaying) {
       return {
-        isPlaying: playback.isPlaying,
-        time: clamp(
-          playback.time + timeState.addtime,
-          0,
-          timeState.maxDuration
-        ),
-        lastUpdated: timeState.lastUpdated,
-        rangeOverride: playback.rangeOverride,
+        ...playback,
+        time: clamp(playback.time + addtime, 0, maxDuration),
+        lastUpdated,
       };
     }
 
@@ -59,14 +57,9 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
         (timeState.lastUpdated.getTime() - playback.lastUpdated.getTime()) /
         1000;
       return {
-        isPlaying: playback.isPlaying,
-        time: clamp(
-          playback.time + timeState.addtime + timeDifference,
-          0,
-          timeState.maxDuration
-        ),
+        ...playback,
+        time: clamp(playback.time + addtime + timeDifference, 0, maxDuration),
         lastUpdated: timeState.lastUpdated,
-        rangeOverride: playback.rangeOverride,
       };
     }
   }

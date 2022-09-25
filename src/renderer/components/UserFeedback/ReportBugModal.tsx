@@ -96,7 +96,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
         <CustomModalInner>
           <CustomStack paddingTop="10px" paddingBottom="10px">
             <Typography variant="h1" color={colors.grey[400]}>
-              Report a bug
+              Report a Bug
             </Typography>
             <CustomStack>
               <TextField
@@ -110,7 +110,7 @@ const ReportBugModal = ({ open, onClose }: Props) => {
               />
               <TextField
                 inputProps={{ style: { color: '#FAFBFC' } }}
-                label="Bug description"
+                label="Bug Description"
                 variant="outlined"
                 value={bugDescription}
                 onChange={(event) => handleBugDescInput(event.target.value)}

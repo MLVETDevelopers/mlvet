@@ -14,7 +14,8 @@ const saveProject: (shouldCloseAfter: boolean) => Promise<void> = async (
   let filePath = '';
   try {
     filePath = await ipc.saveProject(currentProject);
-  } catch {
+  } catch (err) {
+    console.error(err);
     return;
   }
 

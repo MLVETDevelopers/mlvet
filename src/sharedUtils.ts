@@ -1,4 +1,3 @@
-import { SelectionState } from 'renderer/store/selection/helpers';
 import {
   RuntimeProject,
   ProjectMetadata,
@@ -10,7 +9,14 @@ import {
   TranscriptionEngine,
   EngineConfig,
   CloudConfig,
+  TranscriptionChunk,
+  SelectionState,
 } from './sharedTypes';
+
+// TODO: a bit hacky, do this better
+export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
+  return 'activeTakeIndex' in chunk;
+}
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
@@ -132,3 +138,22 @@ export const isInInactiveTake: (
 
 export const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+
+// TODO(chloe): merge from Justin's PR so we don't duplicate this function
+export const checkSentenceEnd: (word: Word | undefined) => boolean = (word) => {
+  // Case where word is undefined, i.e, we have traversed before the first word or after the last word.
+  // This is the end of a sentence
+  if (!word) {
+    return true;
+  }
+  // Case where word is null, i.e, a pause. This is not the end of a sentence.
+  if (word.word === null) {
+    return false;
+  }
+  // Case where the word is a actual word. Return true if it includes . or ? or !
+  return (
+    word.word.includes('.') ||
+    word.word.includes('?') ||
+    word.word.includes('!')
+  );
+};

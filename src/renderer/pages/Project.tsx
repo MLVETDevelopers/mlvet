@@ -6,7 +6,7 @@ import VideoPreviewController, {
 } from 'renderer/components/VideoPreview/VideoPreviewController';
 import PlaybackManager from 'renderer/components/Editor/PlaybackManager';
 import ResizeManager from 'renderer/components/Editor/ResizeManager';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import ResizeSlider from 'renderer/components/Editor/ResizeSlider';
 import ExportCard from 'renderer/components/ExportCard';
 import Scrubber from 'renderer/components/Scrubber';
@@ -33,6 +33,7 @@ const ProjectPage = () => {
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+  const [outputVideoLength, setOutputVideoLength] = useState<number>(0);
 
   return (
     <PlaybackManager
@@ -108,11 +109,11 @@ const ProjectPage = () => {
                       setTime={setTime}
                       setIsPlaying={setIsPlaying}
                       ref={videoPreviewControllerRef}
+                      outputVideoLength={outputVideoLength}
+                      setOutputVideoLength={setOutputVideoLength}
                     />
                     <Scrubber
-                      totalDuration={
-                        currentProject?.transcription?.outputDuration ?? 0
-                      }
+                      totalDuration={outputVideoLength}
                       currentTimeSeconds={time}
                       onScrubberChange={setPlaybackTime}
                     />

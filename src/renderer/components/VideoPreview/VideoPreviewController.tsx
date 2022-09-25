@@ -36,6 +36,8 @@ export interface VideoPreviewControllerRef {
 interface Props {
   setTime: (time: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
+  outputVideoLength: number;
+  setOutputVideoLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;
@@ -51,7 +53,7 @@ const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cuts) => {
 const getPerformanceTime = () => performance.now() * 0.001;
 
 const VideoPreviewControllerBase = (
-  { setTime, setIsPlaying }: Props,
+  { setTime, setIsPlaying, outputVideoLength, setOutputVideoLength }: Props,
   ref: Ref<VideoPreviewControllerRef>
 ) => {
   const skip = useRef(10);
@@ -69,12 +71,14 @@ const VideoPreviewControllerBase = (
     (appStore: ApplicationStore) => appStore.playback.time
   );
 
+  const rangeOverride = useSelector(
+    (appStore: ApplicationStore) => appStore.playback.rangeOverride
+  );
+
   const cuts = useRef<Cut[]>([]);
-  const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
 
-  const clampSystemTime = (time: number) =>
-    clamp(time, 0, outputVideoLength.current);
+  const clampSystemTime = (time: number) => clamp(time, 0, outputVideoLength);
 
   const clockRef = useRef<Clock>({
     hasRunBefore: false,
@@ -167,7 +171,7 @@ const VideoPreviewControllerBase = (
     clockRef.current.time = newSystemTime;
     setTime(clockRef.current.time);
 
-    if (newSystemTime < outputVideoLength.current) {
+    if (newSystemTime < outputVideoLength) {
       const inCutStartTime =
         currentCutRef.current.startTime +
         (clockRef.current.time - currentCutRef.current.outputStartTime);
@@ -185,7 +189,7 @@ const VideoPreviewControllerBase = (
   const play = () => {
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
-      if (clockRef.current.time >= outputVideoLength.current) {
+      if (clockRef.current.time >= outputVideoLength) {
         setPlaybackTime(0);
       }
       startTimer();
@@ -214,16 +218,20 @@ const VideoPreviewControllerBase = (
 
   useEffect(() => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(currentProject.transcription);
+      cuts.current = convertTranscriptToCuts(
+        currentProject.transcription,
+        rangeOverride
+      );
+
       if (cuts.current.length === 0) {
         return;
       }
       const lastCut = cuts.current[cuts.current.length - 1];
-      outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
+      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
       setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProject?.transcription]);
+  }, [currentProject?.transcription, rangeOverride, setOutputVideoLength]);
 
   useEffect(() => {
     setEncodedVideoSrc(

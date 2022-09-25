@@ -122,6 +122,11 @@ export enum AsyncState {
   ERROR = 'ERROR',
 }
 
+export enum ExportFormat {
+  EDL = 'edl',
+  MP4 = 'mp4',
+}
+
 // Interface for index ranges, usually start-inclusive and end-exclusive.
 export interface IndexRange {
   startIndex: number;

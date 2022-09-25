@@ -10,11 +10,13 @@ import colors from 'renderer/colors';
 import { Word } from 'sharedTypes';
 import {
   getOriginalWords,
+  getRestoreIndexRange,
   restoreOriginalSection,
 } from 'renderer/editor/restore';
 import { getColourForIndex } from 'renderer/utils/ui';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRangeOverride } from 'renderer/store/playback/actions';
 import RestorePopover from './RestorePopover';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
@@ -41,6 +43,7 @@ const EditMarker = ({
 }: Props) => {
   const [popperToggled, setPopperToggled] = useState<boolean | null>(false);
   const [popperText, setPopperText] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   const markerRef = useRef<HTMLDivElement>(null);
 
@@ -70,15 +73,25 @@ const EditMarker = ({
 
   const getOriginalText = useCallback(() => {
     const originalWords = getOriginalWords(index, words);
-    const originalText = originalWords.map((w) => w.word).join(' ');
 
-    return originalText;
+    return originalWords;
   }, [index, words]);
 
   const onMarkerClick = useCallback(() => {
     setPopperToggled(true);
-    setPopperText(getOriginalText());
-  }, [setPopperToggled, setPopperText, getOriginalText]);
+
+    const deletedWords = getOriginalText();
+    const deletedText = deletedWords.map((w) => w.word).join(' ');
+
+    const rangeOverride = getRestoreIndexRange(
+      deletedWords[0].originalIndex,
+      deletedWords
+    );
+
+    dispatch(setRangeOverride(rangeOverride));
+
+    setPopperText(deletedText);
+  }, [setPopperToggled, setPopperText, getOriginalText, dispatch]);
 
   const background = useMemo(() => {
     if (isSelected) {

@@ -6,9 +6,12 @@ import {
   VIDEO_PLAYING,
   VIDEO_SEEK,
   VIDEO_SKIP,
+  SET_RANGE_OVERRIDE,
+  CLEAR_RANGE_OVERRIDE,
   UpdatedPlaying,
   UpdatedTimeSeek,
   UpdatedTimeSkip,
+  SetRangeOverridePayload,
 } from './actions';
 
 const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
@@ -21,6 +24,7 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
       isPlaying: playState.isPlaying,
       time: playback.time,
       lastUpdated: playState.lastUpdated,
+      rangeOverride: playback.rangeOverride,
     };
   }
 
@@ -30,6 +34,7 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
       isPlaying: playback.isPlaying,
       time: timeState.time,
       lastUpdated: timeState.lastUpdated,
+      rangeOverride: playback.rangeOverride,
     };
   }
 
@@ -45,6 +50,7 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
           timeState.maxDuration
         ),
         lastUpdated: timeState.lastUpdated,
+        rangeOverride: playback.rangeOverride,
       };
     }
 
@@ -60,8 +66,25 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
           timeState.maxDuration
         ),
         lastUpdated: timeState.lastUpdated,
+        rangeOverride: playback.rangeOverride,
       };
     }
+  }
+
+  if (action.type === SET_RANGE_OVERRIDE) {
+    const { rangeOverride } = action.payload as SetRangeOverridePayload;
+
+    return {
+      ...playback,
+      rangeOverride,
+    };
+  }
+
+  if (action.type === CLEAR_RANGE_OVERRIDE) {
+    return {
+      ...playback,
+      rangeOverride: null,
+    };
   }
 
   return playback;

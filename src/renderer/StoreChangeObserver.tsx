@@ -9,6 +9,7 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import dispatchBroadcast from './collabClient/dispatchBroadcast';
 import { selectionRangeSetTo } from './store/selection/actions';
 import { getLengthOfRange } from './utils/range';
+import { CollabClientSessionState } from './store/collab/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -197,7 +198,8 @@ const StoreChangeObserver = () => {
       currentProject.transcription &&
       currentProject.projectFilePath
     ) {
-      if (collab !== null && collab.isHost) return; // Disallow autosave if you are not the host in collab
+      if (collab !== null && (collab as CollabClientSessionState).isHost)
+        return; // Disallow autosave if you are not the host in collab
 
       ipc.saveProject(currentProject);
 

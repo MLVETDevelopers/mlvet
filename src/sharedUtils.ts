@@ -13,7 +13,6 @@ import {
   SelectionState,
 } from './sharedTypes';
 
-// TODO: a bit hacky, do this better
 export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
   return 'activeTakeIndex' in chunk;
 }

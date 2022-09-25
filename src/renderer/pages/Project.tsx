@@ -46,10 +46,6 @@ const ProjectPage = () => {
         isPlaying,
         setIsPlaying,
         nowPlayingWordIndex,
-        play,
-        pause,
-        seekForward,
-        seekBack,
         setPlaybackTime
       ) => (
         <ResizeManager

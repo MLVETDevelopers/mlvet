@@ -79,6 +79,8 @@ const PlaybackManager = ({
       return;
     }
 
+    // When rangeOverride is not null that means we are playing a deleted take (by clicking on the edit marker)
+    // then there should be no highlighted word, thus nowPlayingWordIndex is set to -1
     if (rangeOverride !== null) {
       setNowPlayingWordIndex(-1);
       return;

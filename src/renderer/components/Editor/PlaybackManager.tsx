@@ -8,6 +8,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useSelector } from 'react-redux';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { RuntimeProject } from 'sharedTypes';
 import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
@@ -41,6 +43,10 @@ const PlaybackManager = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
+  const rangeOverride = useSelector(
+    (store: ApplicationStore) => store.playback.rangeOverride
+  );
+
   const play = useCallback(
     () => videoPreviewControllerRef?.current?.play(),
     [videoPreviewControllerRef]
@@ -73,6 +79,11 @@ const PlaybackManager = ({
       return;
     }
 
+    if (rangeOverride !== null) {
+      setNowPlayingWordIndex(-1);
+      return;
+    }
+
     const newPlayingWordIndex = currentProject.transcription.words.findIndex(
       (word) =>
         time >= word.outputStartTime &&
@@ -85,7 +96,12 @@ const PlaybackManager = ({
       setNowPlayingWordIndex(newPlayingWordIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, currentProject?.transcription]);
+  }, [
+    time,
+    currentProject?.transcription,
+    rangeOverride,
+    setNowPlayingWordIndex,
+  ]);
 
   return useMemo(
     () =>

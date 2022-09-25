@@ -48,6 +48,7 @@ export interface TakeGroup {
   // each time a new take group is created we find the highest take group ID in use and add one
   id: number;
   activeTakeIndex: number;
+  takeSelected: boolean;
 }
 
 export interface TakeInfo {

@@ -1,12 +1,16 @@
 /* eslint-disable react/no-array-index-key */
 import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
-import { Stack } from '@mui/material';
+import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
+import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
+import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 
 const CustomStack = styled(Stack)({ width: '100%' });
@@ -16,6 +20,20 @@ const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
 const CustomRowStack = styled(CustomStack)({
   flexDirection: 'row',
   alignItems: 'center',
+});
+
+const UngroupTakes = styled(BlockIcon)({
+  display: 'flex',
+  position: 'absolute',
+  left: '-46px',
+  marginTop: '40px',
+  width: '22px',
+  height: '22px',
+  color: colors.grey[500],
+
+  '&:hover': {
+    color: colors.grey[300],
+  },
 });
 
 export interface TranscriptionPassThroughProps {
@@ -55,8 +73,33 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(true);
-  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(true);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
+    !takeGroup.takeSelected
+  );
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(
+    !takeGroup.takeSelected
+  );
+  const [showUngroupModal, setShowUngroupModal] = useState(false);
+  const dispatch = useDispatch();
+
+  const ungroupTakesModalOpen = () => {
+    setShowUngroupModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowUngroupModal(false);
+  };
+
+  const ungroupTakes = () => {
+    dispatch(deleteTakeGroup(takeGroup.id));
+    handleModalClose();
+  };
+
+  const clickAway = () => {
+    if (!isFirstTimeOpen) {
+      setIsTakeGroupOpened(false);
+    }
+  };
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -118,12 +161,32 @@ const TakeGroupComponent = ({
   });
 
   return (
-    <CustomColumnStack sx={{ marginTop: '10px', marginBottom: '10px' }}>
-      <CustomRowStack sx={{ justifyContent: 'flex-end' }}>
-        {!isFirstTimeOpen && isTakeGroupOpened && <BlockIcon />}
-      </CustomRowStack>
-      {takes}
-    </CustomColumnStack>
+    <ClickAwayListener onClickAway={clickAway}>
+      <Box>
+        <CustomColumnStack
+          sx={{
+            marginTop: '10px',
+            marginBottom:
+              !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
+          }}
+        >
+          {takes}
+          <CustomRowStack
+            position="relative"
+            sx={{ justifyContent: 'flex-start' }}
+          >
+            {!isFirstTimeOpen && isTakeGroupOpened && (
+              <UngroupTakes onClick={ungroupTakesModalOpen} />
+            )}
+          </CustomRowStack>
+        </CustomColumnStack>
+        <UngroupTakesModal
+          isOpen={showUngroupModal}
+          closeModal={handleModalClose}
+          ungroupTakes={ungroupTakes}
+        />
+      </Box>
+    </ClickAwayListener>
   );
 };
 

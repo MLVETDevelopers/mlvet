@@ -10,6 +10,7 @@ import dispatchBroadcast from './collabClient/dispatchBroadcast';
 import { selectionRangeSetTo } from './store/selection/actions';
 import { getLengthOfRange } from './utils/range';
 import { CollabClientSessionState } from './store/collab/helpers';
+import saveProject from './file/saveProject';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -201,9 +202,7 @@ const StoreChangeObserver = () => {
       if (collab !== null && (collab as CollabClientSessionState).isHost)
         return; // Disallow autosave if you are not the host in collab
 
-      ipc.saveProject(currentProject);
-
-      currentProject.isEdited = false; // set the dirtiness to clean!
+      saveProject(false); // use the renderer's saveProject function to reuse dirtiness handling.
     }
   }, [currentProject, collab]);
 

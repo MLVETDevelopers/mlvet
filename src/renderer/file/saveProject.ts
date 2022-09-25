@@ -11,7 +11,12 @@ const saveProject: (shouldCloseAfter: boolean) => Promise<void> = async (
   // Don't save if we don't have a project open
   if (currentProject === null) return;
 
-  const filePath = await ipc.saveProject(currentProject);
+  let filePath = '';
+  try {
+    filePath = await ipc.saveProject(currentProject);
+  } catch {
+    return;
+  }
 
   const projectMetadata = await window.electron.retrieveProjectMetadata({
     ...currentProject,

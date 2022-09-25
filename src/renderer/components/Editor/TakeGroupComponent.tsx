@@ -4,11 +4,11 @@ import BlockIcon from '@mui/icons-material/Block';
 import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
+import dispatchOp from 'renderer/store/dispatchOp';
+import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -80,7 +80,6 @@ const TakeGroupComponent = ({
     !takeGroup.takeSelected
   );
   const [showUngroupModal, setShowUngroupModal] = useState(false);
-  const dispatch = useDispatch();
 
   const ungroupTakesModalOpen = () => {
     setShowUngroupModal(true);
@@ -91,7 +90,38 @@ const TakeGroupComponent = ({
   };
 
   const ungroupTakes = () => {
-    dispatch(deleteTakeGroup(takeGroup.id));
+    const getTakeRanges = (): IndexRange[] => {
+      const { words } = transcription;
+      const takeRanges = [] as IndexRange[];
+      let start = -1;
+      let end = -1;
+      let takeIndex = 0;
+      let takeInfo;
+      for (let i = 0; i < words.length; i += 1) {
+        takeInfo = words[i].takeInfo;
+        if (takeInfo !== null && takeInfo?.takeGroupId === takeGroup.id) {
+          if (start === -1) {
+            start = i;
+          } else if (takeInfo.takeIndex !== takeIndex) {
+            end = i;
+            takeRanges.push({
+              startIndex: start,
+              endIndex: end,
+            } as IndexRange);
+            takeIndex += 1;
+            start = i;
+          }
+        } else if (start !== -1) {
+          end = i;
+          takeRanges.push({ startIndex: start, endIndex: end } as IndexRange);
+          break;
+        }
+      }
+
+      return takeRanges;
+    };
+
+    dispatchOp(makeDeleteTakeGroup(takeGroup, getTakeRanges()));
     handleModalClose();
   };
 

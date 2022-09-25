@@ -16,31 +16,41 @@ import {
   getCanvasFont,
   getColourForIndex,
   getTextWidth,
+  letterIndexAtXPosition,
 } from 'renderer/utils/ui';
-import { WordMouseHandler } from './DragSelectManager';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
+import WordPartialHighlight from './WordPartialHighlight';
+import PauseMarker from './PauseMarker';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
-const makeWordInner = (isInInactiveTake: boolean) =>
+const makeWordInner = (
+  isInInactiveTake: boolean,
+  partialSelectState: PartialSelectState | null
+) =>
   styled('div')({
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
-    color: colors.white,
+    color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
     margin: '2px 0',
     borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],
-      background: isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
+      background:
+        isInInactiveTake || partialSelectState !== null
+          ? 'none'
+          : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
 
 const defaultStyles: React.CSSProperties = {
   zIndex: 0,
+  position: 'relative',
 };
 
 // thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
@@ -54,9 +64,16 @@ export interface WordPassThroughProps {
   isInInactiveTake: boolean;
   isPlaying: boolean;
   onMouseDown: WordMouseHandler;
-  onMouseEnter: (index: number) => void;
+  onMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   submitWordEdit: () => void;
   setPlaybackTime: (time: number) => void;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
 }
 
 interface Props extends WordPassThroughProps {
@@ -72,6 +89,10 @@ interface Props extends WordPassThroughProps {
   isBeingEdited: boolean;
   editText: string | null;
   outputStartTime: number;
+  isPrevWordSelected: boolean;
+  isNextWordSelected: boolean;
+  partialSelectState: PartialSelectState | null;
+  bufferedDuration: number;
 }
 
 const WordComponent = ({
@@ -93,7 +114,23 @@ const WordComponent = ({
   isSelectedByAnotherClientRightCap,
   setPlaybackTime,
   outputStartTime,
+  isPrevWordSelected,
+  isNextWordSelected,
+  partialSelectState,
+  setPartialSelectState,
+  isMouseDown,
+  bufferedDuration,
 }: Props) => {
+  useEffect(() => {
+    setPartialSelectState((prevState) => {
+      if (isPrevWordSelected && isNextWordSelected) {
+        return null;
+      }
+
+      return prevState;
+    });
+  }, [setPartialSelectState, isPrevWordSelected, isNextWordSelected]);
+
   const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -125,7 +162,7 @@ const WordComponent = ({
   const highlightStyles: React.CSSProperties = useMemo(
     () =>
       (() => {
-        if (isBeingEdited) {
+        if (isBeingEdited || partialSelectState !== null) {
           return {};
         }
         if (isSelected) {
@@ -192,6 +229,7 @@ const WordComponent = ({
       isSelectedByAnotherClientRightCap,
       selectedByClientWithIndex,
       confidence,
+      partialSelectState,
     ]
   );
 
@@ -217,8 +255,8 @@ const WordComponent = ({
   );
 
   const WordInner = useMemo(
-    () => makeWordInner(isInInactiveTake),
-    [isInInactiveTake]
+    () => makeWordInner(isInInactiveTake, partialSelectState),
+    [isInInactiveTake, partialSelectState]
   );
 
   const setEditText = useCallback(
@@ -234,8 +272,12 @@ const WordComponent = ({
       if (isBeingEdited) {
         event.stopPropagation();
       }
+
+      // Fill out selection to entire word
+      // TODO(chloe): put this in the drag manager
+      setPartialSelectState(null);
     },
-    [isBeingEdited]
+    [isBeingEdited, setPartialSelectState]
   );
 
   const onMouseDownWrapped = useCallback(
@@ -249,12 +291,87 @@ const WordComponent = ({
     [isInInactiveTake, index, onMouseDown, ref]
   );
 
-  const onMouseEnterWrapped = useCallback(
-    () => onMouseEnter(index),
-    [onMouseEnter, index]
+  const updatePartialSelect = useCallback(
+    (event: React.MouseEvent) => {
+      if (!isMouseDown) {
+        return;
+      }
+
+      if ((isPrevWordSelected && isNextWordSelected) || !isSelected) {
+        return;
+      }
+
+      const wordXPosition = ref.current?.getBoundingClientRect().left ?? 0;
+      const mouseXPosition = event.clientX;
+      const xOffset = mouseXPosition - wordXPosition;
+
+      const letterIndex = letterIndexAtXPosition(
+        text ?? '',
+        xOffset,
+        getCanvasFont(ref?.current) ?? ''
+      );
+
+      if (letterIndex === null) {
+        return;
+      }
+
+      setPartialSelectState((prevState) => {
+        let anchor = letterIndex;
+        if (prevState?.wordIndex === index) {
+          anchor = prevState.anchorLetterIndex;
+        } else if (isPrevWordSelected) {
+          anchor = 0;
+        } else if (isNextWordSelected) {
+          anchor = text?.length ?? 0;
+        }
+
+        return {
+          wordIndex: index,
+          anchorLetterIndex: anchor,
+          currentLetterIndex: letterIndex,
+        };
+      });
+    },
+    [
+      ref,
+      isPrevWordSelected,
+      isNextWordSelected,
+      setPartialSelectState,
+      isSelected,
+      index,
+      text,
+      isMouseDown,
+    ]
   );
 
-  const textOrUnderscore = text ?? '_';
+  const onMouseMove = useCallback(
+    (event: React.MouseEvent) => {
+      updatePartialSelect(event);
+      onMouseEnter(index, isSelected)(event);
+    },
+    [updatePartialSelect, onMouseEnter, index, isSelected]
+  );
+
+  const textOrPauseMarker = text ?? (
+    <PauseMarker
+      duration={bufferedDuration}
+      isHighlighted={isPlaying || isSelected}
+    />
+  );
+
+  const textWithPartialSelectionBackground =
+    !(partialSelectState?.wordIndex === index) || !isSelected ? (
+      textOrPauseMarker
+    ) : (
+      <>
+        {textOrPauseMarker}
+        <WordPartialHighlight
+          wordRef={ref}
+          text={text ?? ''}
+          partialSelectState={partialSelectState}
+        />
+      </>
+    );
 
   return (
     <WordInner
@@ -262,7 +379,8 @@ const WordComponent = ({
       onClick={onClick}
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDownWrapped}
-      onMouseEnter={onMouseEnterWrapped}
+      onMouseEnter={onMouseMove}
+      onMouseMove={onMouseMove}
       style={style}
     >
       {isBeingEdited ? (
@@ -275,19 +393,19 @@ const WordComponent = ({
               width: Math.max(
                 MIN_EDIT_WIDTH,
                 getTextWidth(
-                  editText ?? '',
+                  editText ?? text ?? '',
                   getCanvasFont(inputRef?.current)
                 ) ?? 0
               ),
             },
           }}
           type="text"
-          value={editText ?? textOrUnderscore}
+          value={editText ?? text ?? ''}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />
       ) : (
-        textOrUnderscore
+        textWithPartialSelectionBackground
       )}
     </WordInner>
   );

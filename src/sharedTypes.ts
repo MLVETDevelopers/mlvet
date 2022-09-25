@@ -48,6 +48,7 @@ export interface TakeGroup {
   // each time a new take group is created we find the highest take group ID in use and add one
   id: number;
   activeTakeIndex: number;
+  takeSelected: boolean;
 }
 
 export interface TakeInfo {
@@ -119,6 +120,11 @@ export enum AsyncState {
   LOADING = 'LOADING',
   DONE = 'DONE',
   ERROR = 'ERROR',
+}
+
+export enum ExportFormat {
+  EDL = 'edl',
+  MP4 = 'mp4',
 }
 
 // Interface for index ranges, usually start-inclusive and end-exclusive.

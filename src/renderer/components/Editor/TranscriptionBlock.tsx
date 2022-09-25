@@ -32,7 +32,10 @@ const TranscriptionBox = styled(Box)({
   overflowX: 'hidden',
   overflowY: 'scroll',
   height: '100%',
-  padding: '20px',
+  paddingTop: '70px',
+  paddingBottom: '45px',
+  paddingLeft: '70px',
+  paddingRight: '70px',
   userSelect: 'none',
 
   '::-webkit-scrollbar': {
@@ -133,7 +136,13 @@ const TranscriptionBlock = ({
 
   return (
     <DragSelectManager clearSelection={clearSelection}>
-      {(onWordMouseDown, onWordMouseEnter) => {
+      {(
+        onWordMouseDown,
+        onWordMouseEnter,
+        partialSelectState,
+        setPartialSelectState,
+        isMouseDown
+      ) => {
         return (
           <TranscriptionBox id="transcription-content" ref={blockRef}>
             {mapWithAccumulator(
@@ -162,6 +171,9 @@ const TranscriptionBlock = ({
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                       setPlaybackTime={setPlaybackTime}
+                      partialSelectState={partialSelectState}
+                      setPartialSelectState={setPartialSelectState}
+                      isMouseDown={isMouseDown}
                     />
                   ),
                   acc: isTakeGroup(chunk)

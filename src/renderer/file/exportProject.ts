@@ -1,20 +1,20 @@
 import ipc from 'renderer/ipc';
-import { startExport } from 'renderer/store/exportIo/actions';
 import store from 'renderer/store/store';
+import { ExportFormat } from '../../sharedTypes';
 
 /**
  * Used by backend to initiate export from front end
  */
-const exportProject: () => Promise<void> = async () => {
+const exportProject: (exportFormat: ExportFormat) => Promise<void> = async (
+  exportFormat
+) => {
   // Retrieve current project state from redux
   const { currentProject } = store.getState();
 
   // Don't export if we don't have a project open
   if (currentProject === null) return;
 
-  const filePath = await ipc.exportProject(currentProject);
-
-  store.dispatch(startExport(currentProject.id, filePath));
+  await ipc.exportProject(exportFormat, currentProject);
 };
 
 export default exportProject;

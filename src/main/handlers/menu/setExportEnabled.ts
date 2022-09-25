@@ -12,7 +12,8 @@ const setExportEnabled: SetExportEnabled = async (
 ) => {
   const { menu } = ipcContext;
 
-  setMenuButtonEnabled(menu, 'file', 'export', exportEnabled);
+  setMenuButtonEnabled(menu, 'file', 'exportEdl', exportEnabled);
+  setMenuButtonEnabled(menu, 'file', 'exportMp4', exportEnabled);
 };
 
 export default setExportEnabled;

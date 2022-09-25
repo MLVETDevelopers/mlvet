@@ -102,3 +102,17 @@ const colourCycle = [
 /** Get a colour given a collaborator ID; cycles back to the start if finished */
 export const getColourForIndex: (index: number) => string = (index) =>
   colourCycle[index % colourCycle.length];
+
+export const letterIndexAtXPosition: (
+  text: string,
+  xPosition: number,
+  font: string
+) => number | null = (text, xPosition, font) => {
+  for (let i = 0; i < text.length; i += 1) {
+    const width = getTextWidth(text.substring(0, i + 1), font) ?? 0;
+    if (width >= xPosition) {
+      return i;
+    }
+  }
+  return null;
+};

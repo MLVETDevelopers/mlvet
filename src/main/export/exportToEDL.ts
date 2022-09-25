@@ -76,7 +76,7 @@ export const constructEDL: (
   return output;
 };
 
-export const exportEDL: (
+export const exportToEDL: (
   exportFilePath: string,
   mainWindow: BrowserWindow | null,
   project: RuntimeProject
@@ -99,12 +99,7 @@ export const exportEDL: (
     );
 
     writeFile(join(exportDir, `${exportFilename}.edl`), edl);
-    mainWindow?.webContents.send(
-      'finish-export',
-      project,
-      project.projectFilePath
-    );
   }
 };
 
-export default exportEDL;
+export default exportToEDL;

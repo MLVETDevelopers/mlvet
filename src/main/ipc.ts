@@ -105,8 +105,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     extractAudio(project)
   );
 
-  ipcMain.handle('export-project', async (_event, project) =>
-    exportProject(ipcContext, project)
+  ipcMain.handle('export-project', async (_event, exportFormat, project) =>
+    exportProject(exportFormat, ipcContext, project)
   );
 
   ipcMain.handle(

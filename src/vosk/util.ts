@@ -7,7 +7,7 @@ import { operatingSystemDllFilePaths } from './helpers';
 /**
  * Returns the path to the vosk DLL library for all OS's
  */
-export const getBaseDLLPath = () => {
+export const getBaseDllPath = () => {
   // Path is different in dev than in production
   const prodPath =
     process.env.NODE_ENV === 'development'
@@ -20,12 +20,12 @@ export const getBaseDLLPath = () => {
 /**
  * Returns the path to the vosk DLL file for the current OS
  */
-export const getDLLDir = () => {
-  const baseDLLPath = getBaseDLLPath();
+export const getDllDir = () => {
+  const baseDllPath = getBaseDllPath();
 
   const dllFilePath =
     operatingSystemDllFilePaths[os.platform() as OperatingSystems];
-  const dllDir = path.join(baseDLLPath, dllFilePath);
+  const dllDir = path.join(baseDllPath, dllFilePath);
 
   if (!fs.existsSync(dllDir)) {
     throw new Error(`DLL could not be found at path '${dllDir}'`);
@@ -37,19 +37,19 @@ export const getDLLDir = () => {
 /**
  * Utility function for adding new paths/strings to the windows PATH environment variable
  */
-export const appendPATHStr = (currentPATHStr: string, newPath: string) => {
-  return newPath + path.delimiter + currentPATHStr;
+export const appendPathStr = (currentPathStr: string, newPath: string) => {
+  return newPath + path.delimiter + currentPathStr;
 };
 
 /**
  * Adds the path to the vosk DLL file to the windows PATH environment variable
  * Note: new paths take precedence over old paths
  */
-export const updatePathWithDLLs = (dllFilePath: string) => {
+export const updatePathWithDlls = (dllFilePath: string) => {
   let currentPath = process.env.Path as string;
 
   const dllDirectory = path.dirname(dllFilePath);
-  currentPath = appendPATHStr(currentPath, path.join(dllDirectory));
+  currentPath = appendPathStr(currentPath, path.join(dllDirectory));
 
   process.env.Path = currentPath;
 };

@@ -17,16 +17,16 @@ import {
   Result,
   SpeakerModel,
 } from './helpers';
-import { getDLLDir, updatePathWithDLLs } from './util';
+import { getDllDir, updatePathWithDlls } from './util';
 
 /**
  * A facade for the vosk speech recognition API
  */
 const vosk = () => {
-  const dllDir = getDLLDir();
+  const dllDir = getDllDir();
   if (os.platform() === OperatingSystems.WINDOWS) {
     // Update PATH to load dependent dlls
-    updatePathWithDLLs(dllDir);
+    updatePathWithDlls(dllDir);
   }
 
   const libvosk = koffi.load(dllDir);

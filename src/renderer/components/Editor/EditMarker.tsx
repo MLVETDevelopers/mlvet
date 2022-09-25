@@ -16,7 +16,12 @@ import {
 import { getColourForIndex } from 'renderer/utils/ui';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { useDispatch, useSelector } from 'react-redux';
-import { setRangeOverride } from 'renderer/store/playback/actions';
+import {
+  clearRangeOverride,
+  setRangeOverride,
+  videoPlaying,
+  videoSeek,
+} from 'renderer/store/playback/actions';
 import RestorePopover from './RestorePopover';
 import EditMarkerSvg from '../../assets/EditMarkerSvg';
 
@@ -83,15 +88,26 @@ const EditMarker = ({
     const deletedWords = getOriginalText();
     const deletedText = deletedWords.map((w) => w.word).join(' ');
 
-    const rangeOverride = getRestoreIndexRange(
-      deletedWords[0].originalIndex,
-      deletedWords
-    );
+    const rangeOverride = getRestoreIndexRange(index, words);
 
     dispatch(setRangeOverride(rangeOverride));
 
+    dispatch(videoPlaying({ isPlaying: true, lastUpdated: new Date() }));
+
+    dispatch(videoSeek({ time: 0, lastUpdated: new Date() }));
+
     setPopperText(deletedText);
-  }, [setPopperToggled, setPopperText, getOriginalText, dispatch]);
+  }, [getOriginalText, index, words, dispatch]);
+
+  const onClickAway = () => {
+    setPopperToggled(false);
+
+    dispatch(clearRangeOverride());
+
+    dispatch(videoPlaying({ isPlaying: false, lastUpdated: new Date() }));
+
+    dispatch(videoSeek({ time: 0, lastUpdated: new Date() }));
+  };
 
   const background = useMemo(() => {
     if (isSelected) {
@@ -114,7 +130,7 @@ const EditMarker = ({
         <RestorePopover
           text={popperText || ''}
           anchorEl={markerRef.current}
-          onClickAway={() => setPopperToggled(false)}
+          onClickAway={onClickAway}
           width={popoverWidth}
           transcriptionBlockRef={transcriptionBlockRef}
           restoreText={() => {

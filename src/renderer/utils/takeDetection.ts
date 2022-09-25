@@ -20,6 +20,10 @@ export const generateTranscriptionChunks = (
   takeGroups: TakeGroup[]
 ) => {
   let takeGroupNum = 0;
+
+  const getTakeGroup = (id: number) => {
+    return takeGroups.find((takeGroup) => takeGroup.id === id);
+  };
   const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
     const { takeInfo } = word;
 
@@ -34,13 +38,9 @@ export const generateTranscriptionChunks = (
         {
           id: takeInfo.takeGroupId,
           activeTakeIndex:
-            takeGroups.find(
-              (takeGroup) => takeGroup.id === takeInfo.takeGroupId
-            )?.activeTakeIndex ?? 0,
+            getTakeGroup(takeInfo.takeGroupId)?.activeTakeIndex ?? 0,
           takeSelected:
-            takeGroups.find(
-              (takeGroup) => takeGroup.id === takeInfo.takeGroupId
-            )?.takeSelected ?? false,
+            getTakeGroup(takeInfo.takeGroupId)?.takeSelected ?? false,
         },
       ];
     }

@@ -48,6 +48,8 @@ const StoreChangeObserver = () => {
     (store: ApplicationStore) => store.editWord?.index
   );
 
+  const collab = useSelector((store: ApplicationStore) => store.collab);
+
   // Debounce the selection to limit network requests for sharing selection with other clients
   const [debouncedSelection, setDebouncedSelection] =
     useDebounce(selfSelection);
@@ -195,10 +197,13 @@ const StoreChangeObserver = () => {
       currentProject.transcription &&
       currentProject.projectFilePath
     ) {
+      if (collab !== null && collab.isHost) return; // Disallow autosave if you are not the host in collab
+
       ipc.saveProject(currentProject);
-      ipc.setFileRepresentation(currentProject.projectFilePath, false); // Don't show a Save Prompt Dialog when closing.
+
+      currentProject.isEdited = false; // set the dirtiness to clean!
     }
-  }, [currentProject]);
+  }, [currentProject, collab]);
 
   // Component doesn't render anything
   return null;

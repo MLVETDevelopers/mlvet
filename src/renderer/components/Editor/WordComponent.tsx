@@ -35,7 +35,7 @@ const makeWordInner = (
     cursor: isInInactiveTake ? 'pointer' : 'text',
     color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
-    margin: '2px 0',
+    margin: 0,
     borderRadius: '7px',
 
     '&:hover': {

@@ -17,8 +17,8 @@ import { WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 
 const TranscriptionParagraph = styled(Box)({
-  marginTop: 12,
-  marginBottom: 12,
+  marginTop: 18,
+  marginBottom: 18,
 });
 
 interface TranscriptionChunkProps extends TranscriptionPassThroughProps {

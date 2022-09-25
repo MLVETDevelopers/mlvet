@@ -59,7 +59,7 @@ const UngroupTakesModal = ({ isOpen, closeModal, ungroupTakes }: Props) => {
               Ungroup Takes
             </Typography>
             <Typography variant="p-300" paddingTop="10px">
-              Are you sure you want to ungroup takes? This is not reversible.
+              Are you sure you want to ungroup takes?
             </Typography>
             <CustomRowStack
               sx={{ paddingTop: '30px', alignItems: 'flex-end', gap: '32px' }}

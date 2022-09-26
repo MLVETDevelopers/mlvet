@@ -5,6 +5,7 @@ import {
   forwardRef,
   useEffect,
   useState,
+  useCallback,
 } from 'react';
 import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
@@ -101,14 +102,14 @@ const VideoPreviewControllerBase = (
   };
 
   // Stops video, timer & UI
-  const pause = () => {
+  const pause = useCallback(() => {
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
-  };
+  }, [setIsPlaying]);
 
   // Called on every frame (by timer setInterval)
-  const onFrame = () => {
+  const onFrame = useCallback(() => {
     if (clockRef.current.isRunning) {
       clockRef.current.time =
         getPerformanceTime() - clockRef.current.intervalStartTime;
@@ -133,10 +134,10 @@ const VideoPreviewControllerBase = (
         }
       }
     }
-  };
+  }, [pause, setTime]);
 
   // Start timer (setInterval)
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     if (!clockRef.current.hasRunBefore) {
       clockRef.current.hasRunBefore = true;
       clockRef.current.prevIntervalEndTime = getPerformanceTime();
@@ -149,40 +150,44 @@ const VideoPreviewControllerBase = (
     clockRef.current.intervalStartTime +=
       getPerformanceTime() - clockRef.current.prevIntervalEndTime;
     clockRef.current.isRunning = true;
-  };
+  }, [onFrame]);
 
   // Sets the video, timer & UI playback time
-  const setPlaybackTime = (time: number) => {
-    const { isRunning } = clockRef.current;
-    if (isRunning) stopTimer();
+  const setPlaybackTime = useCallback(
+    (time: number) => {
+      const { isRunning } = clockRef.current;
+      if (isRunning) stopTimer();
 
-    const newSystemTime = clampSystemTime(time);
-    currentCutRef.current = getCutFromSystemTime(
-      newSystemTime,
-      cuts.current ?? []
-    );
+      const newSystemTime = clampSystemTime(time);
+      currentCutRef.current = getCutFromSystemTime(
+        newSystemTime,
+        cuts.current ?? []
+      );
 
-    clockRef.current.intervalStartTime -= newSystemTime - clockRef.current.time;
+      clockRef.current.intervalStartTime -=
+        newSystemTime - clockRef.current.time;
 
-    clockRef.current.time = newSystemTime;
-    setTime(clockRef.current.time);
+      clockRef.current.time = newSystemTime;
+      setTime(clockRef.current.time);
 
-    if (newSystemTime < outputVideoLength.current) {
-      const inCutStartTime =
-        currentCutRef.current.startTime +
-        (clockRef.current.time - currentCutRef.current.outputStartTime);
-      videoPreviewRef?.current?.setCurrentTime(inCutStartTime);
+      if (newSystemTime < outputVideoLength.current) {
+        const inCutStartTime =
+          currentCutRef.current.startTime +
+          (clockRef.current.time - currentCutRef.current.outputStartTime);
+        videoPreviewRef?.current?.setCurrentTime(inCutStartTime);
 
-      if (isRunning) {
-        startTimer();
+        if (isRunning) {
+          startTimer();
+        }
+      } else {
+        pause();
       }
-    } else {
-      pause();
-    }
-  };
+    },
+    [pause, setTime, startTimer]
+  );
 
   // Starts video, timer & UI
-  const play = () => {
+  const play = useCallback(() => {
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
       if (clockRef.current.time >= outputVideoLength.current) {
@@ -192,7 +197,7 @@ const VideoPreviewControllerBase = (
       videoPreviewRef?.current?.play();
       setIsPlaying(true);
     }
-  };
+  }, [setIsPlaying, setPlaybackTime, startTimer]);
 
   // Skips forward 'n' seconds
   const seekForward = () => {
@@ -247,14 +252,12 @@ const VideoPreviewControllerBase = (
         })
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playState]);
+  }, [pause, play, playState]);
 
   // if the state of playback time is changed, set the time accordingly for video preview
   useEffect(() => {
     setPlaybackTime(timeState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeState]);
+  }, [setPlaybackTime, timeState]);
 
   return (
     <VideoPreview

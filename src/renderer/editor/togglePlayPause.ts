@@ -1,4 +1,4 @@
-import { videoPlaying, UpdatedPlaying } from 'renderer/store/playback/actions';
+import { videoPlaying } from 'renderer/store/playback/actions';
 import store from '../store/store';
 
 const togglePlayPause: () => void = () => {
@@ -6,7 +6,7 @@ const togglePlayPause: () => void = () => {
   const dispatchState = {
     isPlaying: !currState,
     lastUpdated: new Date(),
-  } as UpdatedPlaying;
+  };
   store.dispatch(videoPlaying(dispatchState));
 };
 

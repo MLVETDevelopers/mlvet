@@ -9,12 +9,12 @@ import { operatingSystemDllFilePaths } from './helpers';
  */
 export const getBaseDllPath = () => {
   // Path is different in dev than in production
-  const prodPath =
+  const dllPath =
     process.env.NODE_ENV === 'development'
       ? '../../assets/voskDLLs'
       : '../../../assets/voskDLLs';
 
-  return path.join(__dirname, prodPath, 'lib');
+  return path.join(__dirname, dllPath, 'lib');
 };
 
 /**
@@ -46,10 +46,10 @@ export const appendPathStr = (currentPathStr: string, newPath: string) => {
  * Note: new paths take precedence over old paths
  */
 export const updatePathWithDlls = (dllFilePath: string) => {
-  let currentPath = process.env.Path as string;
+  let currentPath = process.env.PATH as string;
 
   const dllDirectory = path.dirname(dllFilePath);
   currentPath = appendPathStr(currentPath, path.join(dllDirectory));
 
-  process.env.Path = currentPath;
+  process.env.PATH = currentPath;
 };

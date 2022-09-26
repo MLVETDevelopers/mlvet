@@ -76,7 +76,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   useEffect(() => {
     const fetchIfCloudConfigRequired = async () => {
-      const isConfigRequired = await areEngineConfigRequirementsMet();
+      const isConfigRequired = !(await areEngineConfigRequirementsMet());
       setIsCloudConfigRequired(isConfigRequired);
     };
 

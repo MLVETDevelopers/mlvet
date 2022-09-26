@@ -39,7 +39,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+  exportProject: (exportFormat, project) =>
+    ipcRenderer.invoke('export-project', exportFormat, project),
 
   extractThumbnail: (absolutePathToMediaFile, project) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
@@ -54,6 +55,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setConfidenceLinesEnabled: (menuItemEnabled) =>
     ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
+
+  setEditWordEnabled: (editEnabled) =>
+    ipcRenderer.invoke('set-edit-word-enabled', editEnabled),
 
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),

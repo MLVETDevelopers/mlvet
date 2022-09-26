@@ -52,6 +52,7 @@ const initTranscription: (audioUrl: string) => Promise<string> = async (
 
   const jsonData = {
     audio_url: audioUrl,
+    disfluencies: true,
   };
 
   const headers = {

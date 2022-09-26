@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -13,6 +13,9 @@ import Scrubber from 'renderer/components/Scrubber';
 import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
+import ipc from 'renderer/ipc';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 
 /*
@@ -29,6 +32,9 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+  const openUserFeedback = () => {
+    ipc.openExternalLink(URL_USER_FEEDBACK_FORM);
+  };
 
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +64,35 @@ const ProjectPage = () => {
           ) => (
             <>
               <VideoController time={time} isPlaying={isPlaying} />
+              <div
+                style={{
+                  position: 'absolute',
+                  marginTop: '15px',
+                  right: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  fontSize: '12px',
+                }}
+              >
+                <IconButton
+                  color="primary"
+                  onClick={openUserFeedback}
+                  sx={{ padding: '0' }}
+                >
+                  <RateReviewIcon fontSize="medium" />
+                </IconButton>
+                Feedback
+              </div>
+
+              <VideoController
+                time={time}
+                isPlaying={isPlaying}
+                play={play}
+                pause={pause}
+                seekForward={seekForward}
+                seekBack={seekBack}
+              />
+
               {COLLAB_ENABLED && <CollabController />}
 
               <Stack

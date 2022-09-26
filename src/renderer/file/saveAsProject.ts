@@ -25,7 +25,13 @@ const saveAsProject: () => Promise<void> = async () => {
 
   // TODO(chloe): regenerate thumbnail and audio extract
 
-  const filePath = await ipc.saveAsProject(newProject);
+  let filePath = '';
+  try {
+    filePath = await ipc.saveAsProject(newProject);
+  } catch (err) {
+    console.error(err);
+    return;
+  }
 
   const savedFileNameWithExtension = await ipc.getFileNameWithExtension(
     filePath

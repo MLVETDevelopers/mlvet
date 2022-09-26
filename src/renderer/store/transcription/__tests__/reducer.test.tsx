@@ -106,12 +106,10 @@ it('output duration should be updated after deleting words', () => {
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
@@ -194,24 +192,20 @@ it('output duration should be the same as original when deleting and straight af
   transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
   const undoOutput = transcriptionReducer(transcript, {
     type: UNDO_DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 1,
-          endIndex: 3,
-        },
-      ],
+      range: {
+        startIndex: 1,
+        endIndex: 3,
+      },
     },
   });
 
@@ -256,12 +250,10 @@ it('output duration should be 0 after deleting all words', () => {
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 0,
-          endIndex: 4,
-        },
-      ],
+      range: {
+        startIndex: 0,
+        endIndex: 4,
+      },
     },
   });
 
@@ -312,12 +304,10 @@ it('output duration should calculated from last non deleted word (not always las
   const deleteOutput = transcriptionReducer(transcript, {
     type: DELETE_SELECTION,
     payload: {
-      ranges: [
-        {
-          startIndex: 2,
-          endIndex: 4,
-        },
-      ],
+      range: {
+        startIndex: 2,
+        endIndex: 4,
+      },
     },
   });
 
@@ -368,7 +358,10 @@ it('output duration should updated after copying and pasting new text', () => {
   const output = transcriptionReducer(transcript, {
     type: PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range: {
+        startIndex: 3,
+        endIndex: 4,
+      },
       clipboard: [
         makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
         makeBasicWordSequential(
@@ -432,10 +425,14 @@ it('output duration should stay the same after copying and straight away undoing
     ],
   };
 
+  const range = {
+    startIndex: 3,
+    endIndex: 4,
+  };
   transcriptionReducer(transcript, {
     type: PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range,
       clipboard: [
         makeBasicWordSequential(0, 'a', false, undefined, 0, 0, 1, 0, 0.5),
         makeBasicWordSequential(
@@ -456,7 +453,10 @@ it('output duration should stay the same after copying and straight away undoing
   const output = transcriptionReducer(transcript, {
     type: UNDO_PASTE_WORD,
     payload: {
-      startIndex: 3,
+      range: {
+        startIndex: 3,
+        endIndex: 4,
+      },
       clipboardLength: 2,
     },
   });

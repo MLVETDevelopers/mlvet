@@ -2,6 +2,7 @@ import {
   CollabClientInitialState,
   CollabClientSessionState,
 } from 'renderer/store/collab/helpers';
+import { emptyRange } from 'renderer/utils/range';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
@@ -49,7 +50,7 @@ export const initialStore: ApplicationStore = {
   exportIo: { isExporting: false, exportProgress: 0 },
   clipboard: [],
   selection: {
-    self: [],
+    self: emptyRange(),
     others: {},
   },
   shortcutsOpened: false,

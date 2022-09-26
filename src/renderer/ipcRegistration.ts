@@ -17,6 +17,8 @@ import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import togglePlayPause from './editor/togglePlayPause';
 import skipForward from './editor/skipForward';
 import skipBackward from './editor/skipBackward';
+import editWord from './editor/editWord';
+import onExportStart from './file/onExportStart';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -25,6 +27,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'project-opened': onProjectOpen,
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
+  'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
 
@@ -34,6 +37,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-edit-word': editWord,
   'initiate-merge-words': mergeWords,
   'initiate-split-word': splitWord,
   'initiate-undo': performUndo,

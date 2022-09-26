@@ -3,12 +3,13 @@ import {
   PartialWord,
   RuntimeProject,
   Transcription,
+  TranscriptionEngine,
 } from '../../../sharedTypes';
 import preProcessTranscript from '../../editDelete/preProcess';
 import { ffmpegPath, ffprobePath } from '../../ffUtils';
 import { JSONTranscription } from '../../types';
 import { getAudioExtractPath } from '../../util';
-import readCloudConfig from '../file/readCloudConfig';
+import getTranscriptionEngine from '../file/transcriptionConfig/getEngine';
 import transcribe from './transcribe';
 
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -60,11 +61,14 @@ const requestTranscription: RequestTranscription = async (project) => {
     return null;
   }
 
+  const transcriptionEngine = await getTranscriptionEngine();
+  if (transcriptionEngine === null) {
+    throw new Error('No transcription engine configured');
+  }
+
   const transcript = await transcribe(
     project,
-    (
-      await readCloudConfig()
-    ).defaultEngine
+    transcriptionEngine as TranscriptionEngine
   );
 
   if (!validateJsonTranscription(transcript)) {

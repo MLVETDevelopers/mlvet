@@ -78,6 +78,9 @@ contextBridge.exposeInMainWorld('electron', {
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 
+  setSelectSentenceEnabled: (enabled) =>
+    ipcRenderer.invoke('set-select-sentence-enabled', enabled),
+
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 

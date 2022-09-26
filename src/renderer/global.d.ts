@@ -14,8 +14,8 @@ import {
   ProjectIdAndFilePath,
   TranscriptionEngine,
   EngineConfig,
-  CloudConfig,
   ExportFormat,
+  TranscriptionConfig,
 } from '../sharedTypes';
 
 declare global {

@@ -14,7 +14,11 @@ const exportProject: (exportFormat: ExportFormat) => Promise<void> = async (
   // Don't export if we don't have a project open
   if (currentProject === null) return;
 
-  await ipc.exportProject(exportFormat, currentProject);
+  try {
+    await ipc.exportProject(exportFormat, currentProject);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default exportProject;

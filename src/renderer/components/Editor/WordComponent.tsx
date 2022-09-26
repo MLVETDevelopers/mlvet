@@ -21,7 +21,6 @@ import {
 
 import store from 'renderer/store/store';
 import { videoSeek } from 'renderer/store/playback/actions';
-import { DragState, WordMouseHandler } from './WordDragManager';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';

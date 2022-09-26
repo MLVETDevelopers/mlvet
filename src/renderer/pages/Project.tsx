@@ -63,7 +63,6 @@ const ProjectPage = () => {
             videoResizeOptions
           ) => (
             <>
-              <VideoController time={time} isPlaying={isPlaying} />
               <div
                 style={{
                   position: 'absolute',
@@ -84,14 +83,7 @@ const ProjectPage = () => {
                 Feedback
               </div>
 
-              <VideoController
-                time={time}
-                isPlaying={isPlaying}
-                play={play}
-                pause={pause}
-                seekForward={seekForward}
-                seekBack={seekBack}
-              />
+              <VideoController time={time} isPlaying={isPlaying} />
 
               {COLLAB_ENABLED && <CollabController />}
 

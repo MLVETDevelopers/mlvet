@@ -251,13 +251,13 @@ const VideoPreviewControllerBase = (
       play();
     } else {
       pause();
-      store.dispatch(
-        videoSeek({
-          time: clockRef.current.time,
-          lastUpdated: new Date(),
-        })
-      );
     }
+    store.dispatch(
+      videoSeek({
+        time: clockRef.current.time,
+        lastUpdated: new Date(),
+      })
+    );
   }, [pause, play, playState]);
 
   // if the state of playback time is changed, set the time accordingly for video preview

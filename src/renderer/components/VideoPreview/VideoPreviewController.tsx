@@ -14,7 +14,7 @@ import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
 import store from 'renderer/store/store';
-import { videoSeek } from 'renderer/store/playback/actions';
+import { videoPlaying, videoSeek } from 'renderer/store/playback/actions';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -125,6 +125,12 @@ const VideoPreviewControllerBase = (
         // If last put - pause
         // If not - update video
         if (currentCutRef.current.index + 1 >= cuts.current.length) {
+          store.dispatch(
+            videoPlaying({
+              isPlaying: false,
+              lastUpdated: new Date(),
+            })
+          );
           pause();
         } else {
           currentCutRef.current = cuts.current[currentCutRef.current.index + 1];

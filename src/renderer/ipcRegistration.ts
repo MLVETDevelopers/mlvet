@@ -15,6 +15,7 @@ import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionA
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import editWord from './editor/editWord';
+import onExportStart from './file/onExportStart';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -23,6 +24,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'project-opened': onProjectOpen,
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
+  'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
 

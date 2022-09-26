@@ -19,8 +19,11 @@ export const generateTranscriptionChunks = (
   words: Word[],
   takeGroups: TakeGroup[]
 ) => {
-  let numTakeGroups = 0;
+  let takeGroupNum = 0;
 
+  const getTakeGroup = (id: number) => {
+    return takeGroups.find((takeGroup) => takeGroup.id === id);
+  };
   const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
     const { takeInfo } = word;
 
@@ -28,36 +31,20 @@ export const generateTranscriptionChunks = (
       return [...chunksSoFar, word];
     }
 
-    if (chunksSoFar.length === 0) {
-      numTakeGroups += 1;
-
+    if (takeInfo.takeGroupId >= takeGroupNum) {
+      takeGroupNum = takeInfo.takeGroupId + 1;
       return [
+        ...chunksSoFar,
         {
-          id: 0,
+          id: takeInfo.takeGroupId,
           activeTakeIndex:
-            takeGroups.find((takeGroup) => takeGroup.id === 0)
-              ?.activeTakeIndex ?? 0,
+            getTakeGroup(takeInfo.takeGroupId)?.activeTakeIndex ?? 0,
+          takeSelected:
+            getTakeGroup(takeInfo.takeGroupId)?.takeSelected ?? false,
         },
       ];
     }
-
-    const numChunks = chunksSoFar.length;
-    const lastChunk = chunksSoFar[numChunks - 1];
-
-    if (isTakeGroup(lastChunk) && takeInfo.takeGroupId === lastChunk.id) {
-      return chunksSoFar;
-    }
-
-    const newChunks = chunksSoFar.concat({
-      id: numTakeGroups,
-      activeTakeIndex:
-        takeGroups.find((takeGroup) => takeGroup.id === numTakeGroups)
-          ?.activeTakeIndex ?? 0,
-    });
-
-    numTakeGroups += 1;
-
-    return newChunks;
+    return chunksSoFar;
   }, [] as TranscriptionChunk[]);
 
   return chunks;

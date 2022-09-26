@@ -80,11 +80,11 @@
     }
   ],
   "takeGroups": [
-    { "id": 0, "activeTakeIndex": 1 },
-    { "id": 1, "activeTakeIndex": 1 }
+    { "id": 0, "activeTakeIndex": 1, "takeSelected": true },
+    { "id": 1, "activeTakeIndex": 1, "takeSelected": true }
   ],
   "chunks": [
-    { "id": 0, "activeTakeIndex": 1 },
+    { "id": 0, "activeTakeIndex": 1, "takeSelected": true },
     {
       "word": "he",
       "startTime": 2.864,
@@ -98,7 +98,7 @@
       "bufferDurationAfter": 0.013,
       "takeInfo": null
     },
-    { "id": 1, "activeTakeIndex": 1 },
+    { "id": 1, "activeTakeIndex": 1, "takeSelected": true },
     {
       "word": "pretended",
       "startTime": 10.196,

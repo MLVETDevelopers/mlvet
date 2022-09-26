@@ -35,6 +35,7 @@ import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
 import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
+import setSelectSentenceEnabled from './handlers/menu/setSelectSentenceEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
@@ -175,6 +176,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-save-enabled',
     async (_event, saveEnabled, saveAsEnabled) =>
       setSaveEnabled(ipcContext, saveEnabled, saveAsEnabled)
+  );
+
+  ipcMain.handle('set-select-sentence-enabled', async (_event, enabled) =>
+    setSelectSentenceEnabled(ipcContext, enabled)
   );
 
   ipcMain.handle(

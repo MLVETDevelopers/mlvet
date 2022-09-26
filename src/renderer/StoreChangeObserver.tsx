@@ -9,6 +9,8 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import dispatchBroadcast from './collabClient/dispatchBroadcast';
 import { selectionRangeSetTo } from './store/selection/actions';
 import { getLengthOfRange } from './utils/range';
+import { CollabClientSessionState } from './store/collab/helpers';
+import saveProject from './file/saveProject';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -47,6 +49,8 @@ const StoreChangeObserver = () => {
   const editWordIndex = useSelector(
     (store: ApplicationStore) => store.editWord?.index
   );
+
+  const collab = useSelector((store: ApplicationStore) => store.collab);
 
   // Debounce the selection to limit network requests for sharing selection with other clients
   const [debouncedSelection, setDebouncedSelection] =
@@ -187,6 +191,20 @@ const StoreChangeObserver = () => {
   useEffect(() => {
     ipc.setConfidenceLinesEnabled(words !== null);
   }, [isShowingConfidenceUnderlines, words]);
+
+  // Autosave after currentProject changes.
+  useEffect(() => {
+    if (
+      currentProject &&
+      currentProject.transcription &&
+      currentProject.projectFilePath
+    ) {
+      if (collab !== null && (collab as CollabClientSessionState).isHost)
+        return; // Disallow autosave if you are not the host in collab
+
+      saveProject(false); // use the renderer's saveProject function to reuse dirtiness handling.
+    }
+  }, [currentProject, collab]);
 
   // Component doesn't render anything
   return null;

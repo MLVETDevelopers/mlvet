@@ -32,7 +32,10 @@ const TranscriptionBox = styled(Box)({
   overflowX: 'hidden',
   overflowY: 'scroll',
   height: '100%',
-  padding: '20px',
+  paddingTop: '70px',
+  paddingBottom: '45px',
+  paddingLeft: '70px',
+  paddingRight: '70px',
   userSelect: 'none',
 
   '::-webkit-scrollbar': {

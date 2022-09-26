@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore, EditWordState } from 'renderer/store/sharedHelpers';
 import { isIndexInRange } from 'renderer/utils/range';
 import { IndexRange, Word } from 'sharedTypes';
+import { bufferedWordDuration } from 'sharedUtils';
 import { PartialSelectState } from './DragSelectManager';
 import EditMarker from './EditMarker';
 import WordComponent, { WordPassThroughProps } from './WordComponent';
@@ -134,6 +135,7 @@ const WordOuterComponent = ({
           />
           <WordComponent
             text={word.word}
+            bufferedDuration={bufferedWordDuration(word)}
             outputStartTime={word.outputStartTime}
             confidence={confidence}
             isBeingEdited={editWord?.index === index}

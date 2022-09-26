@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDebounce } from '@react-hook/debounce';
+import { checkSentenceEnd } from 'sharedUtils';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
@@ -9,6 +10,8 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import dispatchBroadcast from './collabClient/dispatchBroadcast';
 import { selectionRangeSetTo } from './store/selection/actions';
 import { getLengthOfRange } from './utils/range';
+import { CollabClientSessionState } from './store/collab/helpers';
+import saveProject from './file/saveProject';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -47,6 +50,8 @@ const StoreChangeObserver = () => {
   const editWordIndex = useSelector(
     (store: ApplicationStore) => store.editWord?.index
   );
+
+  const collab = useSelector((store: ApplicationStore) => store.collab);
 
   // Debounce the selection to limit network requests for sharing selection with other clients
   const [debouncedSelection, setDebouncedSelection] =
@@ -156,6 +161,26 @@ const StoreChangeObserver = () => {
     ipc.setEditWordEnabled(editWordEnabled);
   }, [selfSelection, editWordIndex]);
 
+  // Update select sentence option in edit menu when selection or transcription changes
+  useEffect(() => {
+    // Disable the option if there is nothing selected
+    if (getLengthOfRange(selfSelection) === 0) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // Disable the option if a complete sentence is already selected
+    const startWord =
+      currentProject?.transcription?.words[selfSelection.startIndex - 1];
+    const endWord =
+      currentProject?.transcription?.words[selfSelection.endIndex - 1];
+    if (checkSentenceEnd(endWord) && checkSentenceEnd(startWord)) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // If all checks pass, enable the option
+    ipc.setSelectSentenceEnabled(true);
+  }, [currentProject?.transcription?.words, selfSelection]);
+
   // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
   useEffect(() => {
     dispatchBroadcast(selectionRangeSetTo(debouncedSelection));
@@ -187,6 +212,20 @@ const StoreChangeObserver = () => {
   useEffect(() => {
     ipc.setConfidenceLinesEnabled(words !== null);
   }, [isShowingConfidenceUnderlines, words]);
+
+  // Autosave after currentProject changes.
+  useEffect(() => {
+    if (
+      currentProject &&
+      currentProject.transcription &&
+      currentProject.projectFilePath
+    ) {
+      if (collab !== null && (collab as CollabClientSessionState).isHost)
+        return; // Disallow autosave if you are not the host in collab
+
+      saveProject(false); // use the renderer's saveProject function to reuse dirtiness handling.
+    }
+  }, [currentProject, collab]);
 
   // Component doesn't render anything
   return null;

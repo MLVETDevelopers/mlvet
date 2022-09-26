@@ -1,3 +1,4 @@
+import { checkSentenceEnd } from '../../sharedUtils';
 import { Word } from '../../sharedTypes';
 import {
   InjectableTake,
@@ -33,12 +34,7 @@ export function findSentences(words: Word[]): Sentence[] {
       );
     }
 
-    if (
-      word.word.includes('.') ||
-      word.word.includes('?') ||
-      word.word.includes('!') ||
-      idx === words.length - 1
-    ) {
+    if (checkSentenceEnd(word) || idx === words.length - 1) {
       currentSentence.endIndex = idx + 1;
       sentences.push(currentSentence);
       currentSentence = {
@@ -178,12 +174,11 @@ export function findTakes(
       )
         break;
 
-      const s1 = sentences[currentSentenceIdx].sentenceString;
-      const s2 = sentences[nextSentenceIdx].sentenceString;
-
-      const s = getSimilarityScore(s1, s2);
-
-      const isSimilar = s > threshold;
+      const similarityScore = getSimilarityScore(
+        sentences[currentSentenceIdx].sentenceString,
+        sentences[nextSentenceIdx].sentenceString
+      );
+      const isSimilar = similarityScore > threshold;
 
       // if already found potential take
       // but next sentence at potential take index is not similar
@@ -231,7 +226,8 @@ export function findTakes(
         takeGroups.push(
           newTakeGroup(potentialTakeStartIdxs, potentialTakeLen, sentences)
         );
-        currentSentenceIdx = potentialTakeLen * potentialTakeStartIdxs.length;
+        currentSentenceIdx =
+          potentialTakeLen * potentialTakeStartIdxs.length + currentSentenceIdx;
       }
     } else {
       currentSentenceIdx += 1;

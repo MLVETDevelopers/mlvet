@@ -1,6 +1,6 @@
 import ipc from './ipc';
 import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
-import { selectAllWords } from './editor/selection';
+import { selectAllWords, selectSentence } from './editor/selection';
 import saveProject from './file/saveProject';
 import saveAsProject from './file/saveAsProject';
 import onProjectOpen from './file/onProjectOpen';
@@ -15,6 +15,7 @@ import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionA
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import editWord from './editor/editWord';
+import onExportStart from './file/onExportStart';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -23,6 +24,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'project-opened': onProjectOpen,
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
+  'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
 
@@ -32,6 +34,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-select-sentence': selectSentence,
   'initiate-edit-word': editWord,
   'initiate-merge-words': mergeWords,
   'initiate-split-word': splitWord,

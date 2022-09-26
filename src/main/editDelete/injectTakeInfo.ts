@@ -55,6 +55,7 @@ const injectTakeInfo: (
     (_, takeGroupIndex) => ({
       id: takeGroupIndex,
       activeTakeIndex: 0,
+      takeSelected: false,
     })
   );
 

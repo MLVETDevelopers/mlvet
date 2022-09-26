@@ -3,7 +3,14 @@ import { Avatar, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
-import React, { RefObject, useCallback, useMemo } from 'react';
+import React, {
+  RefObject,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
@@ -23,7 +30,7 @@ const makeTakeWrapper = (
       isTakeGroupOpened && isActive ? colors.yellow[500] : colors.grey[400],
     opacity: isActive || isFirstTimeOpen ? 1 : 0.5,
     position: 'relative',
-    left: '20px',
+    left: '-16px',
 
     '&:hover': {
       borderColor: colors.yellow[500],
@@ -82,6 +89,9 @@ const TakeComponent = ({
   setIsFirstTimeOpen,
   ...passThroughProps
 }: TakeComponentProps) => {
+  const [currentTakeHeight, setCurrentTakeHeight] = useState<number>(0);
+  const takeRef = useRef<HTMLDivElement>(null);
+
   const dispatch = useDispatch();
 
   const onSelectTake = useCallback(() => {
@@ -111,68 +121,74 @@ const TakeComponent = ({
     setIsFirstTimeOpen,
   ]);
 
+  const numberedButton =
+    !isFirstTimeOpen && isTakeGroupOpened ? (
+      <Avatar
+        onClick={onSelectTake}
+        sx={{
+          height: 20,
+          width: 20,
+          fontSize: 12,
+          color: colors.grey[700],
+          backgroundColor: isActive ? colors.yellow[500] : colors.grey[400],
+          display: 'flex',
+          position: 'absolute',
+          left: '-30px',
+          transform: 'translateY(2px)',
+          cursor: 'pointer',
+        }}
+      >
+        {takeIndex + 1}
+      </Avatar>
+    ) : null;
+
+  const TakeWords = takeWords.map((word, index, words) => {
+    const wordIndex = transcriptionIndex + index;
+    return (
+      <WordOuterComponent
+        key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
+        word={word}
+        prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
+        nextWord={wordIndex < words.length - 1 ? words[wordIndex + 1] : null}
+        index={wordIndex}
+        isPlaying={nowPlayingWordIndex === wordIndex}
+        isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
+        isSelected={isIndexInRange(selection, wordIndex)}
+        isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+        onMouseDown={onWordMouseDown}
+        onMouseEnter={onWordMouseEnter}
+        isInInactiveTake={!(isActive || isTakeGroupOpened) && !isFirstTimeOpen}
+        transcriptionLength={words.length}
+        {...passThroughProps}
+      />
+    );
+  });
+
+  useLayoutEffect(() => {
+    if (takeRef && takeRef.current?.clientHeight) {
+      setCurrentTakeHeight(takeRef.current.clientHeight);
+    }
+  }, [takeRef.current?.clientHeight, isTakeGroupOpened]);
+
   return (
     <>
       <TakeWrapper className="take" onClick={onClick}>
-        <CustomRowStack sx={{ justifyContent: 'flex-start' }}>
+        <CustomRowStack
+          sx={{ justifyContent: 'flex-start', paddingLeft: '4px', gap: '4px' }}
+        >
           {isTakeGroupOpened || isActive ? (
             <>
-              {!isFirstTimeOpen && isTakeGroupOpened && (
-                <Avatar
-                  onClick={onSelectTake}
-                  sx={{
-                    height: 22,
-                    width: 22,
-                    fontSize: 12,
-                    color: colors.grey[700],
-                    backgroundColor: isActive
-                      ? colors.yellow[500]
-                      : colors.grey[400],
-                    display: 'flex',
-                    position: 'absolute',
-                    left: '-30px',
-                    transform: 'translateY(2px)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {takeIndex + 1}
-                </Avatar>
-              )}
+              {numberedButton}
               <SquareBracket
                 isLast={isLast}
                 isTakeGroupOpened={isTakeGroupOpened}
+                takeHeight={currentTakeHeight}
               />
-              {takeWords.map((word, index, words) => {
-                const wordIndex = transcriptionIndex + index;
-                return (
-                  <WordOuterComponent
-                    key={`word-outer-${word.originalIndex}-${word.pasteKey}`}
-                    word={word}
-                    prevWord={wordIndex > 0 ? words[wordIndex - 1] : null}
-                    nextWord={
-                      wordIndex < words.length - 1 ? words[wordIndex + 1] : null
-                    }
-                    index={wordIndex}
-                    isPlaying={nowPlayingWordIndex === wordIndex}
-                    isPrevWordSelected={isIndexInRange(
-                      selection,
-                      wordIndex - 1
-                    )}
-                    isSelected={isIndexInRange(selection, wordIndex)}
-                    isNextWordSelected={isIndexInRange(
-                      selection,
-                      wordIndex + 1
-                    )}
-                    onMouseDown={onWordMouseDown}
-                    onMouseEnter={onWordMouseEnter}
-                    isInInactiveTake={
-                      !(isActive || isTakeGroupOpened) && !isFirstTimeOpen
-                    }
-                    transcriptionLength={words.length}
-                    {...passThroughProps}
-                  />
-                );
-              })}
+              {isTakeGroupOpened || isActive ? (
+                <CustomRowStack flexWrap="wrap" ref={takeRef}>
+                  {TakeWords}
+                </CustomRowStack>
+              ) : null}
             </>
           ) : null}
         </CustomRowStack>

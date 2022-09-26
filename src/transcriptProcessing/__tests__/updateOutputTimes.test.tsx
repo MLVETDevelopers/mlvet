@@ -33,7 +33,9 @@ describe('updateOutputTimes', () => {
       makeBasicWord({ startTime: 2, duration: 1 }),
     ];
 
-    const takeGroups: TakeGroup[] = [{ activeTakeIndex: 0, id: 0 }];
+    const takeGroups: TakeGroup[] = [
+      { activeTakeIndex: 0, id: 0, takeSelected: false },
+    ];
 
     expect(updateOutputTimes(inputWords, takeGroups)).toEqual({
       words: [
@@ -66,7 +68,9 @@ describe('updateOutputTimes', () => {
       makeBasicWord({ startTime: 2, duration: 1 }),
     ];
 
-    const takeGroups: TakeGroup[] = [{ activeTakeIndex: 0, id: 0 }];
+    const takeGroups: TakeGroup[] = [
+      { activeTakeIndex: 0, id: 0, takeSelected: false },
+    ];
 
     expect(updateOutputTimes(inputWords, takeGroups)).toEqual({
       words: [
@@ -122,8 +126,8 @@ describe('updateOutputTimes', () => {
     ];
 
     const takeGroups: TakeGroup[] = [
-      { activeTakeIndex: 0, id: 0 },
-      { activeTakeIndex: 1, id: 1 },
+      { activeTakeIndex: 0, id: 0, takeSelected: true },
+      { activeTakeIndex: 1, id: 1, takeSelected: true },
     ];
 
     expect(updateOutputTimes(inputWords, takeGroups)).toEqual({

@@ -48,7 +48,7 @@ export const getProjectDataDir: (projectId: string) => string = (projectId) =>
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
-  path.join(getProjectDataDir(projectId), 'extractedAudio.mp3');
+  path.join(getProjectDataDir(projectId), 'extractedAudio.wav');
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>

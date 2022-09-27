@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import { ExportFormat } from '../sharedTypes';
 import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
 
@@ -141,6 +142,16 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-select-all');
         },
       },
+      {
+        id: 'selectSentence',
+        label: 'Select Current Sentence',
+        accelerator: 'CmdOrCtrl+Shift+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-sentence');
+        },
+        enabled: false, // initially disabled, becomes enabled when there is a sentence to select
+      },
     ];
   }
 
@@ -224,11 +235,25 @@ export default class MenuBuilder {
         enabled: false,
       },
       {
-        id: 'export',
-        label: 'Export Project',
+        id: 'exportEdl',
+        label: 'Export Project to EDL',
         accelerator: 'CommandOrControl+E',
         click: () => {
-          this.mainWindow.webContents.send('initiate-export-project');
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.EDL
+          );
+        },
+      },
+      {
+        id: 'exportMp4',
+        label: 'Export Project to MP4',
+        accelerator: 'CommandOrControl+Shift+E',
+        click: () => {
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.MP4
+          );
         },
       },
       {

@@ -39,7 +39,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+  exportProject: (exportFormat, project) =>
+    ipcRenderer.invoke('export-project', exportFormat, project),
 
   extractThumbnail: (absolutePathToMediaFile, project) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
@@ -76,6 +77,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
+
+  setSelectSentenceEnabled: (enabled) =>
+    ipcRenderer.invoke('set-select-sentence-enabled', enabled),
 
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),

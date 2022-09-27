@@ -119,6 +119,8 @@ declare global {
 
       handleOsQuery: () => Promise<OperatingSystems | null>;
 
+      reportBug: (title: string, body: string) => Promise<number>;
+
       setClipboardEnabled: (
         cutEnabled: boolean,
         copyEnabled: boolean,
@@ -133,8 +135,6 @@ declare global {
       returnToHome: (project: RuntimeProject) => Promise<number>;
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;
-
-      reportBug: (title: string, body: string) => Promise<number>;
       // END GENERATED CODE
 
       on: (

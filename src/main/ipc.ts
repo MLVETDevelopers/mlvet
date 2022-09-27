@@ -39,12 +39,12 @@ import setSelectSentenceEnabled from './handlers/menu/setSelectSentenceEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
+import reportBug from './handlers/misc/reportBug';
 import setClipboardEnabled from './handlers/setClipboardEnabled';
 import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
-import reportBug from './handlers/misc/reportBug';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -195,6 +195,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
 
+  ipcMain.handle('report-bug', async (_event, title, body) =>
+    reportBug(title, body)
+  );
+
   ipcMain.handle(
     'set-clipboard-enabled',
     async (_event, cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
@@ -217,10 +221,6 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('show-confirmation', async (_event, message, detail) =>
     showConfirmation(ipcContext, message, detail)
-  );
-
-  ipcMain.handle('report-bug', async (_event, title, body) =>
-    reportBug(title, body)
   );
   // END GENERATED CODE PART 2
 };

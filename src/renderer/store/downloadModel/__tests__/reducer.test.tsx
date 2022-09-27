@@ -32,7 +32,7 @@ describe('Download model reducer', () => {
         },
         {
           type: DOWNLOAD_PROGRESS_UPDATE,
-          payload: { progress: 0.5 },
+          payload: 0.5,
         }
       )
     ).toEqual({

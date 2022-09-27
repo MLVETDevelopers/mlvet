@@ -89,6 +89,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
+  reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
+
   setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
     ipcRenderer.invoke(
       'set-clipboard-enabled',
@@ -106,8 +108,6 @@ contextBridge.exposeInMainWorld('electron', {
 
   showConfirmation: (message, detail) =>
     ipcRenderer.invoke('show-confirmation', message, detail),
-
-  reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

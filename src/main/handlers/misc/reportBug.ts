@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
 import { BUG_REPORT_API_URL } from '../../../constants';
 
-const reportBug = async (title: string, body: string) => {
+type ReportBug = (title: string, body: string) => Promise<number>;
+
+const reportBug: ReportBug = async (title, body) => {
   const response = await fetch(BUG_REPORT_API_URL, {
     method: 'POST',
     headers: {

@@ -13,7 +13,7 @@ const skipForward: () => void = () => {
     store.dispatch(videoSkip(dispatchState));
     if (time + 10 >= duration) {
       store.dispatch(
-        videoPlaying({ isPlaying: true, lastUpdated: new Date() })
+        videoPlaying({ isPlaying: false, lastUpdated: new Date() })
       );
     }
   }

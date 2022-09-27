@@ -1,3 +1,5 @@
+import { ClientId } from 'collabTypes/collabShadowTypes';
+
 // Transcription chunks are either a take group or a paragraph of words
 export type TranscriptionChunk = TakeGroup | Word[];
 

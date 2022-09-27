@@ -48,7 +48,7 @@ export const markWordUndeleted = (word: Word) => ({ ...word, deleted: false });
 export const combineWordsIntoParagraphs: (
   chunks: TranscriptionChunk[],
   paragraphPauseThreshold?: number
-) => TranscriptionChunk[] = (chunks, paragraphPauseThreshold = 0.5) => {
+) => TranscriptionChunk[] = (chunks, paragraphPauseThreshold = 4) => {
   // Words that haven't yet been added to a chunk
   let pendingWords: Word[] = [];
 

@@ -138,7 +138,6 @@ export const isInInactiveTake: (
 export const sleep: (seconds: number) => Promise<void> = (seconds) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-// TODO(chloe): merge from Justin's PR so we don't duplicate this function
 export const checkSentenceEnd: (word: Word | undefined) => boolean = (word) => {
   // Case where word is undefined, i.e, we have traversed before the first word or after the last word.
   // This is the end of a sentence

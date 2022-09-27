@@ -105,11 +105,15 @@ declare global {
 
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
+      setSelectSentenceEnabled: (enabled: boolean) => void;
+
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       handleOsQuery: () => Promise<OperatingSystems | null>;
+
+      reportBug: (title: string, body: string) => Promise<number>;
 
       setClipboardEnabled: (
         cutEnabled: boolean,

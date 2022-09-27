@@ -4,6 +4,8 @@ import fs from 'fs';
 import getVoskTranscript from '../../../../vosk';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
+import getTranscriptionEngineConfig from '../../file/transcriptionConfig/getEngineConfig';
+import { LocalConfig, TranscriptionEngine } from '../../../../sharedTypes';
 
 interface VoskWord {
   end: number;
@@ -11,13 +13,19 @@ interface VoskWord {
   word: string;
 }
 
+const getModelPath = async () => {
+  const localConfig = (await getTranscriptionEngineConfig(
+    TranscriptionEngine.VOSK
+  )) as LocalConfig;
+
+  if (localConfig.modelPath === null)
+    throw new Error('Vosk model path not configured');
+
+  return path.resolve(localConfig.modelPath);
+};
+
 const transcribeWithVosk = async (audioFilePath: string) => {
-  const modelName = 'vosk-model-en-us-0.22';
-  const modelPath = path.join(
-    __dirname,
-    '../../../../../assets/voskModel',
-    modelName
-  );
+  const modelPath = await getModelPath();
 
   if (!fs.existsSync(modelPath)) {
     throw new Error(

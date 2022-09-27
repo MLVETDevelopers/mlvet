@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 export const mkdir = (dirPath: string) => {
   if (!existsSync(dirPath)) {
     try {
-      mkdirSync(dirPath);
+      mkdirSync(dirPath, { recursive: true });
     } catch (err) {
       console.error(err);
     }
@@ -56,9 +56,6 @@ export const getThumbnailPath: (projectId: string) => string = (projectId) =>
 
 export const appTranscriptionConfigPath: () => string = () =>
   path.join(appDataStoragePath(), 'transcriptionConfig.json');
-
-export const appLocalTranscriptionAssetsPath: () => string = () =>
-  path.join(appDataStoragePath(), 'localTranscriptionAssets');
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

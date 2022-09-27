@@ -51,6 +51,8 @@ declare global {
 
       areEngineConfigRequirementsMet: () => Promise<boolean>;
 
+      downloadModel: () => Promise<void>;
+
       getTranscriptionConfigDefault: () => Promise<TranscriptionConfig>;
 
       getTranscriptionEngine: () => Promise<TranscriptionEngine | null>;

@@ -27,6 +27,8 @@ contextBridge.exposeInMainWorld('electron', {
   areEngineConfigRequirementsMet: () =>
     ipcRenderer.invoke('are-engine-config-requirements-met'),
 
+  downloadModel: () => ipcRenderer.invoke('download-model'),
+
   getTranscriptionConfigDefault: () =>
     ipcRenderer.invoke('get-transcription-config-default'),
 

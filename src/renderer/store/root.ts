@@ -12,6 +12,7 @@ import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
+import downloadModelReducer from './downloadModel/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
+  downloadModel: downloadModelReducer,
 });
 
 export default rootReducer;

@@ -69,7 +69,8 @@ export interface CloudConfig {
 }
 
 export interface LocalConfig {
-  assetPath: string | null;
+  libsPath: string | null;
+  modelPath: string | null;
 }
 
 export interface TranscriptionConfig {

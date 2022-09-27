@@ -1,5 +1,4 @@
 import { CloudConfig, LocalConfig } from 'sharedTypes';
-import path from 'path';
 import { fileOrDirExists } from '../../../util';
 
 export const areCloudConfigRequirementsMet = (config: CloudConfig) => {
@@ -7,10 +6,12 @@ export const areCloudConfigRequirementsMet = (config: CloudConfig) => {
 };
 
 export const areLocalConfigRequirementsMet = (config: LocalConfig) => {
-  const isAssetPathValid = config.assetPath !== null && config.assetPath !== '';
+  const isModelPathValid = config.modelPath !== null && config.modelPath !== '';
+  const isLibsPathValid = config.libsPath !== null && config.libsPath !== '';
   return (
-    isAssetPathValid &&
-    fileOrDirExists(path.join(config.assetPath as string, 'libs')) &&
-    fileOrDirExists(path.join(config.assetPath as string, 'voskModel'))
+    isModelPathValid &&
+    isLibsPathValid &&
+    fileOrDirExists(config.modelPath as string) &&
+    fileOrDirExists(config.libsPath as string)
   );
 };

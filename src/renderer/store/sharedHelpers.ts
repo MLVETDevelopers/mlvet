@@ -5,6 +5,7 @@ import {
 import { emptyRange } from 'renderer/utils/range';
 import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
+import { DownloadModel } from './downloadModel/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { SelectionState } from './selection/helpers';
@@ -34,6 +35,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
+  downloadModel: DownloadModel;
 }
 
 /**
@@ -57,4 +59,9 @@ export const initialStore: ApplicationStore = {
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
+  downloadModel: {
+    isDownloading: false,
+    isDownloadComplete: false,
+    downloadProgress: 0,
+  },
 };

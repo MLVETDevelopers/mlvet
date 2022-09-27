@@ -1,3 +1,4 @@
+import { SubdirectoryArrowLeft } from '@mui/icons-material';
 import {
   Box,
   ClickAwayListener,
@@ -58,7 +59,7 @@ const RestorePopover = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            height: 50,
+            height: 53,
             maxWidth: width,
             padding: '8px',
             borderRadius: '5px',
@@ -74,7 +75,13 @@ const RestorePopover = ({
               variant="caption"
               style={{ color: colors.grey[400], fontStyle: 'italic' }}
             >
-              Enter to restore
+              Enter to restore&nbsp;
+              <SubdirectoryArrowLeft
+                sx={{
+                  fontSize: '12px',
+                  color: colors.grey[400],
+                }}
+              />
             </Typography>
           </Stack>
         </Box>

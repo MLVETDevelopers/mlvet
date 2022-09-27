@@ -23,7 +23,6 @@ import {
 const {
   openExternalLink,
   getTranscriptionEngineConfig,
-  setTranscriptionEngine,
   setTranscriptionEngineConfig,
 } = ipc;
 
@@ -72,16 +71,15 @@ const CloudConfigView = ({
   const saveCloudCredentials: () => void = async () => {
     if (apiKey !== null) {
       setApiKey(apiKey.trim());
-      await setTranscriptionEngine(TranscriptionEngine.ASSEMBLYAI);
-      await setTranscriptionEngineConfig(TranscriptionEngine.ASSEMBLYAI, {
+      const engineConfig = (await getTranscriptionEngineConfig(
+        TranscriptionEngine.ASSEMBLYAI
+      )) as CloudConfig;
+      setTranscriptionEngineConfig(TranscriptionEngine.ASSEMBLYAI, {
+        ...engineConfig,
         key: apiKey,
       });
     }
-    if (nextView === null) {
-      closeModal();
-    } else {
-      nextView();
-    }
+    nextView?.();
   };
 
   const cancelCloudCredentials: () => void = () => {

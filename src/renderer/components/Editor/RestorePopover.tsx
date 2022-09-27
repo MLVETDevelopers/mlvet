@@ -67,7 +67,7 @@ const RestorePopover = ({
             border: 0.5,
           }}
         >
-          <Stack>
+          <Stack alignItems="flex-end">
             <Typography style={{ color: colors.yellow[500] }} noWrap>
               {text}
             </Typography>

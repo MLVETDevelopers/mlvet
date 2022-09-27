@@ -78,6 +78,9 @@ contextBridge.exposeInMainWorld('electron', {
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 
+  setSelectSentenceEnabled: (enabled) =>
+    ipcRenderer.invoke('set-select-sentence-enabled', enabled),
+
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
@@ -103,6 +106,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   showConfirmation: (message, detail) =>
     ipcRenderer.invoke('show-confirmation', message, detail),
+
+  reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
   // END GENERATED CODE
 
   // Have to manually redefine, otherwise Electron nukes this since main->renderer comms is not a standard use case

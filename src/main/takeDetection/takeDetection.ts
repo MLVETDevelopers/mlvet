@@ -1,3 +1,4 @@
+import { checkSentenceEnd } from '../../sharedUtils';
 import { Word } from '../../sharedTypes';
 import {
   InjectableTake,
@@ -33,12 +34,7 @@ export function findSentences(words: Word[]): Sentence[] {
       );
     }
 
-    if (
-      word.word.includes('.') ||
-      word.word.includes('?') ||
-      word.word.includes('!') ||
-      idx === words.length - 1
-    ) {
+    if (checkSentenceEnd(word) || idx === words.length - 1) {
       currentSentence.endIndex = idx + 1;
       sentences.push(currentSentence);
       currentSentence = {

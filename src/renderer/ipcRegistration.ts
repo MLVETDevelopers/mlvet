@@ -1,6 +1,6 @@
 import ipc from './ipc';
 import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
-import { selectAllWords } from './editor/selection';
+import { selectAllWords, selectSentence } from './editor/selection';
 import saveProject from './file/saveProject';
 import saveAsProject from './file/saveAsProject';
 import onProjectOpen from './file/onProjectOpen';
@@ -37,6 +37,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-select-sentence': selectSentence,
   'initiate-edit-word': editWord,
   'initiate-merge-words': mergeWords,
   'initiate-split-word': splitWord,

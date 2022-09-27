@@ -33,6 +33,7 @@ import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
 import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
+import setSelectSentenceEnabled from './handlers/menu/setSelectSentenceEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
@@ -41,6 +42,7 @@ import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
+import reportBug from './handlers/misc/reportBug';
 // END GENERATED CODE PART 1
 
 const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
@@ -163,6 +165,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
       setSaveEnabled(ipcContext, saveEnabled, saveAsEnabled)
   );
 
+  ipcMain.handle('set-select-sentence-enabled', async (_event, enabled) =>
+    setSelectSentenceEnabled(ipcContext, enabled)
+  );
+
   ipcMain.handle(
     'set-undo-redo-enabled',
     async (_event, undoEnabled, redoEnabled) =>
@@ -197,6 +203,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('show-confirmation', async (_event, message, detail) =>
     showConfirmation(ipcContext, message, detail)
+  );
+
+  ipcMain.handle('report-bug', async (_event, title, body) =>
+    reportBug(title, body)
   );
   // END GENERATED CODE PART 2
 };

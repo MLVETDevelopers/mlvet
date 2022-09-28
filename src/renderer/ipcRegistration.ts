@@ -16,9 +16,7 @@ import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import editWord from './editor/editWord';
 import onExportStart from './file/onExportStart';
-import startDownloadModel from './file/startDownloadModel';
-import downloadModelProgressUpdate from './file/downloadModelProgressUpdate';
-import finishDownloadModel from './file/finishDownloadModel';
+import updateDownloadModelState from './file/downloadModelProgressUpdate';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -30,9 +28,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
-  'start-download-model': startDownloadModel,
-  'download-model-progress-update': downloadModelProgressUpdate,
-  'finish-download-model': finishDownloadModel,
+  'update-download-model-state': updateDownloadModelState,
 
   // Editor actions
   'initiate-cut-text': cutText,

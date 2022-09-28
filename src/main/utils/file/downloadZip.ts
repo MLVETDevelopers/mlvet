@@ -26,7 +26,7 @@ const downloadZip: DownloadZip = async (
       'targetFile should be the path to the directory to extract the zip to'
     );
 
-  const dir = targetDir.endsWith('.zip') ? path.dirname(targetDir) : targetDir;
+  const dir = path.resolve(targetDir);
   const zipPath = path.join(dir, 'temp.zip');
 
   await downloadFile(

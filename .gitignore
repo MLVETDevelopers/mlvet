@@ -31,14 +31,8 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 
-__pycache__
-
 assets/videos/demo-video.mp4
 assets/audio/audio.wav
 assets/thumbnails/thumbnail.png
-
-venv
-src/pyServer/deepspeech-0.9.3-models.pbmm
-src/pyServer/deepspeech-0.9.3-models.scorer
 
 experiments/**/assets

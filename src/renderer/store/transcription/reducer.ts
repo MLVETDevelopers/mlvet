@@ -1,19 +1,26 @@
 import { Reducer } from 'redux';
-import liveProcessTranscript from 'main/editDelete/liveProcess';
-import { TRANSCRIPTION_CREATED } from './actions';
+import { updateOutputTimes } from 'transcriptProcessing/updateOutputTimes';
 import { Transcription } from '../../../sharedTypes';
 import { Action } from '../action';
-import { DeleteWordsPayload, PasteWordsPayload } from '../undoStack/opPayloads';
+import transcriptionWordsReducer from '../transcriptionWords/reducer';
+import { TRANSCRIPTION_CREATED } from './actions';
 import {
-  DELETE_WORD,
-  UNDO_DELETE_WORD,
+  DELETE_SELECTION,
+  MERGE_WORDS,
   PASTE_WORD,
+  SPLIT_WORD,
+  UNDO_DELETE_SELECTION,
+  UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
-} from '../undoStack/ops';
-
-const processTranscript = (transcription: Transcription) => {
-  return liveProcessTranscript(transcription);
-};
+  CORRECT_WORD,
+  UNDO_CORRECT_WORD,
+  UNDO_SPLIT_WORD,
+  RESTORE_SECTION,
+  UNDO_RESTORE_SECTION,
+} from '../transcriptionWords/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
+import transcriptionTakesReducer from '../transcriptionTakes/reducer';
+import takeGroupsReducer from '../takeGroups/reducer';
 
 /**
  *  Nested reducer for handling transcriptions
@@ -26,65 +33,50 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
     return action.payload as Transcription;
   }
 
-  // If you add a method that handles edits to the transcription -> processTranscript()
+  // Everything below here assumes we have a transcription, so early exit if we don't
+  if (transcription === null) {
+    return null;
+  }
 
+  // Delegate words-related actions to words reducer
   if (
-    (action.type === DELETE_WORD || action.type === UNDO_DELETE_WORD) &&
-    transcription != null
+    [
+      DELETE_SELECTION,
+      UNDO_DELETE_SELECTION,
+      PASTE_WORD,
+      UNDO_PASTE_WORD,
+      MERGE_WORDS,
+      UNDO_MERGE_WORDS,
+      SPLIT_WORD,
+      UNDO_SPLIT_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
+      RESTORE_SECTION,
+      UNDO_RESTORE_SECTION,
+    ].includes(action.type)
   ) {
-    const { startIndex, endIndex } = action.payload as DeleteWordsPayload;
-
-    // sets newDeleted bool to true for delete and false for undo
-    const newDeletedBool = action.type === DELETE_WORD;
-
-    const updatedTranscription = {
+    return {
       ...transcription,
-      words: transcription.words.map((word, i) => ({
-        ...word,
-        deleted:
-          i >= startIndex && i <= endIndex ? newDeletedBool : word.deleted,
-      })),
+      ...updateOutputTimes(
+        transcriptionWordsReducer(transcription.words, action),
+        transcription.takeGroups
+      ),
     };
-
-    return processTranscript(updatedTranscription);
   }
 
-  if (action.type === PASTE_WORD && transcription != null) {
-    const { toIndex, startIndex, endIndex } =
-      action.payload as PasteWordsPayload;
+  // Delegate take-related actions to takes reducer and take groups reducer
+  if ([SELECT_TAKE, DELETE_TAKE_GROUP].includes(action.type)) {
+    // Update take groups first, so that updateOutputTimes uses the correct take groups
+    const takeGroups = takeGroupsReducer(transcription.takeGroups, action);
 
-    // Getting the subarrays for the new transcription
-    const prefix = transcription?.words.slice(0, toIndex);
-    let pastedWords = transcription?.words.slice(startIndex, endIndex + 1); // Words to be pasted
-    pastedWords = pastedWords?.map((word) => ({ ...word, deleted: false })); // Undeleting the cut words
-    const suffix = transcription?.words.slice(toIndex);
-
-    if (pastedWords !== undefined && suffix !== undefined) {
-      const updatedTranscription = {
-        ...transcription,
-        words: prefix?.concat(pastedWords, suffix), // Concatonating the sub arrays
-      };
-      return processTranscript(updatedTranscription);
-    }
-  }
-
-  if (action.type === UNDO_PASTE_WORD && transcription != null) {
-    const { toIndex, startIndex, endIndex } =
-      action.payload as PasteWordsPayload;
-
-    // Getting the subarrays for the new transcription
-    const pasteLength = endIndex - startIndex + 1;
-    const prefix = transcription?.words.slice(0, toIndex);
-    const suffix = transcription?.words.slice(toIndex + pasteLength);
-
-    // Have to check this if to get rid of linter error
-    if (suffix !== undefined) {
-      const updatedTranscription = {
-        ...transcription,
-        words: prefix?.concat(suffix), // Concatonating the sub arrays
-      };
-      return processTranscript(updatedTranscription);
-    }
+    return {
+      ...transcription,
+      ...updateOutputTimes(
+        transcriptionTakesReducer(transcription.words, action),
+        takeGroups
+      ),
+      takeGroups,
+    };
   }
 
   return transcription;

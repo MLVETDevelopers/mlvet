@@ -2,13 +2,19 @@
 // IPC methods declared in main/handlers will be auto-generated here when `yarn gen` is run.
 // If you need to use other modules from electron in the renderer, add their types here and then reference from `ipc` (import from renderer/ipc.ts)
 
-import { IpcRendererEvent } from 'electron';
+import { BrowserWindow, IpcRendererEvent } from 'electron';
+import { SaveDialogSelections } from 'main/handlers/helpers/saveDialog';
+import { JSONTranscription } from 'main/types';
 import {
   OperatingSystems,
-  Project,
+  RuntimeProject,
   ProjectMetadata,
   RecentProject,
   Transcription,
+  ProjectIdAndFilePath,
+  TranscriptionEngine,
+  EngineConfig,
+  CloudConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -17,33 +23,67 @@ declare global {
       // Everything between the START GENERATED CODE and END GENERATED CODE comments will be replaced with the injected handler invocations when 'yarn gen' is run
 
       // START GENERATED CODE
-      deleteProject: (project: Project) => Promise<void>;
+      deleteProject: (project: ProjectIdAndFilePath) => Promise<void>;
+
+      openExternalLink: (url: string) => Promise<void>;
 
       openProject: (
         filePath: string | null
-      ) => Promise<{ project: Project | null; filePath: string }>;
+      ) => Promise<{ project: RuntimeProject | null; filePath: string }>;
 
       retrieveProjectMetadata: (
-        project: Pick<Project, 'projectFilePath' | 'mediaFilePath'>
+        project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
+
+      readCloudConfig: () => Promise<CloudConfig>;
+
+      readDefaultEngineConfig: () => Promise<EngineConfig>;
 
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;
 
-      saveAsProject: (project: Project) => Promise<string>;
+      requireCloudConfig: () => Promise<boolean>;
 
-      saveProject: (project: Project) => Promise<string>;
+      saveAsProject: (project: RuntimeProject) => Promise<string>;
+
+      saveChangesDialog: (
+        mainWindow: BrowserWindow,
+        projectFileName?: string
+      ) => SaveDialogSelections;
+
+      saveProject: (project: RuntimeProject) => Promise<string>;
+
+      storeCloudCredentials: (
+        defaultEngine: TranscriptionEngine,
+        engineConfigs: EngineConfig
+      ) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;
 
-      extractAudio: (project: Project) => Promise<string>;
+      extractAudio: (project: RuntimeProject) => Promise<string>;
 
-      exportProject: (project: Project) => Promise<string>;
+      exportProject: (project: RuntimeProject) => Promise<string>;
 
-      extractThumbnail: (absolutePathToVideoFile: string) => Promise<string>;
+      extractThumbnail: (
+        absolutePathToVideoFile: string,
+        project: RuntimeProject
+      ) => Promise<string>;
 
-      requestTranscription: (project: Project) => Promise<Transcription | null>;
+      loadThumbnail: (projectId: string) => Promise<string>;
+
+      transcribe: (
+        project: RuntimeProject,
+        transcriptionEngine: TranscriptionEngine
+      ) => Promise<JSONTranscription>;
+
+      requestTranscription: (
+        project: RuntimeProject
+      ) => Promise<Transcription | null>;
+
+      setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
+
+      setExportEnabled: (exportEnabled: boolean) => void;
 
       setFileRepresentation: (
         representedFilePath: string | null,
@@ -52,17 +92,31 @@ declare global {
 
       setHomeEnabled: (homeEnabled: boolean) => void;
 
+      setMergeSplitEnabled: (
+        mergeEnabled: boolean,
+        splitEnabled: boolean
+      ) => void;
+
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
-      handleOsQuery: () => OperatingSystems | null;
+      handleOsQuery: () => Promise<OperatingSystems | null>;
+
+      setClipboardEnabled: (
+        cutEnabled: boolean,
+        copyEnabled: boolean,
+        pasteEnabled: boolean,
+        deleteEnabled: boolean
+      ) => Promise<void>;
 
       closeWindow: () => void;
 
-      returnToHome: (project: Project) => Promise<number>;
+      promptSave: (_?: void) => Promise<boolean>;
+
+      returnToHome: (project: RuntimeProject) => Promise<number>;
 
       showConfirmation: (message: string, detail: string) => Promise<boolean>;
       // END GENERATED CODE

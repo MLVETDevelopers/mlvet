@@ -12,7 +12,6 @@ coverage
 .eslintcache
 
 # Dependency directory
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
 # OSX
@@ -32,4 +31,5 @@ npm-debug.log.*
 # https://github.com/eslint/eslint/issues/8429
 !.erb
 
-experiments/*
+experiments
+

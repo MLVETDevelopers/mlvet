@@ -1,18 +1,26 @@
-export interface DeleteWordsPayload {
-  startIndex: number;
-  endIndex: number;
-}
+import {
+  CorrectWordPayload,
+  DeleteSelectionPayload,
+  MergeWordsPayload,
+  PasteWordsPayload,
+  SplitWordPayload,
+  UndoCorrectWordPayload,
+  UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
 
-export interface PasteWordsPayload {
-  toIndex: number;
-  startIndex: number;
-  endIndex: number;
-}
+export type DoPayload =
+  | DeleteSelectionPayload
+  | PasteWordsPayload
+  | CorrectWordPayload
+  | MergeWordsPayload
+  | SplitWordPayload;
 
-export type UndoDeleteWordsPayload = DeleteWordsPayload;
-
-export type UndoPasteWordsPayload = PasteWordsPayload;
-
-export type DoPayload = DeleteWordsPayload;
-
-export type UndoPayload = UndoDeleteWordsPayload;
+export type UndoPayload =
+  | UndoDeleteSelectionPayload
+  | UndoPasteWordsPayload
+  | UndoCorrectWordPayload
+  | UndoMergeWordsPayload
+  | UndoSplitWordPayload;

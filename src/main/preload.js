@@ -6,18 +6,33 @@ contextBridge.exposeInMainWorld('electron', {
   // START GENERATED CODE
   deleteProject: (project) => ipcRenderer.invoke('delete-project', project),
 
+  openExternalLink: (url) => ipcRenderer.invoke('open-external-link', url),
+
   openProject: (filePath) => ipcRenderer.invoke('open-project', filePath),
 
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
 
+  readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
+
+  readDefaultEngineConfig: () =>
+    ipcRenderer.invoke('read-default-engine-config'),
+
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
 
+  requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
+
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
+  saveChangesDialog: (mainWindow, projectFileName) =>
+    ipcRenderer.invoke('save-changes-dialog', mainWindow, projectFileName),
+
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
+
+  storeCloudCredentials: (defaultEngine, engineConfigs) =>
+    ipcRenderer.invoke('store-cloud-credentials', defaultEngine, engineConfigs),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
@@ -26,11 +41,22 @@ contextBridge.exposeInMainWorld('electron', {
 
   exportProject: (project) => ipcRenderer.invoke('export-project', project),
 
-  extractThumbnail: (absolutePathToMediaFile) =>
-    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile),
+  extractThumbnail: (absolutePathToMediaFile, project) =>
+    ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
+
+  loadThumbnail: (projectId) => ipcRenderer.invoke('load-thumbnail', projectId),
+
+  transcribe: (project, transcriptionEngine) =>
+    ipcRenderer.invoke('transcribe', project, transcriptionEngine),
 
   requestTranscription: (project) =>
     ipcRenderer.invoke('request-transcription', project),
+
+  setConfidenceLinesEnabled: (menuItemEnabled) =>
+    ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
+
+  setExportEnabled: (exportEnabled) =>
+    ipcRenderer.invoke('set-export-enabled', exportEnabled),
 
   setFileRepresentation: (representedFilePath, isEdited) =>
     ipcRenderer.invoke(
@@ -41,6 +67,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setHomeEnabled: (homeEnabled) =>
     ipcRenderer.invoke('set-home-enabled', homeEnabled),
+
+  setMergeSplitEnabled: (mergeEnabled, splitEnabled) =>
+    ipcRenderer.invoke('set-merge-split-enabled', mergeEnabled, splitEnabled),
 
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
@@ -53,7 +82,18 @@ contextBridge.exposeInMainWorld('electron', {
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
 
+  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+    ipcRenderer.invoke(
+      'set-clipboard-enabled',
+      cutEnabled,
+      copyEnabled,
+      pasteEnabled,
+      deleteEnabled
+    ),
+
   closeWindow: () => ipcRenderer.invoke('close-window'),
+
+  promptSave: () => ipcRenderer.invoke('prompt-save'),
 
   returnToHome: (project) => ipcRenderer.invoke('return-to-home', project),
 

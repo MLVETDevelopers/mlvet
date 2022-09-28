@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ipcMain } from 'electron';
 
 import { IpcContext } from './types';
@@ -6,24 +7,37 @@ import { IpcContext } from './types';
 
 // START GENERATED CODE PART 1
 import deleteProject from './handlers/file/deleteProject';
+import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
+import readCloudConfig from './handlers/file/readCloudConfig';
+import readDefaultEngineConfig from './handlers/file/readDefaultEngineConfig';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
+import requireCloudConfig from './handlers/file/requireCloudConfig';
 import saveAsProject from './handlers/file/saveAsProjectHandler';
+import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
+import storeCloudCredentials from './handlers/file/storeCloudCredentials';
 import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
 import extractThumbnail from './handlers/media/thumbnailExtract';
+import loadThumbnail from './handlers/media/thumbnailLoad';
+import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
+import setConfidenceLinesEnabled from './handlers/menu/setConfidenceLinesEnabled';
+import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
+import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
+import setClipboardEnabled from './handlers/setClipboardEnabled';
 import closeWindow from './handlers/window/closeWindow';
+import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
 import showConfirmation from './handlers/window/showConfirmation';
 // END GENERATED CODE PART 1
@@ -36,6 +50,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     deleteProject(project)
   );
 
+  ipcMain.handle('open-external-link', async (_event, url) =>
+    openExternalLink(url)
+  );
+
   ipcMain.handle('open-project', async (_event, filePath) =>
     openProject(ipcContext, filePath)
   );
@@ -44,18 +62,38 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     retrieveProjectMetadata(project)
   );
 
+  ipcMain.handle('read-cloud-config', async () => readCloudConfig());
+
+  ipcMain.handle('read-default-engine-config', async () =>
+    readDefaultEngineConfig()
+  );
+
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 
   ipcMain.handle('request-media-dialog', async () =>
     requestMediaDialog(ipcContext)
   );
 
+  ipcMain.handle('require-cloud-config', async () => requireCloudConfig());
+
   ipcMain.handle('save-as-project', async (_event, project) =>
     saveAsProject(ipcContext, project)
   );
 
+  ipcMain.handle(
+    'save-changes-dialog',
+    async (_event, mainWindow, projectFileName) =>
+      saveChangesDialog(mainWindow, projectFileName)
+  );
+
   ipcMain.handle('save-project', async (_event, project) =>
     saveProject(ipcContext, project)
+  );
+
+  ipcMain.handle(
+    'store-cloud-credentials',
+    async (_event, defaultEngine, engineConfigs) =>
+      storeCloudCredentials(defaultEngine, engineConfigs)
   );
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>
@@ -70,12 +108,32 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     exportProject(ipcContext, project)
   );
 
-  ipcMain.handle('extract-thumbnail', async (_event, absolutePathToMediaFile) =>
-    extractThumbnail(absolutePathToMediaFile)
+  ipcMain.handle(
+    'extract-thumbnail',
+    async (_event, absolutePathToMediaFile, project) =>
+      extractThumbnail(absolutePathToMediaFile, project)
+  );
+
+  ipcMain.handle('load-thumbnail', async (_event, projectId) =>
+    loadThumbnail(projectId)
+  );
+
+  ipcMain.handle('transcribe', async (_event, project, transcriptionEngine) =>
+    transcribe(project, transcriptionEngine)
   );
 
   ipcMain.handle('request-transcription', async (_event, project) =>
     requestTranscription(project)
+  );
+
+  ipcMain.handle(
+    'set-confidence-lines-enabled',
+    async (_event, menuItemEnabled) =>
+      setConfidenceLinesEnabled(ipcContext, menuItemEnabled)
+  );
+
+  ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
+    setExportEnabled(ipcContext, exportEnabled)
   );
 
   ipcMain.handle(
@@ -86,6 +144,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('set-home-enabled', async (_event, homeEnabled) =>
     setHomeEnabled(ipcContext, homeEnabled)
+  );
+
+  ipcMain.handle(
+    'set-merge-split-enabled',
+    async (_event, mergeEnabled, splitEnabled) =>
+      setMergeSplitEnabled(ipcContext, mergeEnabled, splitEnabled)
   );
 
   ipcMain.handle(
@@ -106,7 +170,21 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
 
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
 
+  ipcMain.handle(
+    'set-clipboard-enabled',
+    async (_event, cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
+      setClipboardEnabled(
+        ipcContext,
+        cutEnabled,
+        copyEnabled,
+        pasteEnabled,
+        deleteEnabled
+      )
+  );
+
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));
+
+  ipcMain.handle('prompt-save', async () => promptSave(ipcContext));
 
   ipcMain.handle('return-to-home', async (_event, project) =>
     returnToHome(ipcContext, project)

@@ -1,0 +1,116 @@
+{
+  "words": [
+    {
+      "word": "That",
+      "startTime": 0.43,
+      "duration": 0.128,
+      "confidence": 0.92954,
+      "outputStartTime": 0,
+      "originalIndex": 0,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.43,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": { "takeGroupId": 0, "takeIndex": 0 }
+    },
+    {
+      "word": "an",
+      "startTime": 0.944,
+      "duration": 0.118,
+      "confidence": 0.83,
+      "outputStartTime": 0,
+      "originalIndex": 3,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.013,
+      "bufferDurationAfter": 0.007,
+      "takeInfo": { "takeGroupId": 0, "takeIndex": 1 }
+    },
+    {
+      "word": "he",
+      "startTime": 2.864,
+      "duration": 0.214,
+      "confidence": 0.99637,
+      "outputStartTime": 0.931,
+      "originalIndex": 10,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    {
+      "word": "know.",
+      "startTime": 6.608,
+      "duration": 0.612,
+      "confidence": 0.99708,
+      "outputStartTime": 4.687,
+      "originalIndex": 20,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.031,
+      "bufferDurationAfter": 0.285,
+      "takeInfo": { "takeGroupId": 1, "takeIndex": 0 }
+    },
+    {
+      "word": "funny.",
+      "startTime": 8.386,
+      "duration": 0.528,
+      "confidence": 0.99984,
+      "outputStartTime": 0,
+      "originalIndex": 24,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.012,
+      "bufferDurationAfter": 0.054,
+      "takeInfo": { "takeGroupId": 1, "takeIndex": 1 }
+    },
+    {
+      "word": "pretended",
+      "startTime": 10.196,
+      "duration": 0.326,
+      "confidence": 0.5069,
+      "outputStartTime": 6.484,
+      "originalIndex": 30,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    }
+  ],
+  "takeGroups": [
+    { "id": 0, "activeTakeIndex": 1 },
+    { "id": 1, "activeTakeIndex": 1 }
+  ],
+  "chunks": [
+    { "id": 0, "activeTakeIndex": 1 },
+    {
+      "word": "he",
+      "startTime": 2.864,
+      "duration": 0.214,
+      "confidence": 0.99637,
+      "outputStartTime": 0.931,
+      "originalIndex": 10,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.043,
+      "bufferDurationAfter": 0.013,
+      "takeInfo": null
+    },
+    { "id": 1, "activeTakeIndex": 1 },
+    {
+      "word": "pretended",
+      "startTime": 10.196,
+      "duration": 0.326,
+      "confidence": 0.5069,
+      "outputStartTime": 6.484,
+      "originalIndex": 30,
+      "pasteKey": 0,
+      "deleted": false,
+      "bufferDurationBefore": 0.007,
+      "bufferDurationAfter": 0.012,
+      "takeInfo": null
+    }
+  ]
+}

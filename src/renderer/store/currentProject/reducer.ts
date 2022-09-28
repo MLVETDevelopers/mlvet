@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Project, ProjectMetadata } from '../../../sharedTypes';
+import { RuntimeProject, ProjectMetadata } from '../../../sharedTypes';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { Action } from '../action';
 import {
@@ -11,28 +11,37 @@ import {
 import transcriptionReducer from '../transcription/reducer';
 import { TRANSCRIPTION_CREATED } from '../transcription/actions';
 import {
-  EXPORT_PROGRESS_UPDATE,
-  START_EXPORT,
-  FINISH_EXPORT,
-} from '../exportIo/actions';
-import {
-  DELETE_WORD,
-  UNDO_DELETE_WORD,
+  CORRECT_WORD,
+  DELETE_SELECTION,
+  MERGE_WORDS,
   PASTE_WORD,
+  UNDO_CORRECT_WORD,
+  SPLIT_WORD,
+  UNDO_DELETE_SELECTION,
+  UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
-} from '../undoStack/ops';
+  UNDO_SPLIT_WORD,
+  RESTORE_SECTION,
+  UNDO_RESTORE_SECTION,
+} from '../transcriptionWords/actions';
+import {
+  EXPORT_PROGRESS_UPDATE,
+  FINISH_EXPORT,
+  START_EXPORT,
+} from '../exportIo/actions';
+import { DELETE_TAKE_GROUP, SELECT_TAKE } from '../takeGroups/actions';
 
 const currentProjectReducer: Reducer<
   ApplicationStore['currentProject'],
   Action<any>
 > = (currentProject = initialStore.currentProject, action) => {
   if (action.type === PROJECT_CREATED) {
-    return action.payload as Project;
+    return action.payload as RuntimeProject;
   }
 
   if (action.type === PROJECT_OPENED) {
     return {
-      ...(action.payload.project as Project),
+      ...(action.payload.project as RuntimeProject),
       isEdited: false,
       projectFilePath: action.payload.filePath,
     };
@@ -40,7 +49,7 @@ const currentProjectReducer: Reducer<
 
   if (action.type === PROJECT_SAVED && currentProject !== null) {
     const { project, filePath } = action.payload as {
-      project: Project;
+      project: RuntimeProject;
       metadata: ProjectMetadata;
       filePath: string;
     };
@@ -74,7 +83,7 @@ const currentProjectReducer: Reducer<
 
   if (action.type === FINISH_EXPORT) {
     return {
-      ...(action.payload.project as Project),
+      ...(action.payload.project as RuntimeProject),
       projectFilePath: action.payload.filePath,
     };
   }
@@ -83,10 +92,20 @@ const currentProjectReducer: Reducer<
   if (
     [
       TRANSCRIPTION_CREATED,
-      DELETE_WORD,
-      UNDO_DELETE_WORD,
+      DELETE_SELECTION,
+      UNDO_DELETE_SELECTION,
       PASTE_WORD,
       UNDO_PASTE_WORD,
+      CORRECT_WORD,
+      UNDO_CORRECT_WORD,
+      MERGE_WORDS,
+      UNDO_MERGE_WORDS,
+      SPLIT_WORD,
+      UNDO_SPLIT_WORD,
+      SELECT_TAKE,
+      DELETE_TAKE_GROUP,
+      RESTORE_SECTION,
+      UNDO_RESTORE_SECTION,
     ].includes(action.type) &&
     currentProject !== null
   ) {

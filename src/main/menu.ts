@@ -82,6 +82,103 @@ export default class MenuBuilder {
     ];
   }
 
+  buildClipboardOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'cut',
+        label: 'Cut',
+        accelerator: 'CommandOrControl+X',
+        click: () => {
+          // Tell the renderer to initiate a cut
+          this.mainWindow.webContents.send('initiate-cut-text');
+        },
+      },
+      {
+        id: 'copy',
+        label: 'Copy',
+        accelerator: 'CommandOrControl+C',
+        click: () => {
+          // Tell the renderer to initiate a copy
+          this.mainWindow.webContents.send('initiate-copy-text');
+        },
+      },
+      {
+        id: 'paste',
+        label: 'Paste',
+        accelerator: 'CommandOrControl+V',
+        click: () => {
+          // Tell the renderer to initiate a paste
+          this.mainWindow.webContents.send('initiate-paste-text');
+        },
+      },
+      {
+        id: 'delete',
+        label: 'Delete',
+        accelerator: 'Backspace',
+        click: () => {
+          // Tell the renderer to initiate a delete
+          this.mainWindow.webContents.send('initiate-delete-text');
+        },
+      },
+      {
+        // Hidden menu item to allow both backspace and delete to be used for the same purpose
+        id: 'delete2',
+        label: 'delete (invisible)',
+        accelerator: 'Delete',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        click: () => {
+          // Tell the renderer to initiate a delete
+          this.mainWindow.webContents.send('initiate-delete-text');
+        },
+      },
+      {
+        id: 'selectAll',
+        label: 'Select All',
+        accelerator: 'CmdOrCtrl+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-all');
+        },
+      },
+    ];
+  }
+
+  buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        id: 'mergeWords',
+        label: 'Merge Words',
+        accelerator: 'CommandOrControl+L', // 'M' already taken by window 'minimize'
+        click: () => {
+          // Tell the renderer to initiate a merge-words operation
+          this.mainWindow.webContents.send('initiate-merge-words');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
+      {
+        id: 'splitWord',
+        label: 'Split Word',
+        accelerator: 'Shift+CommandOrControl+L',
+        click: () => {
+          // Tell the renderer to initiate a split-words operation
+          this.mainWindow.webContents.send('initiate-split-word');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
+      {
+        id: 'confidence',
+        label: 'Toggle Confidence Underlines',
+        accelerator: 'CommandOrControl+U',
+        click: () => {
+          // Tell the renderer to toggle the confidence underlines
+          this.mainWindow.webContents.send('toggle-confidence-underlines');
+        },
+        enabled: false, // by default, gets updated when a project is entered
+      },
+    ];
+  }
+
   buildFileOptions(): MenuItemConstructorOptions[] {
     return [
       {
@@ -125,7 +222,29 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-export-project');
         },
       },
+      {
+        id: 'updateTranscriptionAPIKey',
+        label: 'Update Transcription API Key',
+        accelerator: 'CommandOrControl+K',
+        click: () => {
+          this.mainWindow.webContents.send('open-update-transcription-api-key');
+        },
+      },
     ];
+  }
+
+  buildEditOptions(): MenuItemConstructorOptions {
+    return {
+      id: 'edit', // do not change, used by IPC to find this menu
+      label: 'Edit',
+      submenu: [
+        ...this.buildUndoRedoOptions(),
+        { type: 'separator' },
+        ...this.buildClipboardOptions(),
+        { type: 'separator' },
+        ...this.buildEditorAdditionalOptions(),
+      ],
+    };
   }
 
   buildHistoryOptions(): MenuItemConstructorOptions[] {
@@ -138,6 +257,17 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-return-to-home');
         },
         enabled: false,
+      },
+    ];
+  }
+
+  buildHelpOptions(): MenuItemConstructorOptions[] {
+    return [
+      {
+        label: 'Keyboard Shortcuts',
+        click: () => {
+          this.mainWindow.webContents.send('open-shortcuts');
+        },
       },
     ];
   }
@@ -179,27 +309,6 @@ export default class MenuBuilder {
       submenu: this.buildFileOptions(),
     };
 
-    const subMenuEdit: DarwinMenuItemConstructorOptions = {
-      id: 'edit', // do not change, used by IPC to find this menu
-      label: 'Edit',
-      submenu: [
-        ...this.buildUndoRedoOptions(),
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'CommandOrControl+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'CommandOrControl+C', selector: 'copy:' },
-        {
-          label: 'Paste',
-          accelerator: 'CommandOrControl+V',
-          selector: 'paste:',
-        },
-        {
-          label: 'Select All',
-          accelerator: 'CommandOrControl+A',
-          selector: 'selectAll:',
-        },
-      ],
-    };
-
     const subMenuViewDev: MenuItemConstructorOptions = {
       label: 'View',
       submenu: [
@@ -226,6 +335,7 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuViewProd: MenuItemConstructorOptions = {
       label: 'View',
       submenu: [
@@ -238,11 +348,13 @@ export default class MenuBuilder {
         },
       ],
     };
+
     const subMenuHistory: MenuItemConstructorOptions = {
       id: 'history',
       label: 'History',
       submenu: this.buildHistoryOptions(),
     };
+
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -261,6 +373,12 @@ export default class MenuBuilder {
       ],
     };
 
+    const subMenuHelp: DarwinMenuItemConstructorOptions = {
+      id: 'help',
+      label: 'Help',
+      submenu: this.buildHelpOptions(),
+    };
+
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
@@ -270,14 +388,15 @@ export default class MenuBuilder {
     return [
       subMenuAbout,
       subMenuFile,
-      subMenuEdit,
+      this.buildEditOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,
+      subMenuHelp,
     ];
   }
 
-  buildDefaultTemplate() {
+  buildDefaultTemplate(): MenuItemConstructorOptions[] {
     const templateDefault = [
       {
         id: 'file',
@@ -287,7 +406,11 @@ export default class MenuBuilder {
       {
         id: 'edit',
         label: '&Edit',
-        submenu: this.buildUndoRedoOptions(),
+        submenu: [
+          ...this.buildUndoRedoOptions(),
+          ...this.buildClipboardOptions(),
+          ...this.buildEditorAdditionalOptions(),
+        ],
       },
       {
         id: 'view',
@@ -340,34 +463,7 @@ export default class MenuBuilder {
       {
         id: 'help',
         label: 'Help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
-            },
-          },
-          {
-            label: 'Documentation',
-            click() {
-              shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
-              );
-            },
-          },
-          {
-            label: 'Community Discussions',
-            click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
-            },
-          },
-        ],
+        submenu: this.buildHelpOptions(),
       },
     ];
 

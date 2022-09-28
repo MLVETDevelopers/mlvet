@@ -1,3 +1,5 @@
+/* eslint-disable promise/always-return */
+
 import {
   Box,
   Typography,
@@ -13,40 +15,39 @@ import { pageChanged } from 'renderer/store/currentPage/actions';
 import { ApplicationPage } from 'renderer/store/currentPage/helpers';
 import { projectOpened } from 'renderer/store/currentProject/actions';
 import { projectDeleted } from 'renderer/store/recentProjects/actions';
+import { useEffect, useMemo, useState } from 'react';
 import { ApplicationStore } from '../store/sharedHelpers';
 import colors from '../colors';
-import { formatDate } from '../util';
-import exampleThumbnail from '../../../assets/example-thumbnail.png';
-import { RecentProject } from '../../sharedTypes';
+import { formatDate } from '../utils/dateTime';
+import { ProjectMetadata, RecentProject } from '../../sharedTypes';
 import ipc from '../ipc';
 
 const { openProject, deleteProject, showConfirmation } = ipc;
 
-const RecentProjectsBox = styled(Box)`
-  width: calc(100vw - 40px);
-  margin: 20px;
-  padding: 40px;
-`;
+const RecentProjectsBox = styled(Box)({
+  width: 'calc(100vw - 40px)',
+  margin: '20px',
+  padding: '40px',
+});
 
-const RecentProjectsItem = styled(Paper)`
-  background: ${colors.grey[700]};
-  color: ${colors.grey[300]};
-  padding: 10px 20px;
-  padding-right: 0;
+const RecentProjectsItem = styled(Paper)({
+  backgroundColor: colors.grey[700],
+  color: colors.grey[300],
+  padding: '10px 20px',
+  paddingRight: 0,
 
-  transition: 0.5s background;
+  transition: '0.5s background',
 
-  &:hover {
-    background: ${colors.grey[600]};
-    cursor: pointer;
-  }
-`;
-
-const RecentProjectsSubItem = styled(Grid)`
-  display: flex;
-  align-items: center;
-  justify-items: right;
-`;
+  '&:hover': {
+    background: colors.grey[600],
+    cursor: 'pointer',
+  },
+});
+const RecentProjectsSubItem = styled(Grid)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyItems: 'right',
+});
 
 // No idea why, but styling typography in paper in the usual way just literally does nothing. Seems like an MUI bug,
 // can't find any documentation on it. So doing this instead
@@ -62,13 +63,40 @@ const sortByDateModified = (first: RecentProject, second: RecentProject) =>
 const RECENT_PROJECTS_COUNT = 5;
 
 const RecentProjectsBlock = () => {
+  const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
+
   const dispatch = useDispatch();
 
-  const recentProjects = useSelector(
+  const recentProjectsFull = useSelector(
     (store: ApplicationStore) => store.recentProjects
-  )
-    .sort(sortByDateModified)
-    .slice(0, RECENT_PROJECTS_COUNT);
+  );
+
+  const recentProjects = useMemo(
+    () =>
+      recentProjectsFull
+        .sort(sortByDateModified)
+        .slice(0, RECENT_PROJECTS_COUNT),
+    [recentProjectsFull]
+  );
+
+  // TODO(chloe) I think this can cause a memory leak if the request is in flight
+  // when the page changes; not sure how to fix
+  useEffect(() => {
+    Promise.all(
+      recentProjects.map(async ({ id }) => ({
+        id,
+        thumbnail: await ipc.loadThumbnail(id),
+      }))
+    )
+      .then((list) => {
+        const map: Record<string, string> = {};
+        list.forEach(({ id, thumbnail }) => {
+          map[id] = thumbnail;
+        });
+        setThumbnails(map);
+      })
+      .catch(() => {});
+  }, [recentProjects]);
 
   const displayDate: (date: Date | null) => string = (date) =>
     date === null ? '?' : formatDate(date);
@@ -84,8 +112,6 @@ const RecentProjectsBlock = () => {
     }
 
     if (!recentProject.projectFilePath) {
-      // TODO(chloe): bring up project file locator, and/or offer to delete project
-      // since not found
       return;
     }
 
@@ -96,10 +122,26 @@ const RecentProjectsBlock = () => {
     );
 
     if (project === null) {
+      if (
+        await showConfirmation(
+          'Delete project?',
+          'The project could not be opened because the project file was not found. Do you want to delete the project metadata?'
+        )
+      ) {
+        dispatch(projectDeleted(recentProject.id));
+
+        await deleteProject(recentProject);
+      }
+
       return;
     }
 
-    dispatch(projectOpened(project, filePath));
+    const projectMetadata: ProjectMetadata = {
+      dateModified: recentProject.dateModified,
+      mediaSize: recentProject.mediaSize,
+    };
+
+    dispatch(projectOpened(project, filePath, projectMetadata));
     dispatch(pageChanged(ApplicationPage.PROJECT));
   };
 
@@ -146,7 +188,7 @@ const RecentProjectsBlock = () => {
             <Grid container spacing={2}>
               <RecentProjectsSubItem item xs={8}>
                 <img
-                  src={exampleThumbnail}
+                  src={`data:image/png;base64,${thumbnails[id] ?? ''}`}
                   alt={`Thumbnail for project ${name}`}
                   style={{
                     maxWidth: 180,

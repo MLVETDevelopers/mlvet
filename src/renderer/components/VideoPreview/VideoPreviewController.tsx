@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { Cut } from 'sharedTypes';
-import convertTranscriptToCuts from 'main/processing/transcriptToCuts';
+import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
 import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
@@ -142,17 +142,6 @@ const VideoPreviewControllerBase = (
     clockRef.current.isRunning = true;
   };
 
-  // Starts video, timer & UI
-  const play = () => {
-    if (!clockRef.current.isRunning) {
-      if (clockRef.current.time < outputVideoLength.current) {
-        videoPreviewRef?.current?.play();
-        startTimer();
-        setIsPlaying(true);
-      }
-    }
-  };
-
   // Sets the video, timer & UI playback time
   const setPlaybackTime = (time: number) => {
     const { isRunning } = clockRef.current;
@@ -183,6 +172,20 @@ const VideoPreviewControllerBase = (
     }
   };
 
+  // Starts video, timer & UI
+  const play = () => {
+    if (!clockRef.current.isRunning) {
+      // If we're at the end of the video, restart it
+      if (clockRef.current.time >= outputVideoLength.current) {
+        setPlaybackTime(0);
+      }
+
+      startTimer();
+      videoPreviewRef?.current?.play();
+      setIsPlaying(true);
+    }
+  };
+
   // Skips forward 'n' seconds
   const seekForward = () => {
     setPlaybackTime(clockRef.current.time + skip.current);
@@ -202,8 +205,11 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    if (currentProject?.transcription != null) {
+    if (currentProject !== null && currentProject?.transcription !== null) {
       cuts.current = convertTranscriptToCuts(currentProject.transcription);
+      if (cuts.current.length === 0) {
+        return;
+      }
       const lastCut = cuts.current[cuts.current.length - 1];
       outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
       setPlaybackTime(clockRef.current.time);

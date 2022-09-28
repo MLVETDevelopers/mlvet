@@ -1,10 +1,11 @@
+import path from 'path';
 import { IpcContext } from '../../types';
-import { Project } from '../../../sharedTypes';
+import { RuntimeProject } from '../../../sharedTypes';
 import { confirmSave } from '../helpers/saveUtils';
 
 type ReturnToHome = (
   ipcContext: IpcContext,
-  project: Project
+  project: RuntimeProject
 ) => Promise<number>;
 
 const PROJECT_ALREADY_SAVED = -1;
@@ -12,12 +13,10 @@ const PROJECT_ALREADY_SAVED = -1;
 const returnToHome: ReturnToHome = async (ipcContext, project) => {
   const { mainWindow } = ipcContext;
 
-  // Checking if project has a save file
-  // TODO: Check if any changes have been made since last save ('dirty feature')
-  const filePath = project.projectFilePath;
+  const fileName = path.basename(project.projectFilePath ?? '');
 
-  if (!filePath) {
-    const userResponse = await confirmSave(mainWindow, project.name);
+  if (project.isEdited) {
+    const userResponse = await confirmSave(mainWindow, fileName);
     return userResponse;
   }
   return PROJECT_ALREADY_SAVED;

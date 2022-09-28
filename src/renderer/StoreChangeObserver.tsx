@@ -1,11 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
+import { isMergeSplitAllowed } from './store/selection/helpers';
+import { indicesToRanges } from './utils/range';
+import { ApplicationPage } from './store/currentPage/helpers';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
+/**
+ * Component that handles sending off side effects when the store changes -
+ * e.g. updating which menu items are active
+ */
 export default function StoreChangeObserver() {
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
@@ -14,6 +21,25 @@ export default function StoreChangeObserver() {
   const currentProject = useSelector(
     (store: ApplicationStore) => store.currentProject
   );
+
+  const words = useMemo(
+    () => currentProject?.transcription?.words ?? [],
+    [currentProject]
+  );
+
+  const currentPage = useSelector(
+    (store: ApplicationStore) => store.currentPage
+  );
+
+  const isShowingConfidenceUnderlines = useSelector(
+    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
+  );
+
+  const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
+
+  const selection = useSelector((store: ApplicationStore) => store.selection);
+
+  const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
   const [hasLoadedRecentProjects, setHasLoadedRecentProjects] =
     useState<boolean>(false);
@@ -48,9 +74,12 @@ export default function StoreChangeObserver() {
 
   // Update file menu item enablement (save, save as) when projects are opened and closed
   useEffect(() => {
-    if (currentProject === null) {
+    if (currentProject === null || currentProject.transcription === null) {
       // Can't save or save as when there is no project open
       ipc.setSaveEnabled(false, false);
+
+      // No project -> no export
+      ipc.setExportEnabled(false);
 
       // No file is represented
       ipc.setFileRepresentation(null, false);
@@ -58,11 +87,16 @@ export default function StoreChangeObserver() {
       // Can save, but not save as, when the project hasn't been saved yet
       ipc.setSaveEnabled(true, false);
 
+      ipc.setExportEnabled(true);
+
       // No file is represented as the project hasn't been saved yet - however, we mark the window as 'dirty'
       ipc.setFileRepresentation(null, true);
     } else {
       // Can do either if the project has been saved already
       ipc.setSaveEnabled(true, true);
+
+      // Allow export when saved
+      ipc.setExportEnabled(true);
 
       // File is represented, dirty depends on if the project has been edited
       ipc.setFileRepresentation(
@@ -71,6 +105,58 @@ export default function StoreChangeObserver() {
       );
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
+
+  // Update 'go to home' option in menu when page is changed
+  useEffect(() => {
+    const homeEnabled = currentPage === ApplicationPage.PROJECT;
+
+    ipc.setHomeEnabled(homeEnabled);
+  }, [currentPage]);
+
+  // Update clipboard options in edit menu when clipboard or selection is changed
+  useEffect(() => {
+    const cutCopyDeleteEnabled = selection.length > 0;
+
+    // Selection must not be empty as we need somewhere to paste to
+    const pasteEnabled = selection.length > 0 && clipboard.length > 0;
+
+    ipc.setClipboardEnabled(
+      cutCopyDeleteEnabled,
+      cutCopyDeleteEnabled,
+      pasteEnabled,
+      cutCopyDeleteEnabled
+    );
+  }, [clipboard, selection]);
+
+  // Update merge/split options in edit menu when selection is changed
+  useEffect(() => {
+    if (words.length === 0) {
+      ipc.setMergeSplitEnabled(false, false);
+      return;
+    }
+
+    const { merge, split } = isMergeSplitAllowed(
+      words,
+      indicesToRanges(selection)
+    );
+
+    ipc.setMergeSplitEnabled(merge, split);
+  }, [words, selection]);
+
+  // Update undo/redo options in edit menu when undo stack is changed
+  useEffect(() => {
+    const { stack, index } = undoStack;
+
+    const undoEnabled = index > 0;
+    const redoEnabled = index < stack.length;
+
+    ipc.setUndoRedoEnabled(undoEnabled, redoEnabled);
+  }, [undoStack]);
+
+  // Update whether 'show/hide confidence underlines' is enabled, and also its label
+  useEffect(() => {
+    ipc.setConfidenceLinesEnabled(words !== null);
+  }, [isShowingConfidenceUnderlines, words]);
 
   // Component doesn't render anything
   return null;

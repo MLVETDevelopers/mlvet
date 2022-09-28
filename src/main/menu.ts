@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import { ExportFormat } from '../sharedTypes';
 import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
 
@@ -141,11 +142,30 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('initiate-select-all');
         },
       },
+      {
+        id: 'selectSentence',
+        label: 'Select Current Sentence',
+        accelerator: 'CmdOrCtrl+Shift+A',
+        click: () => {
+          // Tell the renderer to initiate a select-all
+          this.mainWindow.webContents.send('initiate-select-sentence');
+        },
+        enabled: false, // initially disabled, becomes enabled when there is a sentence to select
+      },
     ];
   }
 
   buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
     return [
+      {
+        id: 'editWord',
+        label: 'Edit Word',
+        accelerator: 'E',
+        click: () => {
+          this.mainWindow.webContents.send('initiate-edit-word');
+        },
+        enabled: false, // by default, gets updated when selection changes
+      },
       {
         id: 'mergeWords',
         label: 'Merge Words',
@@ -215,11 +235,25 @@ export default class MenuBuilder {
         enabled: false,
       },
       {
-        id: 'export',
-        label: 'Export Project',
+        id: 'exportEdl',
+        label: 'Export Project to EDL',
         accelerator: 'CommandOrControl+E',
         click: () => {
-          this.mainWindow.webContents.send('initiate-export-project');
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.EDL
+          );
+        },
+      },
+      {
+        id: 'exportMp4',
+        label: 'Export Project to MP4',
+        accelerator: 'CommandOrControl+Shift+E',
+        click: () => {
+          this.mainWindow.webContents.send(
+            'initiate-export-project',
+            ExportFormat.MP4
+          );
         },
       },
       {
@@ -231,6 +265,39 @@ export default class MenuBuilder {
         },
       },
     ];
+  }
+
+  buildPlaybackOptions(): MenuItemConstructorOptions {
+    return {
+      id: 'playback',
+      label: 'Playback',
+      submenu: [
+        {
+          id: 'playPause',
+          label: 'Play/Pause Video',
+          accelerator: 'Space',
+          click: () => {
+            this.mainWindow.webContents.send('toggle-play-pause');
+          },
+        },
+        {
+          id: 'skipForward',
+          label: 'Skip forwards 10 seconds',
+          accelerator: 'Right',
+          click: () => {
+            this.mainWindow.webContents.send('initiate-skip-forward');
+          },
+        },
+        {
+          id: 'skipBackward',
+          label: 'Skip backwards 10 seconds',
+          accelerator: 'Left',
+          click: () => {
+            this.mainWindow.webContents.send('initiate-skip-backward');
+          },
+        },
+      ],
+    };
   }
 
   buildEditOptions(): MenuItemConstructorOptions {
@@ -389,6 +456,7 @@ export default class MenuBuilder {
       subMenuAbout,
       subMenuFile,
       this.buildEditOptions(),
+      this.buildPlaybackOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,
@@ -455,6 +523,7 @@ export default class MenuBuilder {
                 },
               ],
       },
+      this.buildPlaybackOptions(),
       {
         id: 'history',
         label: '&History',

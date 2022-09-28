@@ -6,7 +6,7 @@ import {
 } from 'renderer/store/transcriptionWords/actions';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from 'renderer/store/selection/actions';
 import {
   DeleteSelectionPayload,
@@ -18,13 +18,9 @@ export type DeleteSelectionOp = Op<
   UndoDeleteSelectionPayload
 >;
 
-export const makeDeleteSelection: (
-  ranges: IndexRange[]
-) => DeleteSelectionOp = (ranges) => ({
-  do: [selectionDeleted(ranges), selectionCleared()],
-  undo: [
-    undoSelectionDeleted(ranges),
-    selectionCleared(),
-    ...ranges.map(selectionRangeAdded),
-  ],
+export const makeDeleteSelection: (range: IndexRange) => DeleteSelectionOp = (
+  range
+) => ({
+  do: [selectionDeleted(range), selectionCleared()],
+  undo: [undoSelectionDeleted(range), selectionRangeSetTo(range)],
 });

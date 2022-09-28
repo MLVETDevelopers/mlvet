@@ -1,11 +1,17 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useDebounce } from '@react-hook/debounce';
+import { checkSentenceEnd } from 'sharedUtils';
 import { recentProjectsLoaded } from './store/recentProjects/actions';
 import { ApplicationStore } from './store/sharedHelpers';
 import ipc from './ipc';
 import { isMergeSplitAllowed } from './store/selection/helpers';
-import { indicesToRanges } from './utils/range';
 import { ApplicationPage } from './store/currentPage/helpers';
+import dispatchBroadcast from './collabClient/dispatchBroadcast';
+import { selectionRangeSetTo } from './store/selection/actions';
+import { getLengthOfRange } from './utils/range';
+import { CollabClientSessionState } from './store/collab/helpers';
+import saveProject from './file/saveProject';
 
 const { readRecentProjects, writeRecentProjects } = ipc;
 
@@ -13,7 +19,7 @@ const { readRecentProjects, writeRecentProjects } = ipc;
  * Component that handles sending off side effects when the store changes -
  * e.g. updating which menu items are active
  */
-export default function StoreChangeObserver() {
+const StoreChangeObserver = () => {
   const recentProjects = useSelector(
     (store: ApplicationStore) => store.recentProjects
   );
@@ -37,7 +43,24 @@ export default function StoreChangeObserver() {
 
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
-  const selection = useSelector((store: ApplicationStore) => store.selection);
+  const selfSelection = useSelector(
+    (store: ApplicationStore) => store.selection.self
+  );
+
+  const editWordIndex = useSelector(
+    (store: ApplicationStore) => store.editWord?.index
+  );
+
+  const collab = useSelector((store: ApplicationStore) => store.collab);
+
+  // Debounce the selection to limit network requests for sharing selection with other clients
+  const [debouncedSelection, setDebouncedSelection] =
+    useDebounce(selfSelection);
+
+  // Update the debounced selection when the selection changes, but debounced
+  useEffect(() => {
+    setDebouncedSelection(selfSelection);
+  }, [setDebouncedSelection, selfSelection]);
 
   const undoStack = useSelector((store: ApplicationStore) => store.undoStack);
 
@@ -115,10 +138,11 @@ export default function StoreChangeObserver() {
 
   // Update clipboard options in edit menu when clipboard or selection is changed
   useEffect(() => {
-    const cutCopyDeleteEnabled = selection.length > 0;
+    const cutCopyDeleteEnabled = getLengthOfRange(selfSelection) > 0;
 
     // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled = selection.length > 0 && clipboard.length > 0;
+    const pasteEnabled =
+      getLengthOfRange(selfSelection) > 0 && clipboard.length > 0;
 
     ipc.setClipboardEnabled(
       cutCopyDeleteEnabled,
@@ -126,7 +150,41 @@ export default function StoreChangeObserver() {
       pasteEnabled,
       cutCopyDeleteEnabled
     );
-  }, [clipboard, selection]);
+  }, [clipboard, selfSelection]);
+
+  // Update edit word option in edit menu when selection is changed
+  useEffect(() => {
+    // Allow user to edit word if there is a single word selected and it is not already being edited
+    const editWordEnabled =
+      getLengthOfRange(selfSelection) === 1 &&
+      selfSelection.startIndex !== editWordIndex;
+    ipc.setEditWordEnabled(editWordEnabled);
+  }, [selfSelection, editWordIndex]);
+
+  // Update select sentence option in edit menu when selection or transcription changes
+  useEffect(() => {
+    // Disable the option if there is nothing selected
+    if (getLengthOfRange(selfSelection) === 0) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // Disable the option if a complete sentence is already selected
+    const startWord =
+      currentProject?.transcription?.words[selfSelection.startIndex - 1];
+    const endWord =
+      currentProject?.transcription?.words[selfSelection.endIndex - 1];
+    if (checkSentenceEnd(endWord) && checkSentenceEnd(startWord)) {
+      ipc.setSelectSentenceEnabled(false);
+      return;
+    }
+    // If all checks pass, enable the option
+    ipc.setSelectSentenceEnabled(true);
+  }, [currentProject?.transcription?.words, selfSelection]);
+
+  // Broadcast selection actions to other clients whenever the selection changes (this is debounced)
+  useEffect(() => {
+    dispatchBroadcast(selectionRangeSetTo(debouncedSelection));
+  }, [debouncedSelection]);
 
   // Update merge/split options in edit menu when selection is changed
   useEffect(() => {
@@ -135,13 +193,10 @@ export default function StoreChangeObserver() {
       return;
     }
 
-    const { merge, split } = isMergeSplitAllowed(
-      words,
-      indicesToRanges(selection)
-    );
+    const { merge, split } = isMergeSplitAllowed(words, selfSelection);
 
     ipc.setMergeSplitEnabled(merge, split);
-  }, [words, selection]);
+  }, [words, selfSelection]);
 
   // Update undo/redo options in edit menu when undo stack is changed
   useEffect(() => {
@@ -158,6 +213,22 @@ export default function StoreChangeObserver() {
     ipc.setConfidenceLinesEnabled(words !== null);
   }, [isShowingConfidenceUnderlines, words]);
 
+  // Autosave after currentProject changes.
+  useEffect(() => {
+    if (
+      currentProject &&
+      currentProject.transcription &&
+      currentProject.projectFilePath
+    ) {
+      if (collab !== null && (collab as CollabClientSessionState).isHost)
+        return; // Disallow autosave if you are not the host in collab
+
+      saveProject(false); // use the renderer's saveProject function to reuse dirtiness handling.
+    }
+  }, [currentProject, collab]);
+
   // Component doesn't render anything
   return null;
-}
+};
+
+export default StoreChangeObserver;

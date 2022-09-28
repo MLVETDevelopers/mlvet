@@ -10,6 +10,9 @@ import shortcutsReducer from './shortcuts/reducer';
 import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reducer';
 import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
+import collabReducer from './collab/reducer';
+import opQueueReducer from './opQueue/reducer';
+import playbackReducer from './playback/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -23,6 +26,9 @@ const rootReducer = combineReducers({
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
+  collab: collabReducer,
+  opQueue: opQueueReducer,
+  playback: playbackReducer,
 });
 
 export default rootReducer;

@@ -1,6 +1,6 @@
 import ipc from './ipc';
 import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
-import { selectAllWords } from './editor/selection';
+import { selectAllWords, selectSentence } from './editor/selection';
 import saveProject from './file/saveProject';
 import saveAsProject from './file/saveAsProject';
 import onProjectOpen from './file/onProjectOpen';
@@ -14,6 +14,11 @@ import openShortcuts from './navigation/openShortcuts';
 import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionAPIKey';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
+import togglePlayPause from './editor/togglePlayPause';
+import skipForward from './editor/skipForward';
+import skipBackward from './editor/skipBackward';
+import editWord from './editor/editWord';
+import onExportStart from './file/onExportStart';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -22,6 +27,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'project-opened': onProjectOpen,
   'export-progress-update': exportProgressUpdate,
   'export-finish': onExportFinish,
+  'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
 
@@ -31,11 +37,16 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
+  'initiate-select-sentence': selectSentence,
+  'initiate-edit-word': editWord,
   'initiate-merge-words': mergeWords,
   'initiate-split-word': splitWord,
   'initiate-undo': performUndo,
   'initiate-redo': performRedo,
   'toggle-confidence-underlines': toggleConfidenceUnderlines,
+  'toggle-play-pause': togglePlayPause,
+  'initiate-skip-forward': skipForward,
+  'initiate-skip-backward': skipBackward,
 
   // Navigation actions
   'initiate-return-to-home': returnToHome,

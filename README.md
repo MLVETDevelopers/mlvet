@@ -2,6 +2,8 @@
 
 ## Dependencies
 
+Supported Hardware - Windows - Mac (Intel) - Mac (ARM) - Linux
+
 Node v16: download from https://nodejs.org/en/
 
 Yarn package manager - run the following from your command line
@@ -22,9 +24,13 @@ yarn
 
 This will install all dependencies required by electron needed to run the app.
 
+## Generating IPC Handlers
+
+Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS_README.md`
+
 ## Additional steps you need to follow
 
-After the [audio extract PR](https://github.com/chloebrett/mlvet/pull/12) got merged you will now need to have a `demo-vdieo.mp4` video file under `assets/videos`
+After the [audio extract PR](https://github.com/chloebrett/mlvet/pull/12) got merged you will now need to have a `demo-video.mp4` video file under `assets/videos`
 
 Note:
 

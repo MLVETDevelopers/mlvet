@@ -15,6 +15,7 @@ import {
   TranscriptionEngine,
   EngineConfig,
   CloudConfig,
+  ExportFormat,
 } from '../sharedTypes';
 
 declare global {
@@ -63,7 +64,10 @@ declare global {
 
       extractAudio: (project: RuntimeProject) => Promise<string>;
 
-      exportProject: (project: RuntimeProject) => Promise<string>;
+      exportProject: (
+        exportFormat: ExportFormat,
+        project: RuntimeProject
+      ) => Promise<string>;
 
       extractThumbnail: (
         absolutePathToVideoFile: string,
@@ -83,6 +87,8 @@ declare global {
 
       setConfidenceLinesEnabled: (menuItemEnabled: boolean) => void;
 
+      setEditWordEnabled: (editEnabled: boolean) => void;
+
       setExportEnabled: (exportEnabled: boolean) => void;
 
       setFileRepresentation: (
@@ -99,11 +105,15 @@ declare global {
 
       setSaveEnabled: (saveEnabled: boolean, saveAsEnabled: boolean) => void;
 
+      setSelectSentenceEnabled: (enabled: boolean) => void;
+
       setUndoRedoEnabled: (undoEnabled: boolean, redoEnabled: boolean) => void;
 
       getFileNameWithExtension: (filePath: string | null) => Promise<string>;
 
       handleOsQuery: () => Promise<OperatingSystems | null>;
+
+      reportBug: (title: string, body: string) => Promise<number>;
 
       setClipboardEnabled: (
         cutEnabled: boolean,

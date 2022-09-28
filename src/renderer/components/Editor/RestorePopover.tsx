@@ -1,11 +1,13 @@
+import { SubdirectoryArrowLeft } from '@mui/icons-material';
 import {
   Box,
   ClickAwayListener,
   Popper,
+  Stack,
   styled,
   Typography,
 } from '@mui/material';
-import { RefObject } from 'react';
+import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
 import useKeypress from 'renderer/utils/hooks';
 
@@ -57,7 +59,7 @@ const RestorePopover = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             overflow: 'hidden',
-            height: 38,
+            height: 53,
             maxWidth: width,
             padding: '8px',
             borderRadius: '5px',
@@ -65,13 +67,27 @@ const RestorePopover = ({
             border: 0.5,
           }}
         >
-          <Typography style={{ color: colors.yellow[500] }} noWrap>
-            {text}
-          </Typography>
+          <Stack alignItems="flex-end">
+            <Typography style={{ color: colors.yellow[500] }} noWrap>
+              {text}
+            </Typography>
+            <Typography
+              variant="caption"
+              style={{ color: colors.grey[400], fontStyle: 'italic' }}
+            >
+              Enter to restore&nbsp;
+              <SubdirectoryArrowLeft
+                sx={{
+                  fontSize: '12px',
+                  color: colors.grey[400],
+                }}
+              />
+            </Typography>
+          </Stack>
         </Box>
       </StyledPopper>
     </ClickAwayListener>
   );
 };
 
-export default RestorePopover;
+export default React.memo(RestorePopover);

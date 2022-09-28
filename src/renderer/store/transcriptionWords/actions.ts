@@ -34,33 +34,33 @@ export const RESTORE_SECTION = 'RESTORE_SECTION';
 export const UNDO_RESTORE_SECTION = 'UNDO_RESTORE_SECTION';
 
 export const selectionDeleted: (
-  ranges: IndexRange[]
-) => Action<DeleteSelectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<DeleteSelectionPayload> = (range) => ({
   type: DELETE_SELECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const undoSelectionDeleted: (
-  ranges: IndexRange[]
-) => Action<UndoDeleteSelectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<UndoDeleteSelectionPayload> = (range) => ({
   type: UNDO_DELETE_SELECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const wordPasted: (
-  startIndex: number,
+  range: IndexRange,
   clipboard: Word[]
-) => Action<PasteWordsPayload> = (startIndex, clipboard) => ({
+) => Action<PasteWordsPayload> = (range, clipboard) => ({
   type: PASTE_WORD,
-  payload: { startIndex, clipboard },
+  payload: { range, clipboard },
 });
 
 export const undoWordPasted: (
-  startIndex: number,
+  range: IndexRange,
   clipboardLength: number
-) => Action<UndoPasteWordsPayload> = (startIndex, clipboardLength) => ({
+) => Action<UndoPasteWordsPayload> = (range, clipboardLength) => ({
   type: UNDO_PASTE_WORD,
-  payload: { startIndex, clipboardLength },
+  payload: { range, clipboardLength },
 });
 
 export const wordsMerged: (range: IndexRange) => Action<MergeWordsPayload> = (
@@ -110,15 +110,15 @@ export const undoWordCorrected: (
 });
 
 export const sectionRestored: (
-  ranges: IndexRange[]
-) => Action<RestoreSectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<RestoreSectionPayload> = (range) => ({
   type: RESTORE_SECTION,
-  payload: { ranges },
+  payload: { range },
 });
 
 export const undoSectionRestored: (
-  ranges: IndexRange[]
-) => Action<UndoRestoreSectionPayload> = (ranges) => ({
+  range: IndexRange
+) => Action<UndoRestoreSectionPayload> = (range) => ({
   type: UNDO_RESTORE_SECTION,
-  payload: { ranges },
+  payload: { range },
 });

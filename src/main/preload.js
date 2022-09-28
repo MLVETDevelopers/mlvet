@@ -39,7 +39,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   extractAudio: (project) => ipcRenderer.invoke('extract-audio', project),
 
-  exportProject: (project) => ipcRenderer.invoke('export-project', project),
+  exportProject: (exportFormat, project) =>
+    ipcRenderer.invoke('export-project', exportFormat, project),
 
   extractThumbnail: (absolutePathToMediaFile, project) =>
     ipcRenderer.invoke('extract-thumbnail', absolutePathToMediaFile, project),
@@ -54,6 +55,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   setConfidenceLinesEnabled: (menuItemEnabled) =>
     ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
+
+  setEditWordEnabled: (editEnabled) =>
+    ipcRenderer.invoke('set-edit-word-enabled', editEnabled),
 
   setExportEnabled: (exportEnabled) =>
     ipcRenderer.invoke('set-export-enabled', exportEnabled),
@@ -74,6 +78,9 @@ contextBridge.exposeInMainWorld('electron', {
   setSaveEnabled: (saveEnabled, saveAsEnabled) =>
     ipcRenderer.invoke('set-save-enabled', saveEnabled, saveAsEnabled),
 
+  setSelectSentenceEnabled: (enabled) =>
+    ipcRenderer.invoke('set-select-sentence-enabled', enabled),
+
   setUndoRedoEnabled: (undoEnabled, redoEnabled) =>
     ipcRenderer.invoke('set-undo-redo-enabled', undoEnabled, redoEnabled),
 
@@ -81,6 +88,8 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
+
+  reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
 
   setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
     ipcRenderer.invoke(

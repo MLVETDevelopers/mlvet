@@ -1,9 +1,25 @@
-import { IndexRange } from 'sharedTypes';
-import { DoPayload, UndoPayload } from './opPayloads';
 import { Action } from '../action';
+import {
+  SelectionClearedPayload,
+  SelectionRangeSetToPayload,
+} from '../selection/actions';
+import {
+  CorrectWordPayload,
+  DeleteSelectionPayload,
+  MergeWordsPayload,
+  PasteWordsPayload,
+  SplitWordPayload,
+  UndoCorrectWordPayload,
+  UndoDeleteSelectionPayload,
+  UndoMergeWordsPayload,
+  UndoPasteWordsPayload,
+  UndoSplitWordPayload,
+} from '../transcriptionWords/opPayloads';
 
 // Selection payloads can be applied to any op do or undo
-export type SelectionPayload = IndexRange | null;
+export type SelectionPayload =
+  | SelectionRangeSetToPayload
+  | SelectionClearedPayload;
 
 /**
  * An Op is a representation of an action that can be both done and undone.
@@ -11,9 +27,10 @@ export type SelectionPayload = IndexRange | null;
  * The list of 'do' actions is represented in the order the actions are done.
  * The list of 'undo' actions is represented in the order the actions are undone.
  */
-export interface Op<T extends DoPayload, U extends UndoPayload> {
+export interface Op<T extends OpPayload, U extends OpPayload> {
   do: Action<T | SelectionPayload>[];
   undo: Action<U | SelectionPayload>[];
+  skipStack?: boolean; // bolt on for collab, so that we can represent undos themselves as ops (wow meta)
 }
 
 /**
@@ -28,3 +45,26 @@ export interface UndoStack {
   stack: Op<DoPayload, UndoPayload>[];
   index: number; // Used for supporting redo
 }
+
+export type UndoStackPushedPayload = Op<DoPayload, UndoPayload>;
+export type UndoStackPoppedPayload = null;
+
+export type DoPayload =
+  | DeleteSelectionPayload
+  | PasteWordsPayload
+  | CorrectWordPayload
+  | MergeWordsPayload
+  | SplitWordPayload;
+
+export type UndoPayload =
+  | UndoDeleteSelectionPayload
+  | UndoPasteWordsPayload
+  | UndoCorrectWordPayload
+  | UndoMergeWordsPayload
+  | UndoSplitWordPayload;
+
+export type OpPayload =
+  | DoPayload
+  | UndoPayload
+  | UndoStackPushedPayload
+  | UndoStackPoppedPayload;

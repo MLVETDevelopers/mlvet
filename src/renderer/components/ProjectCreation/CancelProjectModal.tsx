@@ -52,13 +52,13 @@ const CancelProjectModal = ({
   };
 
   const cancelProjectButton = (
-    <CustomButton color="primary" onClick={cancelProject}>
+    <CustomButton color="secondary" onClick={cancelProject}>
       Cancel Project
     </CustomButton>
   );
 
   const continueProjectButton = (
-    <CustomButton color="secondary" onClick={continueProject}>
+    <CustomButton color="primary" onClick={continueProject}>
       Continue
     </CustomButton>
   );

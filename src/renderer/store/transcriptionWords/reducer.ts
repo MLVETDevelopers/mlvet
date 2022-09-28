@@ -1,8 +1,8 @@
 import { Reducer } from 'react';
-import { mapInRanges } from 'sharedUtils';
+import { mapInRange } from 'sharedUtils';
 import { Word } from 'sharedTypes';
-import { rangeLengthOne } from 'renderer/utils/range';
-import { markWordDeleted } from 'renderer/utils/words';
+import { getLengthOfRange, rangeLengthOne } from 'renderer/utils/range';
+import { markWordDeleted, markWordUndeleted } from 'renderer/utils/words';
 import { Action } from '../action';
 import { mergeWords } from './helpers/mergeWordsHelper';
 import { splitWord } from './helpers/splitWordHelper';
@@ -42,26 +42,33 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   action
 ) => {
   if (action.type === DELETE_SELECTION) {
-    const { ranges } = action.payload as DeleteSelectionPayload;
+    const { range } = action.payload as DeleteSelectionPayload;
 
-    return mapInRanges(words, markWordDeleted, ranges);
+    return mapInRange(words, markWordDeleted, range);
   }
 
   if (action.type === UNDO_DELETE_SELECTION) {
-    const { ranges } = action.payload as UndoDeleteSelectionPayload;
+    const { range } = action.payload as UndoDeleteSelectionPayload;
 
     const markUndeleted = (word: Word) => ({
       ...word,
       deleted: false,
     });
 
-    return mapInRanges(words, markUndeleted, ranges);
+    return mapInRange(words, markUndeleted, range);
   }
 
   if (action.type === PASTE_WORD) {
-    const { startIndex, clipboard } = action.payload as PasteWordsPayload;
+    const { range, clipboard } = action.payload as PasteWordsPayload;
+    const { startIndex, endIndex } = range;
 
-    const prefix = words.slice(0, startIndex + 1);
+    const prefix = words.slice(0, startIndex);
+
+    const wordsToReplace = words.slice(startIndex, endIndex);
+    const replacedWords =
+      getLengthOfRange(range) > 1
+        ? wordsToReplace.map(markWordDeleted)
+        : wordsToReplace;
 
     // Paste key must be unique for all pasted words - that is, no two pasted words should ever have the same paste key.
     // We force this invariant by finding the highest paste key in the entire transcription to this point, and then
@@ -75,19 +82,22 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
       pasteKey: highestExistingPasteKey + index + 1,
     }));
 
-    const suffix = words.slice(startIndex + 1);
+    const suffix = words.slice(endIndex);
 
-    return [...prefix, ...wordsToPaste, ...suffix];
+    return [...prefix, ...replacedWords, ...wordsToPaste, ...suffix];
   }
 
   if (action.type === UNDO_PASTE_WORD) {
-    const { startIndex, clipboardLength } =
-      action.payload as UndoPasteWordsPayload;
+    const { range, clipboardLength } = action.payload as UndoPasteWordsPayload;
+    const { startIndex, endIndex } = range;
 
-    const prefix = words.slice(0, startIndex + 1);
-    const suffix = words.slice(startIndex + clipboardLength + 1);
+    const prefix = words.slice(0, startIndex);
+    const replacedWords = words
+      .slice(startIndex, endIndex)
+      .map(markWordUndeleted);
+    const suffix = words.slice(endIndex + clipboardLength);
 
-    return [...prefix, ...suffix];
+    return [...prefix, ...replacedWords, ...suffix];
   }
 
   // Doing a MERGE_WORDS action is identical to undoing a SPLIT_WORD action
@@ -117,10 +127,10 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   if (action.type === CORRECT_WORD) {
     const { index, text } = action.payload as CorrectWordPayload;
 
-    return mapInRanges(
+    return mapInRange(
       words,
       (word) => ({ ...word, word: text, confidence: 1 }),
-      [rangeLengthOne(index)]
+      rangeLengthOne(index)
     );
   }
 
@@ -128,28 +138,28 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
     const { index, prevText, prevConfidence } =
       action.payload as UndoCorrectWordPayload;
 
-    return mapInRanges(
+    return mapInRange(
       words,
       (word) => ({ ...word, word: prevText, prevConfidence }),
-      [rangeLengthOne(index)]
+      rangeLengthOne(index)
     );
   }
 
   if (action.type === RESTORE_SECTION) {
-    const { ranges } = action.payload as RestoreSectionPayload;
+    const { range } = action.payload as RestoreSectionPayload;
 
     const markUndeleted = (word: Word) => ({
       ...word,
       deleted: false,
     });
 
-    return mapInRanges(words, markUndeleted, ranges);
+    return mapInRange(words, markUndeleted, range);
   }
 
   if (action.type === UNDO_RESTORE_SECTION) {
-    const { ranges } = action.payload as UndoRestoreSectionPayload;
+    const { range } = action.payload as UndoRestoreSectionPayload;
 
-    return mapInRanges(words, markWordDeleted, ranges);
+    return mapInRange(words, markWordDeleted, range);
   }
 
   return words;

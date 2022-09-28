@@ -6,7 +6,7 @@ import {
 } from 'renderer/store/transcriptionWords/actions';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from 'renderer/store/selection/actions';
 import {
   RestoreSectionPayload,
@@ -18,9 +18,9 @@ export type RestoreSectionOp = Op<
   UndoRestoreSectionPayload
 >;
 
-export const makeRestoreSection: (ranges: IndexRange[]) => RestoreSectionOp = (
-  ranges
+export const makeRestoreSection: (range: IndexRange) => RestoreSectionOp = (
+  range
 ) => ({
-  do: [sectionRestored(ranges), ...ranges.map(selectionRangeAdded)],
-  undo: [undoSectionRestored(ranges), selectionCleared()],
+  do: [sectionRestored(range), selectionRangeSetTo(range)],
+  undo: [undoSectionRestored(range), selectionCleared()],
 });

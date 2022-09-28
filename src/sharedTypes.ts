@@ -1,3 +1,13 @@
+import { ClientId } from 'collabTypes/collabShadowTypes';
+
+// Transcription chunks are either a take group or a paragraph of words
+export type TranscriptionChunk = TakeGroup | Word[];
+
+export interface SelectionState {
+  self: IndexRange;
+  others: Record<ClientId, IndexRange>;
+}
+
 export interface PersistedProject {
   id: string; // UUID
   schemaVersion: number;
@@ -48,6 +58,7 @@ export interface TakeGroup {
   // each time a new take group is created we find the highest take group ID in use and add one
   id: number;
   activeTakeIndex: number;
+  takeSelected: boolean;
 }
 
 export interface TakeInfo {
@@ -69,8 +80,8 @@ export interface CloudConfig {
 }
 
 export interface Word {
-  // Text content of the word
-  word: string;
+  // Text content of the word - null if it's just a "pause"
+  word: string | null;
   // Start time in the original transcript
   startTime: number;
   // Duration in the original transcript
@@ -119,6 +130,11 @@ export enum AsyncState {
   LOADING = 'LOADING',
   DONE = 'DONE',
   ERROR = 'ERROR',
+}
+
+export enum ExportFormat {
+  EDL = 'edl',
+  MP4 = 'mp4',
 }
 
 // Interface for index ranges, usually start-inclusive and end-exclusive.

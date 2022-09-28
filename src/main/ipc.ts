@@ -27,14 +27,17 @@ import loadThumbnail from './handlers/media/thumbnailLoad';
 import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
 import setConfidenceLinesEnabled from './handlers/menu/setConfidenceLinesEnabled';
+import setEditWordEnabled from './handlers/menu/setEditWordEnabled';
 import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
 import setHomeEnabled from './handlers/menu/setHomeEnabled';
 import setMergeSplitEnabled from './handlers/menu/setMergeSplitEnabled';
 import setSaveEnabled from './handlers/menu/setSaveEnabled';
+import setSelectSentenceEnabled from './handlers/menu/setSelectSentenceEnabled';
 import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
+import reportBug from './handlers/misc/reportBug';
 import setClipboardEnabled from './handlers/setClipboardEnabled';
 import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
@@ -104,8 +107,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     extractAudio(project)
   );
 
-  ipcMain.handle('export-project', async (_event, project) =>
-    exportProject(ipcContext, project)
+  ipcMain.handle('export-project', async (_event, exportFormat, project) =>
+    exportProject(exportFormat, ipcContext, project)
   );
 
   ipcMain.handle(
@@ -130,6 +133,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-confidence-lines-enabled',
     async (_event, menuItemEnabled) =>
       setConfidenceLinesEnabled(ipcContext, menuItemEnabled)
+  );
+
+  ipcMain.handle('set-edit-word-enabled', async (_event, editEnabled) =>
+    setEditWordEnabled(ipcContext, editEnabled)
   );
 
   ipcMain.handle('set-export-enabled', async (_event, exportEnabled) =>
@@ -158,6 +165,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
       setSaveEnabled(ipcContext, saveEnabled, saveAsEnabled)
   );
 
+  ipcMain.handle('set-select-sentence-enabled', async (_event, enabled) =>
+    setSelectSentenceEnabled(ipcContext, enabled)
+  );
+
   ipcMain.handle(
     'set-undo-redo-enabled',
     async (_event, undoEnabled, redoEnabled) =>
@@ -169,6 +180,10 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   );
 
   ipcMain.handle('handle-os-query', async () => handleOsQuery());
+
+  ipcMain.handle('report-bug', async (_event, title, body) =>
+    reportBug(title, body)
+  );
 
   ipcMain.handle(
     'set-clipboard-enabled',

@@ -1,27 +1,28 @@
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
-import { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
 import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
-import { rangeLengthOne } from 'renderer/utils/range';
+import { emptyRange, rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,
   getTakeGroupLength,
-  isTakeGroup,
 } from 'renderer/utils/takeDetection';
 import { mapWithAccumulator } from 'renderer/utils/list';
+import { ClientId } from 'collabTypes/collabShadowTypes';
+import { isTakeGroup } from 'sharedUtils';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
-import WordDragManager from './WordDragManager';
+import DragSelectManager from './DragSelectManager';
 import {
   selectionCleared,
-  selectionRangeAdded,
+  selectionRangeSetTo,
 } from '../../store/selection/actions';
-import TranscriptionChunk from './TranscriptionChunk';
+import TranscriptionChunkComponent from './TranscriptionChunkComponent';
 
 const TranscriptionBox = styled(Box)({
   position: 'relative',
@@ -31,7 +32,10 @@ const TranscriptionBox = styled(Box)({
   overflowX: 'hidden',
   overflowY: 'scroll',
   height: '100%',
-  padding: '20px',
+  paddingTop: '70px',
+  paddingBottom: '45px',
+  paddingLeft: '70px',
+  paddingRight: '70px',
   userSelect: 'none',
 
   '::-webkit-scrollbar': {
@@ -44,20 +48,31 @@ const TranscriptionBox = styled(Box)({
   },
 });
 
+const ProjectName = styled(Box)({
+  fontSize: 18,
+  lineHeight: '28px',
+  fontWeight: 'bold',
+  marginBottom: 20,
+});
+
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
-  seekToWord: (wordIndex: number) => void;
   blockWidth: number;
+  setPlaybackTime: (time: number) => void;
 }
 
 const TranscriptionBlock = ({
-  seekToWord,
   transcription,
   nowPlayingWordIndex,
   blockWidth,
+  setPlaybackTime,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
+  const projectName = useSelector(
+    (store: ApplicationStore) => store.currentProject?.name
+  );
 
   const blockRef = useRef<HTMLElement>(null);
 
@@ -68,14 +83,21 @@ const TranscriptionBlock = ({
     );
   }, [transcription]);
 
-  const selectionArray = useSelector(
-    (store: ApplicationStore) => store.selection
+  const selection = useSelector((store: ApplicationStore) => store.selection);
+
+  const ownSelection = useMemo(
+    () => (editWord === null ? selection.self : emptyRange()),
+    [selection, editWord]
   );
 
-  const selectionSet = useMemo(
-    () => (editWord === null ? new Set(selectionArray) : new Set()),
-    [selectionArray, editWord]
-  );
+  const otherSelections = useMemo(() => {
+    const selections: Record<ClientId, IndexRange> = {};
+    Object.keys(selection.others).forEach((clientId) => {
+      selections[clientId] = selection.others[clientId];
+    });
+
+    return selections;
+  }, [selection]);
 
   const dispatch = useDispatch();
 
@@ -86,16 +108,20 @@ const TranscriptionBlock = ({
 
     const { index } = editWord;
 
+    if (transcription.words[index].word === null) {
+      return;
+    }
+
     // Clear the selection to start with - the word might be re-selected later
     dispatch(selectionCleared());
 
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
-      dispatchOp(makeDeleteSelection([rangeLengthOne(index)]));
+      dispatchOp(makeDeleteSelection(rangeLengthOne(index)));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
-      dispatch(selectionRangeAdded(rangeLengthOne(index)));
+      dispatch(selectionRangeSetTo(rangeLengthOne(index)));
     }
 
     // Mark the edit as over
@@ -120,52 +146,46 @@ const TranscriptionBlock = ({
   );
 
   return (
-    <WordDragManager clearSelection={clearSelection}>
+    <DragSelectManager clearSelection={clearSelection}>
       {(
         onWordMouseDown,
-        onWordMouseMove,
-        dragState,
-        isWordBeingDragged,
-        mouse,
-        mouseThrottled,
-        dropBeforeIndex,
-        setDropBeforeIndex,
-        cancelDrag
+        onWordMouseEnter,
+        partialSelectState,
+        setPartialSelectState,
+        isMouseDown
       ) => {
         return (
           <TranscriptionBox id="transcription-content" ref={blockRef}>
+            <ProjectName>{projectName}</ProjectName>
             {mapWithAccumulator(
               transcriptionChunks,
               (chunk, _, acc) => {
                 return {
                   item: (
-                    <TranscriptionChunk
+                    <TranscriptionChunkComponent
                       key={
                         isTakeGroup(chunk)
                           ? `take-group-chunk-${(chunk as TakeGroup).id}`
-                          : `word-chunk-${(chunk as Word).originalIndex}-${
-                              (chunk as Word).pasteKey
-                            }`
+                          : `paragraph-chunk-${
+                              (chunk as Word[])[0].originalIndex
+                            }-${(chunk as Word[])[0].pasteKey}`
                       }
                       chunk={chunk}
                       chunkIndex={acc}
                       onWordMouseDown={onWordMouseDown}
-                      onWordMouseMove={onWordMouseMove}
-                      dragState={dragState}
-                      isWordBeingDragged={isWordBeingDragged}
-                      mousePosition={mouse}
-                      mouseThrottled={mouseThrottled}
-                      dropBeforeIndex={dropBeforeIndex}
-                      setDropBeforeIndex={setDropBeforeIndex}
-                      cancelDrag={cancelDrag}
+                      onWordMouseEnter={onWordMouseEnter}
                       editWord={editWord}
                       nowPlayingWordIndex={nowPlayingWordIndex}
                       transcription={transcription}
-                      seekToWord={seekToWord}
                       submitWordEdit={submitWordEdit}
-                      selectionSet={selectionSet}
+                      selection={ownSelection}
+                      otherSelections={otherSelections}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
+                      setPlaybackTime={setPlaybackTime}
+                      partialSelectState={partialSelectState}
+                      setPartialSelectState={setPartialSelectState}
+                      isMouseDown={isMouseDown}
                     />
                   ),
                   acc: isTakeGroup(chunk)
@@ -174,7 +194,7 @@ const TranscriptionBlock = ({
                         chunk as TakeGroup,
                         transcription.words
                       )
-                    : acc + 1,
+                    : acc + (chunk as Word[]).length,
                 };
               },
               0
@@ -182,8 +202,8 @@ const TranscriptionBlock = ({
           </TranscriptionBox>
         );
       }}
-    </WordDragManager>
+    </DragSelectManager>
   );
 };
 
-export default TranscriptionBlock;
+export default React.memo(TranscriptionBlock);

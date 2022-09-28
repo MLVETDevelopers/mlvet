@@ -1,11 +1,5 @@
-import { TakeGroup, Word } from 'sharedTypes';
-
-export type TranscriptionChunk = TakeGroup | Word;
-
-// TODO: a bit hacky, do this better
-export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
-  return 'activeTakeIndex' in chunk;
-}
+import { TakeGroup, TranscriptionChunk, Word } from 'sharedTypes';
+import { combineWordsIntoParagraphs } from './words';
 
 export const getTakeGroupLength: (
   takeGroup: TakeGroup,
@@ -19,46 +13,40 @@ export const generateTranscriptionChunks = (
   words: Word[],
   takeGroups: TakeGroup[]
 ) => {
-  let numTakeGroups = 0;
+  let takeGroupNum = 0;
 
-  const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
-    const { takeInfo } = word;
+  const getTakeGroup = (id: number) => {
+    return takeGroups.find((takeGroup) => takeGroup.id === id);
+  };
 
-    if (takeInfo === null) {
-      return [...chunksSoFar, word];
-    }
+  const chunksWithIndividualWords: TranscriptionChunk[] = words.reduce(
+    (chunksSoFar, word) => {
+      const { takeInfo } = word;
 
-    if (chunksSoFar.length === 0) {
-      numTakeGroups += 1;
+      if (takeInfo === null) {
+        return [...chunksSoFar, [word]];
+      }
 
-      return [
-        {
-          id: 0,
-          activeTakeIndex:
-            takeGroups.find((takeGroup) => takeGroup.id === 0)
-              ?.activeTakeIndex ?? 0,
-        },
-      ];
-    }
+      if (takeInfo.takeGroupId >= takeGroupNum) {
+        takeGroupNum = takeInfo.takeGroupId + 1;
+        return [
+          ...chunksSoFar,
+          {
+            id: takeInfo.takeGroupId,
+            activeTakeIndex:
+              getTakeGroup(takeInfo.takeGroupId)?.activeTakeIndex ?? 0,
+            takeSelected:
+              getTakeGroup(takeInfo.takeGroupId)?.takeSelected ?? false,
+          },
+        ];
+      }
 
-    const numChunks = chunksSoFar.length;
-    const lastChunk = chunksSoFar[numChunks - 1];
-
-    if (isTakeGroup(lastChunk) && takeInfo.takeGroupId === lastChunk.id) {
       return chunksSoFar;
-    }
+    },
+    [] as TranscriptionChunk[]
+  );
 
-    const newChunks = chunksSoFar.concat({
-      id: numTakeGroups,
-      activeTakeIndex:
-        takeGroups.find((takeGroup) => takeGroup.id === numTakeGroups)
-          ?.activeTakeIndex ?? 0,
-    });
-
-    numTakeGroups += 1;
-
-    return newChunks;
-  }, [] as TranscriptionChunk[]);
+  const chunks = combineWordsIntoParagraphs(chunksWithIndividualWords);
 
   return chunks;
 };

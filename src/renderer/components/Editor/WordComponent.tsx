@@ -4,77 +4,102 @@ import React, {
   useEffect,
   useRef,
   useMemo,
-  RefObject,
-  useState,
   useCallback,
 } from 'react';
-import { MousePosition } from '@react-hook/mouse-position';
-import { pointIsInsideRect } from 'renderer/utils/geometry';
 import { useDispatch } from 'react-redux';
 import {
   editWordFinished,
-  editWordStarted,
   editWordUpdated,
 } from 'renderer/store/editWord/actions';
 import { TextField } from '@mui/material';
-import { getCanvasFont, getTextWidth } from 'renderer/utils/ui';
-import { DragState } from './WordDragManager';
+import {
+  getCanvasFont,
+  getColourForIndex,
+  getTextWidth,
+  letterIndexAtXPosition,
+} from 'renderer/utils/ui';
+
+import store from 'renderer/store/store';
+import { videoSeek } from 'renderer/store/playback/actions';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
+import WordPartialHighlight from './WordPartialHighlight';
+import PauseMarker from './PauseMarker';
 
 const BORDER_RADIUS_AMOUNT = '6px'; // for highlight backgrounds
 
-const makeWordInner = (isDragActive: boolean, isInInactiveTake: boolean) =>
+const makeWordInner = (
+  isInInactiveTake: boolean,
+  partialSelectState: PartialSelectState | null
+) =>
   styled('div')({
     display: 'inline-block',
     cursor: isInInactiveTake ? 'pointer' : 'text',
-    color: colors.white,
+    color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
-    margin: '2px 0',
+    margin: 0,
     borderRadius: '7px',
 
     '&:hover': {
       color: colors.grey['000'],
       background:
-        isDragActive || isInInactiveTake ? 'none' : `${colors.blue[500]}66`,
+        isInInactiveTake || partialSelectState !== null
+          ? 'none'
+          : `${colors.blue[500]}66`,
       borderRadius: BORDER_RADIUS_AMOUNT,
     },
   });
+
+const defaultStyles: React.CSSProperties = {
+  zIndex: 0,
+  position: 'relative',
+};
 
 // thresholds below which words are suggested to be corrected - highlight colour depends on which threshold is crossed
 const CONFIDENCE_THRESHOLD_MEDIUM = 0.6;
 const CONFIDENCE_THRESHOLD_LOW = 0.4;
 
-interface Props {
-  index: number;
-  seekToWord: () => void;
+// pixels
+const MIN_EDIT_WIDTH = 10;
+
+export interface WordPassThroughProps {
+  isInInactiveTake: boolean;
   isPlaying: boolean;
+  onMouseDown: WordMouseHandler;
+  onMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
+  submitWordEdit: () => void;
+  setPlaybackTime: (time: number) => void;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
+}
+
+interface Props extends WordPassThroughProps {
+  index: number;
   isSelected: boolean;
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
-  text: string;
-  onMouseDown: (
-    wordRef: RefObject<HTMLDivElement>
-  ) => MouseEventHandler<HTMLDivElement>;
-  onMouseMove: () => void;
-  dragState: DragState; // current state of ANY drag (null if no word being dragged)
-  isBeingDragged: boolean; // whether THIS word is currently being dragged
-  mouse: MousePosition | null;
-  isDropBeforeActive: boolean;
-  isDropAfterActive: boolean;
-  setDropBeforeIndex: (index: number) => void;
-  cancelDrag: () => void;
-  submitWordEdit: () => void;
+  selectedByClientWithIndex: number | null;
+  isSelectedByAnotherClientLeftCap: boolean;
+  isSelectedByAnotherClientRightCap: boolean;
+  text: string | null;
   isBeingEdited: boolean;
   editText: string | null;
-  isInInactiveTake: boolean;
-  isShowingConfidenceUnderlines: boolean;
+  outputStartTime: number;
+  isPrevWordSelected: boolean;
+  isNextWordSelected: boolean;
+  partialSelectState: PartialSelectState | null;
+  bufferedDuration: number;
 }
 
 const WordComponent = ({
   index,
-  seekToWord,
   isPlaying,
   isSelected,
   confidence,
@@ -82,20 +107,33 @@ const WordComponent = ({
   isSelectedRightCap,
   text,
   onMouseDown,
-  onMouseMove,
-  dragState,
-  isBeingDragged,
-  mouse,
-  isDropBeforeActive,
-  isDropAfterActive,
-  setDropBeforeIndex,
-  cancelDrag,
+  onMouseEnter,
   submitWordEdit,
   isBeingEdited,
   editText,
   isInInactiveTake,
-  isShowingConfidenceUnderlines,
+  selectedByClientWithIndex,
+  isSelectedByAnotherClientLeftCap,
+  isSelectedByAnotherClientRightCap,
+  setPlaybackTime,
+  outputStartTime,
+  isPrevWordSelected,
+  isNextWordSelected,
+  partialSelectState,
+  setPartialSelectState,
+  isMouseDown,
+  bufferedDuration,
 }: Props) => {
+  useEffect(() => {
+    setPartialSelectState((prevState) => {
+      if (isPrevWordSelected && isNextWordSelected) {
+        return null;
+      }
+
+      return prevState;
+    });
+  }, [setPartialSelectState, isPrevWordSelected, isNextWordSelected]);
+
   const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -106,193 +144,150 @@ const WordComponent = ({
     }
   }, [isBeingEdited, inputRef]);
 
-  // For handling receiving double-clicks on a word
-  const [awaitingSecondClick, setAwaitingSecondClick] =
-    useState<boolean>(false);
-
   const ref = useRef<HTMLDivElement>(null);
 
-  const refRect = ref.current?.getBoundingClientRect();
-  const xPosition = refRect?.left ?? 0;
-  const yPosition = refRect?.top ?? 0;
-  const halfWidth = (ref.current?.offsetWidth ?? 0) / 2;
-  const height = ref.current?.offsetHeight ?? 0;
-  const mouseX = mouse?.clientX ?? 0;
-  const mouseY = mouse?.clientY ?? 0;
+  const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
+      if (isInInactiveTake) {
+        return;
+      }
 
-  useEffect(() => {
-    if (
-      isBeingDragged &&
-      ((mouse?.clientX ?? null) === null || (mouse?.clientY ?? null) === null)
-    ) {
-      cancelDrag();
-    }
-  }, [isBeingDragged, mouse, cancelDrag]);
+      setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
+      store.dispatch(
+        videoSeek({
+          time: outputStartTime + 0.01,
+          lastUpdated: new Date(),
+        })
+      );
+      handleSelectWord(index);
 
-  const mouseInLeft = useMemo(
-    () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
-        }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
+      // Prevent event from being received by the transcription block and therefore intercepted,
+      // which would clear the selection
+      event.stopPropagation();
+    },
+    [isInInactiveTake, setPlaybackTime, outputStartTime, index]
   );
 
-  const mouseInRight = useMemo(
+  const highlightStyles: React.CSSProperties = useMemo(
     () =>
-      !isBeingDragged &&
-      pointIsInsideRect(
-        {
-          x: mouseX,
-          y: mouseY,
-        },
-        {
-          x: xPosition + halfWidth,
-          y: yPosition,
-          w: halfWidth,
-          h: height,
+      (() => {
+        if (isBeingEdited || partialSelectState !== null) {
+          return {};
         }
-      ),
-    [xPosition, yPosition, halfWidth, height, mouseX, mouseY, isBeingDragged]
+        if (isSelected) {
+          return {
+            background: `${colors.blue[500]}cc`,
+            color: colors.white,
+            borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
+            borderBottomLeftRadius: isSelectedLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
+            borderBottomRightRadius: isSelectedRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+          };
+        }
+        if (isPlaying) {
+          return {
+            background: `${colors.yellow[500]}cc`,
+            color: colors.white,
+            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
+            borderRadius: BORDER_RADIUS_AMOUNT,
+          };
+        }
+        if (selectedByClientWithIndex !== null) {
+          return {
+            background: `${getColourForIndex(selectedByClientWithIndex)}cc`,
+            color: colors.white,
+            borderTopLeftRadius: isSelectedByAnotherClientLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomLeftRadius: isSelectedByAnotherClientLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderTopRightRadius: isSelectedByAnotherClientRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomRightRadius: isSelectedByAnotherClientRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+          };
+        }
+        if (confidence < CONFIDENCE_THRESHOLD_LOW) {
+          return {
+            borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
+            marginBottom: 0,
+          };
+        }
+        if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
+          return {
+            borderBottom: `2px solid ${colors.yellow[500]}88`,
+            marginBottom: 0,
+          };
+        }
+        return {};
+      })(),
+    [
+      isBeingEdited,
+      isSelected,
+      isPlaying,
+      isSelectedLeftCap,
+      isSelectedRightCap,
+      isSelectedByAnotherClientLeftCap,
+      isSelectedByAnotherClientRightCap,
+      selectedByClientWithIndex,
+      confidence,
+      partialSelectState,
+    ]
   );
 
-  useEffect(() => {
-    if (mouseInLeft && !isDropBeforeActive) {
-      setDropBeforeIndex(index);
-    } else if (mouseInRight && !isDropAfterActive) {
-      setDropBeforeIndex(index + 1);
-    }
-  }, [
-    mouseInLeft,
-    mouseInRight,
-    isDropBeforeActive,
-    isDropAfterActive,
-    setDropBeforeIndex,
-    index,
-  ]);
+  const style = useMemo(
+    () => ({
+      ...defaultStyles,
+      ...highlightStyles,
+    }),
+    [highlightStyles]
+  );
 
-  const startEditing = () => {
-    dispatch(editWordStarted(index, text));
-  };
-
-  const onClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    if (isInInactiveTake) {
-      return;
-    }
-
-    if (awaitingSecondClick) {
-      startEditing();
-      return;
-    }
-
-    setAwaitingSecondClick(true);
-    const DOUBLE_CLICK_THRESHOLD = 500; // ms
-    setTimeout(() => {
-      setAwaitingSecondClick(false);
-    }, DOUBLE_CLICK_THRESHOLD);
-
-    seekToWord();
-    handleSelectWord(event, index);
-
-    // Prevent event from being received by the transcription block and therefore intercepted,
-    // which would clear the selection
-    event.stopPropagation();
-  };
-
-  const defaultStyles: React.CSSProperties = {
-    zIndex: 0,
-  };
-
-  const highlightStyles: React.CSSProperties = (() => {
-    if (isBeingEdited) {
-      return {};
-    }
-    if (isSelected || isBeingDragged) {
-      return {
-        background: `${colors.blue[500]}cc`,
-        color: colors.white,
-        borderTopLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
-        borderBottomLeftRadius: isSelectedLeftCap ? BORDER_RADIUS_AMOUNT : 0,
-        borderTopRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
-        borderBottomRightRadius: isSelectedRightCap ? BORDER_RADIUS_AMOUNT : 0,
-      };
-    }
-    if (isPlaying) {
-      return {
-        background: `${colors.yellow[500]}cc`,
-        color: colors.white,
-        boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.5)',
-        borderRadius: BORDER_RADIUS_AMOUNT,
-      };
-    }
-    if (isShowingConfidenceUnderlines) {
-      if (confidence < CONFIDENCE_THRESHOLD_LOW) {
-        return {
-          borderBottom: `2px solid rgba(255, 0, 0, 0.6)`,
-          marginBottom: 0,
-        };
+  const submitIfEnter = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        // Save and close edit
+        submitWordEdit();
+      } else if (event.key === 'Escape') {
+        // Close edit without saving
+        dispatch(editWordFinished());
       }
-      if (confidence < CONFIDENCE_THRESHOLD_MEDIUM) {
-        return {
-          borderBottom: `2px solid ${colors.yellow[500]}88`,
-          marginBottom: 0,
-        };
-      }
-    }
-    return {};
-  })();
-
-  const dragStyles: React.CSSProperties = isBeingDragged
-    ? {
-        position: 'fixed',
-        left: mouseX + (dragState?.offset.x ?? 0),
-        top: mouseY + (dragState?.offset.y ?? 0),
-        zIndex: 100,
-      }
-    : {};
-
-  const style = {
-    ...defaultStyles,
-    ...highlightStyles,
-    ...dragStyles,
-  };
-
-  const submitIfEnter = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      // Save and close edit
-      submitWordEdit();
-    } else if (event.key === 'Escape') {
-      // Close edit without saving
-      dispatch(editWordFinished());
-    }
-  };
+    },
+    [submitWordEdit, dispatch]
+  );
 
   const WordInner = useMemo(
-    () => makeWordInner(dragState !== null, isInInactiveTake),
-    [dragState, isInInactiveTake]
+    () => makeWordInner(isInInactiveTake, partialSelectState),
+    [isInInactiveTake, partialSelectState]
   );
 
-  const setEditText = (value: string) => {
-    dispatch(editWordUpdated(value));
-  };
+  const setEditText = useCallback(
+    (value: string) => {
+      dispatch(editWordUpdated(value));
+    },
+    [dispatch]
+  );
 
-  const onMouseUp: (event: React.MouseEvent) => void = (event) => {
-    // Prevent edit from being cancelled if clicking the word
-    if (isBeingEdited) {
-      event.stopPropagation();
-    }
-  };
+  const onMouseUp = useCallback(
+    (event) => {
+      // Prevent edit from being cancelled if clicking the word
+      if (isBeingEdited) {
+        event.stopPropagation();
+      }
 
-  const MIN_EDIT_WIDTH = 10;
+      // Fill out selection to entire word
+      // TODO(chloe): put this in the drag manager
+      setPartialSelectState(null);
+    },
+    [isBeingEdited, setPartialSelectState]
+  );
 
   const onMouseDownWrapped = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -300,10 +295,92 @@ const WordComponent = ({
         return null;
       }
 
-      return onMouseDown(ref)(event);
+      return onMouseDown(index)(ref)(event);
     },
-    [isInInactiveTake, onMouseDown, ref]
+    [isInInactiveTake, index, onMouseDown, ref]
   );
+
+  const updatePartialSelect = useCallback(
+    (event: React.MouseEvent) => {
+      if (!isMouseDown) {
+        return;
+      }
+
+      if ((isPrevWordSelected && isNextWordSelected) || !isSelected) {
+        return;
+      }
+
+      const wordXPosition = ref.current?.getBoundingClientRect().left ?? 0;
+      const mouseXPosition = event.clientX;
+      const xOffset = mouseXPosition - wordXPosition;
+
+      const letterIndex = letterIndexAtXPosition(
+        text ?? '',
+        xOffset,
+        getCanvasFont(ref?.current) ?? ''
+      );
+
+      if (letterIndex === null) {
+        return;
+      }
+
+      setPartialSelectState((prevState) => {
+        let anchor = letterIndex;
+        if (prevState?.wordIndex === index) {
+          anchor = prevState.anchorLetterIndex;
+        } else if (isPrevWordSelected) {
+          anchor = 0;
+        } else if (isNextWordSelected) {
+          anchor = text?.length ?? 0;
+        }
+
+        return {
+          wordIndex: index,
+          anchorLetterIndex: anchor,
+          currentLetterIndex: letterIndex,
+        };
+      });
+    },
+    [
+      ref,
+      isPrevWordSelected,
+      isNextWordSelected,
+      setPartialSelectState,
+      isSelected,
+      index,
+      text,
+      isMouseDown,
+    ]
+  );
+
+  const onMouseMove = useCallback(
+    (event: React.MouseEvent) => {
+      updatePartialSelect(event);
+      onMouseEnter(index, isSelected)(event);
+    },
+    [updatePartialSelect, onMouseEnter, index, isSelected]
+  );
+
+  const textOrPauseMarker = text ?? (
+    <PauseMarker
+      duration={bufferedDuration}
+      isHighlighted={isPlaying || isSelected}
+    />
+  );
+
+  const textWithPartialSelectionBackground =
+    !(partialSelectState?.wordIndex === index) || !isSelected ? (
+      textOrPauseMarker
+    ) : (
+      <>
+        {textOrPauseMarker}
+        <WordPartialHighlight
+          wordRef={ref}
+          text={text ?? ''}
+          partialSelectState={partialSelectState}
+        />
+      </>
+    );
 
   return (
     <WordInner
@@ -311,8 +388,9 @@ const WordComponent = ({
       onClick={onClick}
       onMouseUp={onMouseUp}
       onMouseDown={onMouseDownWrapped}
+      onMouseEnter={onMouseMove}
       onMouseMove={onMouseMove}
-      style={{ ...style, position: isBeingDragged ? 'fixed' : 'relative' }}
+      style={style}
     >
       {isBeingEdited ? (
         <TextField
@@ -324,22 +402,22 @@ const WordComponent = ({
               width: Math.max(
                 MIN_EDIT_WIDTH,
                 getTextWidth(
-                  editText ?? '',
+                  editText ?? text ?? '',
                   getCanvasFont(inputRef?.current)
                 ) ?? 0
               ),
             },
           }}
           type="text"
-          value={editText ?? text}
+          value={editText ?? text ?? ''}
           onChange={(e) => setEditText(e.target.value)}
           onKeyDown={submitIfEnter}
         />
       ) : (
-        text
+        textWithPartialSelectionBackground
       )}
     </WordInner>
   );
 };
 
-export default WordComponent;
+export default React.memo(WordComponent);

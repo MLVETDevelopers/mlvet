@@ -1,55 +1,105 @@
 /* eslint-disable react/no-array-index-key */
-
-import { MousePosition } from '@react-hook/mouse-position';
-import { Dispatch, RefObject, SetStateAction, useMemo, useState } from 'react';
-import { TakeGroup, Transcription, Word } from 'sharedTypes';
+import styled from '@emotion/styled';
+import BlockIcon from '@mui/icons-material/Block';
+import { Box, ClickAwayListener, Stack } from '@mui/material';
+import { ClientId } from 'collabTypes/collabShadowTypes';
+import React, { RefObject, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import colors from 'renderer/colors';
+import { EditWordState } from 'renderer/store/sharedHelpers';
+import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
+import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import TakeComponent from './TakeComponent';
-import { WordMouseHandler, DragState } from './WordDragManager';
+import UngroupTakesModal from './UngroupTakesModal';
+import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 
-interface TakeGroupComponentProps {
+const CustomStack = styled(Stack)({ width: '100%' });
+
+const CustomColumnStack = styled(CustomStack)({ flexDirection: 'column' });
+
+const CustomRowStack = styled(CustomStack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+});
+
+const UngroupTakes = styled(BlockIcon)({
+  display: 'flex',
+  position: 'absolute',
+  left: '-46px',
+  marginTop: '40px',
+  width: '22px',
+  height: '22px',
+  color: colors.grey[500],
+
+  '&:hover': {
+    color: colors.grey[300],
+  },
+});
+
+export interface TranscriptionPassThroughProps {
+  editWord: EditWordState;
+  submitWordEdit: () => void;
+  otherSelections: Record<ClientId, IndexRange>;
+  popoverWidth: number;
+  transcriptionBlockRef: RefObject<HTMLElement>;
+  setPlaybackTime: (time: number) => void;
+  partialSelectState: PartialSelectState | null;
+  setPartialSelectState: React.Dispatch<
+    React.SetStateAction<PartialSelectState | null>
+  >;
+  isMouseDown: boolean;
+}
+
+interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   takeGroup: TakeGroup;
   chunkIndex: number;
   onWordMouseDown: WordMouseHandler;
-  onWordMouseMove: any;
-  dragState: DragState;
-  isWordBeingDragged: (wordIndex: number) => boolean;
-  mousePosition: MousePosition | null;
-  mouseThrottled: MousePosition | null;
-  dropBeforeIndex: number | null;
-  setDropBeforeIndex: Dispatch<SetStateAction<number | null>>;
-  cancelDrag: () => void;
-  editWord: any;
+  onWordMouseEnter: (
+    wordIndex: number,
+    isWordSelected: boolean
+  ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
+  selection: IndexRange;
   transcription: Transcription;
-  seekToWord: (wordIndex: number) => void;
-  submitWordEdit: () => void;
-  selectionSet: Set<any>;
-  popoverWidth: number;
-  transcriptionBlockRef: RefObject<HTMLElement>;
 }
 
 const TakeGroupComponent = ({
   takeGroup,
   chunkIndex,
   onWordMouseDown,
-  onWordMouseMove,
-  dragState,
-  isWordBeingDragged,
-  mousePosition,
-  mouseThrottled,
-  dropBeforeIndex,
-  setDropBeforeIndex,
-  cancelDrag,
-  editWord,
+  onWordMouseEnter,
   nowPlayingWordIndex,
+  selection,
   transcription,
-  seekToWord,
-  submitWordEdit,
-  selectionSet,
-  popoverWidth,
-  transcriptionBlockRef,
+  ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(false);
+  const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
+    !takeGroup.takeSelected
+  );
+  const [isFirstTimeOpen, setIsFirstTimeOpen] = useState(
+    !takeGroup.takeSelected
+  );
+  const [showUngroupModal, setShowUngroupModal] = useState(false);
+  const dispatch = useDispatch();
+
+  const ungroupTakesModalOpen = () => {
+    setShowUngroupModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowUngroupModal(false);
+  };
+
+  const ungroupTakes = () => {
+    dispatch(deleteTakeGroup(takeGroup.id));
+    handleModalClose();
+  };
+
+  const clickAway = () => {
+    if (!isFirstTimeOpen) {
+      setIsTakeGroupOpened(false);
+    }
+  };
 
   const wordsInTakeGroup = useMemo(
     () =>
@@ -97,37 +147,47 @@ const TakeGroupComponent = ({
         isTakeGroupOpened={isTakeGroupOpened}
         setIsTakeGroupOpened={setIsTakeGroupOpened}
         onWordMouseDown={onWordMouseDown}
-        onWordMouseMove={onWordMouseMove}
-        dragState={dragState}
-        isWordBeingDragged={isWordBeingDragged}
-        mousePosition={mousePosition}
-        mouseThrottled={mouseThrottled}
-        dropBeforeIndex={dropBeforeIndex}
-        setDropBeforeIndex={setDropBeforeIndex}
-        cancelDrag={cancelDrag}
-        editWord={editWord}
+        onWordMouseEnter={onWordMouseEnter}
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
-        seekToWord={seekToWord}
-        submitWordEdit={submitWordEdit}
-        selectionSet={selectionSet}
+        selection={selection}
         transcriptionIndex={transcriptionIndex}
-        popoverWidth={popoverWidth}
-        transcriptionBlockRef={transcriptionBlockRef}
+        isLast={takeIndex === takeWordsPerTake.length - 1}
+        isFirstTimeOpen={isFirstTimeOpen}
+        setIsFirstTimeOpen={setIsFirstTimeOpen}
+        {...passThroughProps}
       />
     );
   });
 
   return (
-    <div
-      style={{
-        marginTop: '10px',
-        marginBottom: '10px',
-      }}
-    >
-      {takes}
-    </div>
+    <ClickAwayListener onClickAway={clickAway}>
+      <Box>
+        <CustomColumnStack
+          sx={{
+            marginTop: '10px',
+            marginBottom:
+              !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
+          }}
+        >
+          {takes}
+          <CustomRowStack
+            position="relative"
+            sx={{ justifyContent: 'flex-start' }}
+          >
+            {!isFirstTimeOpen && isTakeGroupOpened && (
+              <UngroupTakes onClick={ungroupTakesModalOpen} />
+            )}
+          </CustomRowStack>
+        </CustomColumnStack>
+        <UngroupTakesModal
+          isOpen={showUngroupModal}
+          closeModal={handleModalClose}
+          ungroupTakes={ungroupTakes}
+        />
+      </Box>
+    </ClickAwayListener>
   );
 };
 
-export default TakeGroupComponent;
+export default React.memo(TakeGroupComponent);

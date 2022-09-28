@@ -3,11 +3,15 @@ import {
   CollabClientSessionState,
 } from 'renderer/store/collab/helpers';
 import { emptyRange } from 'renderer/utils/range';
-import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
+import {
+  RuntimeProject,
+  RecentProject,
+  Word,
+  SelectionState,
+} from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
-import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
 
 export type EditWordState = { index: number; text: string } | null;

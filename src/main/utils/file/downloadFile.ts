@@ -22,7 +22,6 @@ const downloadFile: DownloadFile = async (
 ) => {
   const options = {
     protocol: 'https',
-    path: url,
     method: 'GET',
   };
 

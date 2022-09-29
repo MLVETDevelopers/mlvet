@@ -1,8 +1,8 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
-import { TranscriptionConfigError } from 'main/utils/file/transcriptionConfig/helpers';
-import { LocalTranscriptionAssetNotFoundError } from 'vosk/helpers';
+import { TranscriptionConfigError } from '../../../utils/file/transcriptionConfig/helpers';
+import { LocalTranscriptionAssetNotFoundError } from '../../../../vosk/helpers';
 import getVoskTranscript from '../../../../vosk';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';

@@ -16,6 +16,7 @@ import {
   Recognizer,
   Result,
   SpeakerModel,
+  LocalTranscriptionAssetNotFoundError,
 } from './helpers';
 import { getDllDir, updatePathWithDlls } from './util';
 
@@ -127,7 +128,9 @@ const vosk = async () => {
   const createModel = (modelPath: string): Model => {
     const handle = newModel(modelPath);
     if (handle === null) {
-      throw new Error(`Failed to load model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load model at ${modelPath}`
+      );
     }
 
     /**
@@ -151,7 +154,9 @@ const vosk = async () => {
   const createSpeakerModel = (modelPath: string): SpeakerModel => {
     const handle = newSpkModel(modelPath);
     if (handle === null) {
-      throw new Error(`Failed to load speaker model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load speaker model at ${modelPath}`
+      );
     }
 
     /**

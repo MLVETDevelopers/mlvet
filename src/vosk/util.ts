@@ -6,8 +6,12 @@ import {
   OperatingSystems,
   TranscriptionEngine,
 } from '../sharedTypes';
-import { operatingSystemDllFilePaths } from './helpers';
+import {
+  LocalTranscriptionAssetNotFoundError,
+  operatingSystemDllFilePaths,
+} from './helpers';
 import getTranscriptionEngineConfig from '../main/handlers/file/transcriptionConfig/getEngineConfig';
+import { TranscriptionConfigError } from '../main/utils/file/transcriptionConfig/helpers';
 
 type GetBaseDllPath = () => Promise<string>;
 
@@ -20,7 +24,7 @@ export const getBaseDllPath: GetBaseDllPath = async () => {
   )) as LocalConfig;
 
   if (localConfig.libsPath === null)
-    throw new Error('Vosk libs path not configured');
+    throw new TranscriptionConfigError('Vosk libs path not configured');
 
   return path.resolve(localConfig.libsPath);
 };
@@ -36,7 +40,9 @@ export const getDllDir = async () => {
   const dllDir = path.join(baseDllPath, dllFilePath);
 
   if (!fs.existsSync(dllDir)) {
-    throw new Error(`DLL could not be found at path '${dllDir}'`);
+    throw new LocalTranscriptionAssetNotFoundError(
+      `DLL could not be found at path '${dllDir}'`
+    );
   }
 
   return dllDir;

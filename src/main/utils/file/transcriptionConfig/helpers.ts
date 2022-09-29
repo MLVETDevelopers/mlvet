@@ -25,6 +25,8 @@ interface LocalTranscriptionAssetsPaths {
   libsPath: string;
 }
 
+export class TranscriptionConfigError extends Error {}
+
 export const appDefaultLocalTranscriptionAssetsBasePath: () => string = () =>
   path.join(appDataStoragePath(), 'localTranscriptionAssets');
 

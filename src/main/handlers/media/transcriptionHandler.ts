@@ -1,4 +1,5 @@
 import ffmpeg from 'fluent-ffmpeg';
+import { TranscriptionConfigError } from 'main/utils/file/transcriptionConfig/helpers';
 import {
   PartialWord,
   RuntimeProject,
@@ -63,7 +64,7 @@ const requestTranscription: RequestTranscription = async (project) => {
 
   const transcriptionEngine = await getTranscriptionEngine();
   if (transcriptionEngine === null) {
-    throw new Error('No transcription engine configured');
+    throw new TranscriptionConfigError('No transcription engine configured');
   }
 
   const transcript = await transcribe(

@@ -1,6 +1,8 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
+import { TranscriptionConfigError } from 'main/utils/file/transcriptionConfig/helpers';
+import { LocalTranscriptionAssetNotFoundError } from 'vosk/helpers';
 import getVoskTranscript from '../../../../vosk';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
@@ -19,7 +21,7 @@ const getModelPath = async () => {
   )) as LocalConfig;
 
   if (localConfig.modelPath === null)
-    throw new Error('Vosk model path not configured');
+    throw new TranscriptionConfigError('Vosk model path not configured');
 
   return path.resolve(localConfig.modelPath);
 };
@@ -28,7 +30,7 @@ const transcribeWithVosk = async (audioFilePath: string) => {
   const modelPath = await getModelPath();
 
   if (!fs.existsSync(modelPath)) {
-    throw new Error(
+    throw new LocalTranscriptionAssetNotFoundError(
       `Model ${modelPath} not found. Have you downloaded the model and put it in the assets folder?`
     );
   }

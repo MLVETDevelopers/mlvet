@@ -11,7 +11,7 @@ import colors from '../../colors';
 import CancelProjectModal from './CancelProjectModal';
 import ipc from '../../ipc';
 
-const { requireCloudConfig } = ipc;
+const { areEngineConfigRequirementsMet } = ipc;
 
 const CustomModal = styled(Modal)({
   display: 'flex',
@@ -76,7 +76,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   useEffect(() => {
     const fetchIfCloudConfigRequired = async () => {
-      const isConfigRequired = await requireCloudConfig();
+      const isConfigRequired = !(await areEngineConfigRequirementsMet());
       setIsCloudConfigRequired(isConfigRequired);
     };
 

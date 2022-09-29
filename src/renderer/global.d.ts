@@ -14,8 +14,8 @@ import {
   ProjectIdAndFilePath,
   TranscriptionEngine,
   EngineConfig,
-  CloudConfig,
   ExportFormat,
+  TranscriptionConfig,
 } from '../sharedTypes';
 
 declare global {
@@ -36,15 +36,9 @@ declare global {
         project: Pick<RuntimeProject, 'projectFilePath' | 'mediaFilePath'>
       ) => Promise<ProjectMetadata>;
 
-      readCloudConfig: () => Promise<CloudConfig>;
-
-      readDefaultEngineConfig: () => Promise<EngineConfig>;
-
       readRecentProjects: () => Promise<RecentProject[]>;
 
       requestMediaDialog: () => Promise<string | null>;
-
-      requireCloudConfig: () => Promise<boolean>;
 
       saveAsProject: (project: RuntimeProject) => Promise<string>;
 
@@ -55,9 +49,21 @@ declare global {
 
       saveProject: (project: RuntimeProject) => Promise<string>;
 
-      storeCloudCredentials: (
-        defaultEngine: TranscriptionEngine,
-        engineConfigs: EngineConfig
+      areEngineConfigRequirementsMet: () => Promise<boolean>;
+
+      getTranscriptionConfigDefault: () => Promise<TranscriptionConfig>;
+
+      getTranscriptionEngine: () => Promise<TranscriptionEngine | null>;
+
+      getTranscriptionEngineConfig: (
+        engine: TranscriptionEngine
+      ) => Promise<EngineConfig | null>;
+
+      setTranscriptionEngine: (engine: TranscriptionEngine) => Promise<void>;
+
+      setTranscriptionEngineConfig: (
+        engine: TranscriptionEngine,
+        engineConfig: EngineConfig
       ) => Promise<void>;
 
       writeRecentProjects: (recentProjects: RecentProject[]) => Promise<void>;

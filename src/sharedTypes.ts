@@ -69,13 +69,23 @@ export interface TakeInfo {
 export enum TranscriptionEngine {
   DUMMY = 'DUMMY',
   ASSEMBLYAI = 'ASSEMBLYAI',
+  VOSK = 'VOSK',
 }
 
-export type EngineConfig = string | null;
+export type EngineConfig = string | null | CloudConfig | LocalConfig;
 
 export interface CloudConfig {
-  defaultEngine: TranscriptionEngine;
-  ASSEMBLYAI: EngineConfig;
+  key: string | null;
+}
+
+export interface LocalConfig {
+  assetPath: string | null;
+}
+
+export interface TranscriptionConfig {
+  defaultEngine: TranscriptionEngine | null;
+  ASSEMBLYAI: CloudConfig;
+  VOSK: LocalConfig;
   DUMMY: EngineConfig;
 }
 

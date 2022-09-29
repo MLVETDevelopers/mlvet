@@ -10,15 +10,17 @@ import deleteProject from './handlers/file/deleteProject';
 import openExternalLink from './handlers/file/openLinkInExternalWindow';
 import openProject from './handlers/file/openProjectHandler';
 import retrieveProjectMetadata from './handlers/file/projectMetadataHandler';
-import readCloudConfig from './handlers/file/readCloudConfig';
-import readDefaultEngineConfig from './handlers/file/readDefaultEngineConfig';
 import readRecentProjects from './handlers/file/readRecentProjects';
 import requestMediaDialog from './handlers/file/requestMediaDialog';
-import requireCloudConfig from './handlers/file/requireCloudConfig';
 import saveAsProject from './handlers/file/saveAsProjectHandler';
 import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
-import storeCloudCredentials from './handlers/file/storeCloudCredentials';
+import areEngineConfigRequirementsMet from './handlers/file/transcriptionConfig/checkConfig';
+import getTranscriptionConfigDefault from './handlers/file/transcriptionConfig/getConfig';
+import getTranscriptionEngine from './handlers/file/transcriptionConfig/getEngine';
+import getTranscriptionEngineConfig from './handlers/file/transcriptionConfig/getEngineConfig';
+import setTranscriptionEngine from './handlers/file/transcriptionConfig/setEngine';
+import setTranscriptionEngineConfig from './handlers/file/transcriptionConfig/setEngineConfig';
 import writeRecentProjects from './handlers/file/writeRecentProjects';
 import extractAudio from './handlers/media/audioExtract';
 import exportProject from './handlers/media/exportProjectHandler';
@@ -65,19 +67,11 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     retrieveProjectMetadata(project)
   );
 
-  ipcMain.handle('read-cloud-config', async () => readCloudConfig());
-
-  ipcMain.handle('read-default-engine-config', async () =>
-    readDefaultEngineConfig()
-  );
-
   ipcMain.handle('read-recent-projects', async () => readRecentProjects());
 
   ipcMain.handle('request-media-dialog', async () =>
     requestMediaDialog(ipcContext)
   );
-
-  ipcMain.handle('require-cloud-config', async () => requireCloudConfig());
 
   ipcMain.handle('save-as-project', async (_event, project) =>
     saveAsProject(ipcContext, project)
@@ -93,10 +87,30 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     saveProject(ipcContext, project)
   );
 
+  ipcMain.handle('are-engine-config-requirements-met', async () =>
+    areEngineConfigRequirementsMet()
+  );
+
+  ipcMain.handle('get-transcription-config-default', async () =>
+    getTranscriptionConfigDefault()
+  );
+
+  ipcMain.handle('get-transcription-engine', async () =>
+    getTranscriptionEngine()
+  );
+
+  ipcMain.handle('get-transcription-engine-config', async (_event, engine) =>
+    getTranscriptionEngineConfig(engine)
+  );
+
+  ipcMain.handle('set-transcription-engine', async (_event, engine) =>
+    setTranscriptionEngine(engine)
+  );
+
   ipcMain.handle(
-    'store-cloud-credentials',
-    async (_event, defaultEngine, engineConfigs) =>
-      storeCloudCredentials(defaultEngine, engineConfigs)
+    'set-transcription-engine-config',
+    async (_event, engine, engineConfig) =>
+      setTranscriptionEngineConfig(engine, engineConfig)
   );
 
   ipcMain.handle('write-recent-projects', async (_event, recentProjects) =>

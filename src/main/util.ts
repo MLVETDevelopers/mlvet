@@ -54,8 +54,11 @@ export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>
   path.join(getProjectDataDir(projectId), 'thumbnail.png');
 
-export const appCloudConfigPath: () => string = () =>
-  path.join(appDataStoragePath(), 'cloudConfig.json');
+export const appTranscriptionConfigPath: () => string = () =>
+  path.join(appDataStoragePath(), 'transcriptionConfig.json');
+
+export const appLocalTranscriptionAssetsPath: () => string = () =>
+  path.join(appDataStoragePath(), 'localTranscriptionAssets');
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

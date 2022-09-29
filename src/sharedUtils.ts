@@ -1,4 +1,3 @@
-import { SelectionState } from 'renderer/store/selection/helpers';
 import {
   RuntimeProject,
   ProjectMetadata,
@@ -7,7 +6,13 @@ import {
   MapCallback,
   IndexRange,
   TakeGroup,
+  TranscriptionChunk,
+  SelectionState,
 } from './sharedTypes';
+
+export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
+  return 'activeTakeIndex' in chunk;
+}
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>

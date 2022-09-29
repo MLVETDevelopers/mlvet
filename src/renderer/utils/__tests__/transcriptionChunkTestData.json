@@ -85,7 +85,7 @@
   ],
   "chunks": [
     { "id": 0, "activeTakeIndex": 1, "takeSelected": true },
-    {
+    [{
       "word": "he",
       "startTime": 2.864,
       "duration": 0.214,
@@ -97,9 +97,9 @@
       "bufferDurationBefore": 0.043,
       "bufferDurationAfter": 0.013,
       "takeInfo": null
-    },
+    }],
     { "id": 1, "activeTakeIndex": 1, "takeSelected": true },
-    {
+    [{
       "word": "pretended",
       "startTime": 10.196,
       "duration": 0.326,
@@ -111,6 +111,6 @@
       "bufferDurationBefore": 0.007,
       "bufferDurationAfter": 0.012,
       "takeInfo": null
-    }
+    }]
   ]
 }

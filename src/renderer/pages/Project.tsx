@@ -58,10 +58,6 @@ const ProjectPage = () => {
           isPlaying,
           setIsPlaying,
           nowPlayingWordIndex,
-          play,
-          pause,
-          seekForward,
-          seekBack,
           setPlaybackTime
         ) => (
           <ResizeManager
@@ -93,16 +89,7 @@ const ProjectPage = () => {
                   </IconButton>
                   Feedback
                 </div>
-
-                <VideoController
-                  time={time}
-                  isPlaying={isPlaying}
-                  play={play}
-                  pause={pause}
-                  seekForward={seekForward}
-                  seekBack={seekBack}
-                />
-
+                <VideoController time={time} isPlaying={isPlaying} />
                 {COLLAB_ENABLED && <CollabController />}
 
                 <Stack

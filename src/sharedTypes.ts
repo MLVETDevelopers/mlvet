@@ -1,3 +1,13 @@
+import { ClientId } from 'collabTypes/collabShadowTypes';
+
+// Transcription chunks are either a take group or a paragraph of words
+export type TranscriptionChunk = TakeGroup | Word[];
+
+export interface SelectionState {
+  self: IndexRange;
+  others: Record<ClientId, IndexRange>;
+}
+
 export interface PersistedProject {
   id: string; // UUID
   schemaVersion: number;

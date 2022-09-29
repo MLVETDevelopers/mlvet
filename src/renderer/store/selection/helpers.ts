@@ -1,11 +1,6 @@
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isInOriginalOrder } from 'renderer/utils/words';
-import { IndexRange, Word } from 'sharedTypes';
-
-export interface SelectionState {
-  self: IndexRange;
-  others: Record<ClientId, IndexRange>;
-}
+import { IndexRange, SelectionState, Word } from 'sharedTypes';
 
 /**
  * Returns whether merge and/or split are allowed given the current state

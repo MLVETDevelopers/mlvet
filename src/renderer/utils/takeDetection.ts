@@ -1,11 +1,5 @@
-import { TakeGroup, Word } from 'sharedTypes';
-
-export type TranscriptionChunk = TakeGroup | Word;
-
-// TODO: a bit hacky, do this better
-export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
-  return 'activeTakeIndex' in chunk;
-}
+import { TakeGroup, TranscriptionChunk, Word } from 'sharedTypes';
+import { combineWordsIntoParagraphs } from './words';
 
 export const getTakeGroupLength: (
   takeGroup: TakeGroup,
@@ -24,28 +18,35 @@ export const generateTranscriptionChunks = (
   const getTakeGroup = (id: number) => {
     return takeGroups.find((takeGroup) => takeGroup.id === id);
   };
-  const chunks: TranscriptionChunk[] = words.reduce((chunksSoFar, word) => {
-    const { takeInfo } = word;
 
-    if (takeInfo === null) {
-      return [...chunksSoFar, word];
-    }
+  const chunksWithIndividualWords: TranscriptionChunk[] = words.reduce(
+    (chunksSoFar, word) => {
+      const { takeInfo } = word;
 
-    if (takeInfo.takeGroupId >= takeGroupNum) {
-      takeGroupNum = takeInfo.takeGroupId + 1;
-      return [
-        ...chunksSoFar,
-        {
-          id: takeInfo.takeGroupId,
-          activeTakeIndex:
-            getTakeGroup(takeInfo.takeGroupId)?.activeTakeIndex ?? 0,
-          takeSelected:
-            getTakeGroup(takeInfo.takeGroupId)?.takeSelected ?? false,
-        },
-      ];
-    }
-    return chunksSoFar;
-  }, [] as TranscriptionChunk[]);
+      if (takeInfo === null) {
+        return [...chunksSoFar, [word]];
+      }
+
+      if (takeInfo.takeGroupId >= takeGroupNum) {
+        takeGroupNum = takeInfo.takeGroupId + 1;
+        return [
+          ...chunksSoFar,
+          {
+            id: takeInfo.takeGroupId,
+            activeTakeIndex:
+              getTakeGroup(takeInfo.takeGroupId)?.activeTakeIndex ?? 0,
+            takeSelected:
+              getTakeGroup(takeInfo.takeGroupId)?.takeSelected ?? false,
+          },
+        ];
+      }
+
+      return chunksSoFar;
+    },
+    [] as TranscriptionChunk[]
+  );
+
+  const chunks = combineWordsIntoParagraphs(chunksWithIndividualWords);
 
   return chunks;
 };

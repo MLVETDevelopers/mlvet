@@ -12,6 +12,7 @@ import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
+import playbackReducer from './playback/reducer';
 import downloadModelReducer from './downloadModel/reducer';
 
 const rootReducer = combineReducers({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
+  playback: playbackReducer,
   downloadModel: downloadModelReducer,
 });
 

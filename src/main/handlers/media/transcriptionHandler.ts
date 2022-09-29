@@ -1,5 +1,5 @@
 import ffmpeg from 'fluent-ffmpeg';
-import { TranscriptionConfigError } from 'main/utils/file/transcriptionConfig/helpers';
+import { TranscriptionConfigError } from '../../utils/file/transcriptionConfig/helpers';
 import {
   PartialWord,
   RuntimeProject,

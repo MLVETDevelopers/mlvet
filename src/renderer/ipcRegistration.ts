@@ -14,6 +14,9 @@ import openShortcuts from './navigation/openShortcuts';
 import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionAPIKey';
 import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
+import togglePlayPause from './editor/togglePlayPause';
+import skipForward from './editor/skipForward';
+import skipBackward from './editor/skipBackward';
 import editWord from './editor/editWord';
 import onExportStart from './file/onExportStart';
 
@@ -41,6 +44,9 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-undo': performUndo,
   'initiate-redo': performRedo,
   'toggle-confidence-underlines': toggleConfidenceUnderlines,
+  'toggle-play-pause': togglePlayPause,
+  'initiate-skip-forward': skipForward,
+  'initiate-skip-backward': skipBackward,
 
   // Navigation actions
   'initiate-return-to-home': returnToHome,

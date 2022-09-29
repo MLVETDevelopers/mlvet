@@ -3,12 +3,17 @@ import {
   CollabClientSessionState,
 } from 'renderer/store/collab/helpers';
 import { emptyRange } from 'renderer/utils/range';
-import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
+import {
+  RuntimeProject,
+  RecentProject,
+  Word,
+  SelectionState,
+} from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
-import { SelectionState } from './selection/helpers';
 import { UndoStack } from './undoStack/helpers';
+import { PlaybackState } from './playback/helpers';
 
 export type EditWordState = { index: number; text: string } | null;
 
@@ -34,6 +39,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
+  playback: PlaybackState;
 }
 
 /**
@@ -57,4 +63,9 @@ export const initialStore: ApplicationStore = {
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
+  playback: {
+    isPlaying: false,
+    time: 0,
+    lastUpdated: new Date(),
+  },
 };

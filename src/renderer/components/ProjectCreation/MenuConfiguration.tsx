@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { TranscriptionEngine } from 'sharedTypes';
 import CloudConfigView from './CloudConfigView';
 import colors from '../../colors';
-import CancelProjectModal from './CancelProjectModal';
 import ipc from '../../ipc';
 import TranscriptionChoiceView from './TranscriptionChoiceView';
 import LocalConfigView from './LocalConfigViews/LocalConfigView';
@@ -39,17 +38,10 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
   const [currentView, setCurrentView] = useState<string>(
     views.transcriptionChoice
   );
-  const [isShowingCancelModal, setIsShowingCancelModal] = useState(false);
 
   const handleModalClose: () => void = () => {
     onClose();
     setCurrentView(views.transcriptionChoice);
-  };
-
-  const closeCancelModal = () => setIsShowingCancelModal(false);
-
-  const showCancelModal = () => {
-    setIsShowingCancelModal(true);
   };
 
   const viewComponents = useMemo(() => {
@@ -81,18 +73,14 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
     }
   };
 
-  const finishConfiguration: () => void = () => {
-    handleModalClose();
-  };
-
   const view = (() => {
     const viewComponent = viewComponents[currentView];
     switch (viewComponent) {
       case TranscriptionChoiceView:
         return (
           <TranscriptionChoiceView
-            prevView={() => setCurrentView(views.transcriptionChoice)}
-            closeModal={showCancelModal}
+            prevView={handleModalClose}
+            closeModal={handleModalClose}
             nextView={goToTranscriptionEngineConfigView}
             projectName={projectName}
           />
@@ -101,8 +89,8 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
         return (
           <CloudConfigView
             prevView={() => setCurrentView(views.transcriptionChoice)}
-            closeModal={showCancelModal}
-            nextView={finishConfiguration}
+            closeModal={handleModalClose}
+            nextView={handleModalClose}
             projectName={projectName}
           />
         );
@@ -110,8 +98,8 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
         return (
           <LocalConfigView
             prevView={() => setCurrentView(views.transcriptionChoice)}
-            closeModal={showCancelModal}
-            nextView={finishConfiguration}
+            closeModal={handleModalClose}
+            nextView={handleModalClose}
             projectName={projectName}
           />
         );
@@ -122,7 +110,7 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
 
   return (
     <>
-      <CustomModal open={isOpen} onClose={showCancelModal} id="custom-modal">
+      <CustomModal open={isOpen} onClose={handleModalClose} id="custom-modal">
         <CustomModalInner
           id="custom-modal-inner"
           sx={{ width: { xs: '300px', sm: '438px', lg: '500px' } }}
@@ -130,11 +118,6 @@ const MenuConfiguration = ({ isOpen, onClose, projectName }: Props) => {
           {view}
         </CustomModalInner>
       </CustomModal>
-      <CancelProjectModal
-        isOpen={isShowingCancelModal}
-        closeDialog={closeCancelModal}
-        handleModalClose={handleModalClose}
-      />
     </>
   );
 };

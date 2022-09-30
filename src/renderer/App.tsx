@@ -18,7 +18,7 @@ import {
 } from './store/menuCustomModals/actions';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
-import MenuConfiguration from './components/ProjectCreation/MenuConfiguration';
+import TranscriptionChoiceConfiguration from './components/ProjectCreation/MenuConfiguration';
 
 const RootContainer = styled(Box)({
   margin: 0,
@@ -98,7 +98,7 @@ function AppContents() {
             />
           </CustomModalInner>
         </CustomModal>
-        <MenuConfiguration
+        <TranscriptionChoiceConfiguration
           isOpen={isUpdateTranscriptionChoiceOpened}
           onClose={closeUpdateTranscriptionChoice}
           projectName=""

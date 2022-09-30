@@ -178,8 +178,9 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   return (
     <div>
-      <CustomModal open={isOpen} onClose={showCancelProject}>
+      <CustomModal open={isOpen} onClose={showCancelProject} id="custom-modal">
         <CustomModalInner
+          id="custom-modal-inner"
           sx={{ width: { xs: '300px', sm: '438px', lg: '500px' } }}
         >
           {view}

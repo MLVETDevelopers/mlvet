@@ -1,10 +1,7 @@
 import useKeypress from 'renderer/utils/hooks';
 import { PrimaryButton, SecondaryButton } from '../../Blocks/Buttons';
-import ipc from '../../../ipc';
 import { CustomRowStack } from '../../CustomStacks';
 import LocalConfigBlock from './LocalConfigBlock';
-
-const { getTranscriptionEngineConfig } = ipc;
 
 interface Props {
   onClickBack: () => void;

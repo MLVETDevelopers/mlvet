@@ -27,16 +27,12 @@ const Container = styled(Box)({
   backgroundColor: colors.grey[700],
 });
 
-const defaultText =
-  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for AssemblyAI";
-
 const TranscriptionChoiceView = ({
   prevView,
   closeModal,
   nextView,
   projectName,
 }: Props) => {
-  const [text, setText] = useState<string>(defaultText);
   const [transcriptionEngineChoice, setTranscriptionEngineChoice] =
     useState<TranscriptionEngine | null>(null);
 
@@ -71,9 +67,7 @@ const TranscriptionChoiceView = ({
   );
 
   const handleHelpClick: () => void = () => {
-    openExternalLink(
-      'https://app.assemblyai.com/signup?_ga=2.64947567.1548607132.1661819143-2080070454.1661819143'
-    );
+    openExternalLink('https://www.mlvet.app/docs');
   };
 
   return (

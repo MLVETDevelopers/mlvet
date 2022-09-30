@@ -9,7 +9,7 @@ import { CustomRowStack } from '../../CustomStacks';
 import DownloadInfoView from './DownloadInfoView';
 import DownloadingModelView from './DownloadingModelView';
 
-const { getTranscriptionEngineConfig, downloadModel } = ipc;
+const { downloadModel } = ipc;
 
 interface Props {
   prevView: (() => void) | null;
@@ -21,9 +21,6 @@ interface Props {
 const Container = styled(Box)({
   backgroundColor: colors.grey[700],
 });
-
-const defaultText =
-  "This is your first time using cloud transcription. To get started, you'll need to provide an API key and client secret for AssemblyAI";
 
 const configViews = {
   info: 'info',

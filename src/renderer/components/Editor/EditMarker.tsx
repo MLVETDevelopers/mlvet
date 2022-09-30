@@ -99,14 +99,20 @@ const EditMarker = ({
     setPopperText(deletedText);
   }, [getOriginalText, index, words, dispatch]);
 
-  const onClickAway = () => {
-    setPopperToggled(false);
+  const onClickAway = (event: React.PointerEvent<HTMLElement>) => {
+    // The property path does exist in this event.
+    // React does not have it within its PointerEvent interface
+    event.path.forEach((element: HTMLElement) => {
+      if (element.id === 'transcription-content') {
+        setPopperToggled(false);
 
-    dispatch(clearRangeOverride());
+        dispatch(clearRangeOverride());
 
-    dispatch(videoPlaying({ isPlaying: false, lastUpdated: new Date() }));
+        dispatch(videoPlaying({ isPlaying: false, lastUpdated: new Date() }));
 
-    dispatch(videoSeek({ time: 0, lastUpdated: new Date() }));
+        dispatch(videoSeek({ time: 0, lastUpdated: new Date() }));
+      }
+    });
   };
 
   const background = useMemo(() => {

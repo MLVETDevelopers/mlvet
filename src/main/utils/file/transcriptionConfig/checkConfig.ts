@@ -1,16 +1,23 @@
 import { CloudConfig, LocalConfig } from 'sharedTypes';
-import path from 'path';
 import { fileOrDirExists } from '../../../util';
 
 export const areCloudConfigRequirementsMet = (config: CloudConfig) => {
   return config.key !== null && config.key !== '';
 };
 
+export const isLocalModelConfiguredAndDownloaded = (config: LocalConfig) => {
+  const isModelPathValid = config.modelPath !== null && config.modelPath !== '';
+  return isModelPathValid && fileOrDirExists(config.modelPath as string);
+};
+
+export const isLocalLibsConfiguredAndDownloaded = (config: LocalConfig) => {
+  const isLibsPathValid = config.libsPath !== null && config.libsPath !== '';
+  return isLibsPathValid && fileOrDirExists(config.libsPath as string);
+};
+
 export const areLocalConfigRequirementsMet = (config: LocalConfig) => {
-  const isAssetPathValid = config.assetPath !== null && config.assetPath !== '';
   return (
-    isAssetPathValid &&
-    fileOrDirExists(path.join(config.assetPath as string, 'libs')) &&
-    fileOrDirExists(path.join(config.assetPath as string, 'voskModel'))
+    isLocalLibsConfiguredAndDownloaded(config) &&
+    isLocalModelConfiguredAndDownloaded(config)
   );
 };

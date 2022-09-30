@@ -13,7 +13,7 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
   checkWavFile(audioBuffer);
 
   // Create the models
-  const voskManager = vosk();
+  const voskManager = await vosk();
   const model = voskManager.createModel(modelPath);
 
   const voskRecognizer = voskManager.createRecognizer(model, 16000);

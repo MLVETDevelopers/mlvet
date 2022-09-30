@@ -16,6 +16,7 @@ import saveAsProject from './handlers/file/saveAsProjectHandler';
 import saveChangesDialog from './handlers/file/saveChangesDialog';
 import saveProject from './handlers/file/saveProjectHandler';
 import areEngineConfigRequirementsMet from './handlers/file/transcriptionConfig/checkConfig';
+import downloadModel from './handlers/file/transcriptionConfig/downloadModel';
 import getTranscriptionConfigDefault from './handlers/file/transcriptionConfig/getConfig';
 import getTranscriptionEngine from './handlers/file/transcriptionConfig/getEngine';
 import getTranscriptionEngineConfig from './handlers/file/transcriptionConfig/getEngineConfig';
@@ -90,6 +91,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
   ipcMain.handle('are-engine-config-requirements-met', async () =>
     areEngineConfigRequirementsMet()
   );
+
+  ipcMain.handle('download-model', async () => downloadModel(ipcContext));
 
   ipcMain.handle('get-transcription-config-default', async () =>
     getTranscriptionConfigDefault()

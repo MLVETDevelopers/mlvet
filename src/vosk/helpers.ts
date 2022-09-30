@@ -62,3 +62,5 @@ export interface Recognizer extends Model {
   partialResult: () => PartialResults;
   reset: () => void;
 }
+
+export class LocalTranscriptionAssetNotFoundError extends Error {}

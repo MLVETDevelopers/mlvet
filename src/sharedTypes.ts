@@ -79,7 +79,8 @@ export interface CloudConfig {
 }
 
 export interface LocalConfig {
-  assetPath: string | null;
+  libsPath: string | null;
+  modelPath: string | null;
 }
 
 export interface TranscriptionConfig {
@@ -145,6 +146,12 @@ export enum AsyncState {
 export enum ExportFormat {
   EDL = 'edl',
   MP4 = 'mp4',
+}
+
+export enum DownloadingModelState {
+  START_DOWNLOAD = 'START_DOWNLOAD',
+  DOWNLOAD_PROGRESS_UPDATE = 'DOWNLOAD_PROGRESS_UPDATE',
+  FINISH_DOWNLOAD = 'FINISH_DOWNLOAD',
 }
 
 // Interface for index ranges, usually start-inclusive and end-exclusive.

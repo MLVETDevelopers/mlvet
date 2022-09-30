@@ -16,14 +16,15 @@ import {
   Recognizer,
   Result,
   SpeakerModel,
+  LocalTranscriptionAssetNotFoundError,
 } from './helpers';
 import { getDllDir, updatePathWithDlls } from './util';
 
 /**
  * A facade for the vosk speech recognition API
  */
-const vosk = () => {
-  const dllDir = getDllDir();
+const vosk = async () => {
+  const dllDir = await getDllDir();
   if (os.platform() === OperatingSystems.WINDOWS) {
     // Update PATH to load dependent dlls
     updatePathWithDlls(dllDir);
@@ -127,7 +128,9 @@ const vosk = () => {
   const createModel = (modelPath: string): Model => {
     const handle = newModel(modelPath);
     if (handle === null) {
-      console.log(`Failed to load model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load model at ${modelPath}`
+      );
     }
 
     /**
@@ -151,7 +154,9 @@ const vosk = () => {
   const createSpeakerModel = (modelPath: string): SpeakerModel => {
     const handle = newSpkModel(modelPath);
     if (handle === null) {
-      throw new Error(`Failed to load speaker model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load speaker model at ${modelPath}`
+      );
     }
 
     /**

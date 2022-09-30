@@ -10,6 +10,7 @@ import {
   SelectionState,
 } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
+import { DownloadModel } from './downloadModel/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { UndoStack } from './undoStack/helpers';
@@ -39,6 +40,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
+  downloadModel: DownloadModel;
   playback: PlaybackState;
 }
 
@@ -63,6 +65,11 @@ export const initialStore: ApplicationStore = {
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
+  downloadModel: {
+    isDownloading: false,
+    isDownloadComplete: false,
+    downloadProgress: 0,
+  },
   playback: {
     isPlaying: false,
     time: 0,

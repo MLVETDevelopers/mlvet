@@ -14,7 +14,7 @@ interface TranscriptionChoiceButtonProps {
   isSelected: boolean;
 }
 
-const TranscriptionChoiceView = ({
+const TranscriptionChoiceButton = ({
   type,
   onClick,
   isSelected,
@@ -97,4 +97,4 @@ const TranscriptionChoiceView = ({
   );
 };
 
-export default TranscriptionChoiceView;
+export default TranscriptionChoiceButton;

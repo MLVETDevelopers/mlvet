@@ -12,9 +12,13 @@ import { ApplicationPage } from './store/currentPage/helpers';
 import { ApplicationStore } from './store/sharedHelpers';
 import { toggleShortcuts } from './store/shortcuts/actions';
 import applicationStore from './store/store';
-import { toggleUpdateTranscriptionAPIKey } from './store/updateTranscriptionAPIKey/actions';
+import {
+  toggleUpdateTranscriptionAPIKey,
+  toggleUpdateTranscriptionChoice,
+} from './store/menuCustomModals/actions';
 import StoreChangeObserver from './StoreChangeObserver';
 import theme from './theme';
+import MenuConfiguration from './components/ProjectCreation/MenuConfiguration';
 
 const RootContainer = styled(Box)({
   margin: 0,
@@ -62,12 +66,16 @@ function AppContents() {
 
   const closeShortcut = () => dispatch(toggleShortcuts(false));
 
-  const hasOpenedUpdateTranscriptionAPIKey = useSelector(
-    (store: ApplicationStore) => store.isUpdateTranscriptionAPIKeyOpened
-  );
+  const {
+    isUpdateTranscriptionAPIKeyOpened,
+    isUpdateTranscriptionChoiceOpened,
+  } = useSelector((store: ApplicationStore) => store.menuCustomModals);
 
   const closeUpdateTranscriptionAPIKey = () =>
     dispatch(toggleUpdateTranscriptionAPIKey(false));
+
+  const closeUpdateTranscriptionChoice = () =>
+    dispatch(toggleUpdateTranscriptionChoice(false));
 
   return (
     <CssBaseline>
@@ -78,18 +86,23 @@ function AppContents() {
           onClose={closeShortcut}
         />
         <CustomModal
-          open={hasOpenedUpdateTranscriptionAPIKey}
+          open={isUpdateTranscriptionAPIKeyOpened}
           onClose={closeUpdateTranscriptionAPIKey}
         >
           <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
             <CloudConfigView
               prevView={null}
               closeModal={closeUpdateTranscriptionAPIKey}
-              nextView={null}
+              nextView={closeUpdateTranscriptionAPIKey}
               projectName=""
             />
           </CustomModalInner>
         </CustomModal>
+        <MenuConfiguration
+          isOpen={isUpdateTranscriptionChoiceOpened}
+          onClose={closeUpdateTranscriptionChoice}
+          projectName=""
+        />
       </RootContainer>
     </CssBaseline>
   );

@@ -7,7 +7,7 @@ import undoStackReducer from './undoStack/reducer';
 import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
-import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reducer';
+import menuCustomModalsReducer from './menuCustomModals/reducer';
 import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
-  isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
+  menuCustomModals: menuCustomModalsReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
   playback: playbackReducer,

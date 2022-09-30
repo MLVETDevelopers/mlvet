@@ -10,6 +10,9 @@ import {
   CustomRowStack,
   CustomStack,
 } from '../CustomStacks';
+import TranscriptionChoiceButton, {
+  TranscriptionChoiceButtonTypes,
+} from './TranscriptionChoiceButton';
 
 const { openExternalLink, setTranscriptionEngine } = ipc;
 
@@ -130,28 +133,24 @@ const TranscriptionChoiceView = ({
               paddingX: { sm: '8px', lg: '32px' },
             }}
           >
-            <PrimaryButton
+            <TranscriptionChoiceButton
               onClick={() =>
                 setTranscriptionEngineChoice(TranscriptionEngine.VOSK)
               }
-              sx={{
-                width: { xs: '100px', sm: '160px' },
-                height: { xs: '100px', sm: '160px' },
-              }}
-            >
-              Local
-            </PrimaryButton>
-            <PrimaryButton
+              type={TranscriptionChoiceButtonTypes.LOCAL}
+              isSelected={
+                transcriptionEngineChoice === TranscriptionEngine.VOSK
+              }
+            />
+            <TranscriptionChoiceButton
               onClick={() =>
                 setTranscriptionEngineChoice(TranscriptionEngine.ASSEMBLYAI)
               }
-              sx={{
-                width: { xs: '100px', sm: '160px' },
-                height: { xs: '100px', sm: '160px' },
-              }}
-            >
-              Cloud
-            </PrimaryButton>
+              type={TranscriptionChoiceButtonTypes.CLOUD}
+              isSelected={
+                transcriptionEngineChoice === TranscriptionEngine.ASSEMBLYAI
+              }
+            />
           </CustomRowStack>
           <Typography
             variant="p-300"

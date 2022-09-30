@@ -60,6 +60,10 @@ const VideoPreviewControllerBase = (
     (store: ApplicationStore) => store?.currentProject
   );
 
+  const { rangeOverride } = useSelector(
+    (store: ApplicationStore) => store?.playback
+  );
+
   const cuts = useRef<Cut[]>([]);
   const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
@@ -196,6 +200,20 @@ const VideoPreviewControllerBase = (
     setPlaybackTime(clockRef.current.time - skip.current);
   };
 
+  const resetClockRefVars = () => {
+    clockRef.current.hasRunBefore = false;
+    clockRef.current.isRunning = false;
+    clockRef.current.intervalRef = null;
+    clockRef.current.prevIntervalEndTime = getPerformanceTime();
+    clockRef.current.intervalStartTime = getPerformanceTime();
+    clockRef.current.time = 0;
+  };
+
+  const resetVideoPreview = () => {
+    pause();
+    resetClockRefVars();
+  };
+
   useImperativeHandle(ref, () => ({
     play,
     pause,
@@ -224,6 +242,14 @@ const VideoPreviewControllerBase = (
       )
     );
   }, [currentProject?.mediaFilePath]);
+
+  useEffect(() => {
+    resetVideoPreview();
+    setPlaybackTime(0);
+    // Maybe conditional for playing dependent on if rangeOverride is null
+    play();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rangeOverride]);
 
   return (
     <VideoPreview

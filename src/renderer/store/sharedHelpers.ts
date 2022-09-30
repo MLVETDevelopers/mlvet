@@ -14,7 +14,6 @@ import { DownloadModel } from './downloadModel/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { UndoStack } from './undoStack/helpers';
-import { PlaybackState } from './playback/helpers';
 
 export type EditWordState = { index: number; text: string } | null;
 
@@ -41,7 +40,6 @@ export interface ApplicationStore {
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
   downloadModel: DownloadModel;
-  playback: PlaybackState;
 }
 
 /**
@@ -69,10 +67,5 @@ export const initialStore: ApplicationStore = {
     isDownloading: false,
     isDownloadComplete: false,
     downloadProgress: 0,
-  },
-  playback: {
-    isPlaying: false,
-    time: 0,
-    lastUpdated: new Date(),
   },
 };

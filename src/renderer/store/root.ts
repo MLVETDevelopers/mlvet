@@ -13,6 +13,7 @@ import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import downloadModelReducer from './downloadModel/reducer';
+import playbackReducer from './playback/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   collab: collabReducer,
   opQueue: opQueueReducer,
   downloadModel: downloadModelReducer,
+  playback: playbackReducer,
 });
 
 export default rootReducer;

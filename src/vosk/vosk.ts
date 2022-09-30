@@ -20,6 +20,11 @@ import {
 } from './helpers';
 import { getDllDir, updatePathWithDlls } from './util';
 
+koffi.opaque('VoskModel');
+koffi.opaque('VoskSpkModel');
+koffi.opaque('VoskRecognizer');
+koffi.opaque('data');
+
 /**
  * A facade for the vosk speech recognition API
  */
@@ -32,14 +37,10 @@ const vosk = async () => {
 
   const libvosk = koffi.load(dllDir);
 
-  koffi.opaque('VoskModel');
   const modelPointer = koffi.pointer('void');
-  koffi.opaque('VoskSpkModel');
   const spkModelPointer = koffi.pointer('void');
-  koffi.opaque('VoskRecognizer');
   const recognizerPointer = koffi.pointer('void');
 
-  koffi.opaque('data');
   const dataBuffer = koffi.pointer('void');
 
   const setLogLevelDebug = libvosk.func('vosk_set_log_level', 'void', ['int']);

@@ -66,8 +66,9 @@ const LocalConfigView = ({
       case DownloadingModelView:
         return (
           <DownloadingModelView
-            onClickBack={() => {}}
+            onClickBack={() => setCurrentConfigView(configViews.info)}
             onClickContinue={() => nextView?.()}
+            isDownloading={isDownloading}
             progress={downloadProgress}
             isDownloadComplete={isDownloadComplete}
           />

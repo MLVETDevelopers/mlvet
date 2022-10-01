@@ -1,5 +1,5 @@
 import { BrowserWindow, Menu } from 'electron';
-import { PartialWord, RuntimeProject } from 'sharedTypes';
+import { PartialWord } from 'sharedTypes';
 import AppState from './AppState';
 
 export interface JSONTranscription {

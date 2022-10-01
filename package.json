@@ -259,6 +259,7 @@
     "@ffprobe-installer/ffprobe": "^1.4.1",
     "@fontsource/rubik": "^4.5.6",
     "@mui/icons-material": "^5.5.1",
+    "@mui/lab": "^5.0.0-alpha.101",
     "@mui/material": "^5.5.1",
     "@react-hook/debounce": "^4.0.0",
     "@react-hook/mouse-position": "^4.1.3",

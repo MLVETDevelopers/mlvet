@@ -264,6 +264,14 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('open-update-transcription-api-key');
         },
       },
+      {
+        id: 'updateTranscriptionChoice',
+        label: 'Switch Transcription Engine',
+        accelerator: 'CommandOrControl+=',
+        click: () => {
+          this.mainWindow.webContents.send('open-update-transcription-choice');
+        },
+      },
     ];
   }
 

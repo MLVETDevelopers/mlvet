@@ -250,8 +250,10 @@ const VideoPreviewControllerBase = (
   useEffect(() => {
     resetVideoPreview();
     setPlaybackTime(0);
-    // Maybe conditional for playing dependent on if rangeOverride is null
-    play();
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    rangeOverride === null ? pause() : play();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rangeOverride]);
 

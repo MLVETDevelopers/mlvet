@@ -102,7 +102,7 @@ const VideoPreviewControllerBase = (
     stopTimer();
   };
 
-  const resetClockRefVars = () => {
+  const resetClockRef = () => {
     clockRef.current.hasRunBefore = false;
     clockRef.current.isRunning = false;
     clockRef.current.intervalRef = null;
@@ -113,7 +113,7 @@ const VideoPreviewControllerBase = (
 
   const resetVideoPreview = () => {
     pause();
-    resetClockRefVars();
+    resetClockRef();
   };
 
   // Called on every frame (by timer setInterval)

@@ -8,6 +8,7 @@ import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
 import getTranscriptionEngineConfig from '../../file/transcriptionConfig/getEngineConfig';
 import { LocalConfig, TranscriptionEngine } from '../../../../sharedTypes';
+import punctuate from '../../../editDelete/punctuate';
 
 interface VoskWord {
   end: number;
@@ -55,11 +56,25 @@ const voskTranscribeFunction: TranscriptionFunction = async (project) => {
 
   console.log('Transcribing with vosk...');
 
-  const jsonTranscript = JSON.parse(
+  const voskTranscript = JSON.parse(
     (await transcribeWithVosk(audioPath)) as string
   );
 
-  return transcriptionAdaptor(jsonTranscript.alternatives[0].result || []);
+  const jsonTranscript = transcriptionAdaptor(
+    voskTranscript.alternatives[0].result || []
+  );
+
+  const lastWord = jsonTranscript.words[jsonTranscript.words.length - 1];
+  const totalDuration = lastWord.startTime + lastWord.duration;
+
+  const mapCallback = punctuate(totalDuration, 0.3);
+
+  const punctuatedTranscript = {
+    ...jsonTranscript,
+    words: jsonTranscript.words.map(mapCallback),
+  };
+
+  return punctuatedTranscript;
 };
 
 export default voskTranscribeFunction;

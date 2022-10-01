@@ -24,6 +24,13 @@ const punctuate: (
     const endTime = isLastWord ? totalDuration : words[index + 1].startTime;
     const silenceDuration = endTime - word.startTime - word.duration;
 
+    if (isLastWord) {
+      return {
+        ...word,
+        word: `${word.word}.`,
+      };
+    }
+
     if (index === 0) {
       words[index].word = capitalizeFirstLetter(words[index].word ?? '');
     }

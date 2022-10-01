@@ -1,5 +1,5 @@
 import store from 'renderer/store/store';
-import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/updateTranscriptionAPIKey/actions';
+import { toggleUpdateTranscriptionAPIKey } from 'renderer/store/menuCustomModals/actions';
 
 const { dispatch } = store;
 

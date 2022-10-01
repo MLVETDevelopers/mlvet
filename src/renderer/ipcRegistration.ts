@@ -20,6 +20,7 @@ import skipBackward from './editor/skipBackward';
 import editWord from './editor/editWord';
 import onExportStart from './file/onExportStart';
 import updateDownloadModelState from './file/downloadModelProgressUpdate';
+import openUpdateTranscriptionChoice from './navigation/openUpdateTranscriptionChoice';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -31,6 +32,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'export-start': onExportStart,
   'initiate-export-project': exportProject,
   'open-update-transcription-api-key': openUpdateTranscriptionAPIKey,
+  'open-update-transcription-choice': openUpdateTranscriptionChoice,
   'update-download-model-state': updateDownloadModelState,
 
   // Editor actions

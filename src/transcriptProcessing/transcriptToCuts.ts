@@ -10,14 +10,15 @@ const convertTranscriptToCuts = (
   transcript: Transcription,
   rangeOverride: IndexRange | null = null
 ): Array<Cut> => {
-  // filter out deleted words as well as words in inactive takes
   const wordsNotYetUpdated =
+    // filter out deleted words as well as words in inactive takes
     rangeOverride === null
       ? transcript.words.filter(
           (word) =>
             !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
         )
-      : transcript.words.slice(
+      : // keep deleted words when rangeOverride is specified
+        transcript.words.slice(
           rangeOverride.startIndex,
           rangeOverride.endIndex
         );

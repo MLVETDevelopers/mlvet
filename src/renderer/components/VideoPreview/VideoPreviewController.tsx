@@ -34,6 +34,8 @@ export interface VideoPreviewControllerRef {
 interface Props {
   setTime: (time: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
+  outputVideoLength: number;
+  setOutputVideoLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;
@@ -49,7 +51,7 @@ const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cuts) => {
 const getPerformanceTime = () => performance.now() * 0.001;
 
 const VideoPreviewControllerBase = (
-  { setTime, setIsPlaying }: Props,
+  { setTime, setIsPlaying, outputVideoLength, setOutputVideoLength }: Props,
   ref: Ref<VideoPreviewControllerRef>
 ) => {
   const skip = useRef(10);
@@ -65,11 +67,9 @@ const VideoPreviewControllerBase = (
   );
 
   const cuts = useRef<Cut[]>([]);
-  const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
 
-  const clampSystemTime = (time: number) =>
-    clamp(time, 0, outputVideoLength.current);
+  const clampSystemTime = (time: number) => clamp(time, 0, outputVideoLength);
 
   const clockRef = useRef<Clock>({
     hasRunBefore: false,
@@ -162,7 +162,7 @@ const VideoPreviewControllerBase = (
     clockRef.current.time = newSystemTime;
     setTime(clockRef.current.time);
 
-    if (newSystemTime < outputVideoLength.current) {
+    if (newSystemTime < outputVideoLength) {
       const inCutStartTime =
         currentCutRef.current.startTime +
         (clockRef.current.time - currentCutRef.current.outputStartTime);
@@ -180,7 +180,7 @@ const VideoPreviewControllerBase = (
   const play = () => {
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
-      if (clockRef.current.time >= outputVideoLength.current) {
+      if (clockRef.current.time >= outputVideoLength) {
         setPlaybackTime(0);
       }
 

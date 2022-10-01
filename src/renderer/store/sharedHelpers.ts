@@ -76,5 +76,6 @@ export const initialStore: ApplicationStore = {
   },
   playback: {
     rangeOverride: null,
+    rangeType: null,
   },
 };

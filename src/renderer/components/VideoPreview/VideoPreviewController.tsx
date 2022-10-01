@@ -224,16 +224,20 @@ const VideoPreviewControllerBase = (
 
   useEffect(() => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(currentProject.transcription);
+      cuts.current = convertTranscriptToCuts(
+        currentProject.transcription,
+        rangeOverride
+      );
+
       if (cuts.current.length === 0) {
         return;
       }
       const lastCut = cuts.current[cuts.current.length - 1];
-      outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
+      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
       setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProject?.transcription]);
+  }, [currentProject?.transcription, rangeOverride, setOutputVideoLength]);
 
   useEffect(() => {
     setEncodedVideoSrc(

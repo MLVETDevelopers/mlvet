@@ -102,6 +102,20 @@ const VideoPreviewControllerBase = (
     stopTimer();
   };
 
+  const resetClockRefVars = () => {
+    clockRef.current.hasRunBefore = false;
+    clockRef.current.isRunning = false;
+    clockRef.current.intervalRef = null;
+    clockRef.current.prevIntervalEndTime = getPerformanceTime();
+    clockRef.current.intervalStartTime = getPerformanceTime();
+    clockRef.current.time = 0;
+  };
+
+  const resetVideoPreview = () => {
+    pause();
+    resetClockRefVars();
+  };
+
   // Called on every frame (by timer setInterval)
   const onFrame = () => {
     if (clockRef.current.isRunning) {
@@ -181,6 +195,8 @@ const VideoPreviewControllerBase = (
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
       if (clockRef.current.time >= outputVideoLength) {
+        // Video preview must be reset (including clock ref) or else the clock will start later than 0 after pressing play
+        resetVideoPreview();
         setPlaybackTime(0);
       }
 
@@ -198,20 +214,6 @@ const VideoPreviewControllerBase = (
   // Skips backward 'n' seconds
   const seekBack = () => {
     setPlaybackTime(clockRef.current.time - skip.current);
-  };
-
-  const resetClockRefVars = () => {
-    clockRef.current.hasRunBefore = false;
-    clockRef.current.isRunning = false;
-    clockRef.current.intervalRef = null;
-    clockRef.current.prevIntervalEndTime = getPerformanceTime();
-    clockRef.current.intervalStartTime = getPerformanceTime();
-    clockRef.current.time = 0;
-  };
-
-  const resetVideoPreview = () => {
-    pause();
-    resetClockRefVars();
   };
 
   useImperativeHandle(ref, () => ({

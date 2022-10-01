@@ -264,40 +264,15 @@ export default class MenuBuilder {
           this.mainWindow.webContents.send('open-update-transcription-api-key');
         },
       },
+      {
+        id: 'updateTranscriptionChoice',
+        label: 'Switch Transcription Engine',
+        accelerator: 'CommandOrControl+=',
+        click: () => {
+          this.mainWindow.webContents.send('open-update-transcription-choice');
+        },
+      },
     ];
-  }
-
-  buildPlaybackOptions(): MenuItemConstructorOptions {
-    return {
-      id: 'playback',
-      label: 'Playback',
-      submenu: [
-        {
-          id: 'playPause',
-          label: 'Play/Pause Video',
-          accelerator: 'Space',
-          click: () => {
-            this.mainWindow.webContents.send('toggle-play-pause');
-          },
-        },
-        {
-          id: 'skipForward',
-          label: 'Skip forwards 10 seconds',
-          accelerator: 'Right',
-          click: () => {
-            this.mainWindow.webContents.send('initiate-skip-forward');
-          },
-        },
-        {
-          id: 'skipBackward',
-          label: 'Skip backwards 10 seconds',
-          accelerator: 'Left',
-          click: () => {
-            this.mainWindow.webContents.send('initiate-skip-backward');
-          },
-        },
-      ],
-    };
   }
 
   buildEditOptions(): MenuItemConstructorOptions {
@@ -456,7 +431,6 @@ export default class MenuBuilder {
       subMenuAbout,
       subMenuFile,
       this.buildEditOptions(),
-      this.buildPlaybackOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,
@@ -523,7 +497,6 @@ export default class MenuBuilder {
                 },
               ],
       },
-      this.buildPlaybackOptions(),
       {
         id: 'history',
         label: '&History',

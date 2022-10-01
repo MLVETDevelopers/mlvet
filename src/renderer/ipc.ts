@@ -17,6 +17,7 @@ const mockIpc = {
   handleOsQuery: async () => null,
   requireCloudConfig: () => false,
   saveProject: () => null,
+  areEngineConfigRequirementsMet: () => true,
 };
 
 const ipc = window.electron ?? mockIpc;

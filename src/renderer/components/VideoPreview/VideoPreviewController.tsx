@@ -5,7 +5,6 @@ import {
   forwardRef,
   useEffect,
   useState,
-  useCallback,
 } from 'react';
 import { Cut } from 'sharedTypes';
 import convertTranscriptToCuts from 'transcriptProcessing/transcriptToCuts';
@@ -13,8 +12,6 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
-import store from 'renderer/store/store';
-import { videoPlaying, videoSeek } from 'renderer/store/playback/actions';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -60,14 +57,7 @@ const VideoPreviewControllerBase = (
   const videoPreviewRef = useRef<VideoPreviewRef>(null);
 
   const currentProject = useSelector(
-    (appStore: ApplicationStore) => appStore?.currentProject
-  );
-  const playState = useSelector(
-    (appStore: ApplicationStore) => appStore.playback.isPlaying
-  );
-
-  const timeState = useSelector(
-    (appStore: ApplicationStore) => appStore.playback.time
+    (store: ApplicationStore) => store?.currentProject
   );
 
   const cuts = useRef<Cut[]>([]);
@@ -102,14 +92,14 @@ const VideoPreviewControllerBase = (
   };
 
   // Stops video, timer & UI
-  const pause = useCallback(() => {
+  const pause = () => {
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
-  }, [setIsPlaying]);
+  };
 
   // Called on every frame (by timer setInterval)
-  const onFrame = useCallback(() => {
+  const onFrame = () => {
     if (clockRef.current.isRunning) {
       clockRef.current.time =
         getPerformanceTime() - clockRef.current.intervalStartTime;
@@ -125,12 +115,6 @@ const VideoPreviewControllerBase = (
         // If last put - pause
         // If not - update video
         if (currentCutRef.current.index + 1 >= cuts.current.length) {
-          store.dispatch(
-            videoPlaying({
-              isPlaying: false,
-              lastUpdated: new Date(),
-            })
-          );
           pause();
         } else {
           currentCutRef.current = cuts.current[currentCutRef.current.index + 1];
@@ -140,10 +124,10 @@ const VideoPreviewControllerBase = (
         }
       }
     }
-  }, [pause, setTime]);
+  };
 
   // Start timer (setInterval)
-  const startTimer = useCallback(() => {
+  const startTimer = () => {
     if (!clockRef.current.hasRunBefore) {
       clockRef.current.hasRunBefore = true;
       clockRef.current.prevIntervalEndTime = getPerformanceTime();
@@ -156,54 +140,51 @@ const VideoPreviewControllerBase = (
     clockRef.current.intervalStartTime +=
       getPerformanceTime() - clockRef.current.prevIntervalEndTime;
     clockRef.current.isRunning = true;
-  }, [onFrame]);
+  };
 
   // Sets the video, timer & UI playback time
-  const setPlaybackTime = useCallback(
-    (time: number) => {
-      const { isRunning } = clockRef.current;
-      if (isRunning) stopTimer();
+  const setPlaybackTime = (time: number) => {
+    const { isRunning } = clockRef.current;
+    if (isRunning) stopTimer();
 
-      const newSystemTime = clampSystemTime(time);
-      currentCutRef.current = getCutFromSystemTime(
-        newSystemTime,
-        cuts.current ?? []
-      );
+    const newSystemTime = clampSystemTime(time);
+    currentCutRef.current = getCutFromSystemTime(
+      newSystemTime,
+      cuts.current ?? []
+    );
 
-      clockRef.current.intervalStartTime -=
-        newSystemTime - clockRef.current.time;
+    clockRef.current.intervalStartTime -= newSystemTime - clockRef.current.time;
 
-      clockRef.current.time = newSystemTime;
-      setTime(clockRef.current.time);
+    clockRef.current.time = newSystemTime;
+    setTime(clockRef.current.time);
 
-      if (newSystemTime < outputVideoLength.current) {
-        const inCutStartTime =
-          currentCutRef.current.startTime +
-          (clockRef.current.time - currentCutRef.current.outputStartTime);
-        videoPreviewRef?.current?.setCurrentTime(inCutStartTime);
+    if (newSystemTime < outputVideoLength.current) {
+      const inCutStartTime =
+        currentCutRef.current.startTime +
+        (clockRef.current.time - currentCutRef.current.outputStartTime);
+      videoPreviewRef?.current?.setCurrentTime(inCutStartTime);
 
-        if (isRunning) {
-          startTimer();
-        }
-      } else {
-        pause();
+      if (isRunning) {
+        startTimer();
       }
-    },
-    [pause, setTime, startTimer]
-  );
+    } else {
+      pause();
+    }
+  };
 
   // Starts video, timer & UI
-  const play = useCallback(() => {
+  const play = () => {
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
       if (clockRef.current.time >= outputVideoLength.current) {
         setPlaybackTime(0);
       }
+
       startTimer();
       videoPreviewRef?.current?.play();
       setIsPlaying(true);
     }
-  }, [setIsPlaying, setPlaybackTime, startTimer]);
+  };
 
   // Skips forward 'n' seconds
   const seekForward = () => {
@@ -243,27 +224,6 @@ const VideoPreviewControllerBase = (
       )
     );
   }, [currentProject?.mediaFilePath]);
-
-  // If the state of play/pause is changed, play/pause the video preview
-  // if the video is paused, update the time in redux
-  useEffect(() => {
-    if (playState) {
-      play();
-    } else {
-      pause();
-    }
-    store.dispatch(
-      videoSeek({
-        time: clockRef.current.time,
-        lastUpdated: new Date(),
-      })
-    );
-  }, [pause, play, playState]);
-
-  // if the state of playback time is changed, set the time accordingly for video preview
-  useEffect(() => {
-    setPlaybackTime(timeState);
-  }, [setPlaybackTime, timeState]);
 
   return (
     <VideoPreview

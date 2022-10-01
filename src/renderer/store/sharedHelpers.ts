@@ -10,10 +10,11 @@ import {
   SelectionState,
 } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
+import { DownloadModel } from './downloadModel/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
 import { UndoStack } from './undoStack/helpers';
-import { PlaybackState } from './playback/helpers';
+import { MenuCustomModals } from './menuCustomModals/helpers';
 
 export type EditWordState = { index: number; text: string } | null;
 
@@ -30,7 +31,7 @@ export interface ApplicationStore {
   // Array of numbers corresponding to indices of words within the transcription
   selection: SelectionState;
   shortcutsOpened: boolean;
-  isUpdateTranscriptionAPIKeyOpened: boolean;
+  menuCustomModals: MenuCustomModals;
   // Index of word currently being edited, otherwise null
   editWord: EditWordState;
   // whether confidence underlines are currently visible
@@ -39,7 +40,7 @@ export interface ApplicationStore {
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
   opQueue: OpQueueItem[];
-  playback: PlaybackState;
+  downloadModel: DownloadModel;
 }
 
 /**
@@ -58,14 +59,17 @@ export const initialStore: ApplicationStore = {
     others: {},
   },
   shortcutsOpened: false,
-  isUpdateTranscriptionAPIKeyOpened: false,
+  menuCustomModals: {
+    isUpdateTranscriptionAPIKeyOpened: false,
+    isUpdateTranscriptionChoiceOpened: false,
+  },
   editWord: null,
   isShowingConfidenceUnderlines: false,
   collab: null,
   opQueue: [],
-  playback: {
-    isPlaying: false,
-    time: 0,
-    lastUpdated: new Date(),
+  downloadModel: {
+    isDownloading: false,
+    isDownloadComplete: false,
+    downloadProgress: 0,
   },
 };

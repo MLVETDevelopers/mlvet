@@ -6,9 +6,6 @@ import {
   MapCallback,
   IndexRange,
   TakeGroup,
-  TranscriptionEngine,
-  EngineConfig,
-  CloudConfig,
   TranscriptionChunk,
   SelectionState,
 } from './sharedTypes';
@@ -54,19 +51,6 @@ export const makeRecentProject: (
 
 export const bufferedWordDuration: (word: Word) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;
-
-export const findDefaultEngineConfig = (
-  cloudConfig: CloudConfig
-): EngineConfig => {
-  switch (cloudConfig.defaultEngine) {
-    case TranscriptionEngine.ASSEMBLYAI: {
-      return cloudConfig.ASSEMBLYAI;
-    }
-    default: {
-      return cloudConfig.DUMMY;
-    }
-  }
-};
 
 /**
  * Maps the values of a list using a given map function,

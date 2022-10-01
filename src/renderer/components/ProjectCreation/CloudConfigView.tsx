@@ -11,7 +11,7 @@ import colors from 'renderer/colors';
 import { useEffect, useState } from 'react';
 import useKeypress from 'renderer/utils/hooks';
 import { URL_ASSEMBLYAI_SIGNUP } from '../../../constants';
-import { TranscriptionEngine } from '../../../sharedTypes';
+import { CloudConfig, TranscriptionEngine } from '../../../sharedTypes';
 import { PrimaryButton, SecondaryButton } from '../Blocks/Buttons';
 import ipc from '../../ipc';
 import {
@@ -20,8 +20,11 @@ import {
   CustomRowStack,
 } from '../CustomStacks';
 
-const { openExternalLink, storeCloudCredentials, readDefaultEngineConfig } =
-  ipc;
+const {
+  openExternalLink,
+  getTranscriptionEngineConfig,
+  setTranscriptionEngineConfig,
+} = ipc;
 
 interface Props {
   prevView: (() => void) | null;
@@ -50,10 +53,13 @@ const CloudConfigView = ({
 
   useEffect(() => {
     const configInfo = async () => {
-      const engineConfig = await readDefaultEngineConfig();
-      if (engineConfig !== null) {
+      const engineConfig = (await getTranscriptionEngineConfig(
+        TranscriptionEngine.ASSEMBLYAI
+      )) as CloudConfig;
+      const apikey = engineConfig.key;
+      if (apikey !== null && apikey !== '') {
         setText('Update API Key');
-        setOriginalApiKey(engineConfig);
+        setOriginalApiKey(apikey);
         setAwaitingApiKey(false);
       }
     };
@@ -62,17 +68,18 @@ const CloudConfigView = ({
     });
   }, []);
 
-  const saveCloudCredentials: () => void = () => {
+  const saveCloudCredentials: () => void = async () => {
     if (apiKey !== null) {
       setApiKey(apiKey.trim());
-      // hard coded to be assembly ai
-      storeCloudCredentials(TranscriptionEngine.ASSEMBLYAI, apiKey);
+      const engineConfig = (await getTranscriptionEngineConfig(
+        TranscriptionEngine.ASSEMBLYAI
+      )) as CloudConfig;
+      setTranscriptionEngineConfig(TranscriptionEngine.ASSEMBLYAI, {
+        ...engineConfig,
+        key: apiKey,
+      });
     }
-    if (nextView === null) {
-      closeModal();
-    } else {
-      nextView();
-    }
+    nextView?.();
   };
 
   const cancelCloudCredentials: () => void = () => {

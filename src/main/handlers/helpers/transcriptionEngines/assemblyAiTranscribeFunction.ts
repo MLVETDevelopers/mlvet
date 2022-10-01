@@ -1,24 +1,31 @@
+// Axios doesn't work for the file upload for some reason, so use node fetch instead.
+// Have to use a slightly older version (2.6.6) as well due to module issues
 import fs from 'fs/promises';
 import axios, { AxiosError } from 'axios';
 import queryString from 'query-string';
 import { JSONTranscription } from 'main/types';
 import fetch from 'node-fetch';
-import readDefaultEngineConfig from '../../file/readDefaultEngineConfig';
-
-// Axios doesn't work for the file upload for some reason, so use node fetch instead.
-// Have to use a slightly older version (2.6.6) as well due to module issues
+import getTranscriptionEngineConfig from '../../file/transcriptionConfig/getEngineConfig';
+import { CloudConfig, TranscriptionEngine } from '../../../../sharedTypes';
 import { TranscriptionFunction } from '../transcribeTypes';
 import { getAudioExtractPath, roundToMs } from '../../../util';
 import { sleep } from '../../../../sharedUtils';
-
-// TODO: put in config
-// const ASSEMBLYAI_API_KEY = 'fd0381ba0a274c09b2359005496fc79f';
 
 const AUTH_ERROR_STRING = 'Authentication error, API token missing/invalid';
 
 class ApiTokenError extends Error {}
 
-const getApiKey = () => readDefaultEngineConfig().then((val) => val ?? '');
+const getApiKey = async () => {
+  const assemblyAIConfig = (await getTranscriptionEngineConfig(
+    TranscriptionEngine.ASSEMBLYAI
+  )) as CloudConfig;
+
+  if (assemblyAIConfig.key === null || assemblyAIConfig.key === '') {
+    throw new ApiTokenError(AUTH_ERROR_STRING);
+  }
+
+  return assemblyAIConfig.key as string;
+};
 
 const uploadAudio = async (audioPath: string) => {
   const ASSEMBLYAI_API_KEY = await getApiKey();

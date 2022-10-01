@@ -48,9 +48,10 @@ const createTempCutVideo: (
 const allTempCutAllVideos: (
   cuts: Cut[],
   source: string | null,
-  tempFileDir: string
-) => Promise<string>[] = (cuts, source, tempFileDir) => {
-  return cuts.map((cut, idx) => {
+  tempFileDir: string,
+  mainWindow: BrowserWindow | null
+) => Promise<string[]> = (cuts, source, tempFileDir, mainWindow) => {
+  const allTempCutAllVideosPromise = cuts.map((cut, idx) => {
     return createTempCutVideo(
       source ?? 'FILE PATH NOT FOUND',
       tempFileDir,
@@ -59,12 +60,29 @@ const allTempCutAllVideos: (
       idx
     );
   });
+
+  const tempCutVideoPathsPromise = Promise.all(allTempCutAllVideosPromise);
+
+  let tempCutVideoCompleteNum = 0;
+  allTempCutAllVideosPromise.forEach((promise) =>
+    promise.then(() => {
+      tempCutVideoCompleteNum += 1;
+      const progress =
+        (tempCutVideoCompleteNum / allTempCutAllVideosPromise.length) * 0.5;
+
+      mainWindow?.webContents.send('export-progress-update', progress);
+    })
+  );
+
+  return tempCutVideoPathsPromise;
 };
 
 const mergeTempCutVideos: (
   inputPaths: string[],
-  outputPath: string
-) => Promise<boolean> = (inputPaths, outputPath) => {
+  outputPath: string,
+  totalTime: number,
+  mainWindow: BrowserWindow | null
+) => Promise<boolean> = (inputPaths, outputPath, totalTime, mainWindow) => {
   const mergedTempCut = ffmpeg();
 
   inputPaths.forEach((inputPath) => {
@@ -74,6 +92,12 @@ const mergeTempCutVideos: (
   return new Promise((resolve, reject) => {
     mergedTempCut
       .mergeToFile(outputPath)
+      .on('progress', (progress: any) => {
+        const time = parseInt(progress.timemark.replace(/:/g, ''));
+        const percent = (time / totalTime) * 0.5 + 0.5;
+
+        mainWindow?.webContents.send('export-progress-update', percent);
+      })
       .on('end', (stdout: string, stderr: string) => {
         if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
         if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
@@ -128,14 +152,20 @@ export const exportToMp4: (
   const tempFileDir = join(exportFileDir, '/temp');
   mkdir(tempFileDir);
 
-  const tempCutVideoPaths = await Promise.all(
-    allTempCutAllVideos(cuts, project.mediaFilePath, tempFileDir)
+  const tempCutVideoPaths = await allTempCutAllVideos(
+    cuts,
+    project.mediaFilePath,
+    tempFileDir,
+    mainWindow
   );
 
-  // hard coded for now
-  mainWindow?.webContents.send('export-progress-update', 0.5);
-
-  await mergeTempCutVideos(tempCutVideoPaths, fixedExportFilePath);
+  const totalTime = project.transcription.duration;
+  await mergeTempCutVideos(
+    tempCutVideoPaths,
+    fixedExportFilePath,
+    totalTime,
+    mainWindow
+  );
 
   await deleteTempCutFiles(tempCutVideoPaths);
 };

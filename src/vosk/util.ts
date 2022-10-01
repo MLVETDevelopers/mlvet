@@ -1,34 +1,48 @@
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
-import { OperatingSystems } from '../sharedTypes';
-import { operatingSystemDllFilePaths } from './helpers';
+import {
+  LocalConfig,
+  OperatingSystems,
+  TranscriptionEngine,
+} from '../sharedTypes';
+import {
+  LocalTranscriptionAssetNotFoundError,
+  operatingSystemDllFilePaths,
+} from './helpers';
+import getTranscriptionEngineConfig from '../main/handlers/file/transcriptionConfig/getEngineConfig';
+import { TranscriptionConfigError } from '../main/utils/file/transcriptionConfig/helpers';
+
+type GetBaseDllPath = () => Promise<string>;
 
 /**
  * Returns the path to the vosk DLL library for all OS's
  */
-export const getBaseDllPath = () => {
-  // Path is different in dev than in production
-  const dllPath =
-    process.env.NODE_ENV === 'development'
-      ? '../../assets/voskDLLs'
-      : '../../../assets/voskDLLs';
+export const getBaseDllPath: GetBaseDllPath = async () => {
+  const localConfig = (await getTranscriptionEngineConfig(
+    TranscriptionEngine.VOSK
+  )) as LocalConfig;
 
-  return path.join(__dirname, dllPath, 'lib');
+  if (localConfig.libsPath === null)
+    throw new TranscriptionConfigError('Vosk libs path not configured');
+
+  return path.resolve(localConfig.libsPath);
 };
 
 /**
  * Returns the path to the vosk DLL file for the current OS
  */
-export const getDllDir = () => {
-  const baseDllPath = getBaseDllPath();
+export const getDllDir = async () => {
+  const baseDllPath = await getBaseDllPath();
 
   const dllFilePath =
     operatingSystemDllFilePaths[os.platform() as OperatingSystems];
   const dllDir = path.join(baseDllPath, dllFilePath);
 
   if (!fs.existsSync(dllDir)) {
-    throw new Error(`DLL could not be found at path '${dllDir}'`);
+    throw new LocalTranscriptionAssetNotFoundError(
+      `DLL could not be found at path '${dllDir}'`
+    );
   }
 
   return dllDir;

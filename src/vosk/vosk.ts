@@ -16,14 +16,20 @@ import {
   Recognizer,
   Result,
   SpeakerModel,
+  LocalTranscriptionAssetNotFoundError,
 } from './helpers';
 import { getDllDir, updatePathWithDlls } from './util';
+
+koffi.opaque('VoskModel');
+koffi.opaque('VoskSpkModel');
+koffi.opaque('VoskRecognizer');
+koffi.opaque('data');
 
 /**
  * A facade for the vosk speech recognition API
  */
-const vosk = () => {
-  const dllDir = getDllDir();
+const vosk = async () => {
+  const dllDir = await getDllDir();
   if (os.platform() === OperatingSystems.WINDOWS) {
     // Update PATH to load dependent dlls
     updatePathWithDlls(dllDir);
@@ -31,14 +37,10 @@ const vosk = () => {
 
   const libvosk = koffi.load(dllDir);
 
-  koffi.opaque('VoskModel');
   const modelPointer = koffi.pointer('void');
-  koffi.opaque('VoskSpkModel');
   const spkModelPointer = koffi.pointer('void');
-  koffi.opaque('VoskRecognizer');
   const recognizerPointer = koffi.pointer('void');
 
-  koffi.opaque('data');
   const dataBuffer = koffi.pointer('void');
 
   const setLogLevelDebug = libvosk.func('vosk_set_log_level', 'void', ['int']);
@@ -127,7 +129,9 @@ const vosk = () => {
   const createModel = (modelPath: string): Model => {
     const handle = newModel(modelPath);
     if (handle === null) {
-      console.log(`Failed to load model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load model at ${modelPath}`
+      );
     }
 
     /**
@@ -151,7 +155,9 @@ const vosk = () => {
   const createSpeakerModel = (modelPath: string): SpeakerModel => {
     const handle = newSpkModel(modelPath);
     if (handle === null) {
-      throw new Error(`Failed to load speaker model at ${modelPath}`);
+      throw new LocalTranscriptionAssetNotFoundError(
+        `Failed to load speaker model at ${modelPath}`
+      );
     }
 
     /**

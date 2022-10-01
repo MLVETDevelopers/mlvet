@@ -7,12 +7,12 @@ import undoStackReducer from './undoStack/reducer';
 import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
-import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reducer';
+import menuCustomModalsReducer from './menuCustomModals/reducer';
 import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
-import playbackReducer from './playback/reducer';
+import downloadModelReducer from './downloadModel/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -25,10 +25,10 @@ const rootReducer = combineReducers({
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
-  isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
+  menuCustomModals: menuCustomModalsReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
-  playback: playbackReducer,
+  downloadModel: downloadModelReducer,
 });
 
 export default rootReducer;

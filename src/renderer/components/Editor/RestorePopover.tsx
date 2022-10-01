@@ -14,7 +14,7 @@ import useKeypress from 'renderer/utils/hooks';
 interface RestorePopoverProps {
   text: string;
   anchorEl: HTMLElement | null;
-  onClickAway: () => void;
+  onClickAway: (event: any) => void;
   width: number | null;
   transcriptionBlockRef: RefObject<HTMLElement>;
   restoreText: () => void;

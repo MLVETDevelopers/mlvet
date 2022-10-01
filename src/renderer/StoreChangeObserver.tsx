@@ -218,7 +218,8 @@ const StoreChangeObserver = () => {
     if (
       currentProject &&
       currentProject.transcription &&
-      currentProject.projectFilePath
+      currentProject.projectFilePath &&
+      currentProject.isEdited
     ) {
       if (collab !== null && (collab as CollabClientSessionState).isHost)
         return; // Disallow autosave if you are not the host in collab

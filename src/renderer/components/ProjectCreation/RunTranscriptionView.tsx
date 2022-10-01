@@ -146,6 +146,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
             overflow="hidden"
             textOverflow="ellipsis"
             variant="h1"
+            noWrap
             sx={{ color: colors.grey[400] }}
           >
             {projectName}

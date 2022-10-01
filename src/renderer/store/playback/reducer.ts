@@ -12,16 +12,19 @@ const playbackReducer: Reducer<ApplicationStore['playback'], Action<any>> = (
   action
 ) => {
   if (action.type === SET_RANGE_OVERRIDE) {
-    const { rangeOverride } = action.payload as SetRangeOverridePayload;
+    const { rangeOverride, rangeType } =
+      action.payload as SetRangeOverridePayload;
 
     return {
       rangeOverride,
+      rangeType,
     };
   }
 
   if (action.type === CLEAR_RANGE_OVERRIDE) {
     return {
       rangeOverride: null,
+      rangeType: null,
     };
   }
 

@@ -32,8 +32,10 @@ const RestorePopover = ({
 }: RestorePopoverProps) => {
   useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
 
+  const paddingPx = 8;
+
   const isTruncated =
-    (getTextWidth(text, '400 Rubik 1rem') ?? 0) > (width || 0) - 16;
+    (getTextWidth(text, '400 Rubik 1rem') ?? 0) > (width || 0) - paddingPx * 2;
 
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
@@ -64,7 +66,7 @@ const RestorePopover = ({
             overflow: 'hidden',
             height: 53,
             maxWidth: width,
-            padding: '8px',
+            padding: `${paddingPx}px`,
             borderRadius: '5px',
             color: colors.yellow[500],
             border: 0.5,

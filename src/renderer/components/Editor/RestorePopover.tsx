@@ -10,6 +10,8 @@ import {
 import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
 import useKeypress from 'renderer/utils/hooks';
+import TextTruncate from 'react-text-truncate';
+import { getTextWidth } from 'renderer/utils/ui';
 
 interface RestorePopoverProps {
   text: string;
@@ -29,6 +31,9 @@ const RestorePopover = ({
   restoreText,
 }: RestorePopoverProps) => {
   useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
+
+  const isTruncated =
+    (getTextWidth(text, '400 Rubik 1rem') ?? 0) > (width ?? 0);
 
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
@@ -56,8 +61,6 @@ const RestorePopover = ({
       >
         <Box
           sx={{
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
             overflow: 'hidden',
             height: 53,
             maxWidth: width,
@@ -68,9 +71,13 @@ const RestorePopover = ({
           }}
         >
           <Stack alignItems="flex-end">
-            <Typography style={{ color: colors.yellow[500] }} noWrap>
-              {text}
-            </Typography>
+            <Box sx={{ alignSelf: 'flex-start', color: colors.yellow[500] }}>
+              {isTruncated ? (
+                <TextTruncate line={1} truncateText="…" text={text} />
+              ) : (
+                text
+              )}
+            </Box>
             <Typography
               variant="caption"
               style={{ color: colors.grey[400], fontStyle: 'italic' }}

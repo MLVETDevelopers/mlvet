@@ -15,6 +15,7 @@ import {
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isTakeGroup } from 'sharedUtils';
+import { transcriptionContentId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import DragSelectManager from './DragSelectManager';
@@ -155,7 +156,7 @@ const TranscriptionBlock = ({
         isMouseDown
       ) => {
         return (
-          <TranscriptionBox id="transcription-content" ref={blockRef}>
+          <TranscriptionBox id={transcriptionContentId} ref={blockRef}>
             <ProjectName>{projectName}</ProjectName>
             {mapWithAccumulator(
               transcriptionChunks,

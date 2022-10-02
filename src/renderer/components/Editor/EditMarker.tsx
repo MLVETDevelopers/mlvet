@@ -13,7 +13,7 @@ import {
   restoreOriginalSection,
   getRestoreRange,
 } from 'renderer/editor/restore';
-import { getColourForIndex } from 'renderer/utils/ui';
+import { getColourForIndex, transcriptionContentId } from 'renderer/utils/ui';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -93,21 +93,21 @@ const EditMarker = ({
     setPopperText(deletedText);
   }, [getOriginalText, dispatch, index, words]);
 
-  const onClickAway = (event: any = null) => {
+  const closeRestorePopover = () => {
+    setPopperToggled(false);
+    dispatch(clearRangeOverride());
+  };
+
+  const onClickAway = (event: Event | null) => {
     let clickedAway = false;
 
-    if (event !== null) {
-      event.path.forEach((element: HTMLElement) => {
-        if (element.id === 'transcription-content') {
-          clickedAway = true;
-        }
+    if (event !== null)
+      event.composedPath().forEach((eventTarget: EventTarget) => {
+        const element = eventTarget as HTMLElement;
+        clickedAway = clickedAway || element.id === transcriptionContentId;
       });
-    }
 
-    if (event === null || clickedAway) {
-      setPopperToggled(false);
-      dispatch(clearRangeOverride());
-    }
+    if (event === null || clickedAway) closeRestorePopover();
   };
 
   const background = useMemo(() => {

@@ -28,6 +28,7 @@ const RestorePopover = ({
   transcriptionBlockRef,
   restoreText,
 }: RestorePopoverProps) => {
+  // Restores text when enter is pressed.
   useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
 
   const StyledPopper = styled(Popper)(() => ({

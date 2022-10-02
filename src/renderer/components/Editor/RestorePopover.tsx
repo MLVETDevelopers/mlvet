@@ -33,7 +33,7 @@ const RestorePopover = ({
   useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
 
   const isTruncated =
-    (getTextWidth(text, '400 Rubik 1rem') ?? 0) > (width ?? 0);
+    (getTextWidth(text, '400 Rubik 1rem') ?? 0) > (width || 0) - 16;
 
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,

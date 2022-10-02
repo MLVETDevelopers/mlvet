@@ -93,14 +93,21 @@ const EditMarker = ({
     setPopperText(deletedText);
   }, [getOriginalText, dispatch, index, words]);
 
-  const onClickAway = (event: any) => {
-    event.path.forEach((element: HTMLElement) => {
-      if (element.id === 'transcription-content') {
-        setPopperToggled(false);
+  const onClickAway = (event: any = null) => {
+    let clickedAway = false;
 
-        dispatch(clearRangeOverride());
-      }
-    });
+    if (event !== null) {
+      event.path.forEach((element: HTMLElement) => {
+        if (element.id === 'transcription-content') {
+          clickedAway = true;
+        }
+      });
+    }
+
+    if (event === null || clickedAway) {
+      setPopperToggled(false);
+      dispatch(clearRangeOverride());
+    }
   };
 
   const background = useMemo(() => {

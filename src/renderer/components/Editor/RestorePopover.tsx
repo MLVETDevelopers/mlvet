@@ -7,7 +7,7 @@ import { useEventListener, useKeypress } from 'renderer/utils/hooks';
 interface RestorePopoverProps {
   text: string;
   anchorEl: HTMLElement | null;
-  onClickAway: (event: any) => void;
+  onClickAway: (event?: any) => void;
   width: number | null;
   transcriptionBlockRef: RefObject<HTMLElement>;
   restoreText: () => void;
@@ -23,7 +23,7 @@ const RestorePopover = ({
 }: RestorePopoverProps) => {
   // Restores text, and updates clears rangeOverride
   const restoreDeletedTake = () => {
-    onClickAway({ path: [{ id: 'transcription-content' }] });
+    onClickAway();
     restoreText();
   };
 

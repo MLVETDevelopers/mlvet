@@ -216,6 +216,27 @@ const VideoPreviewControllerBase = (
     setPlaybackTime(clockRef.current.time - skip.current);
   };
 
+  const updateOutputVideoLength = () => {
+    if (currentProject !== null && currentProject?.transcription !== null) {
+      cuts.current = convertTranscriptToCuts(
+        currentProject.transcription,
+        rangeOverride
+      );
+
+      if (cuts.current.length === 0) {
+        return false;
+      }
+
+      const lastCut = cuts.current[cuts.current.length - 1];
+
+      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
+
+      return true;
+    }
+
+    return false;
+  };
+
   useImperativeHandle(ref, () => ({
     play,
     pause,
@@ -225,16 +246,13 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(currentProject.transcription);
+    const shouldContinue = updateOutputVideoLength();
 
-      if (cuts.current.length === 0) {
-        return;
-      }
-      const lastCut = cuts.current[cuts.current.length - 1];
-      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
-      setPlaybackTime(clockRef.current.time);
+    if (!shouldContinue) {
+      return;
     }
+
+    setPlaybackTime(clockRef.current.time);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProject?.transcription, setOutputVideoLength]);
 
@@ -247,20 +265,14 @@ const VideoPreviewControllerBase = (
   }, [currentProject?.mediaFilePath]);
 
   useEffect(() => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(
-        currentProject.transcription,
-        rangeOverride
-      );
+    const shouldContinue = updateOutputVideoLength();
 
-      if (cuts.current.length === 0) {
-        return;
-      }
-      const lastCut = cuts.current[cuts.current.length - 1];
-      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
-      resetVideoPreview();
-      setPlaybackTime(0);
+    if (!shouldContinue) {
+      return;
     }
+
+    resetVideoPreview();
+    setPlaybackTime(0);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     rangeOverride === null ? pause() : play();

@@ -101,6 +101,7 @@ const EditMarker = ({
         dispatch(clearRangeOverride());
       }
     });
+    event.stopPropagation();
   };
 
   const background = useMemo(() => {

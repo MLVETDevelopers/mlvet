@@ -39,55 +39,55 @@ const RestorePopover = ({
     borderRadius: '5px',
   }));
 
+  useEventListener('mouseup', onClickAway);
+
   return (
-    <ClickAwayListener onClickAway={onClickAway}>
-      <StyledPopper
-        id="restore-popper"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        placement="top"
-        modifiers={[
-          {
-            name: 'preventOverflow',
-            options: {
-              boundary: transcriptionBlockRef.current,
-            },
+    <StyledPopper
+      id="restore-popper"
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      placement="top"
+      modifiers={[
+        {
+          name: 'preventOverflow',
+          options: {
+            boundary: transcriptionBlockRef.current,
           },
-        ]}
+        },
+      ]}
+    >
+      <Box
+        sx={{
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          height: 53,
+          maxWidth: width,
+          padding: '8px',
+          borderRadius: '5px',
+          color: colors.yellow[500],
+          border: 0.5,
+        }}
       >
-        <Box
-          sx={{
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            height: 53,
-            maxWidth: width,
-            padding: '8px',
-            borderRadius: '5px',
-            color: colors.yellow[500],
-            border: 0.5,
-          }}
-        >
-          <Stack alignItems="flex-end">
-            <Typography style={{ color: colors.yellow[500] }} noWrap>
-              {text}
-            </Typography>
-            <Typography
-              variant="caption"
-              style={{ color: colors.grey[400], fontStyle: 'italic' }}
-            >
-              Enter to restore&nbsp;
-              <SubdirectoryArrowLeft
-                sx={{
-                  fontSize: '12px',
-                  color: colors.grey[400],
-                }}
-              />
-            </Typography>
-          </Stack>
-        </Box>
-      </StyledPopper>
-    </ClickAwayListener>
+        <Stack alignItems="flex-end">
+          <Typography style={{ color: colors.yellow[500] }} noWrap>
+            {text}
+          </Typography>
+          <Typography
+            variant="caption"
+            style={{ color: colors.grey[400], fontStyle: 'italic' }}
+          >
+            Enter to restore&nbsp;
+            <SubdirectoryArrowLeft
+              sx={{
+                fontSize: '12px',
+                color: colors.grey[400],
+              }}
+            />
+          </Typography>
+        </Stack>
+      </Box>
+    </StyledPopper>
   );
 };
 

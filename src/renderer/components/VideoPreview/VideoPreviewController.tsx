@@ -250,8 +250,20 @@ const VideoPreviewControllerBase = (
   }, [currentProject?.mediaFilePath]);
 
   useEffect(() => {
-    resetVideoPreview();
-    setPlaybackTime(0);
+    if (currentProject !== null && currentProject?.transcription !== null) {
+      cuts.current = convertTranscriptToCuts(
+        currentProject.transcription,
+        rangeOverride
+      );
+
+      if (cuts.current.length === 0) {
+        return;
+      }
+      const lastCut = cuts.current[cuts.current.length - 1];
+      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
+      resetVideoPreview();
+      setPlaybackTime(0);
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     rangeOverride === null ? pause() : play();

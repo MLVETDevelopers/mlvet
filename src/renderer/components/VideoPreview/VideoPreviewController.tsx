@@ -239,7 +239,7 @@ const VideoPreviewControllerBase = (
       setPlaybackTime(clockRef.current.time);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProject?.transcription, rangeOverride, setOutputVideoLength]);
+  }, [currentProject?.transcription, setOutputVideoLength]);
 
   useEffect(() => {
     setEncodedVideoSrc(

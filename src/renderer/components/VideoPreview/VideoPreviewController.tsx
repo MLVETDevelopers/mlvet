@@ -226,10 +226,7 @@ const VideoPreviewControllerBase = (
 
   useEffect(() => {
     if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(
-        currentProject.transcription,
-        rangeOverride
-      );
+      cuts.current = convertTranscriptToCuts(currentProject.transcription);
 
       if (cuts.current.length === 0) {
         return;

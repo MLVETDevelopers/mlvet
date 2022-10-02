@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
-import useKeypress from 'renderer/utils/hooks';
+import { useKeypress } from 'renderer/utils/hooks';
 
 interface RestorePopoverProps {
   text: string;

@@ -1,15 +1,8 @@
 import { SubdirectoryArrowLeft } from '@mui/icons-material';
-import {
-  Box,
-  ClickAwayListener,
-  Popper,
-  Stack,
-  styled,
-  Typography,
-} from '@mui/material';
+import { Box, Popper, Stack, styled, Typography } from '@mui/material';
 import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
-import { useKeypress } from 'renderer/utils/hooks';
+import { useEventListener, useKeypress } from 'renderer/utils/hooks';
 
 interface RestorePopoverProps {
   text: string;

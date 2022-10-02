@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import ProgressBar from 'renderer/components/ProgressBar';
-import useKeypress from 'renderer/utils/hooks';
+import { useKeypress } from 'renderer/utils/hooks';
 import colors from 'renderer/colors';
 import { PrimaryButton, SecondaryButton } from '../../Blocks/Buttons';
 import { CustomColumnStack, CustomRowStack } from '../../CustomStacks';

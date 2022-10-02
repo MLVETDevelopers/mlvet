@@ -21,8 +21,14 @@ const RestorePopover = ({
   transcriptionBlockRef,
   restoreText,
 }: RestorePopoverProps) => {
+  // Restores text, and updates clears rangeOverride
+  const restoreDeletedTake = () => {
+    onClickAway({ path: [{ id: 'transcription-content' }] });
+    restoreText();
+  };
+
   // Restores text when enter is pressed.
-  useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
+  useKeypress(restoreDeletedTake, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
 
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,

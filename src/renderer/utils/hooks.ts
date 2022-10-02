@@ -41,3 +41,16 @@ export const useKeypress = (
     };
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
 };
+
+export const useEventListener = (
+  eventToListenTo: string,
+  eventHandler: (event: any) => void
+) => {
+  useEffect(() => {
+    window.addEventListener(eventToListenTo, eventHandler);
+    return () => {
+      window.removeEventListener(eventToListenTo, eventHandler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};

@@ -22,11 +22,11 @@ export const useWindowResizer = (
   useEffect(() => handler(windowSize), [windowSize, handler]);
 };
 
-function useKeypress(
+export const useKeypress = (
   eventHandler: (() => void) | (() => Promise<void>),
   isKeypressEnabled: boolean,
   keypressCodes: string[]
-) {
+) => {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
       if (keypressCodes.includes(event.code) && isKeypressEnabled) {
@@ -40,6 +40,4 @@ function useKeypress(
       window.removeEventListener('keypress', handleKeypress);
     };
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
-}
-
-export default useKeypress;
+};

@@ -35,7 +35,7 @@ interface Props {
   setTime: (time: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   outputVideoLength: number;
-  setOutputVideoLength: React.Dispatch<React.SetStateAction<number>>;
+  setOutputVideoLength: (outputVideoLength: number) => void;
 }
 
 type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;

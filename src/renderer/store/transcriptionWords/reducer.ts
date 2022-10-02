@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { mapInRange } from 'sharedUtils';
+import { mapInRange, mapWithIndices } from 'sharedUtils';
 import { Word } from 'sharedTypes';
 import { getLengthOfRange, rangeLengthOne } from 'renderer/utils/range';
 import { markWordDeleted, markWordUndeleted } from 'renderer/utils/words';
@@ -8,13 +8,13 @@ import { mergeWords } from './helpers/mergeWordsHelper';
 import { splitWord } from './helpers/splitWordHelper';
 import {
   CORRECT_WORD,
-  DELETE_SELECTION,
+  DELETE_WORDS,
   MERGE_WORDS,
   PASTE_WORD,
   RESTORE_SECTION,
   SPLIT_WORD,
   UNDO_CORRECT_WORD,
-  UNDO_DELETE_SELECTION,
+  UNDO_DELETE_WORDS,
   UNDO_MERGE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_SPLIT_WORD,
@@ -41,21 +41,16 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   words = [],
   action
 ) => {
-  if (action.type === DELETE_SELECTION) {
-    const { range } = action.payload as DeleteSelectionPayload;
+  if (action.type === DELETE_WORDS) {
+    const { indices } = action.payload as DeleteSelectionPayload;
 
-    return mapInRange(words, markWordDeleted, range);
+    return mapWithIndices(words, markWordDeleted, indices);
   }
 
-  if (action.type === UNDO_DELETE_SELECTION) {
-    const { range } = action.payload as UndoDeleteSelectionPayload;
+  if (action.type === UNDO_DELETE_WORDS) {
+    const { indices } = action.payload as UndoDeleteSelectionPayload;
 
-    const markUndeleted = (word: Word) => ({
-      ...word,
-      deleted: false,
-    });
-
-    return mapInRange(words, markUndeleted, range);
+    return mapWithIndices(words, markWordUndeleted, indices);
   }
 
   if (action.type === PASTE_WORD) {

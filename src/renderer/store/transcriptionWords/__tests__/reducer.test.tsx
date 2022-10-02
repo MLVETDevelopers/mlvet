@@ -1,9 +1,9 @@
 import { Word } from 'sharedTypes';
 import {
-  DELETE_SELECTION,
+  DELETE_WORDS,
   PASTE_WORD,
   RESTORE_SECTION,
-  UNDO_DELETE_SELECTION,
+  UNDO_DELETE_WORDS,
   UNDO_PASTE_WORD,
   UNDO_RESTORE_SECTION,
 } from '../actions';
@@ -40,12 +40,9 @@ describe('Transcription words reducer', () => {
         makeBasicWordSequential(4, 'e'),
       ],
       {
-        type: DELETE_SELECTION,
+        type: DELETE_WORDS,
         payload: {
-          range: {
-            startIndex: 1,
-            endIndex: 3,
-          },
+          indices: [1, 2],
         },
       }
     );
@@ -69,12 +66,9 @@ describe('Transcription words reducer', () => {
         makeBasicWordSequential(4, 'e', true),
       ],
       {
-        type: UNDO_DELETE_SELECTION,
+        type: UNDO_DELETE_WORDS,
         payload: {
-          range: {
-            startIndex: 2,
-            endIndex: 5,
-          },
+          indices: [2, 3, 4],
         },
       }
     );

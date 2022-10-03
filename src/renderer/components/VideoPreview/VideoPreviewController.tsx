@@ -101,7 +101,6 @@ const VideoPreviewControllerBase = (
   };
 
   const resetClockRef = () => {
-    clockRef.current.hasRunBefore = false;
     clockRef.current.isRunning = false;
     clockRef.current.intervalRef = null;
     clockRef.current.prevIntervalEndTime = getPerformanceTime();

@@ -34,6 +34,8 @@ export interface VideoPreviewControllerRef {
 interface Props {
   setTime: (time: number) => void;
   setIsPlaying: (isPlaying: boolean) => void;
+  outputVideoLength: number;
+  setOutputVideoLength: (outputVideoLength: number) => void;
 }
 
 type GetCutFromSystemTime = (systemTime: number, cuts: Cut[]) => Cut;
@@ -49,7 +51,7 @@ const getCutFromSystemTime: GetCutFromSystemTime = (systemTime, cuts) => {
 const getPerformanceTime = () => performance.now() * 0.001;
 
 const VideoPreviewControllerBase = (
-  { setTime, setIsPlaying }: Props,
+  { setTime, setIsPlaying, outputVideoLength, setOutputVideoLength }: Props,
   ref: Ref<VideoPreviewControllerRef>
 ) => {
   const skip = useRef(10);
@@ -60,12 +62,14 @@ const VideoPreviewControllerBase = (
     (store: ApplicationStore) => store?.currentProject
   );
 
+  const { rangeOverride } = useSelector(
+    (store: ApplicationStore) => store?.playback
+  );
+
   const cuts = useRef<Cut[]>([]);
-  const outputVideoLength = useRef<number>(0);
   const [encodedVideoSrc, setEncodedVideoSrc] = useState<string>('');
 
-  const clampSystemTime = (time: number) =>
-    clamp(time, 0, outputVideoLength.current);
+  const clampSystemTime = (time: number) => clamp(time, 0, outputVideoLength);
 
   const clockRef = useRef<Clock>({
     hasRunBefore: false,
@@ -96,6 +100,20 @@ const VideoPreviewControllerBase = (
     videoPreviewRef?.current?.pause();
     setIsPlaying(false);
     stopTimer();
+  };
+
+  const resetClockRef = () => {
+    clockRef.current.hasRunBefore = false;
+    clockRef.current.isRunning = false;
+    clockRef.current.intervalRef = null;
+    clockRef.current.prevIntervalEndTime = getPerformanceTime();
+    clockRef.current.intervalStartTime = getPerformanceTime();
+    clockRef.current.time = 0;
+  };
+
+  const resetVideoPreview = () => {
+    pause();
+    resetClockRef();
   };
 
   // Called on every frame (by timer setInterval)
@@ -158,7 +176,7 @@ const VideoPreviewControllerBase = (
     clockRef.current.time = newSystemTime;
     setTime(clockRef.current.time);
 
-    if (newSystemTime < outputVideoLength.current) {
+    if (newSystemTime < outputVideoLength) {
       const inCutStartTime =
         currentCutRef.current.startTime +
         (clockRef.current.time - currentCutRef.current.outputStartTime);
@@ -176,7 +194,9 @@ const VideoPreviewControllerBase = (
   const play = () => {
     if (!clockRef.current.isRunning) {
       // If we're at the end of the video, restart it
-      if (clockRef.current.time >= outputVideoLength.current) {
+      if (clockRef.current.time >= outputVideoLength) {
+        // Video preview must be reset (including clock ref) or else the clock will start later than 0 after pressing play
+        resetVideoPreview();
         setPlaybackTime(0);
       }
 
@@ -196,6 +216,27 @@ const VideoPreviewControllerBase = (
     setPlaybackTime(clockRef.current.time - skip.current);
   };
 
+  const updateCuts = () => {
+    if (currentProject !== null && currentProject?.transcription !== null) {
+      cuts.current = convertTranscriptToCuts(
+        currentProject.transcription,
+        rangeOverride
+      );
+
+      if (cuts.current.length === 0) {
+        return false;
+      }
+
+      const lastCut = cuts.current[cuts.current.length - 1];
+
+      setOutputVideoLength(lastCut.outputStartTime + lastCut.duration);
+
+      return true;
+    }
+
+    return false;
+  };
+
   useImperativeHandle(ref, () => ({
     play,
     pause,
@@ -205,17 +246,15 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    if (currentProject !== null && currentProject?.transcription !== null) {
-      cuts.current = convertTranscriptToCuts(currentProject.transcription);
-      if (cuts.current.length === 0) {
-        return;
-      }
-      const lastCut = cuts.current[cuts.current.length - 1];
-      outputVideoLength.current = lastCut.outputStartTime + lastCut.duration;
-      setPlaybackTime(clockRef.current.time);
+    const shouldContinue = updateCuts();
+
+    if (!shouldContinue) {
+      return;
     }
+
+    setPlaybackTime(clockRef.current.time);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProject?.transcription]);
+  }, [currentProject?.transcription, setOutputVideoLength]);
 
   useEffect(() => {
     setEncodedVideoSrc(
@@ -224,6 +263,22 @@ const VideoPreviewControllerBase = (
       )
     );
   }, [currentProject?.mediaFilePath]);
+
+  useEffect(() => {
+    const shouldContinue = updateCuts();
+
+    if (!shouldContinue) {
+      return;
+    }
+
+    resetVideoPreview();
+    setPlaybackTime(0);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    rangeOverride === null ? pause() : play();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rangeOverride]);
 
   return (
     <VideoPreview

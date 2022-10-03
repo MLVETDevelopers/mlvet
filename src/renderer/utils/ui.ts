@@ -116,3 +116,5 @@ export const letterIndexAtXPosition: (
   }
   return null;
 };
+
+export const transcriptionContentId = 'transcription-content';

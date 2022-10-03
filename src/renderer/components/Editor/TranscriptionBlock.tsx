@@ -6,7 +6,7 @@ import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
-import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { makeDeleteWords } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { emptyRange, rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,
@@ -118,7 +118,7 @@ const TranscriptionBlock = ({
 
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
-      dispatchOp(makeDeleteSelection(rangeLengthOne(index)));
+      dispatchOp(makeDeleteWords([index]));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));

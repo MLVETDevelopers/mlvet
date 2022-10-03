@@ -216,7 +216,7 @@ const VideoPreviewControllerBase = (
     setPlaybackTime(clockRef.current.time - skip.current);
   };
 
-  const updateOutputVideoLength = () => {
+  const updateCuts = () => {
     if (currentProject !== null && currentProject?.transcription !== null) {
       cuts.current = convertTranscriptToCuts(
         currentProject.transcription,
@@ -246,7 +246,7 @@ const VideoPreviewControllerBase = (
   }));
 
   useEffect(() => {
-    const shouldContinue = updateOutputVideoLength();
+    const shouldContinue = updateCuts();
 
     if (!shouldContinue) {
       return;
@@ -265,7 +265,7 @@ const VideoPreviewControllerBase = (
   }, [currentProject?.mediaFilePath]);
 
   useEffect(() => {
-    const shouldContinue = updateOutputVideoLength();
+    const shouldContinue = updateCuts();
 
     if (!shouldContinue) {
       return;

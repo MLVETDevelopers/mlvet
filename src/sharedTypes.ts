@@ -160,6 +160,11 @@ export interface IndexRange {
   endIndex: number;
 }
 
+export enum RangeType {
+  DELETED_TEXT = 'DELETED_TEXT',
+  SUBSELECTION = 'SUBSELECTION',
+}
+
 /** Utility types */
 
 // Callback to be passed into a map function.

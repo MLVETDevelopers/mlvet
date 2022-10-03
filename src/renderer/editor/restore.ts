@@ -1,7 +1,6 @@
 import dispatchOp from 'renderer/store/dispatchOp';
 import { IndexRange, Word } from 'sharedTypes';
 import { makeRestoreSection } from 'renderer/store/transcriptionWords/ops/restoreSection';
-import { getLengthOfRange } from 'renderer/utils/range';
 import store from '../store/store';
 
 /* Takes a start Index and find the index of the last word that is in the original transcription sequence
@@ -47,9 +46,9 @@ export const getOriginalWords: (startIndex: number, words: Word[]) => Word[] = (
 ) => {
   const restoreIndexRange = getRestoreRange(startIndex, words);
 
-  const originalWords = [...words].splice(
+  const originalWords = words.slice(
     restoreIndexRange.startIndex,
-    getLengthOfRange(restoreIndexRange)
+    restoreIndexRange.endIndex
   );
 
   return originalWords;

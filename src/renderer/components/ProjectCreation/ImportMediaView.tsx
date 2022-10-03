@@ -4,7 +4,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import colors from 'renderer/colors';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
-import useKeypress from 'renderer/utils/hooks';
+import { useKeypress } from 'renderer/utils/hooks';
 import { toggleUpdateTranscriptionChoice } from 'renderer/store/menuCustomModals/actions';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import { projectCreated } from '../../store/currentProject/actions';

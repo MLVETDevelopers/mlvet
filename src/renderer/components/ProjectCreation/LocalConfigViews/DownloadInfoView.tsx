@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { useState } from 'react';
-import useKeypress from 'renderer/utils/hooks';
+import { useKeypress } from 'renderer/utils/hooks';
 import { PrimaryLoadingButton, SecondaryButton } from '../../Blocks/Buttons';
 import { CustomColumnStack, CustomRowStack } from '../../CustomStacks';
 import LocalConfigBlock from './LocalConfigBlock';

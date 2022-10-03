@@ -1,16 +1,27 @@
 import { updateOutputTimes } from './updateOutputTimes';
-import { Transcription, Cut } from '../sharedTypes';
+import { Transcription, Cut, IndexRange } from '../sharedTypes';
 import {
   bufferedWordDuration,
   roundToMs,
   isInInactiveTake,
 } from '../sharedUtils';
 
-const convertTranscriptToCuts = (transcript: Transcription): Array<Cut> => {
-  // filter out deleted words as well as words in inactive takes
-  const wordsNotYetUpdated = transcript.words.filter(
-    (word) => !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
-  );
+const convertTranscriptToCuts = (
+  transcript: Transcription,
+  rangeOverride: IndexRange | null = null
+): Array<Cut> => {
+  const wordsNotYetUpdated =
+    // filter out deleted words as well as words in inactive takes
+    rangeOverride === null
+      ? transcript.words.filter(
+          (word) =>
+            !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
+        )
+      : // keep deleted words when rangeOverride is specified
+        transcript.words.slice(
+          rangeOverride.startIndex,
+          rangeOverride.endIndex
+        );
 
   if (wordsNotYetUpdated.length === 0) {
     return [];

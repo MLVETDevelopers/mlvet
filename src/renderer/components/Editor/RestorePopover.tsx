@@ -1,20 +1,13 @@
 import { SubdirectoryArrowLeft } from '@mui/icons-material';
-import {
-  Box,
-  ClickAwayListener,
-  Popper,
-  Stack,
-  styled,
-  Typography,
-} from '@mui/material';
+import { Box, Popper, Stack, styled, Typography } from '@mui/material';
 import React, { RefObject } from 'react';
 import colors from 'renderer/colors';
-import useKeypress from 'renderer/utils/hooks';
+import { useEventListener, useKeypress } from 'renderer/utils/hooks';
 
 interface RestorePopoverProps {
   text: string;
   anchorEl: HTMLElement | null;
-  onClickAway: () => void;
+  onClickAway: (event: Event | null) => void;
   width: number | null;
   transcriptionBlockRef: RefObject<HTMLElement>;
   restoreText: () => void;
@@ -28,7 +21,14 @@ const RestorePopover = ({
   transcriptionBlockRef,
   restoreText,
 }: RestorePopoverProps) => {
-  useKeypress(restoreText, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
+  // Restores text, and updates clears rangeOverride
+  const restoreDeletedTake = () => {
+    onClickAway(null);
+    restoreText();
+  };
+
+  // Restores text when enter is pressed.
+  useKeypress(restoreDeletedTake, Boolean(anchorEl), ['Enter', 'NumpadEnter']);
 
   const StyledPopper = styled(Popper)(() => ({
     zIndex: 1,
@@ -38,55 +38,55 @@ const RestorePopover = ({
     borderRadius: '5px',
   }));
 
+  useEventListener('mouseup', onClickAway);
+
   return (
-    <ClickAwayListener onClickAway={onClickAway}>
-      <StyledPopper
-        id="restore-popper"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        placement="top"
-        modifiers={[
-          {
-            name: 'preventOverflow',
-            options: {
-              boundary: transcriptionBlockRef.current,
-            },
+    <StyledPopper
+      id="restore-popper"
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      placement="top"
+      modifiers={[
+        {
+          name: 'preventOverflow',
+          options: {
+            boundary: transcriptionBlockRef.current,
           },
-        ]}
+        },
+      ]}
+    >
+      <Box
+        sx={{
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          height: 53,
+          maxWidth: width,
+          padding: '8px',
+          borderRadius: '5px',
+          color: colors.yellow[500],
+          border: 0.5,
+        }}
       >
-        <Box
-          sx={{
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            height: 53,
-            maxWidth: width,
-            padding: '8px',
-            borderRadius: '5px',
-            color: colors.yellow[500],
-            border: 0.5,
-          }}
-        >
-          <Stack alignItems="flex-end">
-            <Typography style={{ color: colors.yellow[500] }} noWrap>
-              {text}
-            </Typography>
-            <Typography
-              variant="caption"
-              style={{ color: colors.grey[400], fontStyle: 'italic' }}
-            >
-              Enter to restore&nbsp;
-              <SubdirectoryArrowLeft
-                sx={{
-                  fontSize: '12px',
-                  color: colors.grey[400],
-                }}
-              />
-            </Typography>
-          </Stack>
-        </Box>
-      </StyledPopper>
-    </ClickAwayListener>
+        <Stack alignItems="flex-end">
+          <Typography style={{ color: colors.yellow[500] }} noWrap>
+            {text}
+          </Typography>
+          <Typography
+            variant="caption"
+            style={{ color: colors.grey[400], fontStyle: 'italic' }}
+          >
+            Enter to restore&nbsp;
+            <SubdirectoryArrowLeft
+              sx={{
+                fontSize: '12px',
+                color: colors.grey[400],
+              }}
+            />
+          </Typography>
+        </Stack>
+      </Box>
+    </StyledPopper>
   );
 };
 

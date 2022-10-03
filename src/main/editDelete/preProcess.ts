@@ -26,6 +26,8 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
   bufferDurationBefore: 0,
   bufferDurationAfter: 0,
   takeInfo: null,
+  highlightRanges: [],
+  selected: false,
 });
 
 const calculateBufferDurationBefore: (
@@ -112,6 +114,8 @@ const makePauseWord: (params: Pick<Word, 'startTime' | 'duration'>) => Word = ({
   confidence: 1,
   pasteKey: 0,
   takeInfo: null,
+  highlightRanges: [],
+  selected: false,
 });
 
 const injectPauses: (

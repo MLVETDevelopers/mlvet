@@ -61,7 +61,7 @@ const VideoPreviewControllerBase = (
     (store: ApplicationStore) => store?.currentProject
   );
 
-  const { rangeOverride } = useSelector(
+  const { rangeOverride, rangeType } = useSelector(
     (store: ApplicationStore) => store?.playback
   );
 
@@ -216,7 +216,8 @@ const VideoPreviewControllerBase = (
     if (currentProject !== null && currentProject?.transcription !== null) {
       cuts.current = convertTranscriptToCuts(
         currentProject.transcription,
-        rangeOverride
+        rangeOverride,
+        rangeType
       );
 
       if (cuts.current.length === 0) {

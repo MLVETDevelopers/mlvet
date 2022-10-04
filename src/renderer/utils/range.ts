@@ -1,3 +1,4 @@
+import { clamp } from 'main/timeUtils';
 import { IndexRange, Word } from 'sharedTypes';
 
 /**
@@ -27,6 +28,20 @@ export const areRangesEqual: (
 ) => boolean = (rangeOne, rangeTwo) =>
   rangeOne.startIndex === rangeTwo.startIndex &&
   rangeOne.endIndex === rangeTwo.endIndex;
+
+/**
+ * Clamps a range within specified bounds.
+ * `startIndex` is bounded at the maximum by one extra unit as `max` specifies
+ * an end-exclusive maximum.
+ */
+export const clampRange: (
+  range: IndexRange,
+  min: number,
+  max: number
+) => IndexRange = (range, min, max) => ({
+  startIndex: clamp(range.startIndex, min, max - 1),
+  endIndex: clamp(range.endIndex, min, max),
+});
 
 /**
  * Takes a range and a list of the words in that range,

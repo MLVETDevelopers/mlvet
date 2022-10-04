@@ -2,7 +2,13 @@ import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
-import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
+import {
+  IndexRange,
+  RangeType,
+  TakeInfo,
+  Transcription,
+  Word,
+} from 'sharedTypes';
 import React, {
   RefObject,
   useCallback,
@@ -15,6 +21,12 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
 import { isIndexInRange } from 'renderer/utils/range';
+import {
+  clearRangeOverride,
+  setRangeOverride,
+} from 'renderer/store/playback/action';
+import { useEventListener } from 'renderer/utils/hooks';
+import { transcriptionContentId } from 'renderer/utils/ui';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -94,12 +106,36 @@ const TakeComponent = ({
 
   const dispatch = useDispatch();
 
+  const clearSubselection = useCallback(() => {
+    dispatch(clearRangeOverride());
+  }, [dispatch]);
+
+  const dispatchSubselection = useCallback(() => {
+    dispatch(
+      setRangeOverride(
+        {
+          startIndex: takeWords[0].originalIndex,
+          endIndex: takeWords[takeWords.length - 1].originalIndex,
+        },
+        RangeType.SUBSELECTION
+      )
+    );
+  }, [dispatch, takeWords]);
+
   const onSelectTake = useCallback(() => {
     dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
     if (!isFirstTimeOpen && isActive) {
       setIsTakeGroupOpened(false);
+      clearSubselection();
     }
-  }, [dispatch, takeWords, isFirstTimeOpen, isActive, setIsTakeGroupOpened]);
+  }, [
+    dispatch,
+    takeWords,
+    isFirstTimeOpen,
+    isActive,
+    setIsTakeGroupOpened,
+    clearSubselection,
+  ]);
 
   const TakeWrapper = useMemo(
     () => makeTakeWrapper(isTakeGroupOpened, isActive, isFirstTimeOpen),
@@ -110,6 +146,7 @@ const TakeComponent = ({
     if (isActive && !isTakeGroupOpened) {
       setIsTakeGroupOpened(true);
     } else {
+      dispatchSubselection();
       onSelectTake();
       setIsFirstTimeOpen(false);
     }
@@ -117,9 +154,19 @@ const TakeComponent = ({
     isActive,
     isTakeGroupOpened,
     setIsTakeGroupOpened,
+    dispatchSubselection,
     onSelectTake,
     setIsFirstTimeOpen,
   ]);
+
+  const onClickAway = (event: Event) => {
+    event.composedPath().forEach((eventTarget: EventTarget) => {
+      const element = eventTarget as HTMLElement;
+      if (element.id === transcriptionContentId) {
+        clearSubselection();
+      }
+    });
+  };
 
   const numberedButton =
     !isFirstTimeOpen && isTakeGroupOpened ? (
@@ -169,6 +216,8 @@ const TakeComponent = ({
       setCurrentTakeHeight(takeRef.current.clientHeight);
     }
   }, [takeRef.current?.clientHeight, isTakeGroupOpened]);
+
+  useEventListener('mouseup', onClickAway);
 
   return (
     <>

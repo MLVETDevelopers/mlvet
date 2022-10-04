@@ -14,6 +14,8 @@ import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import HomeIcon from '@mui/icons-material/Home';
+import returnToHome from 'renderer/navigation/returnToHome';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 
@@ -75,6 +77,21 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
+                <div
+                  style={{
+                    position: 'absolute',
+                    marginTop: '15px',
+                    left: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    fontSize: '12px',
+                  }}
+                >
+                  <IconButton color="primary" onClick={returnToHome}>
+                    <HomeIcon />
+                  </IconButton>
+                </div>
+
                 <div
                   style={{
                     position: 'absolute',

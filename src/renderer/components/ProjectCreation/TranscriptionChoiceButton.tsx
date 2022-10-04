@@ -57,6 +57,7 @@ const TranscriptionChoiceButton = ({
         border: `1px solid ${colors.grey[600]}`,
         borderRadius: '5px',
         '&:hover': {
+          cursor: 'pointer',
           borderColor: colors.yellow[500],
           transition: 'border-color 0.14s ease-in-out',
           '#choice-button-icon': {

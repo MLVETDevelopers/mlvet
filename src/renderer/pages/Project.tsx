@@ -41,6 +41,7 @@ const ProjectPage = () => {
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
+  const [outputVideoLength, setOutputVideoLength] = useState<number>(0);
 
   return (
     <>
@@ -149,11 +150,11 @@ const ProjectPage = () => {
                         setTime={setTime}
                         setIsPlaying={setIsPlaying}
                         ref={videoPreviewControllerRef}
+                        outputVideoLength={outputVideoLength}
+                        setOutputVideoLength={setOutputVideoLength}
                       />
                       <Scrubber
-                        totalDuration={
-                          currentProject?.transcription?.outputDuration ?? 0
-                        }
+                        totalDuration={outputVideoLength}
                         currentTimeSeconds={time}
                         onScrubberChange={setPlaybackTime}
                       />

@@ -1,9 +1,9 @@
 import { Word } from 'sharedTypes';
 import { TRANSCRIPTION_CREATED } from 'renderer/store/transcription/actions';
 import {
-  DELETE_SELECTION,
+  DELETE_WORDS,
   PASTE_WORD,
-  UNDO_DELETE_SELECTION,
+  UNDO_DELETE_WORDS,
   UNDO_PASTE_WORD,
 } from 'renderer/store/transcriptionWords/actions';
 import { makeBasicWord } from 'sharedUtils';
@@ -104,12 +104,9 @@ it('output duration should be updated after deleting words', () => {
   };
 
   const deleteOutput = transcriptionReducer(transcript, {
-    type: DELETE_SELECTION,
+    type: DELETE_WORDS,
     payload: {
-      range: {
-        startIndex: 1,
-        endIndex: 3,
-      },
+      indices: [1, 2],
     },
   });
 
@@ -190,22 +187,16 @@ it('output duration should be the same as original when deleting and straight af
   };
 
   transcriptionReducer(transcript, {
-    type: DELETE_SELECTION,
+    type: DELETE_WORDS,
     payload: {
-      range: {
-        startIndex: 1,
-        endIndex: 3,
-      },
+      indices: [1, 2],
     },
   });
 
   const undoOutput = transcriptionReducer(transcript, {
-    type: UNDO_DELETE_SELECTION,
+    type: UNDO_DELETE_WORDS,
     payload: {
-      range: {
-        startIndex: 1,
-        endIndex: 3,
-      },
+      indices: [1, 2],
     },
   });
 
@@ -248,12 +239,9 @@ it('output duration should be 0 after deleting all words', () => {
   };
 
   const deleteOutput = transcriptionReducer(transcript, {
-    type: DELETE_SELECTION,
+    type: DELETE_WORDS,
     payload: {
-      range: {
-        startIndex: 0,
-        endIndex: 4,
-      },
+      indices: [0, 1, 2, 3],
     },
   });
 
@@ -302,12 +290,9 @@ it('output duration should calculated from last non deleted word (not always las
   };
 
   const deleteOutput = transcriptionReducer(transcript, {
-    type: DELETE_SELECTION,
+    type: DELETE_WORDS,
     payload: {
-      range: {
-        startIndex: 2,
-        endIndex: 4,
-      },
+      indices: [2, 3],
     },
   });
 

@@ -7,6 +7,15 @@ import { mkdir } from '../util';
 import convertTranscriptToCuts from '../../transcriptProcessing/transcriptToCuts';
 import { ffmpegPath } from '../ffUtils';
 
+interface ProgressUpdate {
+  frames: number;
+  currentFps: number;
+  currentKbps: number;
+  targetSize: number;
+  timemark: string;
+  percent: number;
+}
+
 const createTempCutVideo: (
   inputPath: string,
   outputDir: string,
@@ -28,18 +37,11 @@ const createTempCutVideo: (
       .setStartTime(startTime)
       .setDuration(duration)
       .output(outputPath)
-      .on('end', (stdout: string, stderr: string) => {
-        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
-
+      .on('end', () => {
         resolve(outputPath);
       })
-      .on('error', (stdout: string, stderr: string) => {
-        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
-
-        console.log('cut video error');
-        reject(stderr);
+      .on('error', (err: Error) => {
+        reject(err);
       })
       .run();
   });
@@ -69,7 +71,7 @@ const allTempCutAllVideos: (
       tempCutVideoCompleteNum += 1;
       const progress =
         (tempCutVideoCompleteNum / allTempCutAllVideosPromise.length) * 0.5;
-
+      // eslint-disable-next-line promise/always-return
       mainWindow?.webContents.send('export-progress-update', progress);
     })
   );
@@ -82,7 +84,7 @@ const mergeTempCutVideos: (
   outputPath: string,
   totalTime: number,
   mainWindow: BrowserWindow | null
-) => Promise<boolean> = (inputPaths, outputPath, totalTime, mainWindow) => {
+) => Promise<void> = (inputPaths, outputPath, totalTime, mainWindow) => {
   const mergedTempCut = ffmpeg();
 
   inputPaths.forEach((inputPath) => {
@@ -92,23 +94,17 @@ const mergeTempCutVideos: (
   return new Promise((resolve, reject) => {
     mergedTempCut
       .mergeToFile(outputPath)
-      .on('progress', (progress: any) => {
-        const time = parseInt(progress.timemark.replace(/:/g, ''));
-        const percent = (time / totalTime) * 0.5 + 0.5;
+      .on('progress', (progress: ProgressUpdate) => {
+        const time = parseInt(progress.timemark.replace(/:/g, ''), 10);
+        const percent = (time / totalTime) * 0.4 + 0.5;
 
         mainWindow?.webContents.send('export-progress-update', percent);
       })
-      .on('end', (stdout: string, stderr: string) => {
-        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
-
-        resolve(true);
+      .on('end', () => {
+        resolve();
       })
-      .on('error', (stdout: string, stderr: string) => {
-        if (stdout) console.log(`FFMPEG stdout: ${stdout}`);
-        if (stderr) console.error(`FFMPEG stderr: ${stderr}`);
-
-        reject(stderr);
+      .on('error', (err: Error) => {
+        reject(err);
       });
   });
 };
@@ -127,7 +123,7 @@ const deleteTempCutFiles: (
   tempCutVideoPaths: string[]
 ) => Promise<void> = async (tempCutVideoPaths) => {
   await deleteTempCutVideos(tempCutVideoPaths).catch((error) => {
-    console.error(error);
+    throw new Error(error);
   });
 };
 

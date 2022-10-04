@@ -1,8 +1,9 @@
+import { excludeDeletedWords } from 'renderer/utils/range';
 import { IndexRange, Word } from '../../sharedTypes';
 import { clipboardUpdated } from '../store/clipboard/actions';
 import store from '../store/store';
 import dispatchOp from '../store/dispatchOp';
-import { makeDeleteSelection } from '../store/transcriptionWords/ops/deleteSelection';
+import { makeDeleteWords } from '../store/transcriptionWords/ops/deleteSelection';
 import { makePasteWord } from '../store/transcriptionWords/ops/pasteWord';
 
 const { dispatch } = store;
@@ -31,9 +32,22 @@ export const deleteText: () => void = () => {
 
   const { currentProject } = store.getState();
 
-  if (currentProject && currentProject.transcription) {
-    dispatchOp(makeDeleteSelection(range));
+  if (!currentProject?.transcription) {
+    return;
   }
+
+  const words = currentProject.transcription.words.slice(
+    range.startIndex,
+    range.endIndex
+  );
+
+  const indices = excludeDeletedWords(range, words);
+
+  if (indices.length === 0) {
+    return;
+  }
+
+  dispatchOp(makeDeleteWords(indices));
 };
 
 export const cutText: () => void = () => {

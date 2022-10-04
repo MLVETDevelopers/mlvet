@@ -1,7 +1,7 @@
 import { IndexRange, Word } from '../../../sharedTypes';
 
 export interface DeleteSelectionPayload {
-  range: IndexRange;
+  indices: number[];
 }
 
 export interface PasteWordsPayload {

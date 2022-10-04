@@ -1,5 +1,11 @@
 import { updateOutputTimes } from './updateOutputTimes';
-import { Transcription, Cut, IndexRange } from '../sharedTypes';
+import {
+  Transcription,
+  Cut,
+  IndexRange,
+  RangeType,
+  Word,
+} from '../sharedTypes';
 import {
   bufferedWordDuration,
   roundToMs,
@@ -8,20 +14,28 @@ import {
 
 const convertTranscriptToCuts = (
   transcript: Transcription,
-  rangeOverride: IndexRange | null = null
+  rangeOverride: IndexRange | null = null,
+  rangeType: RangeType | null = null
 ): Array<Cut> => {
-  const wordsNotYetUpdated =
-    // filter out deleted words as well as words in inactive takes
-    rangeOverride === null
-      ? transcript.words.filter(
-          (word) =>
-            !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
-        )
-      : // keep deleted words when rangeOverride is specified
-        transcript.words.slice(
-          rangeOverride.startIndex,
-          rangeOverride.endIndex
-        );
+  let wordsNotYetUpdated: Word[] = [];
+  // filter out deleted words as well as words in inactive takes
+
+  if (rangeOverride !== null && rangeType === RangeType.DELETED_TEXT) {
+    // keep deleted words when rangeOverride is specified
+    wordsNotYetUpdated = transcript.words.slice(
+      rangeOverride.startIndex,
+      rangeOverride.endIndex
+    );
+  } else if (rangeOverride !== null && rangeType === RangeType.SUBSELECTION) {
+    // add words within the subsection range and remove deleted words
+    wordsNotYetUpdated = transcript.words
+      .slice(rangeOverride.startIndex, rangeOverride.endIndex)
+      .filter((word) => !word.deleted);
+  } else {
+    wordsNotYetUpdated = transcript.words.filter(
+      (word) => !word.deleted && !isInInactiveTake(word, transcript.takeGroups)
+    );
+  }
 
   if (wordsNotYetUpdated.length === 0) {
     return [];

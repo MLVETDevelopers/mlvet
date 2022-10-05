@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack } from '@mui/material';
+import { Box, IconButton, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -14,8 +14,11 @@ import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import HomeIcon from '@mui/icons-material/Home';
+import returnToHome from 'renderer/navigation/returnToHome';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
+import colors from '../colors';
 
 /*
 This is the page that gets displayed while you are editing a video.
@@ -23,6 +26,33 @@ It will be primarily composed of the transcription area, an editable text box wh
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
+const HeaderBarBox = styled(Box)({
+  background: colors.grey[700],
+  color: colors.grey[300],
+  height: '62px',
+  width: '100vw',
+  margin: 0,
+  padding: '11px 0',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+const LeftAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+});
+const RightAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+});
+
+const CenterAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
 const ProjectPage = () => {
   const currentProject = useSelector(
@@ -75,34 +105,40 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <div
-                  style={{
-                    position: 'absolute',
-                    marginTop: '15px',
-                    right: '20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    fontSize: '12px',
-                  }}
-                >
-                  <IconButton
-                    color="primary"
-                    onClick={openUserFeedback}
-                    sx={{ padding: '0' }}
+                <HeaderBarBox>
+                  <LeftAligned style={{ marginLeft: '20px' }}>
+                    <IconButton color="primary" onClick={returnToHome}>
+                      <HomeIcon />
+                    </IconButton>
+                  </LeftAligned>
+                  <CenterAligned>
+                    <VideoController
+                      time={time}
+                      isPlaying={isPlaying}
+                      play={play}
+                      pause={pause}
+                      seekForward={seekForward}
+                      seekBack={seekBack}
+                    />
+                  </CenterAligned>
+                  <RightAligned
+                    style={{
+                      marginRight: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      fontSize: '12px',
+                    }}
                   >
-                    <RateReviewIcon fontSize="medium" />
-                  </IconButton>
-                  Feedback
-                </div>
-
-                <VideoController
-                  time={time}
-                  isPlaying={isPlaying}
-                  play={play}
-                  pause={pause}
-                  seekForward={seekForward}
-                  seekBack={seekBack}
-                />
+                    <IconButton
+                      color="primary"
+                      onClick={openUserFeedback}
+                      sx={{ padding: '0' }}
+                    >
+                      <RateReviewIcon fontSize="medium" />
+                    </IconButton>
+                    Feedback
+                  </RightAligned>
+                </HeaderBarBox>
 
                 {COLLAB_ENABLED && <CollabController />}
 

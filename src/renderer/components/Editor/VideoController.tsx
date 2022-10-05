@@ -4,18 +4,6 @@ import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
 
-const VideoControllerBox = styled(Box)({
-  background: colors.grey[700],
-  color: colors.grey[300],
-  height: '62px',
-  width: '100vw',
-  margin: 0,
-  padding: '11px 0',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-
 const TimeDisplay = styled(Box)({
   backgroundColor: colors.grey[600],
   fontWeight: 'regular',
@@ -67,7 +55,13 @@ const VideoController = ({
   const timeDisplay = useMemo(() => secondToTimestampUI(time), [time]);
 
   return (
-    <VideoControllerBox>
+    <Box
+      style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+      }}
+    >
       <TimeDisplay>{timeDisplay}</TimeDisplay>
       <IconButton onClick={seekBack}>
         <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
@@ -78,7 +72,7 @@ const VideoController = ({
       <IconButton onClick={seekForward}>
         <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
       </IconButton>
-    </VideoControllerBox>
+    </Box>
   );
 };
 

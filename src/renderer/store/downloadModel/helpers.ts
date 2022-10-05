@@ -5,5 +5,32 @@
 export interface DownloadModel {
   isDownloading: boolean;
   isDownloadComplete: boolean;
-  downloadProgress: number; // Used for showing current download progress
+  // The progress of the download, a value between 0 and 1
+  downloadProgress: number;
+  // The date at which the time remaining was last updated
+  lastUpdated: Date | null;
+  // The amount of time remaining on the download, in seconds
+  timeRemaining: number | null;
+  // The progress of the download on the previous update, a value between 0 and 1
+  previousDownloadProgress: number;
 }
+
+type CalculateTimeRemaining = (
+  newLastUpdated: Date,
+  oldLastUpdated: Date,
+  newDownloadProgress: number,
+  oldDownloadProgress: number
+) => number;
+
+export const calculateTimeRemaining: CalculateTimeRemaining = (
+  newLastUpdated,
+  oldLastUpdated,
+  newDownloadProgress,
+  oldDownloadProgress
+) => {
+  const timeDifference =
+    (newLastUpdated.getTime() - oldLastUpdated.getTime()) / 1000;
+  const progressPerTime =
+    (newDownloadProgress - oldDownloadProgress) / timeDifference;
+  return (1 - newDownloadProgress) / progressPerTime;
+};

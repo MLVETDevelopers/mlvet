@@ -5,8 +5,11 @@ import {
   FINISH_DOWNLOAD,
 } from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
-import { DownloadModel } from './helpers';
+import { calculateTimeRemaining, DownloadModel } from './helpers';
 import { Action } from '../action';
+
+// The time between updates to the download time remaining, in milliseconds
+const timeRemainingUpdateInterval = 1000;
 
 const downloadModelReducer: Reducer<
   ApplicationStore['downloadModel'],
@@ -18,10 +21,35 @@ const downloadModelReducer: Reducer<
       isDownloading: true,
       isDownloadComplete: false,
       downloadProgress: 0,
+      lastUpdated: new Date(),
+      previousDownloadProgress: 0,
+      timeRemaining: null,
     } as DownloadModel;
   }
 
   if (action.type === DOWNLOAD_PROGRESS_UPDATE) {
+    const newLastUpdated = new Date();
+    const oldLastUpdated = downloadModel.lastUpdated as Date;
+    const newDownloadProgress = action.payload;
+    const oldDownloadProgress = downloadModel.previousDownloadProgress;
+    // Only update time remaining every t seconds
+    if (
+      newLastUpdated.getTime() - oldLastUpdated.getTime() >
+      timeRemainingUpdateInterval
+    ) {
+      return {
+        ...downloadModel,
+        downloadProgress: action.payload,
+        lastUpdated: new Date(),
+        previousDownloadProgress: downloadModel.downloadProgress,
+        timeRemaining: calculateTimeRemaining(
+          newLastUpdated,
+          oldLastUpdated,
+          newDownloadProgress,
+          oldDownloadProgress
+        ),
+      } as DownloadModel;
+    }
     return {
       ...downloadModel,
       downloadProgress: action.payload,
@@ -34,6 +62,9 @@ const downloadModelReducer: Reducer<
       isDownloading: false,
       isDownloadComplete: true,
       downloadProgress: 1,
+      lastUpdated: new Date(),
+      previousDownloadProgress: downloadModel.downloadProgress,
+      timeRemaining: 0,
     } as DownloadModel;
   }
 

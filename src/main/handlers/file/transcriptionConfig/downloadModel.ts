@@ -81,12 +81,11 @@ const calculateDownloadProgressWeights = (
   shouldDownloadModel: boolean
 ) => {
   if (shouldDownloadLibs && shouldDownloadModel) {
-    if (process.platform === OperatingSystems.LINUX)
-      return createWeights(0.5, 0.5);
-    return createWeights(0.1, 0.9);
+    if (getModelUrl() === MODEL_SML_URL) return createWeights(0.45, 0.53);
+    return createWeights(0.02, 0.94);
   }
-  if (shouldDownloadLibs) return createWeights(1, 0);
-  if (shouldDownloadModel) return createWeights(0, 1);
+  if (shouldDownloadLibs) return createWeights(0.96, 0);
+  if (shouldDownloadModel) return createWeights(0, 0.96);
   return createWeights(0, 0);
 };
 

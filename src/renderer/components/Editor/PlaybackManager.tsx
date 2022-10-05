@@ -86,13 +86,39 @@ const PlaybackManager = ({
       return;
     }
 
-    const newPlayingWordIndex = currentProject.transcription.words.findIndex(
-      (word) =>
-        time >= word.outputStartTime &&
-        time < word.outputStartTime + bufferedWordDuration(word) &&
-        !word.deleted &&
-        !isInInactiveTake(word, currentProject.transcription?.takeGroups ?? [])
-    );
+    let filteredWords = currentProject.transcription.words;
+
+    // if playing a subselection then filter out the words which arnt in the subselection
+    if (rangeOverride !== null && rangeType === RangeType.SUBSELECTION) {
+      filteredWords = filteredWords.filter(
+        (word) =>
+          rangeOverride.startIndex <= word.originalIndex &&
+          rangeOverride.endIndex >= word.originalIndex &&
+          !word.deleted
+      );
+    }
+
+    // timeOffset is used to help in finding the word when a subselection is set to play
+    // timeOffset is 0 in the case of playing an entire transcript/delete selection
+    const timeOffset = filteredWords[0].outputStartTime;
+
+    // Since the first word to hightlight in filteredwords will be of index 0 when playing a subselection
+    // 0 will hightlight the first word in the entire transcripts
+    // thus wordIndexOffset offsets the index by startIndex of the rangeOverride
+    const wordIndexOffset = rangeOverride ? rangeOverride.startIndex : 0;
+
+    const newPlayingWordIndex =
+      filteredWords.findIndex(
+        (word) =>
+          time + timeOffset >= word.outputStartTime &&
+          time + timeOffset <
+            word.outputStartTime + bufferedWordDuration(word) &&
+          !word.deleted &&
+          !isInInactiveTake(
+            word,
+            currentProject.transcription?.takeGroups ?? []
+          )
+      ) + wordIndexOffset;
 
     if (newPlayingWordIndex !== nowPlayingWordIndex) {
       setNowPlayingWordIndex(newPlayingWordIndex);

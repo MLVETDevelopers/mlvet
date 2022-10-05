@@ -25,8 +25,6 @@ import {
   clearRangeOverride,
   setRangeOverride,
 } from 'renderer/store/playback/action';
-import { useEventListener } from 'renderer/utils/hooks';
-import { transcriptionContentId } from 'renderer/utils/ui';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -159,15 +157,6 @@ const TakeComponent = ({
     setIsFirstTimeOpen,
   ]);
 
-  const onClickAway = (event: Event) => {
-    event.composedPath().forEach((eventTarget: EventTarget) => {
-      const element = eventTarget as HTMLElement;
-      if (element.id === transcriptionContentId) {
-        clearSubselection();
-      }
-    });
-  };
-
   const numberedButton =
     !isFirstTimeOpen && isTakeGroupOpened ? (
       <Avatar
@@ -216,8 +205,6 @@ const TakeComponent = ({
       setCurrentTakeHeight(takeRef.current.clientHeight);
     }
   }, [takeRef.current?.clientHeight, isTakeGroupOpened]);
-
-  useEventListener('mouseup', onClickAway);
 
   return (
     <>

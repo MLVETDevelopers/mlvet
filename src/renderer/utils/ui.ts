@@ -118,3 +118,16 @@ export const letterIndexAtXPosition: (
 };
 
 export const transcriptionContentId = 'transcription-content';
+
+export const isEventInElement: (event: Event, elementId: string) => boolean = (
+  event,
+  elementId
+) => {
+  event.composedPath().forEach((eventTarget: EventTarget) => {
+    const element = eventTarget as HTMLElement;
+    if (element.id === elementId) {
+      return true;
+    }
+  });
+  return false;
+};

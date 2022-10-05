@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
-import { Box, ClickAwayListener, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,9 @@ import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
+import { isEventInElement, transcriptionContentId } from 'renderer/utils/ui';
+import { clearRangeOverride } from 'renderer/store/playback/action';
+import { useEventListener } from 'renderer/utils/hooks';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -97,8 +100,15 @@ const TakeGroupComponent = ({
     handleModalClose();
   };
 
-  const clickAway = () => {
-    if (!isFirstTimeOpen) {
+  const onClickAway = (event: Event) => {
+    const isInTranscriptionContent = isEventInElement(
+      event,
+      transcriptionContentId
+    );
+    const isInTakeGroup = isEventInElement(event, takeGroupId);
+
+    if (isInTranscriptionContent && !isInTakeGroup) {
+      dispatch(clearRangeOverride());
       setIsTakeGroupOpened(false);
     }
   };
@@ -161,6 +171,8 @@ const TakeGroupComponent = ({
       />
     );
   });
+
+  useEventListener('mouseup', onClickAway);
 
   return (
     <Box id={takeGroupId}>

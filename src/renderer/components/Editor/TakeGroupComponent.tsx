@@ -73,6 +73,8 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
+  const takeGroupId = 'take-group';
+
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
     !takeGroup.takeSelected
   );
@@ -161,7 +163,7 @@ const TakeGroupComponent = ({
   });
 
   return (
-    <Box>
+    <Box id={takeGroupId}>
       <CustomColumnStack
         sx={{
           marginTop: '10px',

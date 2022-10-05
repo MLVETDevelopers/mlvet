@@ -123,11 +123,12 @@ export const isEventInElement: (event: Event, elementId: string) => boolean = (
   event,
   elementId
 ) => {
+  let elementFound = false;
+
   event.composedPath().forEach((eventTarget: EventTarget) => {
     const element = eventTarget as HTMLElement;
-    if (element.id === elementId) {
-      return true;
-    }
+    elementFound = elementFound || element.id === elementId;
   });
-  return false;
+
+  return elementFound;
 };

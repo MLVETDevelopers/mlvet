@@ -161,32 +161,29 @@ const TakeGroupComponent = ({
   });
 
   return (
-    <ClickAwayListener onClickAway={clickAway}>
-      <Box>
-        <CustomColumnStack
-          sx={{
-            marginTop: '10px',
-            marginBottom:
-              !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
-          }}
+    <Box>
+      <CustomColumnStack
+        sx={{
+          marginTop: '10px',
+          marginBottom: !isFirstTimeOpen && isTakeGroupOpened ? '35px' : '15px',
+        }}
+      >
+        {takes}
+        <CustomRowStack
+          position="relative"
+          sx={{ justifyContent: 'flex-start' }}
         >
-          {takes}
-          <CustomRowStack
-            position="relative"
-            sx={{ justifyContent: 'flex-start' }}
-          >
-            {!isFirstTimeOpen && isTakeGroupOpened && (
-              <UngroupTakes onClick={ungroupTakesModalOpen} />
-            )}
-          </CustomRowStack>
-        </CustomColumnStack>
-        <UngroupTakesModal
-          isOpen={showUngroupModal}
-          closeModal={handleModalClose}
-          ungroupTakes={ungroupTakes}
-        />
-      </Box>
-    </ClickAwayListener>
+          {!isFirstTimeOpen && isTakeGroupOpened && (
+            <UngroupTakes onClick={ungroupTakesModalOpen} />
+          )}
+        </CustomRowStack>
+      </CustomColumnStack>
+      <UngroupTakesModal
+        isOpen={showUngroupModal}
+        closeModal={handleModalClose}
+        ungroupTakes={ungroupTakes}
+      />
+    </Box>
   );
 };
 

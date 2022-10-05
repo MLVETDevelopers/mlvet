@@ -64,7 +64,7 @@ const DownloadingModelView = ({ onClickBack, onClickContinue }: Props) => {
             >
               {(progress * 100).toFixed(0)}% Complete
             </Typography>
-            {timeRemaining !== null && (
+            {timeRemaining !== null && !isDownloadComplete && (
               <Typography
                 variant="p-400"
                 sx={{ marginTop: '4px', fontSize: '12px' }}

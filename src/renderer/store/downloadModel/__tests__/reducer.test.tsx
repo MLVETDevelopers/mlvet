@@ -5,13 +5,9 @@ import {
   FINISH_DOWNLOAD,
 } from '../actions';
 import { initialStore } from '../../sharedHelpers';
-// import { calculateTimeRemaining } from '../helpers';
+import * as helpers from '../helpers';
 
-jest.mock('../helpers', () => {
-  return {
-    calculateTimeRemaining: jest.fn().mockImplementation(() => 100),
-  };
-});
+jest.spyOn(helpers, 'calculateTimeRemaining').mockImplementation(() => 100);
 
 const RealDate = Date;
 const mockDate = new Date(12345678);
@@ -24,7 +20,7 @@ describe('Download model reducer', () => {
     expect(
       downloadModelReducer(initialStore.downloadModel, {
         type: START_DOWNLOAD,
-        payload: null,
+        payload: helpers.createDownloadStateUpdatePayload(0),
       })
     ).toEqual({
       ...initialStore.downloadModel,
@@ -51,7 +47,7 @@ describe('Download model reducer', () => {
         },
         {
           type: DOWNLOAD_PROGRESS_UPDATE,
-          payload: 0.5,
+          payload: helpers.createDownloadStateUpdatePayload(0.5),
         }
       )
     ).toEqual({
@@ -79,7 +75,7 @@ describe('Download model reducer', () => {
         },
         {
           type: FINISH_DOWNLOAD,
-          payload: null,
+          payload: helpers.createDownloadStateUpdatePayload(1),
         }
       )
     ).toEqual({

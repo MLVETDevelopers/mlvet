@@ -34,3 +34,18 @@ export const calculateTimeRemaining: CalculateTimeRemaining = (
     (newDownloadProgress - oldDownloadProgress) / timeDifference;
   return (1 - newDownloadProgress) / progressPerTime;
 };
+
+export type DownloadStateUpdatePayload = {
+  lastUpdated: Date;
+  downloadProgress: number;
+};
+
+type CreateDownloadStateUpdatePayload = (
+  progress: number
+) => DownloadStateUpdatePayload;
+
+export const createDownloadStateUpdatePayload: CreateDownloadStateUpdatePayload =
+  (progress) => ({
+    lastUpdated: new Date(),
+    downloadProgress: progress,
+  });

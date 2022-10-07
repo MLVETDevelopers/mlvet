@@ -18,7 +18,7 @@ import {
   SpeakerModel,
   LocalTranscriptionAssetNotFoundError,
 } from './helpers';
-import { getDllDir, updatePathWithDlls } from './util';
+import { updatePathWithDlls } from './util';
 
 koffi.opaque('VoskModel');
 koffi.opaque('VoskSpkModel');
@@ -28,8 +28,7 @@ koffi.opaque('data');
 /**
  * A facade for the vosk speech recognition API
  */
-const vosk = async () => {
-  const dllDir = await getDllDir();
+const vosk = (dllDir: string) => {
   if (os.platform() === OperatingSystems.WINDOWS) {
     // Update PATH to load dependent dlls
     updatePathWithDlls(dllDir);

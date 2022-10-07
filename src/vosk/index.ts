@@ -5,7 +5,11 @@ import { checkWavFile } from './wavUtils';
 /**
  * Returns a transcript of the audio file at the given path using the Vosk model at the given path
  */
-const getVoskTranscript = async (modelPath: string, filePath: string) => {
+const getVoskTranscript = (
+  dllLibsPath: string,
+  modelPath: string,
+  filePath: string
+) => {
   // Read in the wav audio file as a buffer
   const audioBuffer = fs.readFileSync(filePath);
 
@@ -13,7 +17,7 @@ const getVoskTranscript = async (modelPath: string, filePath: string) => {
   checkWavFile(audioBuffer);
 
   // Create the models
-  const voskManager = await vosk();
+  const voskManager = vosk(dllLibsPath);
   const model = voskManager.createModel(modelPath);
 
   const voskRecognizer = voskManager.createRecognizer(model, 16000);

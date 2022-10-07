@@ -1,9 +1,10 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
+import { fork } from 'child_process';
+import { getDllDir } from '../../../../vosk/util';
 import { TranscriptionConfigError } from '../../../utils/file/transcriptionConfig/helpers';
 import { LocalTranscriptionAssetNotFoundError } from '../../../../vosk/helpers';
-import getVoskTranscript from '../../../../vosk';
 import { getAudioExtractPath } from '../../../util';
 import { TranscriptionFunction } from '../transcribeTypes';
 import getTranscriptionEngineConfig from '../../file/transcriptionConfig/getEngineConfig';
@@ -27,7 +28,36 @@ const getModelPath = async () => {
   return path.resolve(localConfig.modelPath);
 };
 
+const asyncTranscribeWithVosk = async (
+  dllLibsPath: string,
+  modelPath: string,
+  audioFilePath: string
+) => {
+  const controller = new AbortController();
+
+  const result = await new Promise((resolve, reject) => {
+    const child = fork(
+      path.resolve(__dirname, '../../../../vosk/asyncVosk.ts'),
+      [dllLibsPath, modelPath, audioFilePath],
+      { signal: controller.signal }
+    );
+
+    if (!child) throw new Error('child process not created');
+
+    child.on('message', (res) => {
+      resolve(res);
+    });
+
+    child.on('error', (err) => {
+      reject(err);
+    });
+  });
+
+  return result as string;
+};
+
 const transcribeWithVosk = async (audioFilePath: string) => {
+  const dllLibsDirPath = await getDllDir();
   const modelPath = await getModelPath();
 
   if (!fs.existsSync(modelPath)) {
@@ -35,7 +65,14 @@ const transcribeWithVosk = async (audioFilePath: string) => {
       `Model ${modelPath} not found. Have you downloaded the model and put it in the assets folder?`
     );
   }
-  const result = (await getVoskTranscript(modelPath, audioFilePath)) as string;
+
+  const result = (await asyncTranscribeWithVosk(
+    dllLibsDirPath,
+    modelPath,
+    audioFilePath
+  )) as string;
+
+  console.log(result);
 
   return result;
 };

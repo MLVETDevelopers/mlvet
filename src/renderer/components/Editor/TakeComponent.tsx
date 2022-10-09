@@ -144,6 +144,10 @@ const TakeComponent = ({
 
   const TakeWords = takeWords.map((word, index, words) => {
     const wordIndex = transcriptionIndex + index;
+
+    // Using wordIndex will not work with takes as 'words' will not
+    // equal the entire transcription words, only the take words
+
     return (
       <WordOuterComponent
         key={`word-outer-${word.originalIndex}-${word.pasteKey}`}

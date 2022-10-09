@@ -82,12 +82,10 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
 
     // Replace takeInfo of pasted words with takeInfo of words from paste section
     const takeInfo = wordsToReplace.reduce(getNewTakeInfo, null);
-    if (takeInfo !== null) {
-      wordsToPaste = wordsToPaste.map((word) => ({
-        ...word,
-        takeInfo,
-      }));
-    }
+    wordsToPaste = wordsToPaste.map((word) => ({
+      ...word,
+      takeInfo,
+    }));
 
     return [...prefix, ...replacedWords, ...wordsToPaste, ...suffix];
   }

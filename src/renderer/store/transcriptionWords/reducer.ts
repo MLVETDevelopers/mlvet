@@ -33,7 +33,7 @@ import {
   UndoPasteWordsPayload,
   UndoRestoreSectionPayload,
 } from './opPayloads';
-import { getNewTakeInfo } from './helpers/takeUtils';
+import { getWordsTakeInfo } from './helpers/takeUtils';
 
 /**
  *  Nested reducer for handling transcription words
@@ -81,7 +81,7 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
     const suffix = words.slice(endIndex);
 
     // Replace takeInfo of pasted words with takeInfo of words from paste section
-    const takeInfo = wordsToReplace.reduce(getNewTakeInfo, null);
+    const takeInfo = wordsToReplace.reduce(getWordsTakeInfo, null);
     wordsToPaste = wordsToPaste.map((word) => ({
       ...word,
       takeInfo,

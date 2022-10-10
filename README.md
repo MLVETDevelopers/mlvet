@@ -1,5 +1,12 @@
 # Machine Learning Video Editing Toolkit
 
+## About the App 
+The Machine Learning Video Editing Toolkit (MLVET for short) is a desktop application which 
+allows users to edit their videos via a transcription of the video audio. This transcription 
+is produced with a machine learning model, and users are given the option to transcribe
+both online (with AssemblyAI) and offline (with VOSK). For more information and to install
+the app, visit the MLVET landing page https://www.mlvet.app/
+
 ## Dependencies
 
 Supported Hardware - Windows - Mac (Intel) - Mac (ARM) - Linux

@@ -175,10 +175,16 @@ const ProjectPage = () => {
                     options={videoResizeOptions}
                     sx={{ flex: '0 0 auto' }}
                   />
-                  <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
+                  <Stack
+                    id="video-preview"
+                    justifyContent="center"
+                    sx={{ width: 'fit-content', height: '100%' }}
+                  >
                     <Box
+                      id="video-preview-container"
                       sx={{
                         width: `${videoPreviewContainerWidth}px`,
+                        maxHeight: 'calc(100% - 48px)',
                       }}
                       ref={videoPreviewContainerRef}
                     >

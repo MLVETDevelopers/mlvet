@@ -42,6 +42,9 @@ const ProjectPage = () => {
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
   // useState for findText
   const [findText, setFindText] = useState<string>('');
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
+  );
 
   return (
     <PlaybackManager

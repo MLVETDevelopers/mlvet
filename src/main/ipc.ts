@@ -27,6 +27,7 @@ import loadThumbnail from './handlers/media/thumbnailLoad';
 import transcribe from './handlers/media/transcribe';
 import requestTranscription from './handlers/media/transcriptionHandler';
 import setConfidenceLinesEnabled from './handlers/menu/setConfidenceLinesEnabled';
+import setCtrlFPopoverEnabled from './handlers/menu/setCtrlFPopoverEnabled';
 import setEditWordEnabled from './handlers/menu/setEditWordEnabled';
 import setExportEnabled from './handlers/menu/setExportEnabled';
 import setFileRepresentation from './handlers/menu/setFileRepresentation';
@@ -132,6 +133,12 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     'set-confidence-lines-enabled',
     async (_event, menuItemEnabled) =>
       setConfidenceLinesEnabled(ipcContext, menuItemEnabled)
+  );
+
+  ipcMain.handle(
+    'set-ctrl-f-popover-enabled',
+    async (_event, menuItemEnabled) =>
+      setCtrlFPopoverEnabled(ipcContext, menuItemEnabled)
   );
 
   ipcMain.handle('set-edit-word-enabled', async (_event, editEnabled) =>

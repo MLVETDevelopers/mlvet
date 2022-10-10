@@ -41,6 +41,10 @@ const StoreChangeObserver = () => {
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
   );
 
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
+  );
+
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selfSelection = useSelector(
@@ -128,6 +132,11 @@ const StoreChangeObserver = () => {
       );
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
+
+  // Enable the find menu if a project is open
+  useEffect(() => {
+    ipc.setCtrlFPopoverEnabled(currentProject !== null);
+  }, [currentProject]);
 
   // Update 'go to home' option in menu when page is changed
   useEffect(() => {

@@ -8,12 +8,13 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
 import { IndexRange, Transcription } from 'sharedTypes';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ctrlFindClosed,
   ctrlFindUpdated,
   CtrlFindUpdatePayload,
 } from 'renderer/store/transcriptionFind/actions';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
 
 // Popover for Ctrl+F search
 
@@ -34,6 +35,12 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [totalFinds, setTotalFinds] = React.useState(0);
   const dispatch = useDispatch();
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
+  );
+  const isShowingConfidenceUnderlines = useSelector(
+    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
+  );
 
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Algorithm
@@ -124,6 +131,8 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     // TODO: Make the page scroll to the highlighted word.
     // console.log('Prev Word');
     // console.log(searchOccurrences);
+    console.log(isShowingCtrlFPopover);
+    console.log(isShowingConfidenceUnderlines);
   };
 
   const handleClose = () => {

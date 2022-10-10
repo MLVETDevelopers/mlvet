@@ -13,6 +13,7 @@ import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import transcriptionFindReducer from './transcriptionFind/reducer';
+import ctrlFReducer from './ctrlFPopover/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
+  isShowingCtrlFPopover: ctrlFReducer,
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,

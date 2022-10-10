@@ -30,6 +30,8 @@ export interface ApplicationStore {
   editWord: EditWordState;
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
+  // whether ctrl-f popover is currently visible
+  isShowingCtrlFPopover: boolean;
   // Collab session state
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
@@ -55,6 +57,7 @@ export const initialStore: ApplicationStore = {
   isUpdateTranscriptionAPIKeyOpened: false,
   editWord: null,
   isShowingConfidenceUnderlines: false,
+  isShowingCtrlFPopover: false,
   collab: null,
   opQueue: [],
 };

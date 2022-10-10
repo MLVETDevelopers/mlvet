@@ -53,8 +53,3 @@ export const markWordFound = (word: Word) => ({
 });
 
 export const markWordSelected = (word: Word) => ({ ...word, selected: true });
-
-export const markWordUnselected = (word: Word) => ({
-  ...word,
-  selected: false,
-});

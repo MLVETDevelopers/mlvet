@@ -78,12 +78,3 @@ yarn test
 ## Generating IPC Handlers
 
 Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS_README.md`
-
-## Additional steps you need to follow
-
-After the [audio extract PR](https://github.com/chloebrett/mlvet/pull/12) got merged you will now need to have a `demo-video.mp4` video file under `assets/videos`
-
-Note:
-
-- You will have to create the `/video` subdirectory
-- Do not push a .mp4 folder to the repo since it will not be read correctly between different OS's

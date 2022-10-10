@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><strong>MVLET</strong></h1>
+  <h1><strong>MLVET</strong></h1>
   <p>
     <strong>Machine Learning Video Editing Toolkit</strong>
   </p>

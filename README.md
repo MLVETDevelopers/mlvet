@@ -78,3 +78,7 @@ yarn test
 ## Generating IPC Handlers
 
 Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS_README.md`
+
+## Running the Collab server
+
+Refer to the documentation in `src/collabServer/README.md`

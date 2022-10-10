@@ -30,7 +30,7 @@ Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS
 
 ## Additional steps you need to follow
 
-After the [audio extract PR](https://github.com/chloebrett/mlvet/pull/12) got merged you will now need to have a `demo-video.mp4` video file under `assets/videos`
+After the [audio extract PR](https://github.com/MLVETDevelopers/mlvet/pull/12) got merged you will now need to have a `demo-video.mp4` video file under `assets/videos`
 
 Note:
 

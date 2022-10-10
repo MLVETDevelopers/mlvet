@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
+import { useState } from 'react';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import { IconButton, Stack, TextField } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -15,6 +14,7 @@ import {
   CtrlFindUpdatePayload,
 } from 'renderer/store/transcriptionFind/actions';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { ctrlFPopoverToggled } from 'renderer/store/ctrlFPopover/actions';
 
 // Popover for Ctrl+F search
 
@@ -26,20 +26,17 @@ interface SearchBoxPopoverProps {
 }
 
 const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     // console.log('handleClicked');
     setAnchorEl(event.currentTarget);
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-  const [totalFinds, setTotalFinds] = React.useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [totalFinds, setTotalFinds] = useState(0);
   const dispatch = useDispatch();
   const isShowingCtrlFPopover = useSelector(
     (store: ApplicationStore) => store.isShowingCtrlFPopover
-  );
-  const isShowingConfidenceUnderlines = useSelector(
-    (store: ApplicationStore) => store.isShowingConfidenceUnderlines
   );
 
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +85,6 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
 
         // If only searching for a single word
         if (j === 0 && searchStrArrayLength === 1) {
-          console.log('Single word search');
           if (wordText.includes(currentSearchStr)) {
             const indexRange: IndexRange = {
               startIndex: i,
@@ -99,12 +95,10 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
 
           // If first word of search string
         } else if (j === 0) {
-          console.log('First word of search string');
           if (!wordText.endsWith(currentSearchStr)) break;
 
           // If last word of search string
         } else if (j === searchStrArrayLength - 1) {
-          console.log('Last word of search string');
           if (!wordText.startsWith(currentSearchStr)) break;
           const indexRange: IndexRange = {
             startIndex: i,
@@ -132,31 +126,27 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     // console.log('Prev Word');
     // console.log(searchOccurrences);
     console.log(isShowingCtrlFPopover);
-    console.log(isShowingConfidenceUnderlines);
   };
 
   const handleClose = () => {
     dispatch(ctrlFindClosed());
-    // console.log('Close');
-    setAnchorEl(null);
+    dispatch(ctrlFPopoverToggled());
+    // setAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = isShowingCtrlFPopover ? 'simple-popover' : undefined;
 
   return (
     <div>
-      <Button aria-describedby={id} variant="contained" onClick={handleClick}>
-        Open Ctrl+F Popover
-      </Button>
       <Popover
         id={id}
-        open={open}
+        open={isShowingCtrlFPopover}
         anchorEl={anchorEl}
-        // onClose={handleClose}
+        onClose={handleClose}
+        anchorPosition={{ top: 200, left: 100 }}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: 'top',
+          horizontal: 'right',
         }}
       >
         <Stack

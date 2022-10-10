@@ -30,6 +30,7 @@
 - [Installation (with pre-built binaries)](#installation-with-pre-built-binaries)
 - [Manual Installing (from source)](#manual-installing-from-source)
 - [Optional Development Installation](#optional-development-installation)
+  - [Development Environment Setup](#development-environment-setup)
   - [Packaging for Production](#packaging-for-production)
   - [Testing](#testing)
   - [Generating IPC Handlers](#generating-ipc-handlers)
@@ -97,6 +98,8 @@ There are multiple ways of downloading the MLVET app.
 You should now see MLVET in your file system.
 
 ## Optional Development Installation
+
+### Development Environment Setup
 
 1. Dependencies: Node, yarn
 

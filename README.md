@@ -7,8 +7,12 @@ allows users to edit their videos via a transcription of the video audio. This t
 is produced with a machine learning model, and users are given the option to transcribe
 both online (with AssemblyAI) and offline (with VOSK).
 
-For more information and to install the app, visit the MLVET landing page
-https://www.mlvet.app/ or check [out the github releases tab](https://github.com/chloebrett/mlvet/releases)
+## Installation
+
+There are multiple ways of downloading the MLVET app.
+
+1. Through out website https://www.mlvet.app/
+2. Through the [github releases tab](https://github.com/chloebrett/mlvet/releases)
 
 ## Dependencies
 

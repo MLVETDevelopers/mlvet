@@ -28,7 +28,9 @@ both online (with AssemblyAI) and offline (with VOSK).
 
 ## Official help guide
 
-For offical 'how-to' documentation visit https://www.mlvet.app/docs
+For offical 'how-to' documentation visit [MLVET Docs](https://www.mlvet.app/docs)
+
+To learn the codebase visit [MLVET codebase walkthrough](https://www.youtube.com/watch?v=rSpGJfZOhig)
 
 ## Installation
 
@@ -100,8 +102,8 @@ yarn test
 
 ## Generating IPC Handlers
 
-Refer to the documents `tools/GENCODE_README.md` and `src/main/handlers/HANDLERS_README.md`
+Refer to the [Code Generate](tools/GENCODE_README.md) documentation and [IPC Handlers](src/main/handlers/HANDLERS_README.md) documentation
 
 ## Running the Collab server
 
-Refer to the documentation in `src/collabServer/README.md`
+Refer to the [Collab Server](src/collabServer/README.md) documentation

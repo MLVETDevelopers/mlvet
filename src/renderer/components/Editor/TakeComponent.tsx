@@ -1,8 +1,12 @@
 import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { selectTake } from 'renderer/store/takeGroups/actions';
-import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
+import {
+  IndexRange,
+  TakeGroup,
+  TakeInfo,
+  Transcription,
+  Word,
+} from 'sharedTypes';
 import React, {
   RefObject,
   useCallback,
@@ -15,6 +19,8 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
 import { isIndexInRange } from 'renderer/utils/range';
+import { makeSelectTake } from 'renderer/store/takeGroups/ops/selectTake';
+import dispatchOp from 'renderer/store/dispatchOp';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -87,19 +93,34 @@ const TakeComponent = ({
   isLast,
   isFirstTimeOpen,
   setIsFirstTimeOpen,
+  transcription,
   ...passThroughProps
 }: TakeComponentProps) => {
   const [currentTakeHeight, setCurrentTakeHeight] = useState<number>(0);
   const takeRef = useRef<HTMLDivElement>(null);
 
-  const dispatch = useDispatch();
-
   const onSelectTake = useCallback(() => {
-    dispatch(selectTake(takeWords[0].takeInfo as TakeInfo));
+    const takeInfo = takeWords[0].takeInfo as TakeInfo;
+    const takeGroup = transcription.takeGroups.find(
+      (tg) => tg.id === takeInfo.takeGroupId
+    ) as TakeGroup;
+    if (
+      takeGroup.activeTakeIndex !== takeInfo.takeIndex ||
+      !takeGroup.takeSelected
+    ) {
+      dispatchOp(makeSelectTake(takeInfo, takeGroup));
+    }
+
     if (!isFirstTimeOpen && isActive) {
       setIsTakeGroupOpened(false);
     }
-  }, [dispatch, takeWords, isFirstTimeOpen, isActive, setIsTakeGroupOpened]);
+  }, [
+    takeWords,
+    transcription.takeGroups,
+    isFirstTimeOpen,
+    isActive,
+    setIsTakeGroupOpened,
+  ]);
 
   const TakeWrapper = useMemo(
     () => makeTakeWrapper(isTakeGroupOpened, isActive, isFirstTimeOpen),

@@ -33,6 +33,7 @@ import {
   DELETE_TAKE_GROUP,
   SELECT_TAKE,
   UNDO_DELETE_TAKE_GROUP,
+  UNDO_SELECT_TAKE,
 } from '../takeGroups/actions';
 
 const currentProjectReducer: Reducer<
@@ -107,6 +108,7 @@ const currentProjectReducer: Reducer<
       SPLIT_WORD,
       UNDO_SPLIT_WORD,
       SELECT_TAKE,
+      UNDO_SELECT_TAKE,
       DELETE_TAKE_GROUP,
       UNDO_DELETE_TAKE_GROUP,
       RESTORE_SECTION,

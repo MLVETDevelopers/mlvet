@@ -13,6 +13,9 @@
     <a href="https://github.com/chloebrett/mlvet/releases">
         <img src="https://img.shields.io/github/v/release/chloebrett/mlvet"/>
     </a>
+    <a href="https://github.com/chloebrett/mlvet/blob/develop/LICENSE">
+        <img src="https://img.shields.io/github/license/chloebrett/mlvet"/>
+    </a>
   </p>
 </div>
 

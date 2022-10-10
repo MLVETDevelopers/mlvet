@@ -1,4 +1,20 @@
-# Machine Learning Video Editing Toolkit
+<div align="center">
+  <h1><strong>MVLET</strong></h1>
+  <p>
+    <strong>Machine Learning Video Editing Toolkit</strong>
+  </p>
+  <p>
+    <a href="https://github.com/chloebrett/mlvet/actions/workflows/test.yml?query=branch%3Adevelop++Node.js+CI%22">
+        <img src="https://img.shields.io/github/workflow/status/chloebrett/mlvet/Node.js%20CI/develop?label=build%20status"/>
+    </a>
+    <a href="https://github.com/chloebrett/mlvet/graphs/contributors">
+        <img src="https://img.shields.io/github/contributors/chloebrett/mlvet" />
+    </a>
+    <a href="https://github.com/chloebrett/mlvet/releases">
+        <img src="https://img.shields.io/github/v/release/chloebrett/mlvet"/>
+    </a>
+  </p>
+</div>
 
 ## About the App
 

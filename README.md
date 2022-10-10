@@ -19,6 +19,22 @@
   </p>
 </div>
 
+<!-- TODO: Add screenshot -->
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [About the App](#about-the-app)
+- [Official help guide](#official-help-guide)
+- [Dependencies](#dependencies)
+- [Installation (with pre-built binaries)](#installation-with-pre-built-binaries)
+- [Manual Installing (from source)](#manual-installing-from-source)
+- [Optional Development Installation](#optional-development-installation)
+  - [Packaging for Production](#packaging-for-production)
+  - [Testing](#testing)
+  - [Generating IPC Handlers](#generating-ipc-handlers)
+  - [Running the Collab server](#running-the-collab-server)
+
 ## About the App
 
 The Machine Learning Video Editing Toolkit (MLVET for short) is a desktop application which
@@ -31,13 +47,6 @@ both online (with AssemblyAI) and offline (with VOSK).
 For offical 'how-to' documentation visit [MLVET Docs](https://www.mlvet.app/docs)
 
 To learn the codebase visit [MLVET codebase walkthrough](https://www.youtube.com/watch?v=rSpGJfZOhig)
-
-## Installation
-
-There are multiple ways of downloading the MLVET app.
-
-1. Through out website https://www.mlvet.app/
-2. Through the [github releases tab](https://github.com/chloebrett/mlvet/releases)
 
 ## Dependencies
 
@@ -53,23 +62,63 @@ npm install -g yarn
 
 This will install yarn globally. Then you can install project-specific dependencies as follows
 
-## Installing
+## Installation (with pre-built binaries)
 
-Clone the repo, then:
+There are multiple ways of downloading the MLVET app.
 
-```bash
-yarn
-```
+1. Through out website https://www.mlvet.app/download
+2. Through the [github releases tab](https://github.com/chloebrett/mlvet/releases)
+
+## Manual Installing (from source)
+
+1. Dependencies: Node, yarn
+
+2. Clone the repository and cd into the directory
+
+   ```bash
+   git clone https://github.com/MLVETDevelopers/mlvet.git
+   cd mlvet
+   ```
+
+3. Package mlvet
+
+   ```bash
+   yarn package
+   ```
+
+4. Setup mlvet
+
+   ```bash
+   cd ./release/build
+   ```
+
+5. Execute `MLVET Setup` file
+
+You should now see MLVET in your file system.
+
+## Optional Development Installation
+
+1. Dependencies: Node, yarn
+
+2. Clone the repository and cd into the directory
+
+   ```bash
+   git clone https://github.com/MLVETDevelopers/mlvet.git
+   cd mlvet
+   ```
+
+3. Install node dependencies
+
+   ```bash
+   yarn
+   ```
+
+4. Start the app in the `dev` environment
+   ```bash
+   yarn start
+   ```
 
 This will install all dependencies required by electron needed to run the app.
-
-## Starting Development
-
-Start the app in the `dev` environment:
-
-```bash
-yarn start
-```
 
 To make development easier, it's recommended to use VSCode, and install the following extensions:
 
@@ -78,7 +127,7 @@ To make development easier, it's recommended to use VSCode, and install the foll
 
 These will be automatically configured for the project based on the .eslintrc and .prettierrc files in the root directory.
 
-## Packaging for Production
+### Packaging for Production
 
 To package apps for the local platform:
 
@@ -86,7 +135,7 @@ To package apps for the local platform:
 yarn package
 ```
 
-## Testing
+### Testing
 
 if app has not already been built, run:
 
@@ -100,10 +149,10 @@ To run unit tests:
 yarn test
 ```
 
-## Generating IPC Handlers
+### Generating IPC Handlers
 
 Refer to the [Code Generate](tools/GENCODE_README.md) documentation and [IPC Handlers](src/main/handlers/HANDLERS_README.md) documentation
 
-## Running the Collab server
+### Running the Collab server
 
 Refer to the [Collab Server](src/collabServer/README.md) documentation

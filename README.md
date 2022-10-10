@@ -39,6 +39,14 @@ There are multiple ways of downloading the MLVET app.
 1. Through out website https://www.mlvet.app/
 2. Through the [github releases tab](https://github.com/chloebrett/mlvet/releases)
 
+## Contributors
+
+This project exists thanks to all the people who contribute. If you are interested in helping, check out the [Contributing Guide](CONTRIBUTING.md).
+
+<a href="https://github.com/MLVETDevelopers/mlvet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MLVETDevelopers/mlvet" />
+</a>
+
 ## Dependencies
 
 Supported Hardware - Windows - Mac (Intel) - Mac (ARM) - Linux

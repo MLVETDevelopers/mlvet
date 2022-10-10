@@ -37,6 +37,7 @@ export interface Transcription {
   duration: number;
   outputDuration: number;
   takeGroups: TakeGroup[];
+  ctrlFindSelected: CtrlFindSelected;
 }
 
 export type PartialWord = Pick<
@@ -69,9 +70,15 @@ export interface CloudConfig {
   DUMMY: EngineConfig;
 }
 
-export interface HighlightRange {
-  start: number;
-  end: number;
+export interface CtrlFindSelected {
+  selectedIndex: number;
+  maxIndex: number;
+  indexRanges: IndexRange[];
+}
+
+export interface CtrlFindState {
+  searchMatch: boolean;
+  selected: boolean;
 }
 
 export interface Word {
@@ -102,9 +109,7 @@ export interface Word {
   // if using another platform that doesn't support this, just set to null.
   confidence: number | null | undefined;
   // Highlighting for Ctrl+F
-  highlightRanges: HighlightRange[];
-  // Current selection for Ctrl+F
-  selected: boolean;
+  ctrlFindState: CtrlFindState;
 }
 
 export interface Cut {
@@ -114,11 +119,6 @@ export interface Cut {
   // Somewhat redundant as cuts are stored in array, but it's used by the
   // video preview controller for O(1) lookups of the current cut index
   index: number;
-}
-
-export interface SearchOccurrence {
-  originalIndex: number;
-  pasteKey: number;
 }
 
 export type MediaFileExtension = AudioFileExtension | VideoFileExtension;

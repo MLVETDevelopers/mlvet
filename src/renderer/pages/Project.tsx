@@ -113,11 +113,11 @@ const ProjectPage = () => {
                 ref={projectPageLayoutRef}
               >
                 <Stack>
-                  <SearchBoxPopover
-                    transcription={currentProject.transcription}
-                    findText={findText}
-                    setFindText={setFindText}
-                  />
+                  {currentProject?.transcription && (
+                    <SearchBoxPopover
+                      transcription={currentProject.transcription}
+                    />
+                  )}
                 </Stack>
                 <Stack
                   id="transcription-container"

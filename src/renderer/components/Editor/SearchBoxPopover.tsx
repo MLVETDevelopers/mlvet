@@ -7,12 +7,12 @@ import { IconButton, Stack, TextField } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
-import { HighlightRange, Transcription } from 'sharedTypes';
+import { IndexRange, Transcription } from 'sharedTypes';
 import { useDispatch } from 'react-redux';
 import {
-  searchOccurrenceUpdated,
-  SearchOccurrencePayload,
-  SEARCH_CLOSED,
+  ctrlFindClosed,
+  ctrlFindUpdated,
+  CtrlFindUpdatePayload,
 } from 'renderer/store/transcriptionFind/actions';
 
 // Popover for Ctrl+F search
@@ -37,9 +37,9 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
 
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Algorithm
-    // Loop through every Transcription Word
-    // Loop through every Transcription Letter
-    // Perform string match
+    // Loop through every Transcription Word, if word is deleted, continue.
+    // Loop through every SearchStr Word
+    // If SearchStr is only 1 word, then use .includes. Send word index to reducer if so.
     // First match will need to loop through every letter
     // General case can match full text
     // Last case will only need to check start of text
@@ -49,100 +49,74 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     // Set last match start and end indexes (start will be 0, end will be any index)
     // If only one word, then start and end can be any range
 
+    // Empty search string
     const searchStr = event.target.value;
     if (searchStr.length === 0) return;
 
+    // Split by spaces
     const searchStrArray = searchStr.match(/\S+/g);
     if (searchStrArray === null) return;
     const searchStrArrayLength = searchStrArray.length;
 
-    for (
-      let wordIndex = 0;
-      wordIndex < transcription.words.length - searchStrArrayLength + 1;
-      wordIndex += 1
-    ) {
-      const word = transcription.words[wordIndex];
+    const payload: CtrlFindUpdatePayload = {
+      indexRanges: [],
+    };
+
+    // Loop through each word in the transcription
+    const loopIter = transcription.words.length - searchStrArrayLength + 1;
+    for (let i = 0; i < loopIter; i += 1) {
+      const word = transcription.words[i];
       let wordText = word.word;
       // TODO: Do a proper continue;
       // eslint-disable-next-line no-continue
       if (wordText === null) continue;
-      let firstWordStartIndex = 0;
-      let firstWordEndIndex = 0;
-      let lastWordEndIndex = 0;
 
-      for (
-        let searchStrIndex = 0;
-        searchStrIndex < searchStrArrayLength;
-        searchStrIndex += 1
-      ) {
-        const currentSearchStr = searchStrArray[searchStrIndex];
-        const currentSearchStrLength = currentSearchStr.length;
-        wordText = transcription.words[wordIndex + searchStrIndex].word;
+      // Loop through each word in the search string
+      for (let j = 0; j < searchStrArrayLength; j += 1) {
+        const currentSearchStr = searchStrArray[j];
+        wordText = transcription.words[i + j].word;
         if (wordText === null) {
           break;
         }
 
-        if (searchStrIndex === 0 && searchStrArrayLength === 1) {
-          // If only searching for a single word
-          const startIndexes = [
-            ...wordText.matchAll(new RegExp(currentSearchStr, 'gi')),
-          ].map((match) => match.index);
-          // TODO: Do proper undefined check
-          if (startIndexes === undefined) {
-            break;
+        // If only searching for a single word
+        if (j === 0 && searchStrArrayLength === 1) {
+          console.log('Single word search');
+          if (wordText.includes(currentSearchStr)) {
+            const indexRange: IndexRange = {
+              startIndex: i,
+              endIndex: i,
+            };
+            payload.indexRanges.push(indexRange);
           }
-          const highlightedRanges = startIndexes.map((startIndex) => ({
-            start: startIndex,
-            end: startIndex + currentSearchStrLength,
-          }));
-          // console.log(wordIndex, highlightedRanges);
-        } else if (searchStrIndex === 0) {
+
           // If first word of search string
+        } else if (j === 0) {
+          console.log('First word of search string');
           if (!wordText.endsWith(currentSearchStr)) break;
-          firstWordStartIndex = wordText.length - currentSearchStrLength;
-          firstWordEndIndex = wordText.length;
-        } else if (searchStrIndex === searchStrArrayLength - 1) {
+
           // If last word of search string
-          if (wordText.startsWith(currentSearchStr)) {
-            // console.log('Started with last word');
-            // Update transcription with highlighting information
-            lastWordEndIndex = currentSearchStrLength;
-            const valuesToUpdate = [];
-            // TODO: Rewrite as .map()
-            valuesToUpdate.push({
-              start: firstWordStartIndex,
-              end: firstWordEndIndex,
-            } as HighlightRange);
-            for (let i = 1; i < searchStrArrayLength - 1; i += 1) {
-              valuesToUpdate.push({
-                start: 0,
-                end: wordText.length,
-              } as HighlightRange);
-            }
-            valuesToUpdate.push({
-              start: 0,
-              end: lastWordEndIndex,
-            });
-            // console.log(wordIndex, valuesToUpdate);
-            const searchPayload = {
-              wordIndex,
-              highlightRanges: valuesToUpdate,
-            } as SearchOccurrencePayload;
-            dispatch(searchOccurrenceUpdated(searchPayload));
-          }
-        } else if (wordText !== currentSearchStr) {
-          // General case
-          break;
-        }
+        } else if (j === searchStrArrayLength - 1) {
+          console.log('Last word of search string');
+          if (!wordText.startsWith(currentSearchStr)) break;
+          const indexRange: IndexRange = {
+            startIndex: i,
+            endIndex: i + j,
+          };
+          payload.indexRanges.push(indexRange);
+          // If any middle word of search string
+        } else if (wordText !== currentSearchStr) break;
       }
     }
+    console.log(payload);
+    dispatch(ctrlFindUpdated(payload));
   };
 
   const nextOccurrence = () => {
     // TODO: Change CSS highlighting to highlight next word. If at end, go to beginning.
     // TODO: Make the page scroll to the highlighted word.
     // console.log('Next Word');
-    // console.log(transcription);
+    console.log(transcription);
   };
 
   const prevOccurrence = () => {
@@ -153,7 +127,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   };
 
   const handleClose = () => {
-    dispatch(SEARCH_CLOSED);
+    dispatch(ctrlFindClosed());
     // console.log('Close');
     setAnchorEl(null);
   };

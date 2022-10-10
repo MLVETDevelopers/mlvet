@@ -1,5 +1,7 @@
 import { updateOutputTimes } from '../../transcriptProcessing/updateOutputTimes';
 import {
+  CtrlFindSelected,
+  CtrlFindState,
   MapCallback,
   PartialWord,
   Transcription,
@@ -26,8 +28,10 @@ const injectAttributes: MapCallback<PartialWord, Word> = (word, index) => ({
   bufferDurationBefore: 0,
   bufferDurationAfter: 0,
   takeInfo: null,
-  highlightRanges: [],
-  selected: false,
+  ctrlFindState: {
+    searchMatch: false,
+    selected: false,
+  } as CtrlFindState,
 });
 
 const calculateBufferDurationBefore: (
@@ -114,8 +118,10 @@ const makePauseWord: (params: Pick<Word, 'startTime' | 'duration'>) => Word = ({
   confidence: 1,
   pasteKey: 0,
   takeInfo: null,
-  highlightRanges: [],
-  selected: false,
+  ctrlFindState: {
+    searchMatch: false,
+    selected: false,
+  },
 });
 
 const injectPauses: (
@@ -224,10 +230,17 @@ const preProcessTranscript = (
     injectableTakeGroups
   );
 
+  const ctrlFindSelected: CtrlFindSelected = {
+    selectedIndex: 0,
+    maxIndex: 0,
+    indexRanges: [],
+  };
+
   return {
     duration,
     ...updateOutputTimes(words, takeGroups),
     takeGroups,
+    ctrlFindSelected,
   };
 };
 

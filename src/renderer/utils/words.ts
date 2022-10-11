@@ -7,15 +7,6 @@ export const markWordDeleted = (word: Word) => ({ ...word, deleted: true });
 
 export const markWordUndeleted = (word: Word) => ({ ...word, deleted: false });
 
-export const markWordFound = (word: Word) => ({
-  ...word,
-  ctrlFindState: {
-    searchMatch: true,
-    selected: false,
-  },
-});
-
-export const markWordSelected = (word: Word) => ({ ...word, selected: true });
 export const combineWordsIntoParagraphs: (
   chunks: TranscriptionChunk[],
   paragraphPauseThreshold?: number

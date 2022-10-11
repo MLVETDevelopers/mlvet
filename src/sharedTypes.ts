@@ -128,8 +128,6 @@ export interface Word {
   // Ranges from 0 - 1.
   // if using another platform that doesn't support this, just set to null.
   confidence: number | null | undefined;
-  // Highlighting for Ctrl+F
-  ctrlFindState: CtrlFindState;
 }
 
 export interface Cut {

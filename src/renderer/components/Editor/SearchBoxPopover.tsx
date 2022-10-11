@@ -14,7 +14,7 @@ import {
   ctrlFindPrev,
   ctrlFindUpdated,
   CtrlFindUpdatePayload,
-} from 'renderer/store/transcriptionFind/actions';
+} from 'renderer/store/ctrlFSelectionState/actions';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { ctrlFPopoverToggled } from 'renderer/store/ctrlFPopover/actions';
 import colors from '../../colors';

@@ -5,7 +5,7 @@ import {
   FIND_NEXT,
   FIND_PREV,
   CtrlFindUpdatePayload,
-} from '../transcriptionFind/actions';
+} from './actions';
 import { Action } from '../action';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 

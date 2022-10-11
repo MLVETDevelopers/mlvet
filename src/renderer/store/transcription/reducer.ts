@@ -25,13 +25,6 @@ import {
 } from '../takeGroups/actions';
 import transcriptionTakesReducer from '../transcriptionTakes/reducer';
 import takeGroupsReducer from '../takeGroups/reducer';
-// import {
-//   FIND_CLOSED,
-//   FIND_NEXT,
-//   FIND_PREV,
-//   FIND_UPDATED,
-// } from '../transcriptionFind/actions';
-// import transcriptionFindReducer from '../transcriptionFind/reducer';
 
 /**
  *  Nested reducer for handling transcriptions
@@ -93,17 +86,6 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
       takeGroups,
     };
   }
-
-  // Delegate Ctrl+F actions to find reducer
-  // if ([FIND_UPDATED, FIND_NEXT, FIND_PREV, FIND_CLOSED].includes(action.type)) {
-  //   return {
-  //     ...transcription,
-  //     ...updateOutputTimes(
-  //       transcriptionFindReducer(transcription.words, action),
-  //       transcription.takeGroups
-  //     ),
-  //   };
-  // }
 
   return transcription;
 };

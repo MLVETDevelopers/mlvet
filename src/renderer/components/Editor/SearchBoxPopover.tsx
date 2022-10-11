@@ -10,6 +10,8 @@ import { IndexRange, Transcription } from 'sharedTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ctrlFindClosed,
+  ctrlFindNext,
+  ctrlFindPrev,
   ctrlFindUpdated,
   CtrlFindUpdatePayload,
 } from 'renderer/store/transcriptionFind/actions';
@@ -38,7 +40,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const ctrlFSelection = useSelector(
     (store: ApplicationStore) => store.ctrlFSelection
   );
-  const { selectedIndex, maxIndex } = ctrlFSelection;
+  const { selectedIndex, maxIndex, indexRanges } = ctrlFSelection;
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Algorithm
     // Loop through every Transcription Word, if word is deleted, continue.
@@ -118,16 +120,23 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const nextOccurrence = () => {
     // TODO: Change CSS highlighting to highlight next word. If at end, go to beginning.
     // TODO: Make the page scroll to the highlighted word.
-    // console.log('Next Word');
-    console.log(transcription);
+    const payload: CtrlFindUpdatePayload = {
+      selectedIndex,
+      maxIndex,
+      indexRanges,
+    };
+    dispatch(ctrlFindNext(payload));
   };
 
   const prevOccurrence = () => {
     // TODO: Change CSS highlighting to highlight previous word. If at beginning, go to end.
     // TODO: Make the page scroll to the highlighted word.
-    // console.log('Prev Word');
-    // console.log(searchOccurrences);
-    console.log(isShowingCtrlFPopover);
+    const payload: CtrlFindUpdatePayload = {
+      selectedIndex,
+      maxIndex,
+      indexRanges,
+    };
+    dispatch(ctrlFindPrev(payload));
   };
 
   const handleClose = () => {

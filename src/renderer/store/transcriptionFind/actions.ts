@@ -19,6 +19,20 @@ export const ctrlFindUpdated: (
   payload: ctrlFindUpdatePayload,
 });
 
+export const ctrlFindNext: (
+  ctrlFindPayload: CtrlFindUpdatePayload
+) => Action<CtrlFindUpdatePayload> = (ctrlFindUpdatePayload) => ({
+  type: FIND_NEXT,
+  payload: ctrlFindUpdatePayload,
+});
+
+export const ctrlFindPrev: (
+  ctrlFindPayload: CtrlFindUpdatePayload
+) => Action<CtrlFindUpdatePayload> = (ctrlFindUpdatePayload) => ({
+  type: FIND_PREV,
+  payload: ctrlFindUpdatePayload,
+});
+
 export const ctrlFindClosed: () => Action<null> = () => ({
   type: FIND_CLOSED,
   payload: null,

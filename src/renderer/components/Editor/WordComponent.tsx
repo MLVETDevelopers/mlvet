@@ -80,6 +80,7 @@ export interface WordPassThroughProps {
 interface Props extends WordPassThroughProps {
   index: number;
   isSelected: boolean;
+  isCtrlFSelected: boolean;
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
@@ -100,6 +101,7 @@ const WordComponent = ({
   index,
   isPlaying,
   isSelected,
+  isCtrlFSelected,
   confidence,
   isSelectedLeftCap,
   isSelectedRightCap,
@@ -134,6 +136,8 @@ const WordComponent = ({
 
   const dispatch = useDispatch();
 
+  // console.log('isCtrlFSelected', isCtrlFSelected);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -166,6 +170,13 @@ const WordComponent = ({
       (() => {
         if (isBeingEdited || partialSelectState !== null) {
           return {};
+        }
+        if (isCtrlFSelected) {
+          console.log('WordComponent', isCtrlFSelected);
+          return {
+            background: colors.yellow[500],
+            borderRadius: BORDER_RADIUS_AMOUNT,
+          };
         }
         if (isSelected) {
           return {
@@ -224,6 +235,7 @@ const WordComponent = ({
     [
       isBeingEdited,
       isSelected,
+      isCtrlFSelected,
       isPlaying,
       isSelectedLeftCap,
       isSelectedRightCap,

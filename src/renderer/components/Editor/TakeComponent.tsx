@@ -2,7 +2,13 @@ import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectTake } from 'renderer/store/takeGroups/actions';
-import { IndexRange, TakeInfo, Transcription, Word } from 'sharedTypes';
+import {
+  CtrlFindSelectionState,
+  IndexRange,
+  TakeInfo,
+  Transcription,
+  Word,
+} from 'sharedTypes';
 import React, {
   RefObject,
   useCallback,
@@ -14,7 +20,7 @@ import React, {
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
-import { isIndexInRange } from 'renderer/utils/range';
+import { isIndexInRange, isIndexInRanges } from 'renderer/utils/range';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -62,6 +68,7 @@ interface TakeComponentProps extends TakePassThroughProps {
   setIsTakeGroupOpened: (isOpen: boolean) => void;
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
+  ctrlFSelection: CtrlFindSelectionState;
   onWordMouseDown: WordMouseHandler;
   onWordMouseEnter: (
     wordIndex: number,
@@ -81,6 +88,7 @@ const TakeComponent = ({
   setIsTakeGroupOpened,
   nowPlayingWordIndex,
   selection,
+  ctrlFSelection,
   onWordMouseDown,
   onWordMouseEnter,
   transcriptionIndex,
@@ -159,6 +167,7 @@ const TakeComponent = ({
         isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
         isSelected={isIndexInRange(selection, wordIndex)}
         isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+        isCtrlFSelected={isIndexInRanges(ctrlFSelection.indexRanges, wordIndex)}
         onMouseDown={onWordMouseDown}
         onMouseEnter={onWordMouseEnter}
         isInInactiveTake={!(isActive || isTakeGroupOpened) && !isFirstTimeOpen}

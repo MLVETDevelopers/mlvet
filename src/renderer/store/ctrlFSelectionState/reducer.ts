@@ -10,16 +10,12 @@ import { Action } from '../action';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 
 // The reducer needs to
-// Reset all highlighting on the transcription words to 0
+// Reset all highlighting on the transcription words
 // Set the highlighting on the words that match accordingly
 const ctrlFSelectionReducer: Reducer<
   ApplicationStore['ctrlFSelection'],
   Action<any>
 > = (ctrlFSelection = initialStore.ctrlFSelection, action) => {
-  //   if (action.type === FIND_UPDATED) {
-  //     console.log('ctrlFSelection', action, ctrlFSelection);
-  //   }
-
   // If search term is updated, update all highlighting information
   if (action.type === FIND_UPDATED) {
     const { indexRanges } = action.payload as CtrlFindUpdatePayload;
@@ -33,7 +29,8 @@ const ctrlFSelectionReducer: Reducer<
 
   // Next button click. Update the selected information
   if (action.type === FIND_NEXT) {
-    const nextIndex = ctrlFSelection.selectedIndex % ctrlFSelection.maxIndex;
+    const nextIndex =
+      (ctrlFSelection.selectedIndex + 1) % (ctrlFSelection.maxIndex + 1);
     return {
       ...ctrlFSelection,
       selectedIndex: nextIndex,

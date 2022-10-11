@@ -6,7 +6,13 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
+import {
+  CtrlFindSelectionState,
+  IndexRange,
+  TakeGroup,
+  Transcription,
+  Word,
+} from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
 import TakeComponent from './TakeComponent';
@@ -60,6 +66,7 @@ interface TakeGroupComponentProps extends TranscriptionPassThroughProps {
   ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
+  ctrlFSelection: CtrlFindSelectionState;
   transcription: Transcription;
 }
 
@@ -70,6 +77,7 @@ const TakeGroupComponent = ({
   onWordMouseEnter,
   nowPlayingWordIndex,
   selection,
+  ctrlFSelection,
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
@@ -206,6 +214,7 @@ const TakeGroupComponent = ({
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
         selection={selection}
+        ctrlFSelected={ctrlFSelected}
         transcriptionIndex={transcriptionIndex}
         isLast={takeIndex === takeWordsPerTake.length - 1}
         isFirstTimeOpen={isFirstTimeOpen}

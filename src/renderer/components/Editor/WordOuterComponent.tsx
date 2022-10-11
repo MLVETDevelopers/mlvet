@@ -20,6 +20,7 @@ interface WordOuterComponentProps extends WordPassThroughProps {
   isPrevWordSelected: boolean;
   isNextWordSelected: boolean;
   otherSelections: Record<ClientId, IndexRange>;
+  isCtrlFSelected: boolean;
   editWord: EditWordState;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
@@ -41,6 +42,7 @@ const WordOuterComponent = ({
   isSelected,
   isPrevWordSelected,
   otherSelections,
+  isCtrlFSelected,
   editWord,
   popoverWidth,
   transcriptionBlockRef,
@@ -144,6 +146,7 @@ const WordOuterComponent = ({
             isSelected={isSelected}
             isPrevWordSelected={isPrevWordSelected}
             isNextWordSelected={isNextWordSelected}
+            isCtrlFSelected={isCtrlFSelected}
             selectedByClientWithIndex={selectedByClientWithIndex}
             isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
             isSelectedByAnotherClientRightCap={

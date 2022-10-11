@@ -75,6 +75,31 @@ const TranscriptionBlock = ({
     (store: ApplicationStore) => store.currentProject?.name
   );
 
+  const ctrlFSelection = useSelector(
+    (store: ApplicationStore) => store.ctrlFSelection
+  );
+
+  console.log('ctrlFSelection', ctrlFSelection);
+
+  // TranscriptionBlock has transcription, and turns it into TranscriptionChunks (words and takeGroups)
+  // Chunks are passed into TranscriptionChunkComponent
+  // export interface SelectionState {
+  //   self: IndexRange;
+  //   others: Record<ClientId, IndexRange>;
+  // }
+
+  // ownSelection passed into TranscriptionChunkComponent
+  // then passed into TakeGroupComponent or TranscriptionParagraph
+  // export const isIndexInRange: (range: IndexRange, index: number) => boolean = (
+  //   range,
+  //   index
+  // ) => index >= range.startIndex && index < range.endIndex;
+  // Uses wordIndex = chunkIndex + index
+
+  // Comes from mapWithAccumulator function
+
+  // TakeGroupComponent -> TakeComponent -> WordOuterComponent with isIndexInRange
+
   const blockRef = useRef<HTMLElement>(null);
 
   const transcriptionChunks = useMemo(() => {
@@ -181,6 +206,7 @@ const TranscriptionBlock = ({
                       submitWordEdit={submitWordEdit}
                       selection={ownSelection}
                       otherSelections={otherSelections}
+                      ctrlFSelection={ctrlFSelection}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                       setPlaybackTime={setPlaybackTime}

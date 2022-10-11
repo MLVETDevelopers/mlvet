@@ -17,6 +17,12 @@ export const isIndexInRange: (range: IndexRange, index: number) => boolean = (
   index
 ) => index >= range.startIndex && index < range.endIndex;
 
+export const isIndexInRanges: (
+  ranges: IndexRange[],
+  index: number
+) => boolean = (ranges, index) =>
+  ranges.some((range) => isIndexInRange(range, index));
+
 export const emptyRange: () => IndexRange = () => ({
   startIndex: 0,
   endIndex: 0,

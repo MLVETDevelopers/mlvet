@@ -29,7 +29,6 @@ export const useKeypress = (
 ) => {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
-      console.log(event);
       if (keypressCodes.includes(event.code) && isKeypressEnabled) {
         eventHandler();
       }

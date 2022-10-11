@@ -78,7 +78,7 @@ const PlaybackManager = ({
   useKeypress(play, !isPlaying, ['Space']);
   useKeypress(pause, isPlaying, ['Space']);
   useKeypress(seekForward, true, ['ArrowRight']);
-  useKeypress(seekForward, true, ['ArrowLeft']);
+  useKeypress(seekBack, true, ['ArrowLeft']);
 
   // TODO: Look into optimisations
   useEffect(() => {

@@ -1,7 +1,12 @@
 import { Reducer } from 'react';
 import { TakeGroup, TakeInfo } from 'sharedTypes';
 import { Action } from '../action';
-import { DELETE_TAKE_GROUP, SELECT_TAKE } from './actions';
+import {
+  DELETE_TAKE_GROUP,
+  SELECT_TAKE,
+  UNDO_DELETE_TAKE_GROUP,
+} from './actions';
+import { UndoDeleteTakeGroupPayload } from './opPayloads';
 
 /**
  * Stores the take groups for the current transcription
@@ -25,6 +30,12 @@ const takeGroupsReducer: Reducer<TakeGroup[], Action<any>> = (
 
     // Filter out the deleted take group
     return takeGroups.filter((takeGroup) => takeGroup.id !== takeGroupId);
+  }
+
+  if (action.type === UNDO_DELETE_TAKE_GROUP) {
+    const { takeGroup } = action.payload as UndoDeleteTakeGroupPayload;
+
+    return takeGroups.concat(takeGroup).sort((a, b) => a.id - b.id);
   }
 
   return takeGroups;

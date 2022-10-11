@@ -18,7 +18,7 @@ import { getAspectRatio, getElementSize } from 'renderer/utils/ui';
 const pageLayoutPadding = { x: 96 * 2 + 2, y: 64 };
 
 const pageLayoutOptions = {
-  minTranscriptionWidth: 120,
+  minTranscriptionWidth: 240,
   minVideoPreviewWidth: 120,
 };
 

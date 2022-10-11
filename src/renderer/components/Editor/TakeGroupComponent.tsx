@@ -4,11 +4,11 @@ import BlockIcon from '@mui/icons-material/Block';
 import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import React, { RefObject, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
-import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
+import dispatchOp from 'renderer/store/dispatchOp';
+import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -80,7 +80,6 @@ const TakeGroupComponent = ({
     !takeGroup.takeSelected
   );
   const [showUngroupModal, setShowUngroupModal] = useState(false);
-  const dispatch = useDispatch();
 
   const ungroupTakesModalOpen = () => {
     setShowUngroupModal(true);
@@ -91,7 +90,63 @@ const TakeGroupComponent = ({
   };
 
   const ungroupTakes = () => {
-    dispatch(deleteTakeGroup(takeGroup.id));
+    const getTakeRanges = (): IndexRange[] => {
+      const { words } = transcription;
+
+      // Make a list of only the words in this take group,
+      // keeping track of what their indices in the current transcription were
+      const wordsInTakeGroup: {
+        word: Word;
+        indexInTranscription: number;
+      }[] = words
+        // Keep track of the indices in the transcription so that we can use them later
+        .map((word, i) => ({ word, indexInTranscription: i }))
+        // Filter to only include words in the current take group
+        .filter(({ word }) => word.takeInfo?.takeGroupId === takeGroup.id);
+
+      // Extract a list of take ranges from the word list we just made
+      const takeRanges = wordsInTakeGroup.reduce<IndexRange[]>(
+        (rangesSoFar, word, index) => {
+          const isLastWordInTakeGroup = index === wordsInTakeGroup.length - 1;
+          const nextWord = isLastWordInTakeGroup
+            ? null
+            : wordsInTakeGroup[index + 1];
+          const isLastWordInTake =
+            nextWord?.word.takeInfo?.takeIndex !==
+            word.word.takeInfo?.takeIndex;
+
+          // If we're in a new take compared to the previous word, or this is the last
+          // word in the take group, 'push' the current take to the list of takes.
+          if (isLastWordInTakeGroup || isLastWordInTake) {
+            // Find what the startIndex of the take should be. Since takes are always
+            // next to each other, the start index will just be the endIndex of the previous
+            // take range, or if this is the first take in the group, it will be the index of
+            // the first word in the take.
+            const startIndex =
+              rangesSoFar.length > 0
+                ? rangesSoFar[rangesSoFar.length - 1].endIndex
+                : wordsInTakeGroup[0].indexInTranscription;
+
+            // Add a new range from startIndex up to the current word's index in the current
+            // transcription, plus one as the end index is exclusive
+            return rangesSoFar.concat([
+              {
+                startIndex,
+                endIndex: word.indexInTranscription + 1,
+              },
+            ]);
+          }
+
+          // If this isn't the last word or a new take, just return the list of ranges unmodified
+          return rangesSoFar;
+        },
+        []
+      );
+
+      return takeRanges;
+    };
+
+    dispatchOp(makeDeleteTakeGroup(takeGroup, getTakeRanges()));
     handleModalClose();
   };
 

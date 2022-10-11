@@ -110,7 +110,7 @@ const WordOuterComponent = ({
     <WordAndSpaceContainer
       key={`container-${word.originalIndex}-${word.pasteKey}`}
     >
-      {word.deleted ? (
+      {word.deleted && word.takeInfo === null && (
         <EditMarker
           key={`edit-marker-${word.originalIndex}-${word.pasteKey}`}
           word={word}
@@ -122,7 +122,8 @@ const WordOuterComponent = ({
           popoverWidth={popoverWidth}
           transcriptionBlockRef={transcriptionBlockRef}
         />
-      ) : (
+      )}
+      {!word.deleted && (
         <Fragment key={`${word.originalIndex}-${word.pasteKey}`}>
           <WordSpace
             key={`space-${word.originalIndex}-${word.pasteKey}`}

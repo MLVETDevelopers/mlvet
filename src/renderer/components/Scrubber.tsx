@@ -109,7 +109,7 @@ const Scrubber = ({
   };
 
   return (
-    <div>
+    <div id="scrubber">
       <Slider
         defaultValue={0}
         value={sliderValue}

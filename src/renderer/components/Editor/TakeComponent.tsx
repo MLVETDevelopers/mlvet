@@ -104,6 +104,8 @@ const TakeComponent = ({
     const takeGroup = transcription.takeGroups.find(
       (tg) => tg.id === takeInfo.takeGroupId
     ) as TakeGroup;
+
+    // only makes action if the selection has changed
     if (
       takeGroup.activeTakeIndex !== takeInfo.takeIndex ||
       !takeGroup.takeSelected

@@ -2,7 +2,13 @@ import { Reducer } from 'redux';
 import { IndexRange, Word } from 'sharedTypes';
 import { mapInRange } from 'sharedUtils';
 import { markWordFound, markWordSelected } from 'renderer/utils/words';
-import { FIND_UPDATED, FIND_CLOSED, FIND_NEXT, FIND_PREV } from './actions';
+import {
+  FIND_UPDATED,
+  FIND_CLOSED,
+  FIND_NEXT,
+  FIND_PREV,
+  CtrlFindUpdatePayload,
+} from './actions';
 import { Action } from '../action';
 
 // The reducer needs to
@@ -27,7 +33,8 @@ const transcriptionFindReducer: Reducer<Word[], Action<any>> = (
     action.type === FIND_PREV ||
     action.type === FIND_CLOSED
   ) {
-    const { indexRanges, selectedIndex, maxIndex } = action.payload;
+    const { indexRanges, selectedIndex, maxIndex } =
+      action.payload as CtrlFindUpdatePayload;
     if (indexRanges.length === 0) {
       return [];
     }

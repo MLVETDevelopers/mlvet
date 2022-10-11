@@ -1,4 +1,4 @@
-import { Stack, styled, Typography } from '@mui/material';
+import { Stack, styled, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ProgressBar from './ProgressBar';
 import colors from '../colors';
@@ -13,12 +13,6 @@ const Card = styled(Stack)({
   position: 'relative',
 });
 
-const IconButton = styled(Stack)({
-  position: 'absolute',
-  right: '8px',
-  top: '8px',
-});
-
 interface Props {
   onClose: () => void;
   progress: number;
@@ -29,7 +23,13 @@ const ExportCard = ({ onClose, progress }: Props) => {
   const closeButton =
     progress === 1 ? (
       <IconButton
-        sx={{ color: colors.grey[500], fontSize: 20, marginLeft: 'auto' }}
+        sx={{
+          color: colors.grey[500],
+          marginLeft: 'auto',
+          position: 'absolute',
+          right: '0px',
+          top: '0px',
+        }}
         onClick={onClose}
       >
         <CloseIcon />

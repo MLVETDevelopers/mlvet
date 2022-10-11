@@ -16,9 +16,9 @@ const ctrlFSelectionReducer: Reducer<
   ApplicationStore['ctrlFSelection'],
   Action<any>
 > = (ctrlFSelection = initialStore.ctrlFSelection, action) => {
-  if (action.type === FIND_UPDATED) {
-    console.log('ctrlFSelection', action, ctrlFSelection);
-  }
+  //   if (action.type === FIND_UPDATED) {
+  //     console.log('ctrlFSelection', action, ctrlFSelection);
+  //   }
 
   // If search term is updated, update all highlighting information
   if (action.type === FIND_UPDATED) {

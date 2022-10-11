@@ -26,7 +26,7 @@ const transcriptionFindReducer: Reducer<Word[], Action<any>> = (
     return words;
   }
 
-  // If action.payload is one of FIND_UPDATED, FIND_NEXT, FIND_PREV
+  // If action.payload is one of FIND_UPDATED, FIND_NEXT, FIND_PREV, FIND_CLOSED
   if (
     action.type === FIND_UPDATED ||
     action.type === FIND_NEXT ||

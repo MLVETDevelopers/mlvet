@@ -12,7 +12,6 @@ import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
-import transcriptionFindReducer from './transcriptionFind/reducer';
 import ctrlFReducer from './ctrlFPopover/reducer';
 import ctrlFSelectionReducer from './ctrlFSelectionState/reducer';
 
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
-  transcriptionFind: transcriptionFindReducer,
   ctrlFSelection: ctrlFSelectionReducer,
 });
 

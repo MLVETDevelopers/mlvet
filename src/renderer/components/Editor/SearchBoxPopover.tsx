@@ -15,6 +15,7 @@ import {
 } from 'renderer/store/transcriptionFind/actions';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { ctrlFPopoverToggled } from 'renderer/store/ctrlFPopover/actions';
+import colors from '../../colors';
 
 // Popover for Ctrl+F search
 
@@ -27,10 +28,6 @@ interface SearchBoxPopoverProps {
 
 const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    // console.log('handleClicked');
-    setAnchorEl(event.currentTarget);
-  };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentIndex, setCurrentIndex] = useState(0);
   const [totalFinds, setTotalFinds] = useState(0);
@@ -38,7 +35,10 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const isShowingCtrlFPopover = useSelector(
     (store: ApplicationStore) => store.isShowingCtrlFPopover
   );
-
+  const ctrlFSelection = useSelector(
+    (store: ApplicationStore) => store.ctrlFSelection
+  );
+  const { selectedIndex, maxIndex } = ctrlFSelection;
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Algorithm
     // Loop through every Transcription Word, if word is deleted, continue.
@@ -63,6 +63,8 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     const searchStrArrayLength = searchStrArray.length;
 
     const payload: CtrlFindUpdatePayload = {
+      selectedIndex: 0,
+      maxIndex: 0,
       indexRanges: [],
     };
 
@@ -109,7 +111,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
         } else if (wordText !== currentSearchStr) break;
       }
     }
-    console.log(payload);
+    // console.log(payload);
     dispatch(ctrlFindUpdated(payload));
   };
 
@@ -137,7 +139,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const id = isShowingCtrlFPopover ? 'simple-popover' : undefined;
 
   return (
-    <div>
+    <>
       <Popover
         id={id}
         open={isShowingCtrlFPopover}
@@ -177,7 +179,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
           </IconButton>
         </Stack>
       </Popover>
-    </div>
+    </>
   );
 };
 export default SearchBoxPopover;

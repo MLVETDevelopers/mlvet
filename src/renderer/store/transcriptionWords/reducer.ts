@@ -33,6 +33,7 @@ import {
   UndoPasteWordsPayload,
   UndoRestoreSectionPayload,
 } from './opPayloads';
+import { FIND_UPDATED } from '../transcriptionFind/actions';
 
 /**
  *  Nested reducer for handling transcription words
@@ -41,6 +42,9 @@ const transcriptionWordsReducer: Reducer<Word[], Action<any>> = (
   words = [],
   action
 ) => {
+  if (action.type === FIND_UPDATED) {
+    console.log('transcriptionWords', action.type, words);
+  }
   if (action.type === DELETE_SELECTION) {
     const { range } = action.payload as DeleteSelectionPayload;
 

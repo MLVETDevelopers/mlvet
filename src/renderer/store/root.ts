@@ -14,6 +14,7 @@ import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import transcriptionFindReducer from './transcriptionFind/reducer';
 import ctrlFReducer from './ctrlFPopover/reducer';
+import ctrlFSelectionReducer from './ctrlFSelectionState/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   collab: collabReducer,
   opQueue: opQueueReducer,
   transcriptionFind: transcriptionFindReducer,
+  ctrlFSelection: ctrlFSelectionReducer,
 });
 
 export default rootReducer;

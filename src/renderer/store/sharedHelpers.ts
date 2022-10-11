@@ -3,7 +3,12 @@ import {
   CollabClientSessionState,
 } from 'renderer/store/collab/helpers';
 import { emptyRange } from 'renderer/utils/range';
-import { RuntimeProject, RecentProject, Word } from '../../sharedTypes';
+import {
+  RuntimeProject,
+  RecentProject,
+  Word,
+  CtrlFindSelectionState,
+} from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
 import { ExportIo } from './exportIo/helpers';
 import { OpQueueItem } from './opQueue/helpers';
@@ -24,6 +29,7 @@ export interface ApplicationStore {
   clipboard: Word[];
   // Array of numbers corresponding to indices of words within the transcription
   selection: SelectionState;
+  ctrlFSelection: CtrlFindSelectionState;
   shortcutsOpened: boolean;
   isUpdateTranscriptionAPIKeyOpened: boolean;
   // Index of word currently being edited, otherwise null
@@ -52,6 +58,11 @@ export const initialStore: ApplicationStore = {
   selection: {
     self: emptyRange(),
     others: {},
+  },
+  ctrlFSelection: {
+    selectedIndex: 0,
+    maxIndex: 0,
+    indexRanges: [],
   },
   shortcutsOpened: false,
   isUpdateTranscriptionAPIKeyOpened: false,

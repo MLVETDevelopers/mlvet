@@ -37,7 +37,6 @@ export interface Transcription {
   duration: number;
   outputDuration: number;
   takeGroups: TakeGroup[];
-  ctrlFindSelected: CtrlFindSelected;
 }
 
 export type PartialWord = Pick<
@@ -70,7 +69,7 @@ export interface CloudConfig {
   DUMMY: EngineConfig;
 }
 
-export interface CtrlFindSelected {
+export interface CtrlFindSelectionState {
   selectedIndex: number;
   maxIndex: number;
   indexRanges: IndexRange[];

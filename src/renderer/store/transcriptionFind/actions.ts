@@ -7,6 +7,8 @@ export const FIND_NEXT = 'FIND_NEXT';
 export const FIND_PREV = 'FIND_PREV';
 
 export interface CtrlFindUpdatePayload {
+  selectedIndex: number;
+  maxIndex: number;
   indexRanges: IndexRange[];
 }
 

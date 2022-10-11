@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { clamp } from 'main/timeUtils';
 import { Buffer } from 'buffer';
-import { useKeypress } from 'renderer/utils/hooks';
 import VideoPreview, { VideoPreviewRef } from '.';
 
 export interface Clock {
@@ -276,11 +275,6 @@ const VideoPreviewControllerBase = (
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rangeOverride]);
-
-  useKeypress(play, !clockRef.current.isRunning, ['Space']);
-  useKeypress(pause, clockRef.current.isRunning, ['Space']);
-  useKeypress(seekForward, true, ['ArrowRight']);
-  useKeypress(seekBack, true, ['ArrowLeft']);
 
   return (
     <VideoPreview

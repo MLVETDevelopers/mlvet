@@ -1,11 +1,6 @@
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import { isInOriginalOrder } from 'renderer/utils/words';
-import { IndexRange, Word } from 'sharedTypes';
-
-export interface SelectionState {
-  self: IndexRange;
-  others: Record<ClientId, IndexRange>;
-}
+import { clampRange } from 'renderer/utils/range';
+import { IndexRange, SelectionState, Word } from 'sharedTypes';
 
 /**
  * Returns whether merge and/or split are allowed given the current state
@@ -27,18 +22,22 @@ export const isMergeSplitAllowed: (
     };
   }
 
-  const wordsToMerge = words.slice(range.startIndex, range.endIndex);
-  const firstWord = words[range.startIndex];
+  // Prevent crash if selection is outside the actual range of indexable words
+  // (this would occur if undoing a paste from the end of the transcription)
+  const { startIndex, endIndex } = clampRange(range, 0, words.length);
+
+  const wordsToMerge = words.slice(startIndex, endIndex);
+  const firstWord = words[startIndex];
 
   // Conditions
   const hasAtLeastTwoWords = wordsToMerge.length > 1;
+  const hasExactlyOneWord = wordsToMerge.length === 1;
   const noSelectedWordsDeleted = wordsToMerge.every((word) => !word.deleted);
-  const inOriginalOrder = isInOriginalOrder(words, range);
   const isWordSplittable = firstWord.word?.includes(' ') ?? false;
 
   return {
-    merge: hasAtLeastTwoWords && noSelectedWordsDeleted && inOriginalOrder,
-    split: noSelectedWordsDeleted && isWordSplittable,
+    merge: hasAtLeastTwoWords && noSelectedWordsDeleted,
+    split: hasExactlyOneWord && noSelectedWordsDeleted && isWordSplittable,
   };
 };
 

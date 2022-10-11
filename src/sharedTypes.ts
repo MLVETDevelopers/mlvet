@@ -1,3 +1,13 @@
+import { ClientId } from 'collabTypes/collabShadowTypes';
+
+// Transcription chunks are either a take group or a paragraph of words
+export type TranscriptionChunk = TakeGroup | Word[];
+
+export interface SelectionState {
+  self: IndexRange;
+  others: Record<ClientId, IndexRange>;
+}
+
 export interface PersistedProject {
   id: string; // UUID
   schemaVersion: number;
@@ -59,13 +69,24 @@ export interface TakeInfo {
 export enum TranscriptionEngine {
   DUMMY = 'DUMMY',
   ASSEMBLYAI = 'ASSEMBLYAI',
+  VOSK = 'VOSK',
 }
 
-export type EngineConfig = string | null;
+export type EngineConfig = string | null | CloudConfig | LocalConfig;
 
 export interface CloudConfig {
-  defaultEngine: TranscriptionEngine;
-  ASSEMBLYAI: EngineConfig;
+  key: string | null;
+}
+
+export interface LocalConfig {
+  libsPath: string | null;
+  modelPath: string | null;
+}
+
+export interface TranscriptionConfig {
+  defaultEngine: TranscriptionEngine | null;
+  ASSEMBLYAI: CloudConfig;
+  VOSK: LocalConfig;
   DUMMY: EngineConfig;
 }
 
@@ -140,10 +161,21 @@ export enum ExportFormat {
   MP4 = 'mp4',
 }
 
+export enum DownloadingModelState {
+  START_DOWNLOAD = 'START_DOWNLOAD',
+  DOWNLOAD_PROGRESS_UPDATE = 'DOWNLOAD_PROGRESS_UPDATE',
+  FINISH_DOWNLOAD = 'FINISH_DOWNLOAD',
+}
+
 // Interface for index ranges, usually start-inclusive and end-exclusive.
 export interface IndexRange {
   startIndex: number;
   endIndex: number;
+}
+
+export enum RangeType {
+  DELETED_TEXT = 'DELETED_TEXT',
+  SUBSELECTION = 'SUBSELECTION',
 }
 
 /** Utility types */

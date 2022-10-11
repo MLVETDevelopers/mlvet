@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { projectCreated } from 'renderer/store/currentProject/actions';
-import useKeypress from 'renderer/utils/hooks';
+import { useKeypress } from 'renderer/utils/hooks';
 import {
   updateProjectWithExtractedAudio,
   updateProjectWithMedia,
@@ -146,6 +146,7 @@ const RunTranscriptionView = ({ closeModal, nextView }: Props) => {
             overflow="hidden"
             textOverflow="ellipsis"
             variant="h1"
+            noWrap
             sx={{ color: colors.grey[400] }}
           >
             {projectName}

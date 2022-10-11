@@ -13,16 +13,9 @@ contextBridge.exposeInMainWorld('electron', {
   retrieveProjectMetadata: (project) =>
     ipcRenderer.invoke('retrieve-project-metadata', project),
 
-  readCloudConfig: () => ipcRenderer.invoke('read-cloud-config'),
-
-  readDefaultEngineConfig: () =>
-    ipcRenderer.invoke('read-default-engine-config'),
-
   readRecentProjects: () => ipcRenderer.invoke('read-recent-projects'),
 
   requestMediaDialog: () => ipcRenderer.invoke('request-media-dialog'),
-
-  requireCloudConfig: () => ipcRenderer.invoke('require-cloud-config'),
 
   saveAsProject: (project) => ipcRenderer.invoke('save-as-project', project),
 
@@ -31,8 +24,24 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveProject: (project) => ipcRenderer.invoke('save-project', project),
 
-  storeCloudCredentials: (defaultEngine, engineConfigs) =>
-    ipcRenderer.invoke('store-cloud-credentials', defaultEngine, engineConfigs),
+  areEngineConfigRequirementsMet: () =>
+    ipcRenderer.invoke('are-engine-config-requirements-met'),
+
+  downloadModel: () => ipcRenderer.invoke('download-model'),
+
+  getTranscriptionConfigDefault: () =>
+    ipcRenderer.invoke('get-transcription-config-default'),
+
+  getTranscriptionEngine: () => ipcRenderer.invoke('get-transcription-engine'),
+
+  getTranscriptionEngineConfig: (engine) =>
+    ipcRenderer.invoke('get-transcription-engine-config', engine),
+
+  setTranscriptionEngine: (engine) =>
+    ipcRenderer.invoke('set-transcription-engine', engine),
+
+  setTranscriptionEngineConfig: (engine, engineConfig) =>
+    ipcRenderer.invoke('set-transcription-engine-config', engine, engineConfig),
 
   writeRecentProjects: (recentProjects) =>
     ipcRenderer.invoke('write-recent-projects', recentProjects),
@@ -91,6 +100,8 @@ contextBridge.exposeInMainWorld('electron', {
     ipcRenderer.invoke('get-file-name-with-extension', filePath),
 
   handleOsQuery: () => ipcRenderer.invoke('handle-os-query'),
+
+  reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
 
   setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
     ipcRenderer.invoke(

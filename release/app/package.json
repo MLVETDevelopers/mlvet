@@ -3,15 +3,17 @@
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "MLVET Legends",
-    "email": "irmyspuy@gmail.com",
-    "url": "https://github.com/chloebrett/mlvet"
+    "name": "MLVETDevelopers",
+    "email": "mlvet.developers@gmail.com",
+    "url": "https://github.com/MLVETDevelopers"
   },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
-  "dependencies": {},
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "koffi": "^2.1.1"
+  }
 }

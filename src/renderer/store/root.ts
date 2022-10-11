@@ -7,13 +7,15 @@ import undoStackReducer from './undoStack/reducer';
 import clipboardReducer from './clipboard/reducer';
 import selectionReducer from './selection/reducer';
 import shortcutsReducer from './shortcuts/reducer';
-import updateTranscriptionAPIKeyReducer from './updateTranscriptionAPIKey/reducer';
+import menuCustomModalsReducer from './menuCustomModals/reducer';
 import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
 import ctrlFReducer from './ctrlFPopover/reducer';
 import ctrlFSelectionReducer from './ctrlFSelectionState/reducer';
+import downloadModelReducer from './downloadModel/reducer';
+import playbackReducer from './playback/reducer';
 
 const rootReducer = combineReducers({
   currentProject: currentProjectReducer,
@@ -27,10 +29,14 @@ const rootReducer = combineReducers({
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
   isShowingCtrlFPopover: ctrlFReducer,
-  isUpdateTranscriptionAPIKeyOpened: updateTranscriptionAPIKeyReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
   ctrlFSelection: ctrlFSelectionReducer,
+  menuCustomModals: menuCustomModalsReducer,
+  collab: collabReducer,
+  opQueue: opQueueReducer,
+  downloadModel: downloadModelReducer,
+  playback: playbackReducer,
 });
 
 export default rootReducer;

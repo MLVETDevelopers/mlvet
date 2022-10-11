@@ -6,15 +6,16 @@ import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
-import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { makeDeleteWords } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { emptyRange, rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,
   getTakeGroupLength,
-  isTakeGroup,
 } from 'renderer/utils/takeDetection';
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { ClientId } from 'collabTypes/collabShadowTypes';
+import { isTakeGroup } from 'sharedUtils';
+import { transcriptionContentId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import DragSelectManager from './DragSelectManager';
@@ -22,7 +23,7 @@ import {
   selectionCleared,
   selectionRangeSetTo,
 } from '../../store/selection/actions';
-import TranscriptionChunk from './TranscriptionChunk';
+import TranscriptionChunkComponent from './TranscriptionChunkComponent';
 
 const TranscriptionBox = styled(Box)({
   position: 'relative',
@@ -48,6 +49,13 @@ const TranscriptionBox = styled(Box)({
   },
 });
 
+const ProjectName = styled(Box)({
+  fontSize: 18,
+  lineHeight: '28px',
+  fontWeight: 'bold',
+  marginBottom: 20,
+});
+
 interface Props {
   transcription: Transcription;
   nowPlayingWordIndex: number | null;
@@ -62,6 +70,10 @@ const TranscriptionBlock = ({
   setPlaybackTime,
 }: Props) => {
   const editWord = useSelector((store: ApplicationStore) => store.editWord);
+
+  const projectName = useSelector(
+    (store: ApplicationStore) => store.currentProject?.name
+  );
 
   const blockRef = useRef<HTMLElement>(null);
 
@@ -106,7 +118,7 @@ const TranscriptionBlock = ({
 
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
-      dispatchOp(makeDeleteSelection(rangeLengthOne(index)));
+      dispatchOp(makeDeleteWords([index]));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
@@ -144,19 +156,20 @@ const TranscriptionBlock = ({
         isMouseDown
       ) => {
         return (
-          <TranscriptionBox id="transcription-content" ref={blockRef}>
+          <TranscriptionBox id={transcriptionContentId} ref={blockRef}>
+            <ProjectName>{projectName}</ProjectName>
             {mapWithAccumulator(
               transcriptionChunks,
               (chunk, _, acc) => {
                 return {
                   item: (
-                    <TranscriptionChunk
+                    <TranscriptionChunkComponent
                       key={
                         isTakeGroup(chunk)
                           ? `take-group-chunk-${(chunk as TakeGroup).id}`
-                          : `word-chunk-${(chunk as Word).originalIndex}-${
-                              (chunk as Word).pasteKey
-                            }`
+                          : `paragraph-chunk-${
+                              (chunk as Word[])[0].originalIndex
+                            }-${(chunk as Word[])[0].pasteKey}`
                       }
                       chunk={chunk}
                       chunkIndex={acc}
@@ -182,7 +195,7 @@ const TranscriptionBlock = ({
                         chunk as TakeGroup,
                         transcription.words
                       )
-                    : acc + 1,
+                    : acc + (chunk as Word[]).length,
                 };
               },
               0

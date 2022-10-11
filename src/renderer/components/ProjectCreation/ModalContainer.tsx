@@ -1,6 +1,7 @@
 import { Modal, styled, Box } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { TranscriptionEngine } from 'sharedTypes';
 import { pageChanged } from '../../store/currentPage/actions';
 import { ApplicationPage } from '../../store/currentPage/helpers';
 import NewProjectView from './NewProjectView';
@@ -10,8 +11,10 @@ import ImportMediaView from './ImportMediaView';
 import colors from '../../colors';
 import CancelProjectModal from './CancelProjectModal';
 import ipc from '../../ipc';
+import TranscriptionChoiceView from './TranscriptionChoiceView';
+import LocalConfigView from './LocalConfigViews/LocalConfigView';
 
-const { requireCloudConfig } = ipc;
+const { areEngineConfigRequirementsMet, getTranscriptionEngine } = ipc;
 
 const CustomModal = styled(Modal)({
   display: 'flex',
@@ -31,10 +34,18 @@ interface Props {
   closeModal: () => void;
 }
 
+const views = {
+  newProject: 'newProject',
+  transcriptionChoice: 'transcriptionChoice',
+  localConfig: 'localConfig',
+  cloudConfig: 'cloudConfig',
+  importMedia: 'importMedia',
+  runTranscription: 'runTranscription',
+};
+
 const ModalContainer = ({ isOpen, closeModal }: Props) => {
-  const [currentView, setCurrentView] = useState<number>(0);
+  const [currentView, setCurrentView] = useState<string>(views.newProject);
   const [projectName, setProjectName] = useState<string>('');
-  const [isCloudConfigRequired, setIsCloudConfigRequired] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -46,7 +57,7 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   const handleModalClose: () => void = () => {
     closeModal();
-    setCurrentView(0);
+    setCurrentView(views.newProject);
     setProjectName('');
   };
 
@@ -63,41 +74,47 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
   };
 
   const viewComponents = useMemo(() => {
-    if (isCloudConfigRequired) {
-      return [
-        NewProjectView,
-        CloudConfigView,
-        ImportMediaView,
-        RunTranscriptionView,
-      ];
-    }
-    return [NewProjectView, ImportMediaView, RunTranscriptionView];
-  }, [isCloudConfigRequired]);
-
-  useEffect(() => {
-    const fetchIfCloudConfigRequired = async () => {
-      const isConfigRequired = await requireCloudConfig();
-      setIsCloudConfigRequired(isConfigRequired);
+    return {
+      [views.newProject]: NewProjectView,
+      [views.transcriptionChoice]: TranscriptionChoiceView,
+      [views.localConfig]: LocalConfigView,
+      [views.cloudConfig]: CloudConfigView,
+      [views.importMedia]: ImportMediaView,
+      [views.runTranscription]: RunTranscriptionView,
     };
+  }, []);
 
-    fetchIfCloudConfigRequired().catch(console.log);
-  }, [setIsCloudConfigRequired]);
-
-  const nextView: () => void = () => {
-    if (currentView >= viewComponents.length - 1) {
-      handleModalClose();
-      navigate(ApplicationPage.PROJECT);
+  const goToTranscriptionEngineConfigView = async () => {
+    // Checks if user has already configured the default transcription engine
+    const areConfigRequirementsMet = await areEngineConfigRequirementsMet();
+    if (areConfigRequirementsMet) {
+      setCurrentView(views.importMedia);
       return;
     }
-    setCurrentView((prev) => prev + 1);
+
+    const engine = await getTranscriptionEngine();
+    switch (engine) {
+      case TranscriptionEngine.VOSK:
+        setCurrentView(views.localConfig);
+        return;
+      case TranscriptionEngine.ASSEMBLYAI:
+        setCurrentView(views.cloudConfig);
+        return;
+      default:
+        setCurrentView(views.importMedia);
+    }
   };
 
-  const prevView: () => void = () => {
-    if (currentView === 0) {
-      handleModalClose();
-      return;
-    }
-    setCurrentView((prev) => prev - 1);
+  const goToTranscriptionChoiceView = async () => {
+    // Checks if the user has chosen a transcription engine before
+    const engine = await getTranscriptionEngine();
+    if (engine !== null) goToTranscriptionEngineConfigView();
+    else setCurrentView(views.transcriptionChoice);
+  };
+
+  const completeProjectCreation: () => void = () => {
+    handleModalClose();
+    navigate(ApplicationPage.PROJECT);
   };
 
   const view = (() => {
@@ -107,33 +124,51 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
         return (
           <NewProjectView
             closeModal={showCancelProject}
-            nextView={nextView}
+            nextView={goToTranscriptionChoiceView}
             projectName={projectName}
             setProjectName={setProjectName}
+          />
+        );
+      case TranscriptionChoiceView:
+        return (
+          <TranscriptionChoiceView
+            prevView={() => setCurrentView(views.transcriptionChoice)}
+            closeModal={showCancelProject}
+            nextView={goToTranscriptionEngineConfigView}
+            projectName={projectName}
           />
         );
       case CloudConfigView:
         return (
           <CloudConfigView
-            prevView={prevView}
+            prevView={() => setCurrentView(views.transcriptionChoice)}
             closeModal={showCancelProject}
-            nextView={nextView}
+            nextView={() => setCurrentView(views.importMedia)}
+            projectName={projectName}
+          />
+        );
+      case LocalConfigView:
+        return (
+          <LocalConfigView
+            prevView={() => setCurrentView(views.transcriptionChoice)}
+            closeModal={showCancelProject}
+            nextView={() => setCurrentView(views.importMedia)}
             projectName={projectName}
           />
         );
       case ImportMediaView:
         return (
           <ImportMediaView
-            prevView={prevView}
+            prevView={() => setCurrentView(views.newProject)}
             closeModal={showCancelProject}
-            nextView={nextView}
+            nextView={() => setCurrentView(views.runTranscription)}
           />
         );
       case RunTranscriptionView:
         return (
           <RunTranscriptionView
             closeModal={showCancelProject}
-            nextView={nextView}
+            nextView={completeProjectCreation}
           />
         );
       default:
@@ -143,8 +178,11 @@ const ModalContainer = ({ isOpen, closeModal }: Props) => {
 
   return (
     <div>
-      <CustomModal open={isOpen} onClose={showCancelProject}>
-        <CustomModalInner sx={{ width: { xs: 300, sm: 400, lg: 500 } }}>
+      <CustomModal open={isOpen} onClose={showCancelProject} id="custom-modal">
+        <CustomModalInner
+          id="custom-modal-inner"
+          sx={{ width: { xs: '300px', sm: '438px', lg: '500px' } }}
+        >
           {view}
         </CustomModalInner>
       </CustomModal>

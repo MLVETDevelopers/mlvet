@@ -1,4 +1,3 @@
-import { SelectionState } from 'renderer/store/selection/helpers';
 import {
   RuntimeProject,
   ProjectMetadata,
@@ -7,10 +6,13 @@ import {
   MapCallback,
   IndexRange,
   TakeGroup,
-  TranscriptionEngine,
-  EngineConfig,
-  CloudConfig,
+  TranscriptionChunk,
+  SelectionState,
 } from './sharedTypes';
+
+export function isTakeGroup(chunk: TranscriptionChunk): chunk is TakeGroup {
+  return 'activeTakeIndex' in chunk;
+}
 
 // Round a number in seconds to milliseconds - solves a lot of floating point errors
 export const roundToMs: (input: number) => number = (input) =>
@@ -50,19 +52,6 @@ export const makeRecentProject: (
 export const bufferedWordDuration: (word: Word) => number = (word) =>
   word.bufferDurationBefore + word.duration + word.bufferDurationAfter;
 
-export const findDefaultEngineConfig = (
-  cloudConfig: CloudConfig
-): EngineConfig => {
-  switch (cloudConfig.defaultEngine) {
-    case TranscriptionEngine.ASSEMBLYAI: {
-      return cloudConfig.ASSEMBLYAI;
-    }
-    default: {
-      return cloudConfig.DUMMY;
-    }
-  }
-};
-
 /**
  * Maps the values of a list using a given map function,
  * but only for those values within a specified range.
@@ -80,6 +69,26 @@ export const mapInRange: <T>(
   for (let i = startIndex; i < endIndex; i += 1) {
     listNew[i] = mapCallback(list[i], i, list);
   }
+
+  return listNew;
+};
+
+/**
+ * Maps the values of a list using a given map function,
+ * but only for those values with given indices.
+ * Values outside of the given indices will be unaltered.
+ * @returns the mapped list
+ */
+export const mapWithIndices: <T>(
+  list: T[],
+  mapCallback: MapCallback<T, T>,
+  indices: number[]
+) => T[] = (list, mapCallback, indices) => {
+  const listNew = [...list];
+
+  indices.forEach((index) => {
+    listNew[index] = mapCallback(list[index], index, list);
+  });
 
   return listNew;
 };

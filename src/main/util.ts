@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 export const mkdir = (dirPath: string) => {
   if (!existsSync(dirPath)) {
     try {
-      mkdirSync(dirPath);
+      mkdirSync(dirPath, { recursive: true });
     } catch (err) {
       console.error(err);
     }
@@ -48,14 +48,14 @@ export const getProjectDataDir: (projectId: string) => string = (projectId) =>
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getAudioExtractPath: (projectId: string) => string = (projectId) =>
-  path.join(getProjectDataDir(projectId), 'extractedAudio.mp3');
+  path.join(getProjectDataDir(projectId), 'extractedAudio.wav');
 
 // TODO(chloe): when we support multiple media files, name each according to their ID
 export const getThumbnailPath: (projectId: string) => string = (projectId) =>
   path.join(getProjectDataDir(projectId), 'thumbnail.png');
 
-export const appCloudConfigPath: () => string = () =>
-  path.join(appDataStoragePath(), 'cloudConfig.json');
+export const appTranscriptionConfigPath: () => string = () =>
+  path.join(appDataStoragePath(), 'transcriptionConfig.json');
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;

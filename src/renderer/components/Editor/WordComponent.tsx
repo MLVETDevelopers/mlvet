@@ -18,6 +18,7 @@ import {
   getTextWidth,
   letterIndexAtXPosition,
 } from 'renderer/utils/ui';
+
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import { handleSelectWord } from '../../editor/selection';
 import colors from '../../colors';
@@ -35,7 +36,7 @@ const makeWordInner = (
     cursor: isInInactiveTake ? 'pointer' : 'text',
     color: isInInactiveTake ? colors.grey[600] : colors.white,
     padding: '0 2px',
-    margin: '2px 0',
+    margin: 0,
     borderRadius: '7px',
 
     '&:hover': {
@@ -150,6 +151,7 @@ const WordComponent = ({
       }
 
       setPlaybackTime(outputStartTime + 0.01); // add a small amount so the correct word is selected
+
       handleSelectWord(index);
 
       // Prevent event from being received by the transcription block and therefore intercepted,

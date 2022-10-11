@@ -14,13 +14,10 @@ import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
-<<<<<<< HEAD
 import SearchBoxPopover from 'renderer/components/Editor/SearchBoxPopover';
-import { URL_USER_FEEDBACK_FORM } from '../../constants';
-=======
 import HomeIcon from '@mui/icons-material/Home';
 import returnToHome from 'renderer/navigation/returnToHome';
->>>>>>> develop
+import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -76,103 +73,6 @@ const ProjectPage = () => {
   const projectPageLayoutRef = useRef<HTMLDivElement>(null);
   const videoPreviewContainerRef = useRef<HTMLDivElement>(null);
   const videoPreviewControllerRef = useRef<VideoPreviewControllerRef>(null);
-<<<<<<< HEAD
-  // useState for findText
-  const [findText, setFindText] = useState<string>('');
-  const isShowingCtrlFPopover = useSelector(
-    (store: ApplicationStore) => store.isShowingCtrlFPopover
-  );
-
-  return (
-    <PlaybackManager
-      videoPreviewControllerRef={videoPreviewControllerRef}
-      currentProject={currentProject}
-    >
-      {(
-        time,
-        setTime,
-        isPlaying,
-        setIsPlaying,
-        nowPlayingWordIndex,
-        play,
-        pause,
-        seekForward,
-        seekBack,
-        setPlaybackTime
-      ) => (
-        <ResizeManager
-          projectPageLayoutRef={projectPageLayoutRef}
-          videoPreviewContainerRef={videoPreviewContainerRef}
-        >
-          {(
-            videoPreviewContainerWidth,
-            setVideoPreviewContainerWidth,
-            videoResizeOptions
-          ) => (
-            <>
-              <div
-                style={{
-                  position: 'absolute',
-                  marginTop: '15px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  fontSize: '12px',
-                }}
-              >
-                <IconButton
-                  color="primary"
-                  onClick={openUserFeedback}
-                  sx={{ padding: '0' }}
-                >
-                  <RateReviewIcon fontSize="medium" />
-                </IconButton>
-                Feedback
-              </div>
-
-              <VideoController
-                time={time}
-                isPlaying={isPlaying}
-                play={play}
-                pause={pause}
-                seekForward={seekForward}
-                seekBack={seekBack}
-              />
-
-              {COLLAB_ENABLED && <CollabController />}
-
-              <Stack
-                id="project-page-layout-container"
-                direction="row"
-                sx={{
-                  height: 'calc(100% - 76px)',
-                  gap: '48px',
-                  px: '48px',
-                  py: '32px',
-                }}
-                ref={projectPageLayoutRef}
-              >
-                <Stack>
-                  {currentProject?.transcription && (
-                    <SearchBoxPopover
-                      transcription={currentProject.transcription}
-                    />
-                  )}
-                </Stack>
-                <Stack
-                  id="transcription-container"
-                  spacing={4}
-                  sx={{ flex: '5 1 0' }}
-                >
-                  {currentProject?.transcription && (
-                    <TranscriptionBlock
-                      transcription={currentProject.transcription}
-                      nowPlayingWordIndex={nowPlayingWordIndex}
-                      blockWidth={
-                        window.innerWidth - videoPreviewContainerWidth
-                      }
-                      setPlaybackTime={setPlaybackTime}
-=======
   const [outputVideoLength, setOutputVideoLength] = useState<number>(0);
 
   return (
@@ -221,7 +121,6 @@ const ProjectPage = () => {
                       pause={pause}
                       seekForward={seekForward}
                       seekBack={seekBack}
->>>>>>> develop
                     />
                   </CenterAligned>
                   <RightAligned
@@ -261,6 +160,13 @@ const ProjectPage = () => {
                     spacing={4}
                     sx={{ flex: '5 1 0' }}
                   >
+                    <Stack>
+                      {currentProject?.transcription && (
+                        <SearchBoxPopover
+                          transcription={currentProject.transcription}
+                        />
+                      )}
+                    </Stack>
                     {currentProject?.transcription && (
                       <TranscriptionBlock
                         transcription={currentProject.transcription}

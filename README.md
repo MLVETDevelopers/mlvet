@@ -35,6 +35,7 @@
   - [Testing](#testing)
   - [Generating IPC Handlers](#generating-ipc-handlers)
   - [Running the Collab server](#running-the-collab-server)
+- [Contributors](#contributors)
 
 ## About the App
 
@@ -159,3 +160,11 @@ Refer to the [Code Generate](tools/GENCODE_README.md) documentation and [IPC Han
 ### Running the Collab server
 
 Refer to the [Collab Server](src/collabServer/README.md) documentation
+
+## Contributors
+
+This project exists thanks to all the people who contribute. If you are interested in helping, check out the [Contributing Guide](CONTRIBUTING.md).
+
+<a href="https://github.com/MLVETDevelopers/mlvet/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MLVETDevelopers/mlvet" />
+</a>

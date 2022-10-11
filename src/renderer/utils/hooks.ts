@@ -29,15 +29,16 @@ export const useKeypress = (
 ) => {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
+      console.log(event);
       if (keypressCodes.includes(event.code) && isKeypressEnabled) {
         eventHandler();
       }
     };
 
-    window.addEventListener('keypress', handleKeypress);
+    window.addEventListener('keydown', handleKeypress);
 
     return () => {
-      window.removeEventListener('keypress', handleKeypress);
+      window.removeEventListener('keydown', handleKeypress);
     };
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
 };

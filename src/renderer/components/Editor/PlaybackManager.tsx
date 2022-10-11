@@ -74,8 +74,11 @@ const PlaybackManager = ({
     [videoPreviewControllerRef]
   );
 
+  // video preview shortcuts
   useKeypress(play, !isPlaying, ['Space']);
   useKeypress(pause, isPlaying, ['Space']);
+  useKeypress(seekForward, true, ['ArrowRight']);
+  useKeypress(seekForward, true, ['ArrowLeft']);
 
   // TODO: Look into optimisations
   useEffect(() => {

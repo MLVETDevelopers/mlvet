@@ -132,7 +132,7 @@ export const isInInactiveTake: (
 
   const takeGroup = takeGroups.find((group) => group.id === takeGroupId);
 
-  if (takeGroup?.activeTakeIndex === takeIndex) {
+  if (takeGroup?.activeTakeIndex === takeIndex || !takeGroup?.takeSelected) {
     return false;
   }
 

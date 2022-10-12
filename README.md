@@ -5,16 +5,16 @@
   </p>
   <p>
     <a href="https://github.com/chloebrett/mlvet/actions/workflows/test.yml?query=branch%3Adevelop++Node.js+CI%22">
-        <img src="https://img.shields.io/github/workflow/status/chloebrett/mlvet/Node.js%20CI/develop?label=build%20status"/>
+        <img src="https://img.shields.io/github/workflow/status/MLVETDevelopers/mlvet/Node.js%20CI"/>
     </a>
     <a href="https://github.com/chloebrett/mlvet/graphs/contributors">
-        <img src="https://img.shields.io/github/contributors/chloebrett/mlvet" />
+        <img src="https://img.shields.io/github/contributors/MLVETDevelopers/mlvet" />
     </a>
     <a href="https://github.com/chloebrett/mlvet/releases">
-        <img src="https://img.shields.io/github/v/release/chloebrett/mlvet"/>
+        <img src="https://img.shields.io/github/v/release/MLVETDevelopers/mlvet"/>
     </a>
     <a href="https://github.com/chloebrett/mlvet/blob/develop/LICENSE">
-        <img src="https://img.shields.io/github/license/chloebrett/mlvet"/>
+        <img src="https://img.shields.io/github/license/MLVETDevelopers/mlvet"/>
     </a>
   </p>
 </div>

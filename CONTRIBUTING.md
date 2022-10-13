@@ -9,22 +9,22 @@ One of the most important things you can do is report bugs. Please reference [ho
 ```
 mlvet
 ├── assets
-│   ├── fonts                              holds fonts to be used in the project
-│   ├── icons                              holds app icons
-├── mocks                                  holds file with mock runtime object for testing
+│   ├── fonts                     holds fonts to be used in the project
+│   ├── icons                     holds app icons
+├── mocks                         holds file with mock runtime object for testing
 ├── release
-│   ├── app                                holds files necessary for building
-│   └── build                              packaged app will be stored here after running `yarn package`
+│   ├── app                       holds files necessary for building
+│   └── build                     packaged app will be stored here after running `yarn package`
 │
 ├── src
-│   ├── collabServer                       holds files necessary to run the collab server (collaborative editing)
-│   ├── collabTypes                        holds types for collab types
-│   ├── expressServer                      holds files for express server (server responsible for streaming video to the frontend)
-│   ├── main                               holds files for the electron backend
-│   ├── renderer                           holds files for the react frontend
-│   ├── transcriptProcessing               holds files used by both the frontend and backend for transcription processing
-│   └── vosk                               holds files used by both the frontend and backend for local transcription (vosk)
-└── tools                                  holds files for code gen
+│   ├── collabServer              holds files necessary to run the collab server (collaborative editing)
+│   ├── collabTypes               holds types for collab types
+│   ├── expressServer             holds files for express server (server responsible for streaming video to the frontend)
+│   ├── main                      holds files for the electron backend
+│   ├── renderer                  holds files for the react frontend
+│   ├── transcriptProcessing      holds files used by both the frontend and backend for transcription processing
+│   └── vosk                      holds files used by both the frontend and backend for local transcription (vosk)
+└── tools                         holds files for code gen
 ```
 
 ## Deployment (Releasing the app)

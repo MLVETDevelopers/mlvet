@@ -9,12 +9,7 @@ import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { deleteTakeGroup } from 'renderer/store/takeGroups/actions';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
-import {
-  getWordElementIdFromClick,
-  isEventInElement,
-  isWordInTake,
-  transcriptionContentId,
-} from 'renderer/utils/ui';
+import { isEventInElement, transcriptionContentId } from 'renderer/utils/ui';
 import { clearRangeOverride } from 'renderer/store/playback/action';
 import { useEventListener } from 'renderer/utils/hooks';
 import TakeComponent from './TakeComponent';
@@ -105,6 +100,19 @@ const TakeGroupComponent = ({
     handleModalClose();
   };
 
+  const onClickAway = (event: Event) => {
+    const isInTranscriptionContent = isEventInElement(
+      event,
+      transcriptionContentId
+    );
+    const isInTakeGroup = isEventInElement(event, takeGroupId);
+
+    if (isInTranscriptionContent && !isInTakeGroup) {
+      dispatch(clearRangeOverride());
+      setIsTakeGroupOpened(false);
+    }
+  };
+
   const wordsInTakeGroup = useMemo(
     () =>
       transcription.words.filter(
@@ -132,27 +140,6 @@ const TakeGroupComponent = ({
       }, [] as Word[][]),
     [wordsInTakeGroup]
   );
-
-  const onClickAway = (event: Event) => {
-    const isInTranscriptionContent = isEventInElement(
-      event,
-      transcriptionContentId
-    );
-    const isInTakeGroup = isEventInElement(event, takeGroupId);
-    let isWordFromTake = false;
-
-    const wordIdFromClick = getWordElementIdFromClick(event);
-
-    isWordFromTake = isWordInTake(
-      wordIdFromClick,
-      takeWordsPerTake[takeGroup.activeTakeIndex]
-    );
-
-    if (isInTranscriptionContent && !isInTakeGroup && !isWordFromTake) {
-      dispatch(clearRangeOverride());
-      setIsTakeGroupOpened(false);
-    }
-  };
 
   const takes = takeWordsPerTake.map((takeWords, takeIndex) => {
     // Index of the first word in the take, within the whole transcription

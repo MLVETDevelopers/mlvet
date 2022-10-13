@@ -1,5 +1,4 @@
 import colors from 'renderer/colors';
-import { Word } from 'sharedTypes';
 
 /* Returns the style declaration for an element */
 export const getElementStyle: (
@@ -132,32 +131,4 @@ export const isEventInElement: (event: Event, elementId: string) => boolean = (
   });
 
   return elementFound;
-};
-
-export const getWordElementIdFromClick: (event: Event) => string | null = (
-  event
-) => {
-  let wordFromClick = null;
-
-  event.composedPath().forEach((eventTarget: EventTarget) => {
-    const element = eventTarget as HTMLElement;
-
-    if (element.id?.toLowerCase().search(/word-[0-9]/) === 0) {
-      wordFromClick = element.id;
-    }
-  });
-
-  return wordFromClick;
-};
-export const isWordInTake: (
-  wordId: string | null,
-  takeWords: Word[]
-) => boolean = (wordId, takeWords) => {
-  if (wordId === null) return false;
-
-  const firstWordIndex = takeWords[0].originalIndex;
-  const lastWordIndex = takeWords[takeWords.length - 1].originalIndex;
-  const wordIndex = Number(wordId.split('-')[1]);
-
-  return firstWordIndex <= wordIndex && wordIndex <= lastWordIndex;
 };

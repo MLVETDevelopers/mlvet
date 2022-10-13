@@ -1,4 +1,3 @@
-import { TakeoutDiningTwoTone } from '@mui/icons-material';
 import colors from 'renderer/colors';
 import { Word } from 'sharedTypes';
 

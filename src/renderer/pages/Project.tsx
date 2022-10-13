@@ -120,6 +120,7 @@ const ProjectPage = () => {
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={returnToHome}
+                      title="Exit to Home"
                       style={{ marginRight: '25px' }}
                     >
                       <HomeIcon />
@@ -127,36 +128,42 @@ const ProjectPage = () => {
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={performUndo}
+                      title="Undo"
                     >
                       <UndoIcon />
                     </IconButton>
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={performRedo}
+                      title="Redo"
                     >
                       <RedoIcon />
                     </IconButton>
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={deleteText}
+                      title="Delete Text"
                     >
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={cutText}
+                      title="Cut Text"
                     >
                       <ContentCutIcon />
                     </IconButton>
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={copyText}
+                      title="Copy Text"
                     >
                       <ContentCopyIcon />
                     </IconButton>
                     <IconButton
                       sx={{ color: colors.grey[300] }}
                       onClick={pasteText}
+                      title="Paste Text"
                     >
                       <ContentPasteIcon />
                     </IconButton>

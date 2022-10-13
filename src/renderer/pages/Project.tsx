@@ -114,7 +114,9 @@ const ProjectPage = () => {
             ) => (
               <>
                 <HeaderBarBox id={menuBarId}>
-                  <LeftAligned style={{ marginLeft: '20px' }}>
+                  <LeftAligned
+                    style={{ marginLeft: '20px', marginRight: '20px' }}
+                  >
                     <IconButton
                       color="primary"
                       onClick={returnToHome}

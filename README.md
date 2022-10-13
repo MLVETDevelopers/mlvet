@@ -1,10 +1,6 @@
 ![MLVET Banner](./assets/mlvet-banner.png)
 
 <div align="center">
-  <h1><strong>MLVET</strong></h1>
-  <p>
-    <strong>Machine Learning Video Editing Toolkit</strong>
-  </p>
   <p>
     <a href="https://github.com/chloebrett/mlvet/actions/workflows/test.yml?query=branch%3Adevelop++Node.js+CI%22">
         <img src="https://img.shields.io/github/workflow/status/MLVETDevelopers/mlvet/Node.js%20CI"/>

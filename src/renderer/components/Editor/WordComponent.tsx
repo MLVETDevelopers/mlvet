@@ -375,8 +375,11 @@ const WordComponent = ({
       </>
     );
 
+  const wordId = `word-${index}`;
+
   return (
     <WordInner
+      id={wordId}
       ref={ref}
       onClick={onClick}
       onMouseUp={onMouseUp}

@@ -2,8 +2,6 @@
 
 One of the most important things you can do is report bugs. Please reference [how to report a bug](http://polite.technology/reportabug.html) and follow the issue templates when adding new bugs.
 
-## Development
-
 ## Structure of the mlvet repository
 
 ```

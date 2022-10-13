@@ -1,12 +1,6 @@
 import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
-import {
-  IndexRange,
-  TakeGroup,
-  TakeInfo,
-  Transcription,
-  Word,
-} from 'sharedTypes';
+import { IndexRange, Transcription, Word } from 'sharedTypes';
 import React, {
   RefObject,
   useCallback,

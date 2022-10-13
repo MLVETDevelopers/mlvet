@@ -113,7 +113,7 @@ const TakeComponent = ({
       setRangeOverride(
         {
           startIndex: takeWords[0].originalIndex,
-          endIndex: takeWords[takeWords.length - 1].originalIndex,
+          endIndex: takeWords[takeWords.length - 1].originalIndex + 1,
         },
         RangeType.SUBSELECTION
       )

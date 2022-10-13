@@ -76,7 +76,7 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
-  const takeGroupId = 'take-group';
+  const takeGroupId = `take-group-${takeGroup.id}`;
 
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
     !takeGroup.takeSelected

@@ -17,7 +17,7 @@
   </p>
 </div>
 
-<!-- TODO: Add screenshot -->
+![App demo GIF](./assets/app_demo.gif)
 
 ## Table of Contents
 

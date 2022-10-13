@@ -167,7 +167,23 @@ const TakeComponent = ({
         isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
         isSelected={isIndexInRange(selection, wordIndex)}
         isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+        isPrevCtrlFSelected={isIndexInRanges(
+          ctrlFSelection.indexRanges,
+          wordIndex - 1
+        )}
         isCtrlFSelected={isIndexInRanges(ctrlFSelection.indexRanges, wordIndex)}
+        isNextCtrlFSelected={isIndexInRanges(
+          ctrlFSelection.indexRanges,
+          wordIndex + 1
+        )}
+        isCtrlFSelectedIndex={
+          ctrlFSelection.maxIndex > 0
+            ? isIndexInRange(
+                ctrlFSelection.indexRanges[ctrlFSelection.selectedIndex],
+                wordIndex
+              )
+            : false
+        }
         onMouseDown={onWordMouseDown}
         onMouseEnter={onWordMouseEnter}
         isInInactiveTake={!(isActive || isTakeGroupOpened) && !isFirstTimeOpen}

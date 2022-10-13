@@ -81,6 +81,9 @@ interface Props extends WordPassThroughProps {
   index: number;
   isSelected: boolean;
   isCtrlFSelected: boolean;
+  isCtrlFSelectedIndex: boolean;
+  isCtrlFSelectedLeftCap: boolean;
+  isCtrlFSelectedRightCap: boolean;
   confidence: number;
   isSelectedLeftCap: boolean; // whether the word is the first word in a contiguous selection
   isSelectedRightCap: boolean; // whether the word is the last word in a contiguous selection
@@ -102,6 +105,9 @@ const WordComponent = ({
   isPlaying,
   isSelected,
   isCtrlFSelected,
+  isCtrlFSelectedIndex,
+  isCtrlFSelectedLeftCap,
+  isCtrlFSelectedRightCap,
   confidence,
   isSelectedLeftCap,
   isSelectedRightCap,
@@ -171,11 +177,29 @@ const WordComponent = ({
         if (isBeingEdited || partialSelectState !== null) {
           return {};
         }
+        if (isCtrlFSelectedIndex) {
+          return {
+            background: colors.blue[500],
+            borderRadius: BORDER_RADIUS_AMOUNT,
+          };
+        }
         if (isCtrlFSelected) {
           console.log('WordComponent', isCtrlFSelected);
           return {
             background: colors.yellow[500],
             borderRadius: BORDER_RADIUS_AMOUNT,
+            borderTopLeftRadius: isCtrlFSelectedLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomLeftRadius: isCtrlFSelectedLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderTopRightRadius: isCtrlFSelectedRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomRightRadius: isCtrlFSelectedRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
           };
         }
         if (isSelected) {
@@ -236,6 +260,9 @@ const WordComponent = ({
       isBeingEdited,
       isSelected,
       isCtrlFSelected,
+      isCtrlFSelectedIndex,
+      isCtrlFSelectedLeftCap,
+      isCtrlFSelectedRightCap,
       isPlaying,
       isSelectedLeftCap,
       isSelectedRightCap,

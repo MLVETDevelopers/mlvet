@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
-import Popover from '@mui/material/Popover';
+import Popper from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { IconButton, Stack, TextField } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -30,9 +30,6 @@ interface SearchBoxPopoverProps {
 
 const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [totalFinds, setTotalFinds] = useState(0);
   const dispatch = useDispatch();
   const isShowingCtrlFPopover = useSelector(
     (store: ApplicationStore) => store.isShowingCtrlFPopover
@@ -54,21 +51,23 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     // Set general match start and end indexes (the whole word)
     // Set last match start and end indexes (start will be 0, end will be any index)
     // If only one word, then start and end can be any range
-
     // Empty search string
-    const searchStr = event.target.value;
-    if (searchStr.length === 0) return;
-
-    // Split by spaces
-    const searchStrArray = searchStr.match(/\S+/g);
-    if (searchStrArray === null) return;
-    const searchStrArrayLength = searchStrArray.length;
-
     const payload: CtrlFindUpdatePayload = {
       selectedIndex: 0,
       maxIndex: 0,
       indexRanges: [],
     };
+
+    const searchStr = event.target.value;
+    if (searchStr.length === 0) {
+      dispatch(ctrlFindUpdated(payload));
+      return;
+    }
+    // Split by spaces
+    const searchStrArray = searchStr.match(/\S+/g);
+    if (searchStrArray === null) return;
+    const searchStrArrayLength = searchStrArray.length;
+    console.log(searchStrArray);
 
     // Loop through each word in the transcription
     const loopIter = transcription.words.length - searchStrArrayLength + 1;
@@ -83,43 +82,30 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
       for (let j = 0; j < searchStrArrayLength; j += 1) {
         const currentSearchStr = searchStrArray[j];
         wordText = transcription.words[i + j].word;
-        if (wordText === null) {
-          break;
-        }
+        if (wordText === null) break;
 
-        // If only searching for a single word
-        if (j === 0 && searchStrArrayLength === 1) {
-          if (wordText.includes(currentSearchStr)) {
-            const indexRange: IndexRange = {
-              startIndex: i,
-              endIndex: i,
-            };
-            payload.indexRanges.push(indexRange);
-          }
+        // If last word of search string
+        if (j === searchStrArrayLength - 1) {
+          if (!wordText.startsWith(currentSearchStr)) break;
+          const indexRange: IndexRange = {
+            startIndex: i,
+            endIndex: i + j + 1,
+          };
+          payload.indexRanges.push(indexRange);
 
           // If first word of search string
         } else if (j === 0) {
           if (!wordText.endsWith(currentSearchStr)) break;
 
-          // If last word of search string
-        } else if (j === searchStrArrayLength - 1) {
-          if (!wordText.startsWith(currentSearchStr)) break;
-          const indexRange: IndexRange = {
-            startIndex: i,
-            endIndex: i + j,
-          };
-          payload.indexRanges.push(indexRange);
           // If any middle word of search string
         } else if (wordText !== currentSearchStr) break;
       }
     }
-    // console.log(payload);
+    console.log(payload);
     dispatch(ctrlFindUpdated(payload));
   };
 
   const nextOccurrence = () => {
-    // TODO: Change CSS highlighting to highlight next word. If at end, go to beginning.
-    // TODO: Make the page scroll to the highlighted word.
     const payload: CtrlFindUpdatePayload = {
       selectedIndex,
       maxIndex,
@@ -129,8 +115,6 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   };
 
   const prevOccurrence = () => {
-    // TODO: Change CSS highlighting to highlight previous word. If at beginning, go to end.
-    // TODO: Make the page scroll to the highlighted word.
     const payload: CtrlFindUpdatePayload = {
       selectedIndex,
       maxIndex,
@@ -142,14 +126,13 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
   const handleClose = () => {
     dispatch(ctrlFindClosed());
     dispatch(ctrlFPopoverToggled());
-    // setAnchorEl(null);
   };
 
   const id = isShowingCtrlFPopover ? 'simple-popover' : undefined;
 
   return (
     <>
-      <Popover
+      <Popper
         id={id}
         open={isShowingCtrlFPopover}
         anchorEl={anchorEl}
@@ -167,6 +150,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
             gap: '2px',
             px: '2px',
             py: '2px',
+            backgroundColor: colors.grey['700'],
           }}
         >
           <TextField
@@ -175,19 +159,46 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
             variant="standard"
             onChange={handleFindTextChange}
           />
-          <Typography>{totalFinds ? { currentIndex } : null}</Typography>
+          <Typography
+            style={{
+              color: colors.grey['000'],
+              fontSize: '12px',
+            }}
+            alignItems="center"
+            justifyContent="center"
+          >
+            {maxIndex > 0 ? `${selectedIndex + 1}/${maxIndex + 1}` : '0/0'}
+          </Typography>
           {/* TODO: Insert a vertical line here if you want to make it look like Chrome's one */}
-          <IconButton aria-label="next occurence" onClick={nextOccurrence}>
+          <IconButton
+            aria-label="next occurence"
+            onClick={nextOccurrence}
+            sx={{
+              color: colors.grey['000'],
+            }}
+          >
             <KeyboardArrowDownIcon />
           </IconButton>
-          <IconButton aria-label="previous occurrence" onClick={prevOccurrence}>
+          <IconButton
+            aria-label="previous occurrence"
+            onClick={prevOccurrence}
+            sx={{
+              color: colors.grey['000'],
+            }}
+          >
             <KeyboardArrowUpIcon />
           </IconButton>
-          <IconButton aria-label="close popover" onClick={handleClose}>
+          <IconButton
+            aria-label="close popover"
+            onClick={handleClose}
+            sx={{
+              color: colors.grey['000'],
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Stack>
-      </Popover>
+      </Popper>
     </>
   );
 };

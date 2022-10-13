@@ -214,7 +214,7 @@ const TakeGroupComponent = ({
         nowPlayingWordIndex={nowPlayingWordIndex}
         transcription={transcription}
         selection={selection}
-        ctrlFSelected={ctrlFSelected}
+        ctrlFSelection={ctrlFSelection}
         transcriptionIndex={transcriptionIndex}
         isLast={takeIndex === takeWordsPerTake.length - 1}
         isFirstTimeOpen={isFirstTimeOpen}

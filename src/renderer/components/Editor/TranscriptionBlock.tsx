@@ -116,6 +116,8 @@ const TranscriptionBlock = ({
     [selection, editWord]
   );
 
+  console.log(selection.self);
+
   const otherSelections = useMemo(() => {
     const selections: Record<ClientId, IndexRange> = {};
     Object.keys(selection.others).forEach((clientId) => {

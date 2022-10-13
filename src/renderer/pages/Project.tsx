@@ -16,6 +16,7 @@ import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import HomeIcon from '@mui/icons-material/Home';
 import returnToHome from 'renderer/navigation/returnToHome';
+import { menuBarId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -105,7 +106,7 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <HeaderBarBox>
+                <HeaderBarBox id={menuBarId}>
                   <LeftAligned style={{ marginLeft: '20px' }}>
                     <IconButton color="primary" onClick={returnToHome}>
                       <HomeIcon />

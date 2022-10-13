@@ -131,4 +131,5 @@ export const isEventInElement: (event: Event, elementId: string) => boolean = (
   return elementFound;
 };
 
+export const menuBarId = 'menu-bar-id';
 export const transcriptionContentId = 'transcription-content';

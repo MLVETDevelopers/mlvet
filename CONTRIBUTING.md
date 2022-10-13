@@ -27,6 +27,10 @@ mlvet
 └── tools                         holds files for code gen
 ```
 
+## Development
+
+To develop new features or fix bugs
+
 ## Deployment (Releasing the app)
 
 1. Create a PR into `develop` with the version in `package.json` incremented - [Follow Semantic Versioning](https://semver.org/)

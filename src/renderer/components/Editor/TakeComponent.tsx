@@ -100,10 +100,18 @@ const TakeComponent = ({
   const takeRef = useRef<HTMLDivElement>(null);
 
   const onSelectTake = useCallback(() => {
-    const takeInfo = takeWords[0].takeInfo as TakeInfo;
+    const { takeInfo } = takeWords[0];
+    if (!takeInfo) {
+      return;
+    }
+
     const takeGroup = transcription.takeGroups.find(
       (tg) => tg.id === takeInfo.takeGroupId
-    ) as TakeGroup;
+    );
+
+    if (!takeGroup) {
+      return;
+    }
 
     // only makes action if the selection has changed
     if (

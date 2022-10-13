@@ -132,7 +132,9 @@ export const isInInactiveTake: (
 
   const takeGroup = takeGroups.find((group) => group.id === takeGroupId);
 
-  if (takeGroup?.activeTakeIndex === takeIndex) {
+  // a take is not considered inactive if it is the active/selected take
+  // or when no takes have been selected in the take group
+  if (takeGroup?.activeTakeIndex === takeIndex || !takeGroup?.takeSelected) {
     return false;
   }
 

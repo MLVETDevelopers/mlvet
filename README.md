@@ -86,7 +86,7 @@ There are multiple ways of downloading the MLVET app.
    yarn package
    ```
 
-4. Setup mlvet
+4. Get executable/installer from package result
 
    ```bash
    cd ./release/build

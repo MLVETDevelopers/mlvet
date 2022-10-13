@@ -72,8 +72,10 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
   useEffect(() => {
     if (containerRef !== null && containerRef.current !== null) {
       containerRef.current.onmouseup = (event: Event) => {
-        const isInTakeGroup = isEventInElement(event, menuBarId);
-        if (!isInTakeGroup) {
+        // Check whether mouse event was in menu bar
+        const isInMenuBar = isEventInElement(event, menuBarId);
+        // Only clear the selection if the event was not in the menu bar
+        if (!isInMenuBar) {
           clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
           setMouseDown(false);
         }

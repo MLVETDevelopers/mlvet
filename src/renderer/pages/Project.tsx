@@ -118,28 +118,46 @@ const ProjectPage = () => {
                     style={{ marginLeft: '20px', marginRight: '20px' }}
                   >
                     <IconButton
-                      color="primary"
+                      sx={{ color: colors.grey[300] }}
                       onClick={returnToHome}
                       style={{ marginRight: '25px' }}
                     >
                       <HomeIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={performUndo}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performUndo}
+                    >
                       <UndoIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={performRedo}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performRedo}
+                    >
                       <RedoIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={deleteText}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={deleteText}
+                    >
                       <DeleteIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={cutText}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={cutText}
+                    >
                       <ContentCutIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={copyText}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={copyText}
+                    >
                       <ContentCopyIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={pasteText}>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={pasteText}
+                    >
                       <ContentPasteIcon />
                     </IconButton>
                   </LeftAligned>
@@ -162,11 +180,13 @@ const ProjectPage = () => {
                     }}
                   >
                     <IconButton
-                      color="primary"
                       onClick={openUserFeedback}
                       sx={{ padding: '0' }}
                     >
-                      <RateReviewIcon fontSize="medium" />
+                      <RateReviewIcon
+                        sx={{ color: colors.grey[300] }}
+                        fontSize="medium"
+                      />
                     </IconButton>
                     Feedback
                   </RightAligned>

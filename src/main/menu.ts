@@ -1,10 +1,4 @@
-import {
-  app,
-  Menu,
-  shell,
-  BrowserWindow,
-  MenuItemConstructorOptions,
-} from 'electron';
+import { app, Menu, BrowserWindow, MenuItemConstructorOptions } from 'electron';
 import { ExportFormat } from '../sharedTypes';
 import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
@@ -125,10 +119,7 @@ export default class MenuBuilder {
         id: 'selectAll',
         label: 'Select All',
         accelerator: 'CmdOrCtrl+A',
-        click: () => {
-          // Tell the renderer to initiate a select-all
-          this.mainWindow.webContents.send('initiate-select-all');
-        },
+        role: 'selectAll',
       },
       {
         id: 'selectSentence',
@@ -141,33 +132,6 @@ export default class MenuBuilder {
         enabled: false, // initially disabled, becomes enabled when there is a sentence to select
       },
     ];
-  }
-
-  buildMacClipboardOptions(): DarwinMenuItemConstructorOptions[] {
-    const selectors: Record<string, string> = {
-      cut: 'cut:',
-      copy: 'copy:',
-      paste: 'paste:',
-      selectAll: 'selectAll:',
-      delete: 'delete:',
-    };
-
-    const options =
-      this.buildClipboardOptions().map<DarwinMenuItemConstructorOptions>(
-        (option) => {
-          if (option.id && option.id in selectors) {
-            return {
-              ...option,
-              selector: selectors[option.id],
-            };
-          }
-          return option;
-        }
-      );
-
-    console.log(options);
-
-    return options;
   }
 
   buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
@@ -298,20 +262,6 @@ export default class MenuBuilder {
         ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         ...this.buildClipboardOptions(),
-        { type: 'separator' },
-        ...this.buildEditorAdditionalOptions(),
-      ],
-    };
-  }
-
-  buildMacEditOptions(): DarwinMenuItemConstructorOptions {
-    return {
-      id: 'edit', // do not change, used by IPC to find this menu
-      label: 'Edit',
-      submenu: [
-        ...this.buildUndoRedoOptions(),
-        { type: 'separator' },
-        ...this.buildMacClipboardOptions(),
         { type: 'separator' },
         ...this.buildEditorAdditionalOptions(),
       ],
@@ -459,7 +409,7 @@ export default class MenuBuilder {
     return [
       subMenuAbout,
       subMenuFile,
-      this.buildMacEditOptions(),
+      this.buildEditOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,

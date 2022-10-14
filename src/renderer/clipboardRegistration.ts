@@ -8,6 +8,12 @@ import { copyText, cutText, pasteText } from './editor/clipboard';
 import { selectAllWords } from './editor/selection';
 import ipc from './ipc';
 
+const isInTextField: () => boolean = () => {
+  return ['input', 'textarea'].includes(
+    (document.activeElement?.tagName ?? '').toLowerCase()
+  );
+};
+
 const registerClipboardHandlers: () => Promise<void> = async () => {
   const os = await ipc.handleOsQuery();
 
@@ -23,6 +29,11 @@ const registerClipboardHandlers: () => Promise<void> = async () => {
 
   Object.keys(actionToHandlerMap).forEach((key) => {
     document.addEventListener(key, () => {
+      // If in a text field, bypass the app-specific clipboard logic
+      if (isInTextField()) {
+        return;
+      }
+
       actionToHandlerMap[key]();
     });
   });
@@ -36,6 +47,11 @@ const registerClipboardHandlers: () => Promise<void> = async () => {
     }
 
     if (Object.keys(keyToHandlerMap).includes(event.key)) {
+      // If in a text field, bypass the app-specific clipboard logic
+      if (isInTextField()) {
+        return;
+      }
+
       // Invoke the appropriate handler
       keyToHandlerMap[event.key]();
     }

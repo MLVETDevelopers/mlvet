@@ -21,7 +21,7 @@ const MODEL_URL =
   'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model.zip';
 const MODEL_SML_URL =
   'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
-const LIBS_URL = `https://mlvet-local.s3.ap-southeast-2.amazonaws.com/libs.zip`;
+const LIBS_URL = `https://mlvetdevelopers.github.io/mlvet-local-transcription-assets/libs.zip`;
 
 const onDownloadStart = (ipcContext: IpcContext) => () => {
   const downloadModelStateUpdate = {

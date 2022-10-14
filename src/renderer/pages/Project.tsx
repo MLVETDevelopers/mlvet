@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled } from '@mui/material';
+import { Box, IconButton, Menu, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -25,6 +25,7 @@ import returnToHome from 'renderer/navigation/returnToHome';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
 import ProjectTooltip from 'renderer/components/Editor/ProjectTooltip';
+import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -127,54 +128,24 @@ const ProjectPage = () => {
                         <HomeIcon />
                       </IconButton>
                     </ProjectTooltip>
-                    <ProjectTooltip title="Undo">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={performUndo}
-                      >
-                        <UndoIcon />
-                      </IconButton>
-                    </ProjectTooltip>
-                    <ProjectTooltip title="Redo">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={performRedo}
-                      >
-                        <RedoIcon />
-                      </IconButton>
-                    </ProjectTooltip>
-                    <ProjectTooltip title="Delete Text">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={deleteText}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </ProjectTooltip>
-                    <ProjectTooltip title="Cut Text">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={cutText}
-                      >
-                        <ContentCutIcon />
-                      </IconButton>
-                    </ProjectTooltip>
-                    <ProjectTooltip title="Copy Text">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={copyText}
-                      >
-                        <ContentCopyIcon />
-                      </IconButton>
-                    </ProjectTooltip>
-                    <ProjectTooltip title="Paste Text">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={pasteText}
-                      >
-                        <ContentPasteIcon />
-                      </IconButton>
-                    </ProjectTooltip>
+                    <MenuBarButton text="Undo" onClick={performUndo}>
+                      <UndoIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Redo" onClick={performRedo}>
+                      <RedoIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Delete Text" onClick={deleteText}>
+                      <DeleteIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Cut Text" onClick={cutText}>
+                      <ContentCutIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Copy Text" onClick={copyText}>
+                      <ContentCopyIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Paste Text" onClick={pasteText}>
+                      <ContentPasteIcon />
+                    </MenuBarButton>
                   </LeftAligned>
                   <CenterAligned>
                     <VideoController
@@ -194,17 +165,12 @@ const ProjectPage = () => {
                       fontSize: '12px',
                     }}
                   >
-                    <ProjectTooltip title="Provide Feedback">
-                      <IconButton
-                        onClick={openUserFeedback}
-                        sx={{ padding: '0' }}
-                      >
-                        <RateReviewIcon
-                          sx={{ color: colors.grey[300] }}
-                          fontSize="medium"
-                        />
-                      </IconButton>
-                    </ProjectTooltip>
+                    <MenuBarButton
+                      text="Provide Feedback"
+                      onClick={openUserFeedback}
+                    >
+                      <RateReviewIcon />
+                    </MenuBarButton>
                   </RightAligned>
                 </HeaderBarBox>
 

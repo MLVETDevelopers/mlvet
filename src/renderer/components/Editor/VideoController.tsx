@@ -3,6 +3,7 @@ import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
+import MenuBarButton from './MenuBarButton';
 import ProjectTooltip from './ProjectTooltip';
 
 const TimeDisplay = styled(Box)({
@@ -64,21 +65,18 @@ const VideoController = ({
       }}
     >
       <TimeDisplay>{timeDisplay}</TimeDisplay>
-      <ProjectTooltip title="Seek back 10 seconds">
-        <IconButton onClick={seekBack}>
-          <Replay10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
-        </IconButton>
-      </ProjectTooltip>
-      <ProjectTooltip title={isPlaying ? 'Pause' : 'Play'}>
-        <IconButton onClick={onClickPlayPause}>
-          <TogglePlayButton isPlaying={isPlaying} />
-        </IconButton>
-      </ProjectTooltip>
-      <ProjectTooltip title="Seek forward 10 seconds">
-        <IconButton onClick={seekForward}>
-          <Forward10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
-        </IconButton>
-      </ProjectTooltip>
+      <MenuBarButton onClick={seekBack} text="Seek backwards 10 seconds">
+        <Replay10 sx={{ fontSize: '36px' }} />
+      </MenuBarButton>
+      <MenuBarButton
+        onClick={onClickPlayPause}
+        text={isPlaying ? 'Pause' : 'Play'}
+      >
+        <TogglePlayButton isPlaying={isPlaying} />
+      </MenuBarButton>
+      <MenuBarButton onClick={seekForward} text="Seek forward 10 seconds">
+        <Forward10 sx={{ fontSize: '36px' }} />
+      </MenuBarButton>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import { EditWordState } from 'renderer/store/sharedHelpers';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
+import { isEventInElement, transcriptionContentId } from 'renderer/utils/ui';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -73,6 +74,8 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
+  const takeGroupId = `take-group-${takeGroup.id}`;
+
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
     !takeGroup.takeSelected
   );
@@ -150,8 +153,14 @@ const TakeGroupComponent = ({
     handleModalClose();
   };
 
-  const clickAway = () => {
-    if (!isFirstTimeOpen) {
+  const clickAway = (event: Event) => {
+    const isInTranscriptionContent = isEventInElement(
+      event,
+      transcriptionContentId
+    );
+    const isInTakeGroup = isEventInElement(event, takeGroupId);
+
+    if (!isFirstTimeOpen && isInTranscriptionContent && !isInTakeGroup) {
       setIsTakeGroupOpened(false);
     }
   };

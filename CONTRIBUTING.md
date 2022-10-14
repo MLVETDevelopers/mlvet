@@ -27,7 +27,37 @@ mlvet
 
 ## Development
 
-To develop new features or fix bugs
+To get your development environment set up
+
+1. Install the following dependencies: `node 16`, `yarn`
+
+2. Clone the repository and cd into the directory
+
+   ```bash
+   repos> git clone https://github.com/MLVETDevelopers/mlvet.git
+   repos> cd mlvet
+   ```
+
+3. Install node dependencies
+
+   ```bash
+   mlvet> yarn
+   mlvet> cd src/collabServer/
+   m/s/collabServer/> yarn
+   m/s/collabServer/> cd ../../release/app
+   m/r/app/> yarn
+   ```
+
+4. Running the tests
+
+   ```bash
+   mlvet> yarn test
+   ```
+
+5. Start the app in the `dev` environment
+   ```bash
+   yarn start
+   ```
 
 ## Deployment (Releasing the app)
 

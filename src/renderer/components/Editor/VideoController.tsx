@@ -3,6 +3,7 @@ import { Box, IconButton, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
+import ProjectTooltip from './ProjectTooltip';
 
 const TimeDisplay = styled(Box)({
   backgroundColor: colors.grey[600],
@@ -63,15 +64,21 @@ const VideoController = ({
       }}
     >
       <TimeDisplay>{timeDisplay}</TimeDisplay>
-      <IconButton onClick={seekBack}>
-        <Replay10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
-      </IconButton>
-      <IconButton onClick={onClickPlayPause}>
-        <TogglePlayButton isPlaying={isPlaying} />
-      </IconButton>
-      <IconButton onClick={seekForward}>
-        <Forward10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
-      </IconButton>
+      <ProjectTooltip title="Seek back 10 seconds">
+        <IconButton onClick={seekBack}>
+          <Replay10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
+        </IconButton>
+      </ProjectTooltip>
+      <ProjectTooltip title={isPlaying ? 'Pause' : 'Play'}>
+        <IconButton onClick={onClickPlayPause}>
+          <TogglePlayButton isPlaying={isPlaying} />
+        </IconButton>
+      </ProjectTooltip>
+      <ProjectTooltip title="Seek forward 10 seconds">
+        <IconButton onClick={seekForward}>
+          <Forward10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
+        </IconButton>
+      </ProjectTooltip>
     </Box>
   );
 };

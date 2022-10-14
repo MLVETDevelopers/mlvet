@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled } from '@mui/material';
+import { Box, IconButton, Stack, styled, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -24,6 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
+import ProjectTooltip from 'renderer/components/Editor/ProjectTooltip';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -117,56 +118,63 @@ const ProjectPage = () => {
                   <LeftAligned
                     style={{ marginLeft: '20px', marginRight: '20px' }}
                   >
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={returnToHome}
-                      title="Exit to Home"
-                      style={{ marginRight: '25px' }}
-                    >
-                      <HomeIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={performUndo}
-                      title="Undo"
-                    >
-                      <UndoIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={performRedo}
-                      title="Redo"
-                    >
-                      <RedoIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={deleteText}
-                      title="Delete Text"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={cutText}
-                      title="Cut Text"
-                    >
-                      <ContentCutIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={copyText}
-                      title="Copy Text"
-                    >
-                      <ContentCopyIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={pasteText}
-                      title="Paste Text"
-                    >
-                      <ContentPasteIcon />
-                    </IconButton>
+                    <ProjectTooltip title="Exit to Home">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={returnToHome}
+                        style={{ marginRight: '25px' }}
+                      >
+                        <HomeIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Undo">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={performUndo}
+                      >
+                        <UndoIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Redo">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={performRedo}
+                      >
+                        <RedoIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Delete Text">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={deleteText}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Cut Text">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={cutText}
+                      >
+                        <ContentCutIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Copy Text">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={copyText}
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </ProjectTooltip>
+                    <ProjectTooltip title="Paste Text">
+                      <IconButton
+                        sx={{ color: colors.grey[300] }}
+                        onClick={pasteText}
+                      >
+                        <ContentPasteIcon />
+                      </IconButton>
+                    </ProjectTooltip>
                   </LeftAligned>
                   <CenterAligned>
                     <VideoController
@@ -186,16 +194,17 @@ const ProjectPage = () => {
                       fontSize: '12px',
                     }}
                   >
-                    <IconButton
-                      onClick={openUserFeedback}
-                      sx={{ padding: '0' }}
-                    >
-                      <RateReviewIcon
-                        sx={{ color: colors.grey[300] }}
-                        fontSize="medium"
-                      />
-                    </IconButton>
-                    Feedback
+                    <ProjectTooltip title="Provide Feedback">
+                      <IconButton
+                        onClick={openUserFeedback}
+                        sx={{ padding: '0' }}
+                      >
+                        <RateReviewIcon
+                          sx={{ color: colors.grey[300] }}
+                          fontSize="medium"
+                        />
+                      </IconButton>
+                    </ProjectTooltip>
                   </RightAligned>
                 </HeaderBarBox>
 

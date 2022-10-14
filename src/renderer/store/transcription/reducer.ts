@@ -22,6 +22,7 @@ import {
   DELETE_TAKE_GROUP,
   SELECT_TAKE,
   UNDO_DELETE_TAKE_GROUP,
+  UNDO_SELECT_TAKE,
 } from '../takeGroups/actions';
 import transcriptionTakesReducer from '../transcriptionTakes/reducer';
 import takeGroupsReducer from '../takeGroups/reducer';
@@ -70,9 +71,12 @@ const transcriptionReducer: Reducer<Transcription | null, Action<any>> = (
 
   // Delegate take-related actions to takes reducer and take groups reducer
   if (
-    [SELECT_TAKE, DELETE_TAKE_GROUP, UNDO_DELETE_TAKE_GROUP].includes(
-      action.type
-    )
+    [
+      SELECT_TAKE,
+      UNDO_SELECT_TAKE,
+      DELETE_TAKE_GROUP,
+      UNDO_DELETE_TAKE_GROUP,
+    ].includes(action.type)
   ) {
     // Update take groups first, so that updateOutputTimes uses the correct take groups
     const takeGroups = takeGroupsReducer(transcription.takeGroups, action);

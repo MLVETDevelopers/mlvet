@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
 import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, { RefObject, useMemo, useState } from 'react';
+import React, { RefObject, useEffect, useMemo, useState } from 'react';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
@@ -223,6 +223,14 @@ const TakeGroupComponent = ({
       />
     );
   });
+
+  useEffect(() => {
+    // when undoing the first take selection, it reverts back to the initial state
+    setIsFirstTimeOpen(!takeGroup.takeSelected);
+    if (!takeGroup.takeSelected) {
+      setIsTakeGroupOpened(true);
+    }
+  }, [takeGroup.takeSelected]);
 
   return (
     <ClickAwayListener onClickAway={clickAway}>

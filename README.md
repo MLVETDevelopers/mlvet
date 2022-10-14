@@ -34,6 +34,7 @@
   - [Generating IPC Handlers](#generating-ipc-handlers)
   - [Running the Collab server](#running-the-collab-server)
 - [Contributors](#contributors)
+- [Other READMEs](#other-readmes)
 
 ## About the App
 
@@ -166,3 +167,10 @@ This project exists thanks to all the people who contribute. If you are interest
 <a href="https://github.com/MLVETDevelopers/mlvet/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=MLVETDevelopers/mlvet" />
 </a>
+
+## Other READMEs
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [GENCODE.md](/tools/GENCODE_README.md)
+- [Handlers README.md](/src/main/handlers/HANDLERS_README.md)
+- [Collab server README.md](/src/collabServer/README.md)

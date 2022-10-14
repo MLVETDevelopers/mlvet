@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, Stack, styled } from '@mui/material';
+import { Box, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -24,7 +24,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
-import ProjectTooltip from 'renderer/components/Editor/ProjectTooltip';
 import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
@@ -119,15 +118,13 @@ const ProjectPage = () => {
                   <LeftAligned
                     style={{ marginLeft: '20px', marginRight: '20px' }}
                   >
-                    <ProjectTooltip title="Exit to Home">
-                      <IconButton
-                        sx={{ color: colors.grey[300] }}
-                        onClick={returnToHome}
-                        style={{ marginRight: '25px' }}
-                      >
-                        <HomeIcon />
-                      </IconButton>
-                    </ProjectTooltip>
+                    <MenuBarButton
+                      text="Exit to Home"
+                      onClick={returnToHome}
+                      style={{ marginRight: '25px' }}
+                    >
+                      <HomeIcon />
+                    </MenuBarButton>
                     <MenuBarButton text="Undo" onClick={performUndo}>
                       <UndoIcon />
                     </MenuBarButton>

@@ -1,10 +1,9 @@
 import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
 import MenuBarButton from './MenuBarButton';
-import ProjectTooltip from './ProjectTooltip';
 
 const TimeDisplay = styled(Box)({
   backgroundColor: colors.grey[600],

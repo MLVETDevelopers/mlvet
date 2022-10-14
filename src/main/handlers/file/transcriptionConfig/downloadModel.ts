@@ -1,3 +1,6 @@
+import { moveSync } from 'fs-extra';
+import fs from 'fs';
+import path from 'path';
 import setTranscriptionEngineConfig from './setEngineConfig';
 import {
   DownloadingModelState,
@@ -18,7 +21,7 @@ import {
 import getTranscriptionEngineConfig from './getEngineConfig';
 
 const MODEL_URL =
-  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model.zip';
+  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
 const MODEL_SML_URL =
   'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
 const LIBS_URL = `https://mlvetdevelopers.github.io/mlvet-local-transcription-assets/libs.zip`;
@@ -89,6 +92,94 @@ const calculateDownloadProgressWeights = (
   return createWeights(0, 0);
 };
 
+const getFilesParentDir: (
+  baseDir: string,
+  desiredFiles: string[]
+) => Promise<string | null> = async (baseDir, desiredFiles) => {
+  const dirFiles = fs.readdirSync(baseDir);
+
+  const areFilesInDir = desiredFiles.every((file) => dirFiles.includes(file));
+
+  console.log('dirFiles', dirFiles);
+
+  if (areFilesInDir) return baseDir;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const dirFile of dirFiles) {
+    const res = path.resolve(baseDir, dirFile);
+    const isDir = fs.lstatSync(res).isDirectory();
+
+    if (isDir) {
+      // eslint-disable-next-line no-await-in-loop
+      const filesParentDir = await getFilesParentDir(res, desiredFiles);
+      if (filesParentDir !== null) return filesParentDir;
+    }
+  }
+
+  return null;
+};
+
+const downloadAndExtractLibs = async (
+  defaultLibsDir: string,
+  libsProgressWeighting: number,
+  onProgress: (progress: number) => void
+) => {
+  console.log('Downloading dynamic libs');
+  await downloadZip(
+    getLibsUrl(),
+    defaultLibsDir,
+    () => {},
+    (progress: number) => {
+      const weightedProgress = progress * libsProgressWeighting;
+      onProgress(weightedProgress);
+    },
+    () => {}
+  );
+};
+
+const downloadAndExtractModel = async (
+  defaultModelDir: string,
+  modelProgressWeighting: number,
+  libsProgressWeighting: number,
+  onProgress: (progress: number) => void
+) => {
+  console.log('Downloading model');
+
+  await downloadZip(
+    getModelUrl(),
+    defaultModelDir,
+    () => {},
+    (progress: number) => {
+      const weightedProgress =
+        progress * modelProgressWeighting + libsProgressWeighting;
+      onProgress(weightedProgress);
+    },
+    () => {}
+  );
+
+  const modelFiles = ['am', 'conf', 'graph'];
+
+  const modelFilesParentDir = await getFilesParentDir(
+    defaultModelDir,
+    modelFiles
+  );
+
+  if (modelFilesParentDir !== null) {
+    const modelFilesGrandparentDir = path.dirname(modelFilesParentDir);
+    const modelFilesNewParentDir = path.resolve(
+      modelFilesGrandparentDir,
+      'model'
+    );
+    fs.renameSync(path.resolve(modelFilesParentDir), modelFilesNewParentDir);
+
+    const finalModelPath = path.resolve(defaultModelDir, 'model');
+    if (modelFilesNewParentDir !== finalModelPath)
+      moveSync(modelFilesNewParentDir, finalModelPath, {
+        overwrite: true,
+      });
+  }
+};
+
 type DownloadModel = (ipcContext: IpcContext) => Promise<void>;
 
 const downloadModel: DownloadModel = async (ipcContext) => {
@@ -112,43 +203,37 @@ const downloadModel: DownloadModel = async (ipcContext) => {
 
   // Download and extract libs if not already present
   if (shouldDownloadLibs) {
-    console.log('Downloading dynamic libs');
-    await downloadZip(
-      getLibsUrl(),
+    await downloadAndExtractLibs(
       defaultLibsDir,
-      () => {},
-      (progress: number) => {
-        const weightedProgress = progress * libsProgressWeighting;
-        onProgress(weightedProgress);
-      },
-      () => {}
+      libsProgressWeighting,
+      onProgress
     );
   }
 
   // Download and extract model if not already present
   if (shouldDownloadModel) {
-    console.log('Downloading model');
-    await downloadZip(
-      getModelUrl(),
+    await downloadAndExtractModel(
       defaultModelDir,
-      () => {},
-      (progress: number) => {
-        const weightedProgress =
-          progress * modelProgressWeighting + libsProgressWeighting;
-        onProgress(weightedProgress);
-      },
-      () => {}
+      modelProgressWeighting,
+      libsProgressWeighting,
+      onProgress
     );
   }
+
+  console.log('1');
 
   // set config assets path to default paths if not already defined
   const { libsPath: defaultLibsPath, modelPath: defaultModelPath } =
     appDefaultLocalTranscriptionAssetsPaths();
 
+  console.log('2');
+
   await setTranscriptionEngineConfig(TranscriptionEngine.VOSK, {
     libsPath: shouldDownloadLibs ? defaultLibsPath : localConfig.libsPath,
     modelPath: shouldDownloadModel ? defaultModelPath : localConfig.modelPath,
   });
+
+  console.log('3');
 
   // Trigger download finish frontend
   onDownloadFinish(ipcContext)();

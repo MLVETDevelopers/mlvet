@@ -87,30 +87,18 @@ export default class MenuBuilder {
     return [
       {
         id: 'cut',
-        label: 'Cut',
+        role: 'cut',
         accelerator: 'CommandOrControl+X',
-        click: () => {
-          // Tell the renderer to initiate a cut
-          this.mainWindow.webContents.send('initiate-cut-text');
-        },
       },
       {
         id: 'copy',
-        label: 'Copy',
+        role: 'copy',
         accelerator: 'CommandOrControl+C',
-        click: () => {
-          // Tell the renderer to initiate a copy
-          this.mainWindow.webContents.send('initiate-copy-text');
-        },
       },
       {
         id: 'paste',
-        label: 'Paste',
+        role: 'paste',
         accelerator: 'CommandOrControl+V',
-        click: () => {
-          // Tell the renderer to initiate a paste
-          this.mainWindow.webContents.send('initiate-paste-text');
-        },
       },
       {
         id: 'delete',
@@ -153,6 +141,33 @@ export default class MenuBuilder {
         enabled: false, // initially disabled, becomes enabled when there is a sentence to select
       },
     ];
+  }
+
+  buildMacClipboardOptions(): DarwinMenuItemConstructorOptions[] {
+    const selectors: Record<string, string> = {
+      cut: 'cut:',
+      copy: 'copy:',
+      paste: 'paste:',
+      selectAll: 'selectAll:',
+      delete: 'delete:',
+    };
+
+    const options =
+      this.buildClipboardOptions().map<DarwinMenuItemConstructorOptions>(
+        (option) => {
+          if (option.id && option.id in selectors) {
+            return {
+              ...option,
+              selector: selectors[option.id],
+            };
+          }
+          return option;
+        }
+      );
+
+    console.log(options);
+
+    return options;
   }
 
   buildEditorAdditionalOptions(): MenuItemConstructorOptions[] {
@@ -283,6 +298,20 @@ export default class MenuBuilder {
         ...this.buildUndoRedoOptions(),
         { type: 'separator' },
         ...this.buildClipboardOptions(),
+        { type: 'separator' },
+        ...this.buildEditorAdditionalOptions(),
+      ],
+    };
+  }
+
+  buildMacEditOptions(): DarwinMenuItemConstructorOptions {
+    return {
+      id: 'edit', // do not change, used by IPC to find this menu
+      label: 'Edit',
+      submenu: [
+        ...this.buildUndoRedoOptions(),
+        { type: 'separator' },
+        ...this.buildMacClipboardOptions(),
         { type: 'separator' },
         ...this.buildEditorAdditionalOptions(),
       ],
@@ -430,7 +459,7 @@ export default class MenuBuilder {
     return [
       subMenuAbout,
       subMenuFile,
-      this.buildEditOptions(),
+      this.buildMacEditOptions(),
       subMenuView,
       subMenuHistory,
       subMenuWindow,

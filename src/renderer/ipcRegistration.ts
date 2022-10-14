@@ -1,5 +1,4 @@
 import ipc from './ipc';
-import { copyText, cutText, deleteText, pasteText } from './editor/clipboard';
 import { selectAllWords, selectSentence } from './editor/selection';
 import saveProject from './file/saveProject';
 import saveAsProject from './file/saveAsProject';
@@ -12,12 +11,13 @@ import { performUndo, performRedo } from './editor/undoRedo';
 import { mergeWords, splitWord } from './editor/mergeSplit';
 import openShortcuts from './navigation/openShortcuts';
 import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionAPIKey';
-import registerKeyboardHandlers from './keyboardShortcutsRegistration';
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import editWord from './editor/editWord';
 import onExportStart from './file/onExportStart';
 import updateDownloadModelState from './file/downloadModelProgressUpdate';
 import openUpdateTranscriptionChoice from './navigation/openUpdateTranscriptionChoice';
+import registerClipboardHandlers from './clipboardRegistration';
+import { deleteText } from './editor/clipboard';
 
 const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   // File actions
@@ -33,9 +33,9 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'update-download-model-state': updateDownloadModelState,
 
   // Editor actions
-  'initiate-cut-text': cutText,
-  'initiate-copy-text': copyText,
-  'initiate-paste-text': pasteText,
+  // 'initiate-cut-text': cutText,
+  // 'initiate-copy-text': copyText,
+  // 'initiate-paste-text': pasteText,
   'initiate-delete-text': deleteText,
   'initiate-select-all': selectAllWords,
   'initiate-select-sentence': selectSentence,
@@ -72,5 +72,5 @@ Object.keys(IPC_RECEIVERS).forEach((key) =>
   registerIpcHandler(key, IPC_RECEIVERS[key])
 );
 
-// Also register the manual keyboard handlers for windows/linux
-registerKeyboardHandlers();
+// Also register clipboard handlers
+registerClipboardHandlers();

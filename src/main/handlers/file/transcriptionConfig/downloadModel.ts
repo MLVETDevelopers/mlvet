@@ -1,5 +1,4 @@
 import { moveSync } from 'fs-extra';
-import fs from 'fs';
 import path from 'path';
 import setTranscriptionEngineConfig from './setEngineConfig';
 import {
@@ -10,6 +9,7 @@ import {
 } from '../../../../sharedTypes';
 import { IpcContext } from '../../../types';
 import downloadZip from '../../../utils/file/downloadZip';
+import { getFilesParentDir, renameFileOrDir } from '../../../utils/file/file';
 import {
   appDefaultLocalTranscriptionAssetsDirs,
   appDefaultLocalTranscriptionAssetsPaths,
@@ -92,33 +92,6 @@ const calculateDownloadProgressWeights = (
   return createWeights(0, 0);
 };
 
-const getFilesParentDir: (
-  baseDir: string,
-  desiredFiles: string[]
-) => Promise<string | null> = async (baseDir, desiredFiles) => {
-  const dirFiles = fs.readdirSync(baseDir);
-
-  const areFilesInDir = desiredFiles.every((file) => dirFiles.includes(file));
-
-  console.log('dirFiles', dirFiles);
-
-  if (areFilesInDir) return baseDir;
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const dirFile of dirFiles) {
-    const res = path.resolve(baseDir, dirFile);
-    const isDir = fs.lstatSync(res).isDirectory();
-
-    if (isDir) {
-      // eslint-disable-next-line no-await-in-loop
-      const filesParentDir = await getFilesParentDir(res, desiredFiles);
-      if (filesParentDir !== null) return filesParentDir;
-    }
-  }
-
-  return null;
-};
-
 const downloadAndExtractLibs = async (
   defaultLibsDir: string,
   libsProgressWeighting: number,
@@ -159,22 +132,22 @@ const downloadAndExtractModel = async (
 
   const modelFiles = ['am', 'conf', 'graph'];
 
-  const modelFilesParentDir = await getFilesParentDir(
+  // Get the path to model after download and extraction
+  const downloadedModelPath = await getFilesParentDir(
     defaultModelDir,
     modelFiles
   );
 
-  if (modelFilesParentDir !== null) {
-    const modelFilesGrandparentDir = path.dirname(modelFilesParentDir);
-    const modelFilesNewParentDir = path.resolve(
-      modelFilesGrandparentDir,
-      'model'
-    );
-    fs.renameSync(path.resolve(modelFilesParentDir), modelFilesNewParentDir);
+  if (downloadedModelPath !== null) {
+    // Rename the model (eg: 'vosk-model-small-en-us-0.15') to 'model'
+    const downloadedModelParentDir = path.dirname(downloadedModelPath);
+    const newModelPath = path.resolve(downloadedModelParentDir, 'model');
+    renameFileOrDir(downloadedModelPath, newModelPath);
 
-    const finalModelPath = path.resolve(defaultModelDir, 'model');
-    if (modelFilesNewParentDir !== finalModelPath)
-      moveSync(modelFilesNewParentDir, finalModelPath, {
+    // Move the model to the default model dir, if it isn't there already
+    const defaultModelPath = path.resolve(defaultModelDir, 'model');
+    if (newModelPath !== defaultModelPath)
+      moveSync(newModelPath, defaultModelPath, {
         overwrite: true,
       });
   }
@@ -220,20 +193,14 @@ const downloadModel: DownloadModel = async (ipcContext) => {
     );
   }
 
-  console.log('1');
-
   // set config assets path to default paths if not already defined
   const { libsPath: defaultLibsPath, modelPath: defaultModelPath } =
     appDefaultLocalTranscriptionAssetsPaths();
-
-  console.log('2');
 
   await setTranscriptionEngineConfig(TranscriptionEngine.VOSK, {
     libsPath: shouldDownloadLibs ? defaultLibsPath : localConfig.libsPath,
     modelPath: shouldDownloadModel ? defaultModelPath : localConfig.modelPath,
   });
-
-  console.log('3');
 
   // Trigger download finish frontend
   onDownloadFinish(ipcContext)();

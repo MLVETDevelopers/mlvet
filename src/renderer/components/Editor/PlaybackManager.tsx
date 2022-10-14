@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { RangeType, RuntimeProject } from 'sharedTypes';
 import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
+import { useKeypress } from 'renderer/utils/hooks';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
 
 type ChildFunction = (
@@ -72,6 +73,12 @@ const PlaybackManager = ({
     () => videoPreviewControllerRef?.current?.seekBack(),
     [videoPreviewControllerRef]
   );
+
+  // video preview shortcuts
+  useKeypress(play, !isPlaying, ['Space']);
+  useKeypress(pause, isPlaying, ['Space']);
+  useKeypress(seekForward, true, ['ArrowRight']);
+  useKeypress(seekBack, true, ['ArrowLeft']);
 
   // TODO: Look into optimisations
   useEffect(() => {

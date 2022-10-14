@@ -73,6 +73,9 @@ export const initialStore: ApplicationStore = {
     isDownloading: false,
     isDownloadComplete: false,
     downloadProgress: 0,
+    lastUpdated: null,
+    timeRemaining: null,
+    previousDownloadProgress: 0,
   },
   playback: {
     rangeOverride: null,

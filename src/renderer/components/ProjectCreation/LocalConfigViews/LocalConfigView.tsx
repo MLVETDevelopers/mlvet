@@ -34,7 +34,7 @@ const LocalConfigView = ({
   projectName,
 }: Props) => {
   const [currentConfigView, setCurrentConfigView] = useState(configViews.info);
-  const { isDownloading, downloadProgress, isDownloadComplete } = useSelector(
+  const { isDownloading } = useSelector(
     (store: ApplicationStore) => store.downloadModel
   );
 
@@ -68,9 +68,6 @@ const LocalConfigView = ({
           <DownloadingModelView
             onClickBack={() => setCurrentConfigView(configViews.info)}
             onClickContinue={() => nextView?.()}
-            isDownloading={isDownloading}
-            progress={downloadProgress}
-            isDownloadComplete={isDownloadComplete}
           />
         );
       default:

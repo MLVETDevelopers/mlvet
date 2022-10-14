@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack } from '@mui/material';
+import { Box, IconButton, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -14,15 +14,53 @@ import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import HomeIcon from '@mui/icons-material/Home';
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DeleteIcon from '@mui/icons-material/Delete';
+import returnToHome from 'renderer/navigation/returnToHome';
+import { performRedo, performUndo } from 'renderer/editor/undoRedo';
+import { menuBarId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
-
+import colors from '../colors';
+import { copyText, cutText, deleteText, pasteText } from '../editor/clipboard';
 /*
 This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
 changes get reflected in the video. In addition to that, there is a video preview
 section to the side among other things.
 */
+const HeaderBarBox = styled(Box)({
+  background: colors.grey[700],
+  color: colors.grey[300],
+  height: '62px',
+  width: '100vw',
+  margin: 0,
+  padding: '11px 0',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+const LeftAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+});
+const RightAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+});
+
+const CenterAligned = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
 const ProjectPage = () => {
   const currentProject = useSelector(
@@ -75,34 +113,91 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <div
-                  style={{
-                    position: 'absolute',
-                    marginTop: '15px',
-                    right: '20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    fontSize: '12px',
-                  }}
-                >
-                  <IconButton
-                    color="primary"
-                    onClick={openUserFeedback}
-                    sx={{ padding: '0' }}
+                <HeaderBarBox id={menuBarId}>
+                  <LeftAligned
+                    style={{ marginLeft: '20px', marginRight: '20px' }}
                   >
-                    <RateReviewIcon fontSize="medium" />
-                  </IconButton>
-                  Feedback
-                </div>
-
-                <VideoController
-                  time={time}
-                  isPlaying={isPlaying}
-                  play={play}
-                  pause={pause}
-                  seekForward={seekForward}
-                  seekBack={seekBack}
-                />
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={returnToHome}
+                      title="Exit to Home"
+                      style={{ marginRight: '25px' }}
+                    >
+                      <HomeIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performUndo}
+                      title="Undo"
+                    >
+                      <UndoIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performRedo}
+                      title="Redo"
+                    >
+                      <RedoIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={deleteText}
+                      title="Delete Text"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={cutText}
+                      title="Cut Text"
+                    >
+                      <ContentCutIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={copyText}
+                      title="Copy Text"
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={pasteText}
+                      title="Paste Text"
+                    >
+                      <ContentPasteIcon />
+                    </IconButton>
+                  </LeftAligned>
+                  <CenterAligned>
+                    <VideoController
+                      time={time}
+                      isPlaying={isPlaying}
+                      play={play}
+                      pause={pause}
+                      seekForward={seekForward}
+                      seekBack={seekBack}
+                    />
+                  </CenterAligned>
+                  <RightAligned
+                    style={{
+                      marginRight: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      fontSize: '12px',
+                    }}
+                  >
+                    <IconButton
+                      onClick={openUserFeedback}
+                      sx={{ padding: '0' }}
+                    >
+                      <RateReviewIcon
+                        sx={{ color: colors.grey[300] }}
+                        fontSize="medium"
+                      />
+                    </IconButton>
+                    Feedback
+                  </RightAligned>
+                </HeaderBarBox>
 
                 {COLLAB_ENABLED && <CollabController />}
 
@@ -139,10 +234,16 @@ const ProjectPage = () => {
                     options={videoResizeOptions}
                     sx={{ flex: '0 0 auto' }}
                   />
-                  <Stack justifyContent="center" sx={{ width: 'fit-content' }}>
+                  <Stack
+                    id="video-preview"
+                    justifyContent="center"
+                    sx={{ width: 'fit-content', height: '100%' }}
+                  >
                     <Box
+                      id="video-preview-container"
                       sx={{
                         width: `${videoPreviewContainerWidth}px`,
+                        maxHeight: 'calc(100% - 48px)',
                       }}
                       ref={videoPreviewContainerRef}
                     >

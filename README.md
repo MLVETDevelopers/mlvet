@@ -112,7 +112,7 @@ You should now see MLVET in your file system.
 3. Install node dependencies
 
    ```bash
-   yarn
+   yarn && cd src/collabServer/ && yarn && cd ../../release/app && yarn
    ```
 
 4. Start the app in the `dev` environment

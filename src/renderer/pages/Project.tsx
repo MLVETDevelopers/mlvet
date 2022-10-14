@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled, Tooltip } from '@mui/material';
+import { Box, IconButton, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {

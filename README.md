@@ -43,6 +43,8 @@ allows users to edit their videos via a transcription of the video audio. This t
 is produced with a machine learning model, and users are given the option to transcribe
 both online (with AssemblyAI) and offline (with VOSK).
 
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
 ## Official help guide
 
 For offical 'how-to' documentation visit [MLVET Docs](https://www.mlvet.app/docs)

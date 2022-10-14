@@ -1,3 +1,7 @@
+## Code of Conduct
+
+This project and everyone participating in it is governed by the [MLVET Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
 ## Bug Reporting :bug:
 
 One of the most important things you can do is report bugs. Please reference [how to report a bug](http://polite.technology/reportabug.html) and follow the issue templates when adding new bugs.

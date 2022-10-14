@@ -15,11 +15,19 @@ import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import HomeIcon from '@mui/icons-material/Home';
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
+import { performRedo, performUndo } from 'renderer/editor/undoRedo';
+import { menuBarId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
-
+import { copyText, cutText, deleteText, pasteText } from '../editor/clipboard';
 /*
 This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
@@ -105,10 +113,59 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <HeaderBarBox>
-                  <LeftAligned style={{ marginLeft: '20px' }}>
-                    <IconButton color="primary" onClick={returnToHome}>
+                <HeaderBarBox id={menuBarId}>
+                  <LeftAligned
+                    style={{ marginLeft: '20px', marginRight: '20px' }}
+                  >
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={returnToHome}
+                      title="Exit to Home"
+                      style={{ marginRight: '25px' }}
+                    >
                       <HomeIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performUndo}
+                      title="Undo"
+                    >
+                      <UndoIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={performRedo}
+                      title="Redo"
+                    >
+                      <RedoIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={deleteText}
+                      title="Delete Text"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={cutText}
+                      title="Cut Text"
+                    >
+                      <ContentCutIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={copyText}
+                      title="Copy Text"
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: colors.grey[300] }}
+                      onClick={pasteText}
+                      title="Paste Text"
+                    >
+                      <ContentPasteIcon />
                     </IconButton>
                   </LeftAligned>
                   <CenterAligned>
@@ -130,11 +187,13 @@ const ProjectPage = () => {
                     }}
                   >
                     <IconButton
-                      color="primary"
                       onClick={openUserFeedback}
                       sx={{ padding: '0' }}
                     >
-                      <RateReviewIcon fontSize="medium" />
+                      <RateReviewIcon
+                        sx={{ color: colors.grey[300] }}
+                        fontSize="medium"
+                      />
                     </IconButton>
                     Feedback
                   </RightAligned>

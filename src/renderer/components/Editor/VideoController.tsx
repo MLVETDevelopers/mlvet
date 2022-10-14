@@ -64,13 +64,13 @@ const VideoController = ({
     >
       <TimeDisplay>{timeDisplay}</TimeDisplay>
       <IconButton onClick={seekBack}>
-        <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
+        <Replay10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
       </IconButton>
       <IconButton onClick={onClickPlayPause}>
         <TogglePlayButton isPlaying={isPlaying} />
       </IconButton>
       <IconButton onClick={seekForward}>
-        <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
+        <Forward10 sx={{ fontSize: '36px', color: colors.grey[300] }} />
       </IconButton>
     </Box>
   );

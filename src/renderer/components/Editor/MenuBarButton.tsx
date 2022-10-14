@@ -15,11 +15,7 @@ const MenuBarButton = ({
 }: MenuBarButtonProps) => {
   return (
     <ProjectTooltip title={text}>
-      <IconButton
-        sx={{ color: colors.grey[300], display: 'flex' }}
-        onClick={onClick}
-        {...rest}
-      >
+      <IconButton sx={{ color: colors.grey[300] }} onClick={onClick} {...rest}>
         <div>{children}</div>
       </IconButton>
     </ProjectTooltip>

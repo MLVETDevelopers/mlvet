@@ -41,7 +41,7 @@ import setUndoRedoEnabled from './handlers/menu/setUndoRedoEnabled';
 import getFileNameWithExtension from './handlers/misc/getFileNameWithExtension';
 import handleOsQuery from './handlers/misc/osQuery';
 import reportBug from './handlers/misc/reportBug';
-import setClipboardEnabled from './handlers/setClipboardEnabled';
+import setDeleteEnabled from './handlers/setDeleteEnabled';
 import closeWindow from './handlers/window/closeWindow';
 import promptSave from './handlers/window/promptSave';
 import returnToHome from './handlers/window/returnToHomeHandler';
@@ -202,16 +202,8 @@ const initialiseIpcHandlers: (ipcContext: IpcContext) => void = (
     reportBug(title, body)
   );
 
-  ipcMain.handle(
-    'set-clipboard-enabled',
-    async (_event, cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
-      setClipboardEnabled(
-        ipcContext,
-        cutEnabled,
-        copyEnabled,
-        pasteEnabled,
-        deleteEnabled
-      )
+  ipcMain.handle('set-delete-enabled', async (_event, deleteEnabled) =>
+    setDeleteEnabled(ipcContext, deleteEnabled)
   );
 
   ipcMain.handle('close-window', async () => closeWindow(ipcContext));

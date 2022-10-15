@@ -14,9 +14,5 @@ const ProjectTooltip = styled(tooltipComponent)(() => ({
 }));
 
 export default function toolTipFunction(props: TooltipProps) {
-  return (
-    <ProjectTooltip title={props.title}>
-      <span>{props.children}</span>
-    </ProjectTooltip>
-  );
+  return <ProjectTooltip title={props.title}>{props.children}</ProjectTooltip>;
 }

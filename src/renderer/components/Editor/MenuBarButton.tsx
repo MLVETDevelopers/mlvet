@@ -16,7 +16,7 @@ const MenuBarButton = ({
   return (
     <ProjectTooltip title={text}>
       <IconButton sx={{ color: colors.grey[300] }} onClick={onClick} {...rest}>
-        <div>{children}</div>
+        {children}
       </IconButton>
     </ProjectTooltip>
   );

@@ -177,7 +177,7 @@ const WordComponent = ({
         }
         if (isCtrlFSelectedIndex) {
           return {
-            background: colors.blue[500],
+            background: `${colors.blue[500]}cc`,
             borderRadius: BORDER_RADIUS_AMOUNT,
             borderTopLeftRadius: isCtrlFSelectedLeftCap
               ? BORDER_RADIUS_AMOUNT
@@ -195,7 +195,7 @@ const WordComponent = ({
         }
         if (isCtrlFSelected) {
           return {
-            background: `${colors.yellow[500]}cc`,
+            background: `${colors.yellow[400]}cc`,
             borderRadius: BORDER_RADIUS_AMOUNT,
             borderTopLeftRadius: isCtrlFSelectedLeftCap
               ? BORDER_RADIUS_AMOUNT

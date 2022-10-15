@@ -20,7 +20,7 @@ const WordSpace = ({
       if (isCtrlFSelectedIndex) {
         return `${colors.blue[500]}cc`;
       }
-      return `${colors.yellow[500]}cc`;
+      return `${colors.yellow[400]}cc`;
     }
     if (isBetweenHighlightedWords) {
       return `${colors.blue[500]}cc`;

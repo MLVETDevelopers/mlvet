@@ -138,7 +138,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
           alignItems="center"
           justifyContent="center"
         >
-          {maxIndex > 0 ? `${selectedIndex + 1}/${maxIndex + 1}` : '0/0'}
+          {maxIndex >= 0 ? `${selectedIndex + 1}/${maxIndex + 1}` : '0/0'}
         </Typography>
         {/* TODO: Insert a vertical line here if you want to make it look like Chrome's one */}
         <IconButton

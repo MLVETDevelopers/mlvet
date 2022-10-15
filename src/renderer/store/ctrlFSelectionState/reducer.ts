@@ -12,7 +12,7 @@ import { ApplicationStore, initialStore } from '../sharedHelpers';
 // The reducer handles the state changes for Ctrl+F search.
 const ctrlFSelectionReducer: Reducer<
   ApplicationStore['ctrlFSelection'],
-  Action<any>
+  Action<CtrlFindUpdatePayload | null>
 > = (ctrlFSelection = initialStore.ctrlFSelection, action) => {
   // If search term is updated, update all highlighting information
   if (action.type === FIND_UPDATED) {

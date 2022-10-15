@@ -180,6 +180,8 @@ const WordOuterComponent = ({
             <WordSpace
               key="space-end"
               isBetweenHighlightedWords={false}
+              isBetweenCtrlFHighlightedWords={false}
+              isCtrlFSelectedIndex={false}
               highlightedByClientWithIndex={null}
             />
           )}

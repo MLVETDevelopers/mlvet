@@ -107,7 +107,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     <Paper
       style={{
         position: 'absolute',
-        right: 0,
+        right: 50,
         width: 350,
         boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
       }}

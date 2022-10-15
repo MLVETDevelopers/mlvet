@@ -123,12 +123,7 @@ declare global {
 
       reportBug: (title: string, body: string) => Promise<number>;
 
-      setClipboardEnabled: (
-        cutEnabled: boolean,
-        copyEnabled: boolean,
-        pasteEnabled: boolean,
-        deleteEnabled: boolean
-      ) => Promise<void>;
+      setDeleteEnabled: (deleteEnabled: boolean) => Promise<void>;
 
       closeWindow: () => void;
 

@@ -34,10 +34,10 @@ export const useKeypress = (
       }
     };
 
-    window.addEventListener('keypress', handleKeypress);
+    window.addEventListener('keydown', handleKeypress);
 
     return () => {
-      window.removeEventListener('keypress', handleKeypress);
+      window.removeEventListener('keydown', handleKeypress);
     };
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
 };

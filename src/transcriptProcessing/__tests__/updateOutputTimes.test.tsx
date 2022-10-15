@@ -69,7 +69,7 @@ describe('updateOutputTimes', () => {
     ];
 
     const takeGroups: TakeGroup[] = [
-      { activeTakeIndex: 0, id: 0, takeSelected: false },
+      { activeTakeIndex: 0, id: 0, takeSelected: true },
     ];
 
     expect(updateOutputTimes(inputWords, takeGroups)).toEqual({

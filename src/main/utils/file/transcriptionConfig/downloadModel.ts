@@ -1,9 +1,9 @@
 import path from 'path';
+import { getConfigsPath } from '../../../util';
 import { OperatingSystems } from '../../../../sharedTypes';
 import { readJsonFile } from '../file';
 
-const downloadConfigPath =
-  '../../../../../assets/data/localTranscriptionAssetsConfig.json';
+const downloadConfigFilename = 'localTranscriptionAssetsConfig.json';
 
 export interface DownloadConfig {
   model: {
@@ -18,7 +18,11 @@ export interface DownloadConfig {
 }
 
 export const getDownloadConfig: () => Promise<DownloadConfig> = async () => {
-  const downloadConfigPathAbs = path.resolve(__dirname, downloadConfigPath);
+  const downloadConfigPathAbs = path.resolve(
+    getConfigsPath(),
+    downloadConfigFilename
+  );
+
   const downloadConfig = (await readJsonFile(
     downloadConfigPathAbs
   )) as DownloadConfig;

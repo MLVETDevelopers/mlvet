@@ -142,8 +142,6 @@ const WordComponent = ({
 
   const dispatch = useDispatch();
 
-  // console.log('isCtrlFSelected', isCtrlFSelected);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -181,12 +179,23 @@ const WordComponent = ({
           return {
             background: colors.blue[500],
             borderRadius: BORDER_RADIUS_AMOUNT,
+            borderTopLeftRadius: isCtrlFSelectedLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomLeftRadius: isCtrlFSelectedLeftCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderTopRightRadius: isCtrlFSelectedRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
+            borderBottomRightRadius: isCtrlFSelectedRightCap
+              ? BORDER_RADIUS_AMOUNT
+              : 0,
           };
         }
         if (isCtrlFSelected) {
-          console.log('WordComponent', isCtrlFSelected);
           return {
-            background: colors.yellow[500],
+            background: `${colors.yellow[500]}cc`,
             borderRadius: BORDER_RADIUS_AMOUNT,
             borderTopLeftRadius: isCtrlFSelectedLeftCap
               ? BORDER_RADIUS_AMOUNT

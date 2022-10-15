@@ -4,14 +4,24 @@ import { getColourForIndex } from 'renderer/utils/ui';
 
 interface Props {
   isBetweenHighlightedWords: boolean;
+  isBetweenCtrlFHighlightedWords: boolean;
+  isCtrlFSelectedIndex: boolean;
   highlightedByClientWithIndex: number | null;
 }
 
 const WordSpace = ({
   isBetweenHighlightedWords,
+  isBetweenCtrlFHighlightedWords,
+  isCtrlFSelectedIndex,
   highlightedByClientWithIndex,
 }: Props) => {
   const background: string = (() => {
+    if (isBetweenCtrlFHighlightedWords) {
+      if (isCtrlFSelectedIndex) {
+        return `${colors.blue[500]}cc`;
+      }
+      return `${colors.yellow[500]}cc`;
+    }
     if (isBetweenHighlightedWords) {
       return `${colors.blue[500]}cc`;
     }

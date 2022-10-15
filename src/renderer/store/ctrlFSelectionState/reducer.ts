@@ -9,9 +9,7 @@ import {
 import { Action } from '../action';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 
-// The reducer needs to
-// Reset all highlighting on the transcription words
-// Set the highlighting on the words that match accordingly
+// The reducer handles the state changes for Ctrl+F search.
 const ctrlFSelectionReducer: Reducer<
   ApplicationStore['ctrlFSelection'],
   Action<any>
@@ -39,10 +37,10 @@ const ctrlFSelectionReducer: Reducer<
 
   // Prev button click. Update the selected information
   if (action.type === FIND_PREV) {
-    let prevIndex = ctrlFSelection.selectedIndex - 1; // TODO: Use better way to loop index around
-    if (prevIndex < 0) {
-      prevIndex = ctrlFSelection.maxIndex;
-    }
+    const prevIndex =
+      ctrlFSelection.selectedIndex === 0
+        ? ctrlFSelection.maxIndex
+        : ctrlFSelection.selectedIndex - 1;
     return {
       ...ctrlFSelection,
       selectedIndex: prevIndex,

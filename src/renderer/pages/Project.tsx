@@ -14,9 +14,9 @@ import TranscriptionBlock from 'renderer/components/Editor/TranscriptionBlock';
 import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
-import SearchBoxPopover from 'renderer/components/Editor/SearchBoxPopover';
 import HomeIcon from '@mui/icons-material/Home';
 import returnToHome from 'renderer/navigation/returnToHome';
+import CtrlFPopover from 'renderer/components/Editor/CtrlFPopover';
 import { URL_USER_FEEDBACK_FORM } from '../../constants';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
@@ -62,6 +62,10 @@ const ProjectPage = () => {
   );
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
+  );
+
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
   );
 
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
@@ -143,7 +147,13 @@ const ProjectPage = () => {
                 </HeaderBarBox>
 
                 {COLLAB_ENABLED && <CollabController />}
-
+                <Stack>
+                  {isShowingCtrlFPopover && currentProject?.transcription && (
+                    <CtrlFPopover
+                      transcription={currentProject.transcription}
+                    />
+                  )}
+                </Stack>
                 <Stack
                   id="project-page-layout-container"
                   direction="row"
@@ -160,13 +170,6 @@ const ProjectPage = () => {
                     spacing={4}
                     sx={{ flex: '5 1 0' }}
                   >
-                    <Stack>
-                      {currentProject?.transcription && (
-                        <SearchBoxPopover
-                          transcription={currentProject.transcription}
-                        />
-                      )}
-                    </Stack>
                     {currentProject?.transcription && (
                       <TranscriptionBlock
                         transcription={currentProject.transcription}

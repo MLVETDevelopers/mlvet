@@ -136,6 +136,10 @@ const WordOuterComponent = ({
           <WordSpace
             key={`space-${word.originalIndex}-${word.pasteKey}`}
             isBetweenHighlightedWords={isSelected && isPrevWordSelected}
+            isBetweenCtrlFHighlightedWords={
+              isCtrlFSelected && isPrevCtrlFSelected
+            }
+            isCtrlFSelectedIndex={isCtrlFSelectedIndex}
             highlightedByClientWithIndex={
               isSelectedByAnotherClientLeftCap
                 ? null

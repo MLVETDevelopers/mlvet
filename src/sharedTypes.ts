@@ -96,11 +96,6 @@ export interface CtrlFindSelectionState {
   indexRanges: IndexRange[];
 }
 
-export interface CtrlFindState {
-  searchMatch: boolean;
-  selected: boolean;
-}
-
 export interface Word {
   // Text content of the word - null if it's just a "pause"
   word: string | null;

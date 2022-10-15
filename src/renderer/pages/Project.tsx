@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled } from '@mui/material';
+import { Box, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -24,6 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
+import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -117,56 +118,31 @@ const ProjectPage = () => {
                   <LeftAligned
                     style={{ marginLeft: '20px', marginRight: '20px' }}
                   >
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
+                    <MenuBarButton
+                      text="Exit to Home"
                       onClick={returnToHome}
-                      title="Exit to Home"
                       style={{ marginRight: '25px' }}
                     >
                       <HomeIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={performUndo}
-                      title="Undo"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Undo" onClick={performUndo}>
                       <UndoIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={performRedo}
-                      title="Redo"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Redo" onClick={performRedo}>
                       <RedoIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={deleteText}
-                      title="Delete Text"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Delete Text" onClick={deleteText}>
                       <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={cutText}
-                      title="Cut Text"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Cut Text" onClick={cutText}>
                       <ContentCutIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={copyText}
-                      title="Copy Text"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Copy Text" onClick={copyText}>
                       <ContentCopyIcon />
-                    </IconButton>
-                    <IconButton
-                      sx={{ color: colors.grey[300] }}
-                      onClick={pasteText}
-                      title="Paste Text"
-                    >
+                    </MenuBarButton>
+                    <MenuBarButton text="Paste Text" onClick={pasteText}>
                       <ContentPasteIcon />
-                    </IconButton>
+                    </MenuBarButton>
                   </LeftAligned>
                   <CenterAligned>
                     <VideoController
@@ -186,16 +162,12 @@ const ProjectPage = () => {
                       fontSize: '12px',
                     }}
                   >
-                    <IconButton
+                    <MenuBarButton
+                      text="Provide Feedback"
                       onClick={openUserFeedback}
-                      sx={{ padding: '0' }}
                     >
-                      <RateReviewIcon
-                        sx={{ color: colors.grey[300] }}
-                        fontSize="medium"
-                      />
-                    </IconButton>
-                    Feedback
+                      <RateReviewIcon />
+                    </MenuBarButton>
                   </RightAligned>
                 </HeaderBarBox>
 

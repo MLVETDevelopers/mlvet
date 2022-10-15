@@ -5,8 +5,12 @@ import {
   DELETE_TAKE_GROUP,
   SELECT_TAKE,
   UNDO_DELETE_TAKE_GROUP,
+  UNDO_SELECT_TAKE,
 } from './actions';
-import { UndoDeleteTakeGroupPayload } from './opPayloads';
+import {
+  UndoDeleteTakeGroupPayload,
+  UndoSelectTakePayload,
+} from './opPayloads';
 
 /**
  * Stores the take groups for the current transcription
@@ -23,6 +27,12 @@ const takeGroupsReducer: Reducer<TakeGroup[], Action<any>> = (
         ? { ...takeGroup, activeTakeIndex: takeIndex, takeSelected: true }
         : takeGroup
     );
+  }
+
+  if (action.type === UNDO_SELECT_TAKE) {
+    const { takeGroup } = action.payload as UndoSelectTakePayload;
+
+    return takeGroups.map((tg) => (tg.id === takeGroup.id ? takeGroup : tg));
   }
 
   if (action.type === DELETE_TAKE_GROUP) {

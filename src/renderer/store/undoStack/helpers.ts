@@ -5,7 +5,9 @@ import {
 } from '../selection/actions';
 import {
   DeleteTakeGroupPayload,
+  SelectTakePayload,
   UndoDeleteTakeGroupPayload,
+  UndoSelectTakePayload,
 } from '../takeGroups/opPayloads';
 import {
   CorrectWordPayload,
@@ -59,7 +61,8 @@ export type DoPayload =
   | CorrectWordPayload
   | MergeWordsPayload
   | SplitWordPayload
-  | DeleteTakeGroupPayload;
+  | DeleteTakeGroupPayload
+  | SelectTakePayload;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
@@ -67,7 +70,8 @@ export type UndoPayload =
   | UndoCorrectWordPayload
   | UndoMergeWordsPayload
   | UndoSplitWordPayload
-  | UndoDeleteTakeGroupPayload;
+  | UndoDeleteTakeGroupPayload
+  | UndoSelectTakePayload;
 
 export type OpPayload =
   | DoPayload

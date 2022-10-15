@@ -1,5 +1,6 @@
-import fs from 'fs';
+import fs, { readFileSync } from 'fs';
 import path from 'path';
+import { fileOrDirExists } from '../../util';
 
 type GetFilesParentDir = (
   baseDir: string,
@@ -39,4 +40,18 @@ type Rename = (oldPath: string, newPath: string) => void;
 
 export const renameFileOrDir: Rename = (oldPath, newPath) => {
   fs.renameSync(path.resolve(oldPath), path.resolve(newPath));
+};
+
+export const readJsonFile = async (filePath: string) => {
+  if (fileOrDirExists(filePath)) {
+    const dataBuffer = readFileSync(filePath);
+    try {
+      const dataString = dataBuffer.toString();
+      const data: object = JSON.parse(dataString);
+      return data;
+    } catch (err) {
+      throw new Error(`Error reading file: ${err}`);
+    }
+  }
+  throw new Error(`File does not exist at ${filePath}`);
 };

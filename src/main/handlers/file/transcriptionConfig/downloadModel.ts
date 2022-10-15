@@ -4,7 +4,6 @@ import setTranscriptionEngineConfig from './setEngineConfig';
 import {
   DownloadingModelState,
   LocalConfig,
-  OperatingSystems,
   TranscriptionEngine,
 } from '../../../../sharedTypes';
 import { IpcContext } from '../../../types';
@@ -19,12 +18,11 @@ import {
   isLocalModelConfiguredAndDownloaded,
 } from '../../../utils/file/transcriptionConfig/checkConfig';
 import getTranscriptionEngineConfig from './getEngineConfig';
-
-const MODEL_URL =
-  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
-const MODEL_SML_URL =
-  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
-const LIBS_URL = `https://mlvetdevelopers.github.io/mlvet-local-transcription-assets/libs.zip`;
+import {
+  calculateDownloadProgressWeights,
+  getLibsUrl,
+  getModelUrl,
+} from '../../../utils/file/transcriptionConfig/downloadModel';
 
 const onDownloadStart = (ipcContext: IpcContext) => () => {
   const downloadModelStateUpdate = {
@@ -60,36 +58,11 @@ const onDownloadFinish = (ipcContext: IpcContext) => () => {
   );
 };
 
-const getModelUrl = () => {
-  if (process.platform === OperatingSystems.LINUX) return MODEL_SML_URL;
-  return MODEL_URL;
-};
-
-const getLibsUrl = () => LIBS_URL;
-
 const getLocalConfig = async (): Promise<LocalConfig> => {
   const config = (await getTranscriptionEngineConfig(
     TranscriptionEngine.VOSK
   )) as LocalConfig;
   return config;
-};
-
-const createWeights = (
-  libsProgressWeighting: number,
-  modelProgressWeighting: number
-) => ({ libsProgressWeighting, modelProgressWeighting });
-
-const calculateDownloadProgressWeights = (
-  shouldDownloadLibs: boolean,
-  shouldDownloadModel: boolean
-) => {
-  if (shouldDownloadLibs && shouldDownloadModel) {
-    if (getModelUrl() === MODEL_SML_URL) return createWeights(0.36, 0.63);
-    return createWeights(0.02, 0.97);
-  }
-  if (shouldDownloadLibs) return createWeights(0.99, 0);
-  if (shouldDownloadModel) return createWeights(0, 0.99);
-  return createWeights(0, 0);
 };
 
 const downloadAndExtractLibs = async (
@@ -98,8 +71,9 @@ const downloadAndExtractLibs = async (
   onProgress: (progress: number) => void
 ) => {
   console.log('Downloading dynamic libs');
+
   await downloadZip(
-    getLibsUrl(),
+    await getLibsUrl(),
     defaultLibsDir,
     () => {},
     (progress: number) => {
@@ -119,7 +93,7 @@ const downloadAndExtractModel = async (
   console.log('Downloading model');
 
   await downloadZip(
-    getModelUrl(),
+    await getModelUrl(),
     defaultModelDir,
     () => {},
     (progress: number) => {
@@ -165,7 +139,10 @@ const downloadModel: DownloadModel = async (ipcContext) => {
 
   // Set progress update weightings for libs and model
   const { libsProgressWeighting, modelProgressWeighting } =
-    calculateDownloadProgressWeights(shouldDownloadLibs, shouldDownloadModel);
+    await calculateDownloadProgressWeights(
+      shouldDownloadLibs,
+      shouldDownloadModel
+    );
 
   // Get default dirs to download and extract local assets to
   const { libsDir: defaultLibsDir, modelDir: defaultModelDir } =

@@ -1,5 +1,5 @@
 import { Box, Stack, styled } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
@@ -26,6 +26,7 @@ import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
 import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
 import { ApplicationStore } from '../store/sharedHelpers';
+import { closeExportCard } from '../store/exportIo/actions';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
 import { copyText, cutText, deleteText, pasteText } from '../editor/clipboard';
@@ -70,6 +71,9 @@ const ProjectPage = () => {
   const { isExporting, exportProgress } = useSelector(
     (store: ApplicationStore) => store.exportIo
   );
+
+  const dispatch = useDispatch();
+  const toggleCloseExportCard = () => dispatch(closeExportCard());
 
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
 
@@ -241,7 +245,10 @@ const ProjectPage = () => {
                         bottom: '32px',
                       }}
                     >
-                      <ExportCard progress={exportProgress} />
+                      <ExportCard
+                        onClose={toggleCloseExportCard}
+                        progress={exportProgress}
+                      />
                     </div>
                   )}
                 </Stack>

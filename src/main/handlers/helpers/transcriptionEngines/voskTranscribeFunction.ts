@@ -2,6 +2,7 @@ import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
 import { exec, ExecException } from 'child_process';
+import { app } from 'electron';
 import { getDllDir } from '../../../../vosk/util';
 import { TranscriptionConfigError } from '../../../utils/file/transcriptionConfig/helpers';
 import { LocalTranscriptionAssetNotFoundError } from '../../../../vosk/helpers';
@@ -34,6 +35,12 @@ interface AsyncCmdOutput {
   error: Error | null;
 }
 
+const getAsyncVoskScriptPath = () => {
+  return app.isPackaged
+    ? path.join(__dirname, 'asyncVosk.ts')
+    : path.join(__dirname, '../../../../vosk/asyncVosk.ts');
+};
+
 const asyncTranscribeWithVosk = async (
   dllLibsPath: string,
   modelPath: string,
@@ -42,7 +49,7 @@ const asyncTranscribeWithVosk = async (
   const controller = new AbortController();
 
   const result = await new Promise((resolve, reject) => {
-    const scriptPath = path.resolve(__dirname, '../../../../vosk/asyncVosk.ts');
+    const scriptPath = getAsyncVoskScriptPath();
     const cmd = `ts-node ${scriptPath} ${dllLibsPath} ${modelPath} ${audioFilePath}`;
 
     const child = exec(

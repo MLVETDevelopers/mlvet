@@ -9,7 +9,14 @@ import { EditWordState } from 'renderer/store/sharedHelpers';
 import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
-import { isEventInElement, transcriptionContentId } from 'renderer/utils/ui';
+import {
+  isDigit,
+  isEventInElement,
+  takeGroupKeyboardShortCuts,
+  transcriptionContentId,
+} from 'renderer/utils/ui';
+import { makeSelectTake } from 'renderer/store/takeGroups/ops/selectTake';
+import { useKeypressWithEvent } from 'renderer/utils/hooks';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -223,6 +230,45 @@ const TakeGroupComponent = ({
       />
     );
   });
+
+  const selectTake = (takeIndex: number) => {
+    if (takeIndex === takeGroup.activeTakeIndex) {
+      setIsTakeGroupOpened(false);
+    }
+
+    if (takeIndex >= 0 && takeIndex < takeWordsPerTake.length) {
+      const { takeInfo } = takeWordsPerTake[takeIndex][0];
+
+      if (takeInfo === null) {
+        return;
+      }
+
+      dispatchOp(makeSelectTake(takeInfo, takeGroup));
+    }
+  };
+
+  const handleKeypressWithEvent = (event: Event) => {
+    if (!isTakeGroupOpened) {
+      return;
+    }
+
+    const keyboardEvent = event as KeyboardEvent;
+
+    const eventCode = keyboardEvent.code;
+
+    if (eventCode.includes('Enter')) {
+      selectTake(takeGroup.activeTakeIndex);
+    } else if (isDigit(eventCode[eventCode.length - 1])) {
+      const numberPressed = Number(eventCode[eventCode.length - 1]);
+      selectTake(numberPressed - 1); // minus one since the UI displays the index + 1
+    }
+  };
+
+  useKeypressWithEvent(
+    handleKeypressWithEvent,
+    true,
+    takeGroupKeyboardShortCuts()
+  );
 
   useEffect(() => {
     // when undoing the first take selection, it reverts back to the initial state

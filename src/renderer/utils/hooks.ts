@@ -42,6 +42,26 @@ export const useKeypress = (
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
 };
 
+export const useKeypressWithEvent = (
+  eventHandler: (event: Event) => void,
+  isKeypressEnabled: boolean,
+  keypressCodes: string[]
+) => {
+  useEffect(() => {
+    const handleKeypress = async (event: KeyboardEvent) => {
+      if (keypressCodes.includes(event.code) && isKeypressEnabled) {
+        eventHandler(event);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeypress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeypress);
+    };
+  }, [eventHandler, isKeypressEnabled, keypressCodes]);
+};
+
 export const useEventListener = (
   eventToListenTo: string,
   eventHandler: (event: any) => void

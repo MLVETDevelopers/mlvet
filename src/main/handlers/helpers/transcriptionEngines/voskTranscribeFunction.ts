@@ -1,7 +1,7 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
-import { spawn, exec, ExecException } from 'child_process';
+import { exec, ExecException } from 'child_process';
 import { getDllDir } from '../../../../vosk/util';
 import { TranscriptionConfigError } from '../../../utils/file/transcriptionConfig/helpers';
 import { LocalTranscriptionAssetNotFoundError } from '../../../../vosk/helpers';
@@ -89,8 +89,6 @@ const transcribeWithVosk = async (audioFilePath: string) => {
     modelPath,
     audioFilePath
   )) as string;
-
-  console.log(result);
 
   return result;
 };

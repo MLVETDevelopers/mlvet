@@ -200,6 +200,22 @@ const TakeGroupComponent = ({
     [wordsInTakeGroup]
   );
 
+  const selectTake = (takeIndex: number) => {
+    if (takeIndex === takeGroup.activeTakeIndex) {
+      setIsTakeGroupOpened(false);
+    }
+
+    if (takeIndex >= 0 && takeIndex < takeWordsPerTake.length) {
+      const { takeInfo } = takeWordsPerTake[takeIndex][0];
+
+      if (takeInfo === null) {
+        return;
+      }
+
+      dispatchOp(makeSelectTake(takeInfo, takeGroup));
+    }
+  };
+
   const takes = takeWordsPerTake.map((takeWords, takeIndex) => {
     // Index of the first word in the take, within the whole transcription
     const transcriptionIndex =
@@ -226,26 +242,11 @@ const TakeGroupComponent = ({
         isLast={takeIndex === takeWordsPerTake.length - 1}
         isFirstTimeOpen={isFirstTimeOpen}
         setIsFirstTimeOpen={setIsFirstTimeOpen}
+        selectTake={selectTake}
         {...passThroughProps}
       />
     );
   });
-
-  const selectTake = (takeIndex: number) => {
-    if (takeIndex === takeGroup.activeTakeIndex) {
-      setIsTakeGroupOpened(false);
-    }
-
-    if (takeIndex >= 0 && takeIndex < takeWordsPerTake.length) {
-      const { takeInfo } = takeWordsPerTake[takeIndex][0];
-
-      if (takeInfo === null) {
-        return;
-      }
-
-      dispatchOp(makeSelectTake(takeInfo, takeGroup));
-    }
-  };
 
   const handleKeypressWithEvent = (event: Event) => {
     if (!isTakeGroupOpened) {

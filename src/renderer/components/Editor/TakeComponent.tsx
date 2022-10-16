@@ -13,8 +13,6 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
 import { isIndexInRange } from 'renderer/utils/range';
-import { makeSelectTake } from 'renderer/store/takeGroups/ops/selectTake';
-import dispatchOp from 'renderer/store/dispatchOp';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';

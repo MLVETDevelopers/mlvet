@@ -3,8 +3,8 @@
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "MLVET Legends",
-    "url": "https://github.com/chloebrett/mlvet"
+    "name": "MLVET Developers",
+    "url": "https://github.com/MLVETDevelopers"
   },
   "version": "0.0.4",
   "scripts": {
@@ -124,7 +124,8 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "deb"
       ],
       "category": "Development",
       "files": [
@@ -141,7 +142,7 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "chloebrett",
+      "owner": "MLVETDevelopers",
       "repo": "mlvet",
       "releaseType": "release",
       "vPrefixedTagName": false
@@ -149,7 +150,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chloebrett/mlvet.git"
+    "url": "git+https://github.com/MLVETDevelopers/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",

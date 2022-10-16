@@ -14,6 +14,7 @@ import { IndexRange } from 'sharedTypes';
 import { ContainerRefContext } from 'renderer/RootContainerContext';
 import { ApplicationStore } from 'renderer/store/sharedHelpers';
 import { areRangesEqual } from 'renderer/utils/range';
+import { isEventInElement, menuBarId } from 'renderer/utils/ui';
 import { selectionRangeSetTo } from '../../store/selection/actions';
 import { MouseButton } from '../../utils/input';
 
@@ -70,9 +71,14 @@ const DragSelectManager = ({ clearSelection, children }: Props) => {
   // Handle mouse-up events on the overall page using the container ref
   useEffect(() => {
     if (containerRef !== null && containerRef.current !== null) {
-      containerRef.current.onmouseup = () => {
-        clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
-        setMouseDown(false);
+      containerRef.current.onmouseup = (event: Event) => {
+        // Check whether mouse event was in menu bar
+        const isInMenuBar = isEventInElement(event, menuBarId);
+        // Only clear the selection if the event was not in the menu bar
+        if (!isInMenuBar) {
+          clearSelection(dragSelectAnchor, () => setDragSelectAnchor(null));
+          setMouseDown(false);
+        }
       };
     }
   }, [containerRef, clearSelection, dragSelectAnchor, setDragSelectAnchor]);

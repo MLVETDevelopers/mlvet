@@ -100,14 +100,8 @@ contextBridge.exposeInMainWorld('electron', {
 
   reportBug: (title, body) => ipcRenderer.invoke('report-bug', title, body),
 
-  setClipboardEnabled: (cutEnabled, copyEnabled, pasteEnabled, deleteEnabled) =>
-    ipcRenderer.invoke(
-      'set-clipboard-enabled',
-      cutEnabled,
-      copyEnabled,
-      pasteEnabled,
-      deleteEnabled
-    ),
+  setDeleteEnabled: (deleteEnabled) =>
+    ipcRenderer.invoke('set-delete-enabled', deleteEnabled),
 
   closeWindow: () => ipcRenderer.invoke('close-window'),
 

@@ -117,4 +117,19 @@ export const letterIndexAtXPosition: (
   return null;
 };
 
+export const isEventInElement: (event: Event, elementId: string) => boolean = (
+  event,
+  elementId
+) => {
+  let elementFound = false;
+
+  event.composedPath().forEach((eventTarget: EventTarget) => {
+    const element = eventTarget as HTMLElement;
+    elementFound = elementFound || element.id === elementId;
+  });
+
+  return elementFound;
+};
+
+export const menuBarId = 'menu-bar-id';
 export const transcriptionContentId = 'transcription-content';

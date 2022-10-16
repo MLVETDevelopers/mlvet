@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import BlockIcon from '@mui/icons-material/Block';
 import { Box, ClickAwayListener, Stack } from '@mui/material';
 import { ClientId } from 'collabTypes/collabShadowTypes';
-import React, { RefObject, useMemo, useState } from 'react';
+import React, { RefObject, useEffect, useMemo, useState } from 'react';
 import colors from 'renderer/colors';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import {
@@ -15,6 +15,7 @@ import {
 } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeDeleteTakeGroup } from 'renderer/store/takeGroups/ops/deleteTakeGroup';
+import { isEventInElement, transcriptionContentId } from 'renderer/utils/ui';
 import TakeComponent from './TakeComponent';
 import UngroupTakesModal from './UngroupTakesModal';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -81,6 +82,8 @@ const TakeGroupComponent = ({
   transcription,
   ...passThroughProps
 }: TakeGroupComponentProps) => {
+  const takeGroupId = `take-group-${takeGroup.id}`;
+
   const [isTakeGroupOpened, setIsTakeGroupOpened] = useState(
     !takeGroup.takeSelected
   );
@@ -158,8 +161,14 @@ const TakeGroupComponent = ({
     handleModalClose();
   };
 
-  const clickAway = () => {
-    if (!isFirstTimeOpen) {
+  const clickAway = (event: Event) => {
+    const isInTranscriptionContent = isEventInElement(
+      event,
+      transcriptionContentId
+    );
+    const isInTakeGroup = isEventInElement(event, takeGroupId);
+
+    if (!isFirstTimeOpen && isInTranscriptionContent && !isInTakeGroup) {
       setIsTakeGroupOpened(false);
     }
   };
@@ -223,6 +232,14 @@ const TakeGroupComponent = ({
       />
     );
   });
+
+  useEffect(() => {
+    // when undoing the first take selection, it reverts back to the initial state
+    setIsFirstTimeOpen(!takeGroup.takeSelected);
+    if (!takeGroup.takeSelected) {
+      setIsTakeGroupOpened(true);
+    }
+  }, [takeGroup.takeSelected]);
 
   return (
     <ClickAwayListener onClickAway={clickAway}>

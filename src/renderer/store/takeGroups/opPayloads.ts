@@ -1,6 +1,10 @@
 import { IndexRange, TakeGroup, TakeInfo } from '../../../sharedTypes';
 
-export type SelectTakeGroupPayload = TakeInfo;
+export type SelectTakePayload = TakeInfo;
+
+export interface UndoSelectTakePayload {
+  takeGroup: TakeGroup;
+}
 
 export type DeleteTakeGroupPayload = number;
 

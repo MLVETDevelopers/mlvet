@@ -1,10 +1,4 @@
-import {
-  app,
-  Menu,
-  shell,
-  BrowserWindow,
-  MenuItemConstructorOptions,
-} from 'electron';
+import { app, Menu, BrowserWindow, MenuItemConstructorOptions } from 'electron';
 import { ExportFormat } from '../sharedTypes';
 import openProject from './handlers/file/openProjectHandler';
 import { IpcContext } from './types';
@@ -87,30 +81,18 @@ export default class MenuBuilder {
     return [
       {
         id: 'cut',
-        label: 'Cut',
+        role: 'cut',
         accelerator: 'CommandOrControl+X',
-        click: () => {
-          // Tell the renderer to initiate a cut
-          this.mainWindow.webContents.send('initiate-cut-text');
-        },
       },
       {
         id: 'copy',
-        label: 'Copy',
+        role: 'copy',
         accelerator: 'CommandOrControl+C',
-        click: () => {
-          // Tell the renderer to initiate a copy
-          this.mainWindow.webContents.send('initiate-copy-text');
-        },
       },
       {
         id: 'paste',
-        label: 'Paste',
+        role: 'paste',
         accelerator: 'CommandOrControl+V',
-        click: () => {
-          // Tell the renderer to initiate a paste
-          this.mainWindow.webContents.send('initiate-paste-text');
-        },
       },
       {
         id: 'delete',
@@ -137,10 +119,7 @@ export default class MenuBuilder {
         id: 'selectAll',
         label: 'Select All',
         accelerator: 'CmdOrCtrl+A',
-        click: () => {
-          // Tell the renderer to initiate a select-all
-          this.mainWindow.webContents.send('initiate-select-all');
-        },
+        role: 'selectAll',
       },
       {
         id: 'selectSentence',

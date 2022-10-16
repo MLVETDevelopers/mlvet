@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled } from '@mui/material';
+import { Box, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
@@ -15,13 +15,21 @@ import CollabController from 'renderer/components/Collab/CollabController';
 import { COLLAB_ENABLED } from 'renderer/config';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import HomeIcon from '@mui/icons-material/Home';
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
 import CtrlFPopover from 'renderer/components/Editor/CtrlFPopover';
-import { URL_USER_FEEDBACK_FORM } from '../../constants';
+import { performRedo, performUndo } from 'renderer/editor/undoRedo';
+import { menuBarId } from 'renderer/utils/ui';
+import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
-
+import { copyText, cutText, deleteText, pasteText } from '../editor/clipboard';
 /*
 This is the page that gets displayed while you are editing a video.
 It will be primarily composed of the transcription area, an editable text box whose
@@ -111,11 +119,35 @@ const ProjectPage = () => {
               videoResizeOptions
             ) => (
               <>
-                <HeaderBarBox>
-                  <LeftAligned style={{ marginLeft: '20px' }}>
-                    <IconButton color="primary" onClick={returnToHome}>
+                <HeaderBarBox id={menuBarId}>
+                  <LeftAligned
+                    style={{ marginLeft: '20px', marginRight: '20px' }}
+                  >
+                    <MenuBarButton
+                      text="Exit to Home"
+                      onClick={returnToHome}
+                      style={{ marginRight: '25px' }}
+                    >
                       <HomeIcon />
-                    </IconButton>
+                    </MenuBarButton>
+                    <MenuBarButton text="Undo" onClick={performUndo}>
+                      <UndoIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Redo" onClick={performRedo}>
+                      <RedoIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Delete Text" onClick={deleteText}>
+                      <DeleteIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Cut Text" onClick={cutText}>
+                      <ContentCutIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Copy Text" onClick={copyText}>
+                      <ContentCopyIcon />
+                    </MenuBarButton>
+                    <MenuBarButton text="Paste Text" onClick={pasteText}>
+                      <ContentPasteIcon />
+                    </MenuBarButton>
                   </LeftAligned>
                   <CenterAligned>
                     <VideoController
@@ -135,14 +167,12 @@ const ProjectPage = () => {
                       fontSize: '12px',
                     }}
                   >
-                    <IconButton
-                      color="primary"
+                    <MenuBarButton
+                      text="Provide Feedback"
                       onClick={openUserFeedback}
-                      sx={{ padding: '0' }}
                     >
-                      <RateReviewIcon fontSize="medium" />
-                    </IconButton>
-                    Feedback
+                      <RateReviewIcon />
+                    </MenuBarButton>
                   </RightAligned>
                 </HeaderBarBox>
 

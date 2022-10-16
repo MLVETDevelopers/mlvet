@@ -149,16 +149,7 @@ const StoreChangeObserver = () => {
   useEffect(() => {
     const cutCopyDeleteEnabled = getLengthOfRange(selfSelection) > 0;
 
-    // Selection must not be empty as we need somewhere to paste to
-    const pasteEnabled =
-      getLengthOfRange(selfSelection) > 0 && clipboard.length > 0;
-
-    ipc.setClipboardEnabled(
-      cutCopyDeleteEnabled,
-      cutCopyDeleteEnabled,
-      pasteEnabled,
-      cutCopyDeleteEnabled
-    );
+    ipc.setDeleteEnabled(cutCopyDeleteEnabled);
   }, [clipboard, selfSelection]);
 
   // Update edit word option in edit menu when selection is changed

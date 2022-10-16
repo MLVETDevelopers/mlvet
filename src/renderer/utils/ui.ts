@@ -131,5 +131,34 @@ export const isEventInElement: (event: Event, elementId: string) => boolean = (
   return elementFound;
 };
 
+export const isDigit: (char: string) => boolean = (char) => {
+  return char >= '0' && char <= '9';
+};
+
+export const numpadDigitsCodes: () => string[] = () => {
+  const codes = [] as string[];
+  const prefix = 'Numpad';
+
+  '0123456789'.split('').forEach((digit) => {
+    codes.push(prefix + digit);
+  });
+
+  return codes;
+};
+export const digitsCodes: () => string[] = () => {
+  const codes = [] as string[];
+  const prefix = 'Digit';
+
+  '0123456789'.split('').forEach((digit) => {
+    codes.push(prefix + digit);
+  });
+
+  return codes;
+};
+
+export const takeGroupKeyboardShortCuts: () => string[] = () => {
+  return ['NumpadEnter', 'Enter', ...numpadDigitsCodes(), ...digitsCodes()];
+};
+
 export const menuBarId = 'menu-bar-id';
 export const transcriptionContentId = 'transcription-content';

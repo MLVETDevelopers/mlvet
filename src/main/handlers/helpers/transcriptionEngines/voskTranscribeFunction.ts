@@ -1,7 +1,7 @@
 import { JSONTranscription } from 'main/types';
 import path from 'path';
 import fs from 'fs';
-import { fork } from 'child_process';
+import { spawn, exec, ExecException } from 'child_process';
 import { getDllDir } from '../../../../vosk/util';
 import { TranscriptionConfigError } from '../../../utils/file/transcriptionConfig/helpers';
 import { LocalTranscriptionAssetNotFoundError } from '../../../../vosk/helpers';
@@ -28,6 +28,12 @@ const getModelPath = async () => {
   return path.resolve(localConfig.modelPath);
 };
 
+interface AsyncCmdOutput {
+  res: string;
+  success: boolean;
+  error: Error | null;
+}
+
 const asyncTranscribeWithVosk = async (
   dllLibsPath: string,
   modelPath: string,
@@ -36,20 +42,32 @@ const asyncTranscribeWithVosk = async (
   const controller = new AbortController();
 
   const result = await new Promise((resolve, reject) => {
-    const child = fork(
-      path.resolve(__dirname, '../../../../vosk/asyncVosk.ts'),
-      [dllLibsPath, modelPath, audioFilePath],
-      { signal: controller.signal }
+    const scriptPath = path.resolve(__dirname, '../../../../vosk/asyncVosk.ts');
+    const cmd = `ts-node ${scriptPath} ${dllLibsPath} ${modelPath} ${audioFilePath}`;
+
+    const child = exec(
+      cmd,
+      { signal: controller.signal },
+      (error: ExecException | null, stdout: string, stderr: string) => {
+        if (error) {
+          reject(error);
+        }
+        if (stdout) {
+          const out: AsyncCmdOutput = JSON.parse(stdout);
+          if (out.success) {
+            resolve(out.res);
+          }
+          reject(out.error);
+        }
+        if (stderr) console.error(stderr);
+      }
     );
 
-    if (!child) throw new Error('child process not created');
-
-    child.on('message', (res) => {
-      resolve(res);
-    });
-
-    child.on('error', (err) => {
-      reject(err);
+    child.on('exit', (code: number) => {
+      console.log(
+        'Vosk Transcription child process exited with exit code',
+        code
+      );
     });
   });
 

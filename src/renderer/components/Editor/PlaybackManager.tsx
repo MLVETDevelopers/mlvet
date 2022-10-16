@@ -8,8 +8,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { RuntimeProject } from 'sharedTypes';
+import { useSelector } from 'react-redux';
+import { ApplicationStore } from 'renderer/store/sharedHelpers';
+import { RangeType, RuntimeProject } from 'sharedTypes';
 import { bufferedWordDuration, isInInactiveTake } from 'sharedUtils';
+import { useKeypress } from 'renderer/utils/hooks';
 import { VideoPreviewControllerRef } from '../VideoPreview/VideoPreviewController';
 
 type ChildFunction = (
@@ -41,6 +44,10 @@ const PlaybackManager = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [nowPlayingWordIndex, setNowPlayingWordIndex] = useState<number>(0);
 
+  const { rangeOverride, rangeType } = useSelector(
+    (store: ApplicationStore) => store.playback
+  );
+
   const play = useCallback(
     () => videoPreviewControllerRef?.current?.play(),
     [videoPreviewControllerRef]
@@ -67,9 +74,22 @@ const PlaybackManager = ({
     [videoPreviewControllerRef]
   );
 
+  // video preview shortcuts
+  useKeypress(play, !isPlaying, ['Space']);
+  useKeypress(pause, isPlaying, ['Space']);
+  useKeypress(seekForward, true, ['ArrowRight']);
+  useKeypress(seekBack, true, ['ArrowLeft']);
+
   // TODO: Look into optimisations
   useEffect(() => {
     if (currentProject === null || currentProject?.transcription === null) {
+      return;
+    }
+
+    // When rangeOverride is not null that means we are playing a specific range
+    // when rangeType is equal to DELETED_TEXT, then there should be no highlighted word, thus nowPlayingWordIndex is set to -1
+    if (rangeOverride !== null && rangeType === RangeType.DELETED_TEXT) {
+      setNowPlayingWordIndex(-1);
       return;
     }
 
@@ -85,7 +105,13 @@ const PlaybackManager = ({
       setNowPlayingWordIndex(newPlayingWordIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, currentProject?.transcription]);
+  }, [
+    time,
+    currentProject?.transcription,
+    rangeOverride,
+    rangeType,
+    setNowPlayingWordIndex,
+  ]);
 
   return useMemo(
     () =>

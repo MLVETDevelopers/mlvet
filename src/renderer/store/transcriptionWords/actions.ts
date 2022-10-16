@@ -15,8 +15,8 @@ import {
   UndoSplitWordPayload,
 } from './opPayloads';
 
-export const DELETE_SELECTION = 'DELETE_SELECTION';
-export const UNDO_DELETE_SELECTION = 'UNDO_DELETE_SELECTION';
+export const DELETE_WORDS = 'DELETE_WORDS';
+export const UNDO_DELETE_WORDS = 'UNDO_DELETE_WORDS';
 
 export const PASTE_WORD = 'PASTE_WORD';
 export const UNDO_PASTE_WORD = 'UNDO_PASTE_WORD';
@@ -34,17 +34,17 @@ export const RESTORE_SECTION = 'RESTORE_SECTION';
 export const UNDO_RESTORE_SECTION = 'UNDO_RESTORE_SECTION';
 
 export const selectionDeleted: (
-  range: IndexRange
-) => Action<DeleteSelectionPayload> = (range) => ({
-  type: DELETE_SELECTION,
-  payload: { range },
+  indices: number[]
+) => Action<DeleteSelectionPayload> = (indices) => ({
+  type: DELETE_WORDS,
+  payload: { indices },
 });
 
 export const undoSelectionDeleted: (
-  range: IndexRange
-) => Action<UndoDeleteSelectionPayload> = (range) => ({
-  type: UNDO_DELETE_SELECTION,
-  payload: { range },
+  indices: number[]
+) => Action<UndoDeleteSelectionPayload> = (indices) => ({
+  type: UNDO_DELETE_WORDS,
+  payload: { indices },
 });
 
 export const wordPasted: (

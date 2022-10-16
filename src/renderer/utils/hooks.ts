@@ -22,11 +22,11 @@ export const useWindowResizer = (
   useEffect(() => handler(windowSize), [windowSize, handler]);
 };
 
-function useKeypress(
+export const useKeypress = (
   eventHandler: (() => void) | (() => Promise<void>),
   isKeypressEnabled: boolean,
   keypressCodes: string[]
-) {
+) => {
   useEffect(() => {
     const handleKeypress = async (event: KeyboardEvent) => {
       if (keypressCodes.includes(event.code) && isKeypressEnabled) {
@@ -34,12 +34,23 @@ function useKeypress(
       }
     };
 
-    window.addEventListener('keypress', handleKeypress);
+    window.addEventListener('keydown', handleKeypress);
 
     return () => {
-      window.removeEventListener('keypress', handleKeypress);
+      window.removeEventListener('keydown', handleKeypress);
     };
   }, [eventHandler, isKeypressEnabled, keypressCodes]);
-}
+};
 
-export default useKeypress;
+export const useEventListener = (
+  eventToListenTo: string,
+  eventHandler: (event: any) => void
+) => {
+  useEffect(() => {
+    window.addEventListener(eventToListenTo, eventHandler);
+    return () => {
+      window.removeEventListener(eventToListenTo, eventHandler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};

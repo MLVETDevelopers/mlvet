@@ -1,5 +1,10 @@
 import { Reducer } from 'redux';
-import { EXPORT_PROGRESS_UPDATE, FINISH_EXPORT, START_EXPORT } from './actions';
+import {
+  EXPORT_PROGRESS_UPDATE,
+  FINISH_EXPORT,
+  START_EXPORT,
+  CLOSE_EXPORT,
+} from './actions';
 import { ApplicationStore, initialStore } from '../sharedHelpers';
 import { ExportIo } from './helpers';
 import { Action } from '../action';
@@ -17,7 +22,11 @@ const exportIoReducer: Reducer<ApplicationStore['exportIo'], Action<any>> = (
   }
 
   if (action.type === FINISH_EXPORT) {
-    return { isExporting: false, exportProgress: 1 } as ExportIo;
+    return { isExporting: true, exportProgress: 1 } as ExportIo;
+  }
+
+  if (action.type === CLOSE_EXPORT) {
+    return { ...exportIo, isExporting: false };
   }
 
   return exportIo;

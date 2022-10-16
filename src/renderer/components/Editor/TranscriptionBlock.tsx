@@ -6,7 +6,7 @@ import { IndexRange, TakeGroup, Transcription, Word } from 'sharedTypes';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { makeCorrectWord } from 'renderer/store/transcriptionWords/ops/correctWord';
 import { editWordFinished } from 'renderer/store/editWord/actions';
-import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { makeDeleteWords } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { emptyRange, rangeLengthOne } from 'renderer/utils/range';
 import {
   generateTranscriptionChunks,
@@ -15,6 +15,7 @@ import {
 import { mapWithAccumulator } from 'renderer/utils/list';
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { isTakeGroup } from 'sharedUtils';
+import { transcriptionContentId } from 'renderer/utils/ui';
 import { ApplicationStore } from '../../store/sharedHelpers';
 import colors from '../../colors';
 import DragSelectManager from './DragSelectManager';
@@ -117,7 +118,7 @@ const TranscriptionBlock = ({
 
     if (editWord.text === '') {
       // If the user edits a word to be empty, treat this as a delete action
-      dispatchOp(makeDeleteSelection(rangeLengthOne(index)));
+      dispatchOp(makeDeleteWords([index]));
     } else {
       // If the user edits a word, update the word then select it
       dispatchOp(makeCorrectWord(transcription.words, index, editWord.text));
@@ -155,7 +156,7 @@ const TranscriptionBlock = ({
         isMouseDown
       ) => {
         return (
-          <TranscriptionBox id="transcription-content" ref={blockRef}>
+          <TranscriptionBox id={transcriptionContentId} ref={blockRef}>
             <ProjectName>{projectName}</ProjectName>
             {mapWithAccumulator(
               transcriptionChunks,

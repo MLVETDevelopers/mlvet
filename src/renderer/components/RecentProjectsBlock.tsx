@@ -187,13 +187,23 @@ const RecentProjectsBlock = () => {
           <RecentProjectsItem key={id} onClick={() => handleOpenProject(id)}>
             <Grid container spacing={2}>
               <RecentProjectsSubItem item xs={8}>
-                <img
-                  src={`data:image/png;base64,${thumbnails[id] ?? ''}`}
-                  alt={`Thumbnail for project ${name}`}
-                  style={{
-                    maxWidth: 180,
+                <Stack
+                  sx={{
+                    width: 180,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    backgroundColor: colors.grey[900],
                   }}
-                />
+                >
+                  <img
+                    src={`data:image/png;base64,${thumbnails[id] ?? ''}`}
+                    alt={`Thumbnail for project ${name}`}
+                    style={{
+                      maxWidth: 180,
+                      maxHeight: 100,
+                    }}
+                  />
+                </Stack>
                 <Typography
                   variant="h1"
                   style={{ fontWeight: 'bold', marginLeft: 40 }}

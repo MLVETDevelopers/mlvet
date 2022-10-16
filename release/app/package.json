@@ -3,9 +3,9 @@
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "MLVET Legends",
-    "email": "irmyspuy@gmail.com",
-    "url": "https://github.com/chloebrett/mlvet"
+    "name": "MLVETDevelopers",
+    "email": "mlvet.developers@gmail.com",
+    "url": "https://github.com/MLVETDevelopers"
   },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",

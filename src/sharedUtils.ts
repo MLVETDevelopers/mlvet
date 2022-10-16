@@ -74,6 +74,26 @@ export const mapInRange: <T>(
 };
 
 /**
+ * Maps the values of a list using a given map function,
+ * but only for those values with given indices.
+ * Values outside of the given indices will be unaltered.
+ * @returns the mapped list
+ */
+export const mapWithIndices: <T>(
+  list: T[],
+  mapCallback: MapCallback<T, T>,
+  indices: number[]
+) => T[] = (list, mapCallback, indices) => {
+  const listNew = [...list];
+
+  indices.forEach((index) => {
+    listNew[index] = mapCallback(list[index], index, list);
+  });
+
+  return listNew;
+};
+
+/**
  * For testing - makes a word with any desired fields overridden
  * @param override - any fields to override
  * @returns
@@ -112,7 +132,9 @@ export const isInInactiveTake: (
 
   const takeGroup = takeGroups.find((group) => group.id === takeGroupId);
 
-  if (takeGroup?.activeTakeIndex === takeIndex) {
+  // a take is not considered inactive if it is the active/selected take
+  // or when no takes have been selected in the take group
+  if (takeGroup?.activeTakeIndex === takeIndex || !takeGroup?.takeSelected) {
     return false;
   }
 

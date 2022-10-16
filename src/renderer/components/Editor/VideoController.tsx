@@ -1,20 +1,9 @@
 import { Forward10, Pause, PlayArrow, Replay10 } from '@mui/icons-material';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { secondToTimestampUI } from 'main/timeUtils';
 import React, { useCallback, useMemo } from 'react';
 import colors from '../../colors';
-
-const VideoControllerBox = styled(Box)({
-  background: colors.grey[700],
-  color: colors.grey[300],
-  height: '62px',
-  width: '100vw',
-  margin: 0,
-  padding: '11px 0',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
+import MenuBarButton from './MenuBarButton';
 
 const TimeDisplay = styled(Box)({
   backgroundColor: colors.grey[600],
@@ -67,18 +56,27 @@ const VideoController = ({
   const timeDisplay = useMemo(() => secondToTimestampUI(time), [time]);
 
   return (
-    <VideoControllerBox>
+    <Box
+      style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+      }}
+    >
       <TimeDisplay>{timeDisplay}</TimeDisplay>
-      <IconButton onClick={seekBack}>
-        <Replay10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
-      </IconButton>
-      <IconButton onClick={onClickPlayPause}>
+      <MenuBarButton onClick={seekBack} text="Seek backwards 10 seconds">
+        <Replay10 sx={{ fontSize: '36px' }} />
+      </MenuBarButton>
+      <MenuBarButton
+        onClick={onClickPlayPause}
+        text={isPlaying ? 'Pause' : 'Play'}
+      >
         <TogglePlayButton isPlaying={isPlaying} />
-      </IconButton>
-      <IconButton onClick={seekForward}>
-        <Forward10 sx={{ fontSize: '36px', color: colors.grey[400] }} />
-      </IconButton>
-    </VideoControllerBox>
+      </MenuBarButton>
+      <MenuBarButton onClick={seekForward} text="Seek forward 10 seconds">
+        <Forward10 sx={{ fontSize: '36px' }} />
+      </MenuBarButton>
+    </Box>
   );
 };
 

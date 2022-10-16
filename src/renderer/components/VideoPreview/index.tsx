@@ -54,6 +54,17 @@ const VideoPreviewBase = ({ src }: Props, ref: Ref<VideoPreviewRef>) => {
         controls: {
           includeControls: [],
         },
+        keyboardShortcuts: {
+          keyMap: {
+            togglePause: [],
+            toggleFullscreen: '',
+            decreaseVolume: '',
+            increaseVolume: '',
+            skipBack: '',
+            skipForward: '',
+            toggleMute: '',
+          },
+        },
       }}
       initialPlaybackProps={{ isPaused: true }}
       onStreamStateChange={handleStreamStateChange}

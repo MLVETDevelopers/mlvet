@@ -4,6 +4,12 @@ import {
   SelectionRangeSetToPayload,
 } from '../selection/actions';
 import {
+  DeleteTakeGroupPayload,
+  SelectTakePayload,
+  UndoDeleteTakeGroupPayload,
+  UndoSelectTakePayload,
+} from '../takeGroups/opPayloads';
+import {
   CorrectWordPayload,
   DeleteSelectionPayload,
   MergeWordsPayload,
@@ -54,14 +60,18 @@ export type DoPayload =
   | PasteWordsPayload
   | CorrectWordPayload
   | MergeWordsPayload
-  | SplitWordPayload;
+  | SplitWordPayload
+  | DeleteTakeGroupPayload
+  | SelectTakePayload;
 
 export type UndoPayload =
   | UndoDeleteSelectionPayload
   | UndoPasteWordsPayload
   | UndoCorrectWordPayload
   | UndoMergeWordsPayload
-  | UndoSplitWordPayload;
+  | UndoSplitWordPayload
+  | UndoDeleteTakeGroupPayload
+  | UndoSelectTakePayload;
 
 export type OpPayload =
   | DoPayload

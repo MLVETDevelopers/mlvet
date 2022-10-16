@@ -3,10 +3,10 @@
   "description": "Machine Learning Video Editor Toolkit",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "MLVET Legends",
-    "url": "https://github.com/chloebrett/mlvet"
+    "name": "MLVET Developers",
+    "url": "https://github.com/MLVETDevelopers"
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -124,7 +124,8 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "deb"
       ],
       "category": "Development",
       "files": [
@@ -141,7 +142,7 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "chloebrett",
+      "owner": "MLVETDevelopers",
       "repo": "mlvet",
       "releaseType": "release",
       "vPrefixedTagName": false
@@ -149,7 +150,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chloebrett/mlvet.git"
+    "url": "git+https://github.com/MLVETDevelopers/mlvet.git"
   },
   "jest": {
     "testURL": "http://localhost/",
@@ -190,6 +191,7 @@
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/react-text-truncate": "^0.14.1",
     "@types/terser-webpack-plugin": "^5.0.4",
     "@types/uuid": "^8.3.4",
     "@types/webpack-env": "^1.16.3",
@@ -276,12 +278,14 @@
     "ffmpeg-static": "^5.0.2",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^10.1.0",
     "history": "^5.3.0",
     "node-fetch": "2.6.6",
     "query-string": "^7.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
+    "react-text-truncate": "^0.19.0",
     "redux": "^4.1.2",
     "socket.io-client": "^4.5.0",
     "uuid": "^8.3.2",

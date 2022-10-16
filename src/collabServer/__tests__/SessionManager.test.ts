@@ -4,8 +4,7 @@ import { Socket } from 'socket.io-client';
 import { Transcription } from 'sharedTypes';
 import { UndoStack } from 'renderer/store/undoStack/helpers';
 import { CollabServerSessionState } from 'collabServer/types';
-import { rangeLengthOne } from 'renderer/utils/range';
-import { makeDeleteSelection } from 'renderer/store/transcriptionWords/ops/deleteSelection';
+import { makeDeleteWords } from 'renderer/store/transcriptionWords/ops/deleteSelection';
 import { ClientId, SessionCode } from 'collabTypes/collabShadowTypes';
 import SessionManager from '../SessionManager';
 
@@ -243,7 +242,7 @@ describe('SessionManager', () => {
     expect(guestSocketSpy).toBeCalledTimes(0);
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection(rangeLengthOne(0))];
+    const ops = [makeDeleteWords([0])];
 
     sessionManager.handleClientAction(actionId, ops, guestId, session.id);
 
@@ -261,7 +260,7 @@ describe('SessionManager', () => {
     expect(hostSocketSpy).toBeCalledTimes(0);
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection(rangeLengthOne(0))];
+    const ops = [makeDeleteWords([0])];
 
     sessionManager.handleClientAction(actionId, ops, guestId, session.id);
 
@@ -291,7 +290,7 @@ describe('SessionManager', () => {
     });
 
     const actionId = 'abc';
-    const ops = [makeDeleteSelection(rangeLengthOne(0))];
+    const ops = [makeDeleteWords([0])];
 
     expect(guestSocketSpy).toBeCalledTimes(0);
 
@@ -312,7 +311,7 @@ describe('SessionManager', () => {
 
     const firstActionId = 'abc';
     const secondActionId = 'def';
-    const ops = [makeDeleteSelection(rangeLengthOne(0))];
+    const ops = [makeDeleteWords([0])];
 
     // Guest pushes an action, it gets accepted
     sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);
@@ -349,7 +348,7 @@ describe('SessionManager', () => {
 
     const firstActionId = 'abc';
     const secondActionId = 'def';
-    const ops = [makeDeleteSelection(rangeLengthOne(0))];
+    const ops = [makeDeleteWords([0])];
 
     // Guest pushes an action, it gets accepted
     sessionManager.handleClientAction(firstActionId, ops, guestId, session.id);

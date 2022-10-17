@@ -1,12 +1,14 @@
+import { moveSync } from 'fs-extra';
+import path from 'path';
 import setTranscriptionEngineConfig from './setEngineConfig';
 import {
   DownloadingModelState,
   LocalConfig,
-  OperatingSystems,
   TranscriptionEngine,
 } from '../../../../sharedTypes';
 import { IpcContext } from '../../../types';
 import downloadZip from '../../../utils/file/downloadZip';
+import { getFilesParentDir, renameFileOrDir } from '../../../utils/file/file';
 import {
   appDefaultLocalTranscriptionAssetsDirs,
   appDefaultLocalTranscriptionAssetsPaths,
@@ -16,12 +18,11 @@ import {
   isLocalModelConfiguredAndDownloaded,
 } from '../../../utils/file/transcriptionConfig/checkConfig';
 import getTranscriptionEngineConfig from './getEngineConfig';
-
-const MODEL_URL =
-  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model.zip';
-const MODEL_SML_URL =
-  'https://mlvet-local.s3.ap-southeast-2.amazonaws.com/model-sml.zip';
-const LIBS_URL = `https://mlvet-local.s3.ap-southeast-2.amazonaws.com/libs.zip`;
+import {
+  calculateDownloadProgressWeights,
+  getLibsUrl,
+  getModelUrl,
+} from '../../../utils/file/transcriptionConfig/downloadModel';
 
 const onDownloadStart = (ipcContext: IpcContext) => () => {
   const downloadModelStateUpdate = {
@@ -57,13 +58,6 @@ const onDownloadFinish = (ipcContext: IpcContext) => () => {
   );
 };
 
-const getModelUrl = () => {
-  if (process.platform === OperatingSystems.LINUX) return MODEL_SML_URL;
-  return MODEL_URL;
-};
-
-const getLibsUrl = () => LIBS_URL;
-
 const getLocalConfig = async (): Promise<LocalConfig> => {
   const config = (await getTranscriptionEngineConfig(
     TranscriptionEngine.VOSK
@@ -71,22 +65,66 @@ const getLocalConfig = async (): Promise<LocalConfig> => {
   return config;
 };
 
-const createWeights = (
+const downloadAndExtractLibs = async (
+  defaultLibsDir: string,
   libsProgressWeighting: number,
-  modelProgressWeighting: number
-) => ({ libsProgressWeighting, modelProgressWeighting });
-
-const calculateDownloadProgressWeights = (
-  shouldDownloadLibs: boolean,
-  shouldDownloadModel: boolean
+  onProgress: (progress: number) => void
 ) => {
-  if (shouldDownloadLibs && shouldDownloadModel) {
-    if (getModelUrl() === MODEL_SML_URL) return createWeights(0.36, 0.63);
-    return createWeights(0.02, 0.97);
+  console.log('Downloading dynamic libs');
+
+  await downloadZip(
+    await getLibsUrl(),
+    defaultLibsDir,
+    () => {},
+    (progress: number) => {
+      const weightedProgress = progress * libsProgressWeighting;
+      onProgress(weightedProgress);
+    },
+    () => {}
+  );
+};
+
+const downloadAndExtractModel = async (
+  defaultModelDir: string,
+  modelProgressWeighting: number,
+  libsProgressWeighting: number,
+  onProgress: (progress: number) => void
+) => {
+  console.log('Downloading model');
+
+  await downloadZip(
+    await getModelUrl(),
+    defaultModelDir,
+    () => {},
+    (progress: number) => {
+      const weightedProgress =
+        progress * modelProgressWeighting + libsProgressWeighting;
+      onProgress(weightedProgress);
+    },
+    () => {}
+  );
+
+  const modelFiles = ['am', 'conf', 'graph'];
+
+  // Get the path to model after download and extraction
+  const downloadedModelPath = await getFilesParentDir(
+    defaultModelDir,
+    modelFiles
+  );
+
+  if (downloadedModelPath !== null) {
+    // Rename the model (eg: 'vosk-model-small-en-us-0.15') to 'model'
+    const downloadedModelParentDir = path.dirname(downloadedModelPath);
+    const newModelPath = path.resolve(downloadedModelParentDir, 'model');
+    renameFileOrDir(downloadedModelPath, newModelPath);
+
+    // Move the model to the default model dir, if it isn't there already
+    const defaultModelPath = path.resolve(defaultModelDir, 'model');
+    if (newModelPath !== defaultModelPath)
+      moveSync(newModelPath, defaultModelPath, {
+        overwrite: true,
+      });
   }
-  if (shouldDownloadLibs) return createWeights(0.99, 0);
-  if (shouldDownloadModel) return createWeights(0, 0.99);
-  return createWeights(0, 0);
 };
 
 type DownloadModel = (ipcContext: IpcContext) => Promise<void>;
@@ -101,7 +139,10 @@ const downloadModel: DownloadModel = async (ipcContext) => {
 
   // Set progress update weightings for libs and model
   const { libsProgressWeighting, modelProgressWeighting } =
-    calculateDownloadProgressWeights(shouldDownloadLibs, shouldDownloadModel);
+    await calculateDownloadProgressWeights(
+      shouldDownloadLibs,
+      shouldDownloadModel
+    );
 
   // Get default dirs to download and extract local assets to
   const { libsDir: defaultLibsDir, modelDir: defaultModelDir } =
@@ -112,32 +153,20 @@ const downloadModel: DownloadModel = async (ipcContext) => {
 
   // Download and extract libs if not already present
   if (shouldDownloadLibs) {
-    console.log('Downloading dynamic libs');
-    await downloadZip(
-      getLibsUrl(),
+    await downloadAndExtractLibs(
       defaultLibsDir,
-      () => {},
-      (progress: number) => {
-        const weightedProgress = progress * libsProgressWeighting;
-        onProgress(weightedProgress);
-      },
-      () => {}
+      libsProgressWeighting,
+      onProgress
     );
   }
 
   // Download and extract model if not already present
   if (shouldDownloadModel) {
-    console.log('Downloading model');
-    await downloadZip(
-      getModelUrl(),
+    await downloadAndExtractModel(
       defaultModelDir,
-      () => {},
-      (progress: number) => {
-        const weightedProgress =
-          progress * modelProgressWeighting + libsProgressWeighting;
-        onProgress(weightedProgress);
-      },
-      () => {}
+      modelProgressWeighting,
+      libsProgressWeighting,
+      onProgress
     );
   }
 

@@ -248,10 +248,6 @@ const TakeGroupComponent = ({
   };
 
   const handleKeypressWithEvent = (event: Event) => {
-    if (!isTakeGroupOpened) {
-      return;
-    }
-
     const keyboardEvent = event as KeyboardEvent;
 
     const eventCode = keyboardEvent.code;
@@ -266,7 +262,7 @@ const TakeGroupComponent = ({
 
   useKeypressWithEvent(
     handleKeypressWithEvent,
-    true,
+    isTakeGroupOpened,
     takeGroupKeyboardShortCuts()
   );
 

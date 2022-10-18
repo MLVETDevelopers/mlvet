@@ -262,7 +262,7 @@ const TakeGroupComponent = ({
 
   useKeypressWithEvent(
     handleKeypressWithEvent,
-    isTakeGroupOpened,
+    isTakeGroupOpened && !isFirstTimeOpen,
     takeGroupKeyboardShortCuts()
   );
 

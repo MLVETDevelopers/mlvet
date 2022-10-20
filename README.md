@@ -33,6 +33,7 @@
   - [Testing](#testing)
   - [Generating IPC Handlers](#generating-ipc-handlers)
   - [Running the Collab server](#running-the-collab-server)
+  - [Configuring Local Transcription](#configuring-local-transcription)
 - [Contributors](#contributors)
 - [Other READMEs](#other-readmes)
 
@@ -75,7 +76,6 @@ There are multiple ways of downloading the MLVET app.
 ## Manual Installing (from source)
 
 1. Dependencies: Node, yarn
-
 2. Clone the repository and cd into the directory
 
    ```bash
@@ -104,7 +104,6 @@ You should now see MLVET in your file system.
 ### Development Environment Setup
 
 1. Dependencies: Node, yarn
-
 2. Clone the repository and cd into the directory
 
    ```bash
@@ -119,6 +118,7 @@ You should now see MLVET in your file system.
    ```
 
 4. Start the app in the `dev` environment
+
    ```bash
    yarn start
    ```
@@ -161,6 +161,10 @@ Refer to the [Code Generate](tools/GENCODE_README.md) documentation and [IPC Han
 ### Running the Collab server
 
 Refer to the [Collab Server](src/collabServer/README.md) documentation
+
+### Configuring local transcription
+
+Refer to the [Code Generate](src/vosk/README.md) documentation and the help docs on the landing page.
 
 ## Contributors
 

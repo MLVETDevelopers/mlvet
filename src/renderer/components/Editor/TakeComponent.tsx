@@ -13,8 +13,6 @@ import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
 import { isIndexInRange } from 'renderer/utils/range';
-import { makeSelectTake } from 'renderer/store/takeGroups/ops/selectTake';
-import dispatchOp from 'renderer/store/dispatchOp';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
 import WordOuterComponent from './WordOuterComponent';
 import SquareBracket from './SquareBracket';
@@ -71,6 +69,7 @@ interface TakeComponentProps extends TakePassThroughProps {
   isLast: boolean;
   isFirstTimeOpen: boolean;
   setIsFirstTimeOpen: (isFirstTimeOpen: boolean) => void;
+  selectTake: (takeIndex: number) => void;
 }
 
 const TakeComponent = ({
@@ -87,6 +86,7 @@ const TakeComponent = ({
   isLast,
   isFirstTimeOpen,
   setIsFirstTimeOpen,
+  selectTake,
   transcription,
   ...passThroughProps
 }: TakeComponentProps) => {
@@ -99,32 +99,12 @@ const TakeComponent = ({
       return;
     }
 
-    const takeGroup = transcription.takeGroups.find(
-      (tg) => tg.id === takeInfo.takeGroupId
-    );
-
-    if (!takeGroup) {
-      return;
-    }
-
-    // only makes action if the selection has changed
-    if (
-      takeGroup.activeTakeIndex !== takeInfo.takeIndex ||
-      !takeGroup.takeSelected
-    ) {
-      dispatchOp(makeSelectTake(takeInfo, takeGroup));
-    }
+    selectTake(takeInfo.takeIndex);
 
     if (!isFirstTimeOpen && isActive) {
       setIsTakeGroupOpened(false);
     }
-  }, [
-    takeWords,
-    transcription.takeGroups,
-    isFirstTimeOpen,
-    isActive,
-    setIsTakeGroupOpened,
-  ]);
+  }, [takeWords, isFirstTimeOpen, isActive, selectTake, setIsTakeGroupOpened]);
 
   const TakeWrapper = useMemo(
     () => makeTakeWrapper(isTakeGroupOpened, isActive, isFirstTimeOpen),

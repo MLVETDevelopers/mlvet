@@ -6,7 +6,7 @@
     "name": "MLVET Developers",
     "url": "https://github.com/MLVETDevelopers"
   },
-  "version": "0.0.5",
+  "version": "0.1.0",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",

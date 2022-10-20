@@ -164,7 +164,7 @@ Refer to the [Collab Server](src/collabServer/README.md) documentation
 
 ### Configuring local transcription
 
-Refer to the [Code Generate](src/vosk/README.md) documentation and the help docs on the landing page.
+Refer to the [Local Transcription](src/vosk/README.md) documentation and the help docs on the landing page.
 
 ## Contributors
 

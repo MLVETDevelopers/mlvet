@@ -95,7 +95,9 @@ Steps to build your `.deb`/`.rpm`
       "category": "Development",
 ```
 
-2. Then run `yarn package`, it might fail the first time (which is why we have not included it in our build process), just run it again and it'll work.
+2. Download the dependencies mentioned earlier.
+
+3. Then run `yarn package`, it might fail the first time (which is why we have not included it in our build process), just run it again and it'll work.
 
 ## Contributors
 

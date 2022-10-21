@@ -78,7 +78,7 @@ To get your development environment set up
 
 [mlvet.app](https://www.mlvet.app/) is managed in a [separate repo](https://github.com/rileykeane/mlvet-landing-page).
 
-## Targetting `.deb` and `.rpm` on linux.
+## Targeting `.deb` and `.rpm` on linux.
 
 To create `.deb` and `.rpm` releases you must build the app on a linux distribution based on the distribution you want to target.
 

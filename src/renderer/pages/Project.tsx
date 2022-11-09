@@ -1,5 +1,5 @@
 import { Box, Stack, styled } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import VideoController from 'renderer/components/Editor/VideoController';
 import VideoPreviewController, {
   VideoPreviewControllerRef,
@@ -26,6 +26,7 @@ import CtrlFPopover from 'renderer/components/Editor/CtrlFPopover';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
 import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
+import { ctrlFindClosed } from 'renderer/store/ctrlFSelectionState/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
 import colors from '../colors';
@@ -75,6 +76,10 @@ const ProjectPage = () => {
   const isShowingCtrlFPopover = useSelector(
     (store: ApplicationStore) => store.isShowingCtrlFPopover
   );
+
+  const dispatch = useDispatch();
+
+  if (!isShowingCtrlFPopover) dispatch(ctrlFindClosed());
 
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
 

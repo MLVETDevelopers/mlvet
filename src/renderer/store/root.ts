@@ -33,8 +33,6 @@ const rootReducer = combineReducers({
   opQueue: opQueueReducer,
   ctrlFSelection: ctrlFSelectionReducer,
   menuCustomModals: menuCustomModalsReducer,
-  collab: collabReducer,
-  opQueue: opQueueReducer,
   downloadModel: downloadModelReducer,
   playback: playbackReducer,
 });

@@ -27,6 +27,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
     (store: ApplicationStore) => store.ctrlFSelection
   );
   const { selectedIndex, maxIndex, indexRanges } = ctrlFSelection;
+
   const handleFindTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Ctrl+F Search Algorithm
     // Splits words by spaces, and compares word-by-word
@@ -36,7 +37,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
       indexRanges: [],
     };
 
-    const searchStr = event.target.value;
+    const searchStr = event.target.value.toLowerCase();
     if (searchStr.length === 0) {
       dispatch(ctrlFindUpdated(payload));
       return;
@@ -59,6 +60,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
         const currentSearchStr = searchStrArray[j];
         wordText = transcription.words[i + j].word;
         if (wordText === null) break;
+        wordText = wordText.toLowerCase();
 
         // If last word of search string
         if (j === searchStrArrayLength - 1) {
@@ -138,7 +140,7 @@ const SearchBoxPopover = ({ transcription }: SearchBoxPopoverProps) => {
           alignItems="center"
           justifyContent="center"
         >
-          {maxIndex >= 0 ? `${selectedIndex + 1}/${maxIndex + 1}` : '0/0'}
+          {maxIndex > 0 ? `${selectedIndex + 1}/${maxIndex + 1}` : '0/0'}
         </Typography>
         {/* TODO: Insert a vertical line here if you want to make it look like Chrome's one */}
         <IconButton

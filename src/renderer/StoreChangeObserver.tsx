@@ -41,10 +41,6 @@ const StoreChangeObserver = () => {
     (store: ApplicationStore) => store.isShowingConfidenceUnderlines
   );
 
-  const isShowingCtrlFPopover = useSelector(
-    (store: ApplicationStore) => store.isShowingCtrlFPopover
-  );
-
   const clipboard = useSelector((store: ApplicationStore) => store.clipboard);
 
   const selfSelection = useSelector(

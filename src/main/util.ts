@@ -59,3 +59,14 @@ export const appTranscriptionConfigPath: () => string = () =>
 
 export const fileOrDirExists: (filePath: string) => boolean = (filePath) =>
   statSync(filePath, { throwIfNoEntry: false }) !== undefined;
+
+export const getAssetsPath: () => string = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return path.join(__dirname, '../../assets');
+  }
+  return path.join(__dirname, '../../../assets');
+};
+
+export const getConfigsPath: () => string = () => {
+  return path.join(getAssetsPath(), 'configs');
+};

@@ -6,7 +6,7 @@
     "name": "MLVET Developers",
     "url": "https://github.com/MLVETDevelopers"
   },
-  "version": "0.0.4",
+  "version": "0.1.0",
   "scripts": {
     "preinstall": "npx only-allow yarn",
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -277,6 +277,7 @@
     "ffmpeg-static": "^5.0.2",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
+    "fs-extra": "^10.1.0",
     "history": "^5.3.0",
     "node-fetch": "2.6.6",
     "query-string": "^7.1.1",

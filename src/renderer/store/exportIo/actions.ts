@@ -4,6 +4,7 @@ import { Action } from '../action';
 export const START_EXPORT = 'START_EXPORT';
 export const EXPORT_PROGRESS_UPDATE = 'EXPORT_PROGRESS_UPDATE';
 export const FINISH_EXPORT = 'FINISH_UPDATE';
+export const CLOSE_EXPORT = 'CLOSE_EXPORT';
 
 export const startExport: (
   projectId: string,
@@ -32,4 +33,9 @@ export const finishExport: (
 ) => ({
   type: FINISH_EXPORT,
   payload: { project, filePath },
+});
+
+export const closeExportCard: () => Action<boolean> = () => ({
+  type: CLOSE_EXPORT,
+  payload: false,
 });

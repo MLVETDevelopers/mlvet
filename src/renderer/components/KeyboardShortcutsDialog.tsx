@@ -164,9 +164,10 @@ const KeyboardShortcutsDialog = ({ open, onClose }: Props) => {
               `${CTRL_OR_CMD} + S`,
               `${CTRL_OR_CMD} + Shift + S`,
             ]}
-            wordsRight={['Export Project', 'Return to Home']}
+            wordsRight={['Export to EDL', 'Export to MP4', 'Return to Home']}
             shortcutsRight={[
               `${CTRL_OR_CMD} + E`,
+              `${CTRL_OR_CMD} + Shift + E`,
               `${CTRL_OR_CMD} + Shift + H`,
             ]}
           />

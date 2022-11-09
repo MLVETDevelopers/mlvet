@@ -6,15 +6,12 @@ import { Action } from '../action';
 const ctrlFReducer: Reducer<
   ApplicationStore['isShowingCtrlFPopover'],
   Action<any>
-> = (
-  isShowingConfidenceUnderlines = initialStore.isShowingCtrlFPopover,
-  action
-) => {
+> = (isShowingCtrlFPopover = initialStore.isShowingCtrlFPopover, action) => {
   if (action.type === CTRL_F_POPOVER_TOGGLED) {
-    return !isShowingConfidenceUnderlines;
+    return !isShowingCtrlFPopover;
   }
 
-  return isShowingConfidenceUnderlines;
+  return isShowingCtrlFPopover;
 };
 
 export default ctrlFReducer;

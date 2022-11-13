@@ -175,6 +175,16 @@ export default class MenuBuilder {
         },
         enabled: false, // by default, gets updated when a project is entered
       },
+      {
+        id: 'find',
+        label: 'Find...',
+        accelerator: 'CommandOrControl+F',
+        click: () => {
+          // Tell the renderer to toggle the confidence underlines
+          this.mainWindow.webContents.send('toggle-ctrl-f-popover');
+        },
+        enabled: false, // by default, gets updated when a project is entered
+      },
     ];
   }
 

@@ -65,6 +65,9 @@ contextBridge.exposeInMainWorld('electron', {
   setConfidenceLinesEnabled: (menuItemEnabled) =>
     ipcRenderer.invoke('set-confidence-lines-enabled', menuItemEnabled),
 
+  setCtrlFPopoverEnabled: (menuItemEnabled) =>
+    ipcRenderer.invoke('set-ctrl-f-popover-enabled', menuItemEnabled),
+
   setEditWordEnabled: (editEnabled) =>
     ipcRenderer.invoke('set-edit-word-enabled', editEnabled),
 

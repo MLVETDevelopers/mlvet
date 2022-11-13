@@ -7,6 +7,7 @@ import {
   RuntimeProject,
   RecentProject,
   Word,
+  CtrlFindSelectionState,
   SelectionState,
 } from '../../sharedTypes';
 import { ApplicationPage } from './currentPage/helpers';
@@ -31,12 +32,15 @@ export interface ApplicationStore {
   clipboard: Word[];
   // Array of numbers corresponding to indices of words within the transcription
   selection: SelectionState;
+  ctrlFSelection: CtrlFindSelectionState;
   shortcutsOpened: boolean;
   menuCustomModals: MenuCustomModals;
   // Index of word currently being edited, otherwise null
   editWord: EditWordState;
   // whether confidence underlines are currently visible
   isShowingConfidenceUnderlines: boolean;
+  // whether ctrl-f popover is currently visible
+  isShowingCtrlFPopover: boolean;
   // Collab session state
   collab: CollabClientSessionState | CollabClientInitialState | null;
   // Op queue session state for pending actions when in a collab session
@@ -60,6 +64,11 @@ export const initialStore: ApplicationStore = {
     self: emptyRange(),
     others: {},
   },
+  ctrlFSelection: {
+    selectedIndex: 0,
+    maxIndex: 0,
+    indexRanges: [],
+  },
   shortcutsOpened: false,
   menuCustomModals: {
     isUpdateTranscriptionAPIKeyOpened: false,
@@ -67,6 +76,7 @@ export const initialStore: ApplicationStore = {
   },
   editWord: null,
   isShowingConfidenceUnderlines: false,
+  isShowingCtrlFPopover: false,
   collab: null,
   opQueue: [],
   downloadModel: {

@@ -1,12 +1,13 @@
 import React from 'react';
 import {
+  CtrlFindSelectionState,
   IndexRange,
   TakeGroup,
   Transcription,
   TranscriptionChunk,
   Word,
 } from 'sharedTypes';
-import { isIndexInRange } from 'renderer/utils/range';
+import { isIndexInRange, isIndexInRanges } from 'renderer/utils/range';
 import { isTakeGroup } from 'sharedUtils';
 import styled from '@emotion/styled';
 import { Box } from '@mui/material';
@@ -31,6 +32,7 @@ interface TranscriptionChunkProps extends TranscriptionPassThroughProps {
   ) => (event: React.MouseEvent) => void;
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
+  ctrlFSelection: CtrlFindSelectionState;
   transcription: Transcription;
 }
 
@@ -41,6 +43,7 @@ const TranscriptionChunkComponent = ({
   onWordMouseEnter,
   nowPlayingWordIndex,
   selection,
+  ctrlFSelection,
   transcription,
   ...passThroughProps
 }: TranscriptionChunkProps) => {
@@ -52,6 +55,7 @@ const TranscriptionChunkComponent = ({
       onWordMouseEnter={onWordMouseEnter}
       nowPlayingWordIndex={nowPlayingWordIndex}
       selection={selection}
+      ctrlFSelection={ctrlFSelection}
       transcription={transcription}
       {...passThroughProps}
     />
@@ -74,6 +78,26 @@ const TranscriptionChunkComponent = ({
             isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
             isSelected={isIndexInRange(selection, wordIndex)}
             isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+            isPrevCtrlFSelected={isIndexInRanges(
+              ctrlFSelection.indexRanges,
+              wordIndex - 1
+            )}
+            isCtrlFSelected={isIndexInRanges(
+              ctrlFSelection.indexRanges,
+              wordIndex
+            )}
+            isNextCtrlFSelected={isIndexInRanges(
+              ctrlFSelection.indexRanges,
+              wordIndex + 1
+            )}
+            isCtrlFSelectedIndex={
+              ctrlFSelection.maxIndex > 0
+                ? isIndexInRange(
+                    ctrlFSelection.indexRanges[ctrlFSelection.selectedIndex],
+                    wordIndex
+                  )
+                : false
+            }
             onMouseDown={onWordMouseDown}
             onMouseEnter={onWordMouseEnter}
             isPlaying={nowPlayingWordIndex === wordIndex}

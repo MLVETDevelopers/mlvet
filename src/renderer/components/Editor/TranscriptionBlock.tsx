@@ -75,6 +75,10 @@ const TranscriptionBlock = ({
     (store: ApplicationStore) => store.currentProject?.name
   );
 
+  const ctrlFSelection = useSelector(
+    (store: ApplicationStore) => store.ctrlFSelection
+  );
+
   const blockRef = useRef<HTMLElement>(null);
 
   const transcriptionChunks = useMemo(() => {
@@ -181,6 +185,7 @@ const TranscriptionBlock = ({
                       submitWordEdit={submitWordEdit}
                       selection={ownSelection}
                       otherSelections={otherSelections}
+                      ctrlFSelection={ctrlFSelection}
                       popoverWidth={blockWidth - 194}
                       transcriptionBlockRef={blockRef}
                       setPlaybackTime={setPlaybackTime}

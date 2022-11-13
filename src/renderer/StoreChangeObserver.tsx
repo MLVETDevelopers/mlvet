@@ -129,6 +129,11 @@ const StoreChangeObserver = () => {
     }
   }, [currentProject, isProjectEdited, setProjectEdited]);
 
+  // Enable the find menu if a project is open
+  useEffect(() => {
+    ipc.setCtrlFPopoverEnabled(currentProject !== null);
+  }, [currentProject]);
+
   // Update 'go to home' option in menu when page is changed
   useEffect(() => {
     const homeEnabled = currentPage === ApplicationPage.PROJECT;

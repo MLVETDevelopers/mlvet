@@ -22,9 +22,11 @@ import ContentCutIcon from '@mui/icons-material/ContentCut';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import DeleteIcon from '@mui/icons-material/Delete';
 import returnToHome from 'renderer/navigation/returnToHome';
+import CtrlFPopover from 'renderer/components/Editor/CtrlFPopover';
 import { performRedo, performUndo } from 'renderer/editor/undoRedo';
 import { menuBarId } from 'renderer/utils/ui';
 import MenuBarButton from 'renderer/components/Editor/MenuBarButton';
+import { ctrlFindClosed } from 'renderer/store/ctrlFSelectionState/actions';
 import { ApplicationStore } from '../store/sharedHelpers';
 import { closeExportCard } from '../store/exportIo/actions';
 import ProvideFeedbackModal from '../components/UserFeedback/ProvideFeedbackModal';
@@ -72,7 +74,14 @@ const ProjectPage = () => {
     (store: ApplicationStore) => store.exportIo
   );
 
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
+  );
+
   const dispatch = useDispatch();
+
+  if (!isShowingCtrlFPopover) dispatch(ctrlFindClosed());
+
   const toggleCloseExportCard = () => dispatch(closeExportCard());
 
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
@@ -176,7 +185,13 @@ const ProjectPage = () => {
                 </HeaderBarBox>
 
                 {COLLAB_ENABLED && <CollabController />}
-
+                <Stack>
+                  {isShowingCtrlFPopover && currentProject?.transcription && (
+                    <CtrlFPopover
+                      transcription={currentProject.transcription}
+                    />
+                  )}
+                </Stack>
                 <Stack
                   id="project-page-layout-container"
                   direction="row"

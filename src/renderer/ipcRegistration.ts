@@ -14,6 +14,7 @@ import openUpdateTranscriptionAPIKey from './navigation/openUpdateTranscriptionA
 import toggleConfidenceUnderlines from './editor/toggleConfidenceUnderlines';
 import editWord from './editor/editWord';
 import onExportStart from './file/onExportStart';
+import toggleCtrlFPopover from './editor/toggleCtrlFPopover';
 import updateDownloadModelState from './file/downloadModelProgressUpdate';
 import openUpdateTranscriptionChoice from './navigation/openUpdateTranscriptionChoice';
 import registerClipboardHandlers from './clipboardRegistration';
@@ -45,6 +46,7 @@ const IPC_RECEIVERS: Record<string, (...args: any[]) => void> = {
   'initiate-undo': performUndo,
   'initiate-redo': performRedo,
   'toggle-confidence-underlines': toggleConfidenceUnderlines,
+  'toggle-ctrl-f-popover': toggleCtrlFPopover,
 
   // Navigation actions
   'initiate-return-to-home': returnToHome,

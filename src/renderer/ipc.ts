@@ -8,6 +8,7 @@ const mockIpc = {
   setFileRepresentation: () => null,
   openProject: async () => null,
   setDeleteEnabled: async () => null,
+  setCtrlFPopoverEnabled: async () => null,
   setEditWordEnabled: async () => null,
   setMergeSplitEnabled: async () => null,
   setHomeEnabled: async () => null,

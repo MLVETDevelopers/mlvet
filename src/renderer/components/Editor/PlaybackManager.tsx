@@ -48,6 +48,10 @@ const PlaybackManager = ({
     (store: ApplicationStore) => store.playback
   );
 
+  const isShowingCtrlFPopover = useSelector(
+    (store: ApplicationStore) => store.isShowingCtrlFPopover
+  );
+
   const play = useCallback(
     () => videoPreviewControllerRef?.current?.play(),
     [videoPreviewControllerRef]
@@ -75,8 +79,8 @@ const PlaybackManager = ({
   );
 
   // video preview shortcuts
-  useKeypress(play, !isPlaying, ['Space']);
-  useKeypress(pause, isPlaying, ['Space']);
+  useKeypress(play, !isPlaying && !isShowingCtrlFPopover, ['Space']);
+  useKeypress(pause, isPlaying && !isShowingCtrlFPopover, ['Space']);
   useKeypress(seekForward, true, ['ArrowRight']);
   useKeypress(seekBack, true, ['ArrowLeft']);
 

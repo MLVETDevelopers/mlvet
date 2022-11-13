@@ -20,6 +20,10 @@ interface WordOuterComponentProps extends WordPassThroughProps {
   isPrevWordSelected: boolean;
   isNextWordSelected: boolean;
   otherSelections: Record<ClientId, IndexRange>;
+  isPrevCtrlFSelected: boolean;
+  isCtrlFSelected: boolean;
+  isNextCtrlFSelected: boolean;
+  isCtrlFSelectedIndex: boolean;
   editWord: EditWordState;
   popoverWidth: number;
   transcriptionBlockRef: RefObject<HTMLElement>;
@@ -41,6 +45,10 @@ const WordOuterComponent = ({
   isSelected,
   isPrevWordSelected,
   otherSelections,
+  isPrevCtrlFSelected,
+  isCtrlFSelected,
+  isNextCtrlFSelected,
+  isCtrlFSelectedIndex,
   editWord,
   popoverWidth,
   transcriptionBlockRef,
@@ -128,6 +136,10 @@ const WordOuterComponent = ({
           <WordSpace
             key={`space-${word.originalIndex}-${word.pasteKey}`}
             isBetweenHighlightedWords={isSelected && isPrevWordSelected}
+            isBetweenCtrlFHighlightedWords={
+              isCtrlFSelected && isPrevCtrlFSelected
+            }
+            isCtrlFSelectedIndex={isCtrlFSelectedIndex}
             highlightedByClientWithIndex={
               isSelectedByAnotherClientLeftCap
                 ? null
@@ -144,6 +156,10 @@ const WordOuterComponent = ({
             isSelected={isSelected}
             isPrevWordSelected={isPrevWordSelected}
             isNextWordSelected={isNextWordSelected}
+            isCtrlFSelectedLeftCap={isCtrlFSelected && !isPrevCtrlFSelected}
+            isCtrlFSelectedRightCap={isCtrlFSelected && !isNextCtrlFSelected}
+            isCtrlFSelected={isCtrlFSelected}
+            isCtrlFSelectedIndex={isCtrlFSelectedIndex}
             selectedByClientWithIndex={selectedByClientWithIndex}
             isSelectedByAnotherClientLeftCap={isSelectedByAnotherClientLeftCap}
             isSelectedByAnotherClientRightCap={
@@ -164,6 +180,8 @@ const WordOuterComponent = ({
             <WordSpace
               key="space-end"
               isBetweenHighlightedWords={false}
+              isBetweenCtrlFHighlightedWords={false}
+              isCtrlFSelectedIndex={false}
               highlightedByClientWithIndex={null}
             />
           )}

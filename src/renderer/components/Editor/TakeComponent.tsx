@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { Avatar, Box } from '@mui/material';
-import { IndexRange, Transcription, Word } from 'sharedTypes';
+import {
+  CtrlFindSelectionState,
+  IndexRange,
+  Transcription,
+  Word,
+} from 'sharedTypes';
 import React, {
   RefObject,
   useCallback,
@@ -12,7 +17,7 @@ import React, {
 import { ClientId } from 'collabTypes/collabShadowTypes';
 import { EditWordState } from 'renderer/store/sharedHelpers';
 import colors from 'renderer/colors';
-import { isIndexInRange } from 'renderer/utils/range';
+import { isIndexInRange, isIndexInRanges } from 'renderer/utils/range';
 import { makeSelectTake } from 'renderer/store/takeGroups/ops/selectTake';
 import dispatchOp from 'renderer/store/dispatchOp';
 import { PartialSelectState, WordMouseHandler } from './DragSelectManager';
@@ -62,6 +67,7 @@ interface TakeComponentProps extends TakePassThroughProps {
   setIsTakeGroupOpened: (isOpen: boolean) => void;
   nowPlayingWordIndex: number | null;
   selection: IndexRange;
+  ctrlFSelection: CtrlFindSelectionState;
   onWordMouseDown: WordMouseHandler;
   onWordMouseEnter: (
     wordIndex: number,
@@ -81,6 +87,7 @@ const TakeComponent = ({
   setIsTakeGroupOpened,
   nowPlayingWordIndex,
   selection,
+  ctrlFSelection,
   onWordMouseDown,
   onWordMouseEnter,
   transcriptionIndex,
@@ -184,6 +191,23 @@ const TakeComponent = ({
         isPrevWordSelected={isIndexInRange(selection, wordIndex - 1)}
         isSelected={isIndexInRange(selection, wordIndex)}
         isNextWordSelected={isIndexInRange(selection, wordIndex + 1)}
+        isPrevCtrlFSelected={isIndexInRanges(
+          ctrlFSelection.indexRanges,
+          wordIndex - 1
+        )}
+        isCtrlFSelected={isIndexInRanges(ctrlFSelection.indexRanges, wordIndex)}
+        isNextCtrlFSelected={isIndexInRanges(
+          ctrlFSelection.indexRanges,
+          wordIndex + 1
+        )}
+        isCtrlFSelectedIndex={
+          ctrlFSelection.maxIndex > 0
+            ? isIndexInRange(
+                ctrlFSelection.indexRanges[ctrlFSelection.selectedIndex],
+                wordIndex
+              )
+            : false
+        }
         onMouseDown={onWordMouseDown}
         onMouseEnter={onWordMouseEnter}
         isInInactiveTake={!(isActive || isTakeGroupOpened) && !isFirstTimeOpen}

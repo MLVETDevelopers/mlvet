@@ -90,6 +90,12 @@ export interface TranscriptionConfig {
   DUMMY: EngineConfig;
 }
 
+export interface CtrlFindSelectionState {
+  selectedIndex: number;
+  maxIndex: number;
+  indexRanges: IndexRange[];
+}
+
 export interface Word {
   // Text content of the word - null if it's just a "pause"
   word: string | null;

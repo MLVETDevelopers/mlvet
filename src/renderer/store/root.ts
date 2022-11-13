@@ -12,6 +12,8 @@ import editWordReducer from './editWord/reducer';
 import confidenceUnderlinesReducer from './confidenceUnderlines/reducer';
 import collabReducer from './collab/reducer';
 import opQueueReducer from './opQueue/reducer';
+import ctrlFReducer from './ctrlFPopover/reducer';
+import ctrlFSelectionReducer from './ctrlFSelectionState/reducer';
 import downloadModelReducer from './downloadModel/reducer';
 import playbackReducer from './playback/reducer';
 
@@ -26,9 +28,11 @@ const rootReducer = combineReducers({
   shortcutsOpened: shortcutsReducer,
   editWord: editWordReducer,
   isShowingConfidenceUnderlines: confidenceUnderlinesReducer,
-  menuCustomModals: menuCustomModalsReducer,
+  isShowingCtrlFPopover: ctrlFReducer,
   collab: collabReducer,
   opQueue: opQueueReducer,
+  ctrlFSelection: ctrlFSelectionReducer,
+  menuCustomModals: menuCustomModalsReducer,
   downloadModel: downloadModelReducer,
   playback: playbackReducer,
 });
